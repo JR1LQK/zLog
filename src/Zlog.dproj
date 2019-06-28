@@ -1,0 +1,385 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{FA11CDE5-5221-44F5-B0DC-672F211DB07C}</ProjectGuid>
+        <MainSource>Zlog.dpr</MainSource>
+        <Base>True</Base>
+        <Config Condition="'$(Config)'==''">Debug</Config>
+        <TargetedPlatforms>1</TargetedPlatforms>
+        <AppType>Application</AppType>
+        <FrameworkType>VCL</FrameworkType>
+        <ProjectVersion>18.6</ProjectVersion>
+        <Platform Condition="'$(Platform)'==''">Win32</Platform>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Base)'=='true') or '$(Base_Win32)'!=''">
+        <Base_Win32>true</Base_Win32>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win64' and '$(Base)'=='true') or '$(Base_Win64)'!=''">
+        <Base_Win64>true</Base_Win64>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Release' or '$(Cfg_1)'!=''">
+        <Cfg_1>true</Cfg_1>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_1)'=='true') or '$(Cfg_1_Win32)'!=''">
+        <Cfg_1_Win32>true</Cfg_1_Win32>
+        <CfgParent>Cfg_1</CfgParent>
+        <Cfg_1>true</Cfg_1>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' or '$(Cfg_2)'!=''">
+        <Cfg_2>true</Cfg_2>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_2)'=='true') or '$(Cfg_2_Win32)'!=''">
+        <Cfg_2_Win32>true</Cfg_2_Win32>
+        <CfgParent>Cfg_2</CfgParent>
+        <Cfg_2>true</Cfg_2>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Base)'!=''">
+        <DCC_E>false</DCC_E>
+        <DCC_F>false</DCC_F>
+        <DCC_K>false</DCC_K>
+        <DCC_N>false</DCC_N>
+        <DCC_S>false</DCC_S>
+        <DCC_ImageBase>00400000</DCC_ImageBase>
+        <SanitizedProjectName>Zlog</SanitizedProjectName>
+        <DCC_Namespace>Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;System;Xml;Data;Datasnap;Web;Soap;Winapi;$(DCC_Namespace)</DCC_Namespace>
+        <VerInfo_Locale>1041</VerInfo_Locale>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=;CFBundleName=</VerInfo_Keys>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Base_Win32)'!=''">
+        <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
+        <BT_BuildType>Debug</BT_BuildType>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName)</VerInfo_Keys>
+        <VerInfo_Locale>1033</VerInfo_Locale>
+        <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
+        <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
+        <UWP_DelphiLogo44>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_44.png</UWP_DelphiLogo44>
+        <UWP_DelphiLogo150>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png</UWP_DelphiLogo150>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Base_Win64)'!=''">
+        <UWP_DelphiLogo44>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_44.png</UWP_DelphiLogo44>
+        <UWP_DelphiLogo150>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png</UWP_DelphiLogo150>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_1)'!=''">
+        <DCC_Define>RELEASE;$(DCC_Define)</DCC_Define>
+        <DCC_DebugInformation>0</DCC_DebugInformation>
+        <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
+        <DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+        <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
+        <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_2)'!=''">
+        <DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
+        <DCC_Optimize>false</DCC_Optimize>
+        <DCC_GenerateStackFrames>true</DCC_GenerateStackFrames>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
+        <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
+        <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
+    </PropertyGroup>
+    <ItemGroup>
+        <DelphiCompile Include="$(MainSource)">
+            <MainSource>MainSource</MainSource>
+        </DelphiCompile>
+        <DCCReference Include="main.pas">
+            <Form>MainForm</Form>
+        </DCCReference>
+        <DCCReference Include="zLogGlobal.pas"/>
+        <DCCReference Include="UBasicScore.pas">
+            <Form>BasicScore</Form>
+        </DCCReference>
+        <DCCReference Include="UBasicMulti.pas">
+            <Form>BasicMulti</Form>
+        </DCCReference>
+        <DCCReference Include="UALLJAMulti.pas">
+            <Form>ALLJAMulti</Form>
+        </DCCReference>
+        <DCCReference Include="UPartials.pas">
+            <Form>PartialCheck</Form>
+        </DCCReference>
+        <DCCReference Include="UEditDialog.pas">
+            <Form>EditDialog</Form>
+        </DCCReference>
+        <DCCReference Include="UALLJAEditDialog.pas">
+            <Form>ALLJAEditDialog</Form>
+        </DCCReference>
+        <DCCReference Include="UAbout.pas">
+            <Form>AboutBox</Form>
+        </DCCReference>
+        <DCCReference Include="URateDialog.pas">
+            <Form>RateDialog</Form>
+        </DCCReference>
+        <DCCReference Include="UOptions.pas">
+            <Form>Options</Form>
+        </DCCReference>
+        <DCCReference Include="UMenu.pas">
+            <Form>MenuForm</Form>
+        </DCCReference>
+        <DCCReference Include="UACAGMulti.pas">
+            <Form>ACAGMulti</Form>
+        </DCCReference>
+        <DCCReference Include="USuperCheck.pas">
+            <Form>SuperCheck</Form>
+        </DCCReference>
+        <DCCReference Include="UACAGScore.pas">
+            <Form>ACAGScore</Form>
+        </DCCReference>
+        <DCCReference Include="UzLogCW.pas"/>
+        <DCCReference Include="UzLogVoice.pas"/>
+        <DCCReference Include="UALLJAScore.pas">
+            <Form>ALLJAScore</Form>
+        </DCCReference>
+        <DCCReference Include="UWWScore.pas">
+            <Form>WWScore</Form>
+        </DCCReference>
+        <DCCReference Include="UWWMulti.pas">
+            <Form>WWMulti</Form>
+        </DCCReference>
+        <DCCReference Include="UWWZone.pas">
+            <Form>WWZone</Form>
+        </DCCReference>
+        <DCCReference Include="UComm.pas">
+            <Form>CommForm</Form>
+        </DCCReference>
+        <DCCReference Include="UClusterTelnetSet.pas">
+            <Form>ClusterTelnetSet</Form>
+        </DCCReference>
+        <DCCReference Include="UClusterCOMSet.pas">
+            <Form>ClusterCOMSet</Form>
+        </DCCReference>
+        <DCCReference Include="UJIDXMulti.pas">
+            <Form>JIDXMulti</Form>
+        </DCCReference>
+        <DCCReference Include="UJIDXScore.pas">
+            <Form>JIDXScore</Form>
+        </DCCReference>
+        <DCCReference Include="UJIDXScore2.pas">
+            <Form>JIDXScore2</Form>
+        </DCCReference>
+        <DCCReference Include="UZlinkComSet.pas">
+            <Form>ZLinkCOMSet</Form>
+        </DCCReference>
+        <DCCReference Include="UZlinkTelnetSet.pas">
+            <Form>ZLinkTelnetSet</Form>
+        </DCCReference>
+        <DCCReference Include="UWPXMulti.pas">
+            <Form>WPXMulti</Form>
+        </DCCReference>
+        <DCCReference Include="UWPXScore.pas">
+            <Form>WPXScore</Form>
+        </DCCReference>
+        <DCCReference Include="UPediScore.pas">
+            <Form>PediScore</Form>
+        </DCCReference>
+        <DCCReference Include="UCWKeyBoard.pas">
+            <Form>CWKeyBoard</Form>
+        </DCCReference>
+        <DCCReference Include="UJIDX_DX_Score.pas">
+            <Form>JIDX_DX_Score</Form>
+        </DCCReference>
+        <DCCReference Include="UJIDX_DX_Multi.pas">
+            <Form>JIDX_DX_Multi</Form>
+        </DCCReference>
+        <DCCReference Include="UChat.pas">
+            <Form>ChatForm</Form>
+        </DCCReference>
+        <DCCReference Include="UZServerInquiry.pas">
+            <Form>ZServerInquiry</Form>
+        </DCCReference>
+        <DCCReference Include="UZLinkForm.pas">
+            <Form>ZLinkForm</Form>
+        </DCCReference>
+        <DCCReference Include="UGeneralScore.pas">
+            <Form>GeneralScore</Form>
+        </DCCReference>
+        <DCCReference Include="UGeneralMulti2.pas">
+            <Form>GeneralMulti2</Form>
+        </DCCReference>
+        <DCCReference Include="USpotForm.pas">
+            <Form>SpotForm</Form>
+        </DCCReference>
+        <DCCReference Include="UFDMulti.pas">
+            <Form>FDMulti</Form>
+        </DCCReference>
+        <DCCReference Include="UARRLDXMulti.pas">
+            <Form>ARRLDXMulti</Form>
+        </DCCReference>
+        <DCCReference Include="UARRLDXScore.pas">
+            <Form>ARRLDXScore</Form>
+        </DCCReference>
+        <DCCReference Include="UARRLWMulti.pas">
+            <Form>ARRLWMulti</Form>
+        </DCCReference>
+        <DCCReference Include="UAPSprintScore.pas">
+            <Form>APSprintScore</Form>
+        </DCCReference>
+        <DCCReference Include="UJA0Score.pas">
+            <Form>JA0Score</Form>
+        </DCCReference>
+        <DCCReference Include="UJA0Multi.pas">
+            <Form>JA0Multi</Form>
+        </DCCReference>
+        <DCCReference Include="UKCJMulti.pas">
+            <Form>KCJMulti</Form>
+        </DCCReference>
+        <DCCReference Include="USixDownMulti.pas">
+            <Form>SixDownMulti</Form>
+        </DCCReference>
+        <DCCReference Include="USixDownScore.pas">
+            <Form>SixDownScore</Form>
+        </DCCReference>
+        <DCCReference Include="UQTHDialog.pas">
+            <Form>QTHDialog</Form>
+        </DCCReference>
+        <DCCReference Include="UIARUMulti.pas">
+            <Form>IARUMulti</Form>
+        </DCCReference>
+        <DCCReference Include="UIARUScore.pas">
+            <Form>IARUScore</Form>
+        </DCCReference>
+        <DCCReference Include="UAllAsianScore.pas">
+            <Form>AllAsianScore</Form>
+        </DCCReference>
+        <DCCReference Include="UAgeDialog.pas">
+            <Form>AgeDialog</Form>
+        </DCCReference>
+        <DCCReference Include="UIOTAMulti.pas">
+            <Form>IOTAMulti</Form>
+        </DCCReference>
+        <DCCReference Include="UNewIOTARef.pas">
+            <Form>NewIOTARef</Form>
+        </DCCReference>
+        <DCCReference Include="UIOTACategory.pas">
+            <Form>IOTACategory</Form>
+        </DCCReference>
+        <DCCReference Include="UUTCDialog.pas">
+            <Form>UTCDialog</Form>
+        </DCCReference>
+        <DCCReference Include="UARRL10Multi.pas">
+            <Form>ARRL10Multi</Form>
+        </DCCReference>
+        <DCCReference Include="UARRL10Score.pas">
+            <Form>ARRL10Score</Form>
+        </DCCReference>
+        <DCCReference Include="UPaddleThread.pas"/>
+        <DCCReference Include="BGK32Lib.pas"/>
+        <DCCReference Include="USummaryInfo.pas">
+            <Form>SummaryInfo</Form>
+        </DCCReference>
+        <DCCReference Include="URigControl.pas">
+            <Form>RigControl</Form>
+        </DCCReference>
+        <DCCReference Include="UConsolePad.pas">
+            <Form>ConsolePad</Form>
+        </DCCReference>
+        <DCCReference Include="UFreqList.pas">
+            <Form>FreqList</Form>
+        </DCCReference>
+        <DCCReference Include="UCheckWin.pas">
+            <Form>CheckWin</Form>
+        </DCCReference>
+        <DCCReference Include="UCheckCall2.pas">
+            <Form>CheckCall2</Form>
+        </DCCReference>
+        <DCCReference Include="UCheckMulti.pas">
+            <Form>CheckMulti</Form>
+        </DCCReference>
+        <DCCReference Include="UCheckCountry.pas">
+            <Form>CheckCountry</Form>
+        </DCCReference>
+        <DCCReference Include="UMinMaxFreqDlg.pas">
+            <Form>MinMaxFreqDlg</Form>
+        </DCCReference>
+        <DCCReference Include="USpotClass.pas"/>
+        <DCCReference Include="UIntegerDialog.pas">
+            <Form>IntegerDialog</Form>
+        </DCCReference>
+        <DCCReference Include="UBGKMonitorThread.pas"/>
+        <DCCReference Include="URenewThread.pas"/>
+        <DCCReference Include="UNewPrefix.pas">
+            <Form>NewPrefix</Form>
+        </DCCReference>
+        <DCCReference Include="UKCJZone.pas">
+            <Form>KCJZone</Form>
+        </DCCReference>
+        <DCCReference Include="UMultipliers.pas"/>
+        <DCCReference Include="UScratchSheet.pas">
+            <Form>ScratchSheet</Form>
+        </DCCReference>
+        <DCCReference Include="UKCJScore.pas">
+            <Form>KCJScore</Form>
+        </DCCReference>
+        <DCCReference Include="UMMTTY.pas"/>
+        <DCCReference Include="UTTYConsole.pas">
+            <Form>TTYConsole</Form>
+        </DCCReference>
+        <DCCReference Include="UQTCForm.pas">
+            <Form>QTCForm</Form>
+        </DCCReference>
+        <DCCReference Include="UWAEScore.pas">
+            <Form>WAEScore</Form>
+        </DCCReference>
+        <DCCReference Include="UWAEMulti.pas">
+            <Form>WAEMulti</Form>
+        </DCCReference>
+        <DCCReference Include="..\..\VCL\async32_x\CommInt.pas"/>
+        <DCCReference Include="..\..\VCL\HID\HidControllerClass.pas"/>
+        <DCCReference Include="..\..\VCL\HID\Hid.pas"/>
+        <DCCReference Include="UVoiceForm.pas">
+            <Form>VoiceForm</Form>
+        </DCCReference>
+        <DCCReference Include="..\..\VCL\ToneGen.pas"/>
+        <DCCReference Include="UQuickRef.pas">
+            <Form>QuickRef</Form>
+        </DCCReference>
+        <DCCReference Include="UBandScope2.pas">
+            <Form>BandScope2</Form>
+        </DCCReference>
+        <DCCReference Include="UELogJapanese.pas">
+            <Form>ELogJapanese</Form>
+        </DCCReference>
+        <BuildConfiguration Include="Debug">
+            <Key>Cfg_2</Key>
+            <CfgParent>Base</CfgParent>
+        </BuildConfiguration>
+        <BuildConfiguration Include="Base">
+            <Key>Base</Key>
+        </BuildConfiguration>
+        <BuildConfiguration Include="Release">
+            <Key>Cfg_1</Key>
+            <CfgParent>Base</CfgParent>
+        </BuildConfiguration>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Delphi.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Delphi.Personality>
+                <Source>
+                    <Source Name="MainSource">Zlog.dpr</Source>
+                </Source>
+            </Delphi.Personality>
+            <Platforms>
+                <Platform value="Win32">True</Platform>
+                <Platform value="Win64">False</Platform>
+            </Platforms>
+        </BorlandProject>
+        <ProjectFileVersion>12</ProjectFileVersion>
+    </ProjectExtensions>
+    <Import Project="$(BDS)\Bin\CodeGear.Delphi.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Delphi.Targets')"/>
+    <Import Project="$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj" Condition="Exists('$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj')"/>
+</Project>
