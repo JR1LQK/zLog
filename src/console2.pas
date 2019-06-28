@@ -1591,9 +1591,9 @@ end;
 destructor TColorConsole2.Destroy;
 begin
   inherited Destroy;
-  StrDispose(Pointer(FIndexes));
+  StrDispose(PChar(FIndexes));
   FAttrList.Free;
-  StrDispose(Pointer(FCellWidths));
+  StrDispose(PChar(FCellWidths));
 end;
 
 function TColorConsole2.IndexPtr(X,Y: Integer): PInteger;
@@ -1615,7 +1615,7 @@ var
   I: Integer;
   A: Integer;
   P: PInteger;
-  P2: Pointer;
+  P2: PChar;
 begin
   inherited ResizeBuffer;
   Pointer(P) := nil;
@@ -1624,9 +1624,9 @@ begin
     Pointer(P) := StrAlloc(Longint(Cols) * Rows * Sizeof(Integer));
     P2 := StrAlloc(Cols * SizeOf(Integer));
     Exchange(Pointer(FIndexes), Pointer(P));
-    Exchange(Pointer(FCellWidths), P2);
+    Exchange(Pointer(FCellWidths), Pointer(P2));
   finally
-    StrDispose(Pointer(P));
+    StrDispose(PChar(P));
     StrDispose(P2);
   end;
   FAttrList.Clear;
