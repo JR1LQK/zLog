@@ -1,0 +1,70 @@
+TZtimer : high performance timer component , August 8(1997), vs 1.00
+-------------------------------------------------------------------- 
+Similar to the vcl Ttimer component, but with a resolution of 0.1ms and accurate to
+0.015ms.
+
+
+Installation
+Put the files Z_timer.pas and Z_timer.dcr in your library path, and install the
+component as usual. The component TZtimer will appear on your systempage of the vcl
+palette. 
+
+Operation
+The TZtimer component has the same properties as the vcl Ttimer, but :
+property Interval : is now an extended type , so you can insert decimal values for
+                    the milliseconds, values will be rounded to 0.1 (ms)
+
+,and there are 2 additional  properties :
+public property Count:integer (readonly)    ; number of timer events triggered
+published property TimeOutSeconds:integer   ; timeout period in seconds after which
+                                              the timer will be shut down.
+
+The latter property is convenient because this timer will lock up the applications
+while running. Normally you will disable the timer in the ontimerevent after you 
+are done. Specification of a timeout period can serve as a safetymeasure.
+This timer is intended for time critical applications, and will only perform well if
+the task it is triggering (the ontimerevent) is completed quickly. The ontimerevent 
+should return in less than about 30 microseconds, otherwise the timing will get out
+of sync. On most current pc's , you can do a lot in that period : read a port/ store 
+ data/ do some simple calculations/ plot a line etc. However, you should NOT try to do
+too many visual operations. It depends on your hardware of course.
+If you still want to react on buttonclicks and such while the timer is running, you
+should put application.processmessages in your ontimerevent. However the speed and
+accuracy of the timing will deteriorate.
+
+
+Technical background
+The windows multitasking system is not very well suited for accurate timing. The
+windows timer let you only specify milliseconds as resolution, while its accuracy
+is much worse than that. Alternative approaches with the sleep or gettickcount 
+functions suffer from the same problem.
+In order to do better, the multitasking must be restricted. This timer will take
+control of the pc, and will dedicate it to sending out ontimerevents until
+it is disabled. 
+Note that multithreading is out of the question : an extra thread will also consume
+time, combining that with the extra time needed for taskswitching, the timer will be
+thrown out of sync. One thread must do all !
+Keep in mind that the only way to stop a running Ztimer is to put its enabled
+property to false in the onttimerevenhandler, or wait  until the timeoutperiod
+expires.
+The timing originates from the standard PPP chip that changes an output bit every 15
+microseconds.  Resolution could be improved considerably when the RDTSC (pentium)
+instruction is utilized, however I had to get this timer working on a 486 also. 
+It was tested on D2 and D3 for W95, it should also work on D1 and W3.1. However it
+will not work in Windows NT (?).
+
+Some observed timing measurements of Tztimer, compared with the (vcl) Ttimer :
+{ evaluation of 60 runs on W95, P133, D3}
+
+interval    (vcl) Ttimer           Tztimer
+100  ms      108 +/- 4 ms          99.3  +/- 0.14  ms		
+ 10  ms       59 +/- 5 ms          10.1  +/- 0.07  ms
+  1  ms       59 +/- 6 ms (!)       1.00 +/- 0.02  ms
+  0.1ms       Not available         0.098+/- 0.015 ms 
+
+
+Copyright
+This is completely free, adapt it to your needs, etc. 
+
+Any remarks or suggestions :
+d950021@icpc00.icpc.fukui-u.ac.jp (Antonie Baars)

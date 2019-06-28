@@ -1,0 +1,109 @@
+---------------- TStrColGridについて ----------------
+
+    TStrColGrid はセルごとに色・書式を指定できる、
+  TStringGridから派生したコンポーネントです。
+    Delphi2.0でご使用いただけます。LHAで解凍してください。
+
+    STRCGRID.PAS
+    STRCGRID.DCR
+    STRCGRID.RES
+
+    以上の３ファイルを同一ディレクトリに置き、通常の
+    コンポーネントインストール手順でDelphiに組み込ん
+    でご使用ください。また、
+
+    \TESTPRG\SCGTEST.DPR
+
+    として、簡単な使用見本を添付しましたので必要に応
+  じてコンパイルしてご使用ください。
+
+
+    ご意見、ご要望、バグ報告はFDELPHI１０番会議室また
+  はメールでお願いします。可能な限り対処しますが絶対
+  ではありません(^^;)。
+
+    本コンポーネントの著作権はＭＯ－(QZE03067)が所有
+  し、本コンポーネントを使用した結果生じたいかなる損
+  害にも責任を負わないものとします。
+
+    改造したソースファイルを配布する事はご遠慮くださ
+  い。ただし利用される方が自作のアプリケーションに組
+  み込んで、コンパイルした上でその生成物(EXE, DLL)を
+  配布する場合は改造も自由です。
+
+  ではこのへんで。FDELPHIでお会いしましょう( ^^)/~~
+
+-----------------------------------------------------
+1997.08.02 補足
+  新たにフォント関連のプロパティ／メソッドを追加しま
+した。使用方法は添付サンプルをご参照下さい。
+　また、いくつかあったバグ（主に複数セル選択時の振る
+舞いについて）も潰しています。
+-----------------------------------------------------
+
+TStrColGrid 追加属性一覧
+
+追加プロパティ
+
+  Alignment: TAlignment;
+    グリッド全体の文字表示位置。
+  FixedAlignment: TAlignment;
+    固定セルの文字表示位置。
+  FocusDraw: boolean
+    フォーカスを失っても、選択の表示常態を保つ。
+  FontCount: integer
+    登録されているフォント数。
+  FocusDraw: boolean
+    フォーカスを失った場合でも選択範囲表示を行うか否か。
+  CellAlignments[ACol, ARow: integer]: TAlignment
+    セル固有の文字表示位置。
+  CellFontColors[ACol, ARow: integer]: TColor
+    セル固有の文字色。
+  CellFontWidths[ACol, ARow: integer]: integer
+    セル固有の文字太さ。
+  CellColors[ACol, ARow: integer]: TColor
+    セル固有の背景色。
+  CellBrushEnabled[ACol, ARow: integer]: boolean;
+    セル固有のブラシ使用／未使用フラグ。
+  CellBrushStyles[ACol, ARow: integer]: TBrushStyle
+    セル固有のブラシスタイル。
+  CellBrushColors[ACol, ARow: integer]: TColor
+    セル固有のブラシカラー。
+  CellFonts[ACol, ARow: integer]: integer
+    セルで使用するフォントのインデックス番号
+
+
+追加メソッド
+
+  procedure ClearAllCellParams;
+    全パラメータ消去。
+  function GetDefaultCellParams(ACol, ARow: integer): TCellDrawParams;
+    デフォルトのセルパラメータを取得。
+  function GetCellParams(ACol, ARow: integer): TCellDrawParams;
+    セルパラメータを一括取得。
+  procedure SetCellParams(ACol, ARow: integer; AValue: TCellDrawParams);
+    セルパラメータを一括設定。
+  proceudre AddFont(AFont: TFont);
+    フォントを追加。
+  proceudre DeleteFont(AIndex: integer);
+    フォントを削除。
+
+
+パラメータ用レコード
+
+  TCellDrawParams = record
+    Col, Row: integer;           位置
+    Alignment: TAlignment;       文字表示位置
+    FontColor: TColor;           文字色
+    FontWidth: integer;          文字幅
+    BackColor: TColor;           セル色
+    BrushEnabled: boolean;       ブラシの使用/未使用
+    BrushStyle: TBrushStyle;     ブラシスタイル
+    BrushColor: TColor;          ブラシ色
+    FontIndex: integer;          フォント番号(-1でコントロールフォント使用）
+  end;
+
+-----------------------------------------------------
+                                           1997.08.02
+                                     ＭＯ－(QZE03067)
+[------------------------------------------------EOF]

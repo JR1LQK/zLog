@@ -1,0 +1,97 @@
+Component: 	TSRichEdit
+Description:	RichEdit control with added events and properties
+Author:		Richard Shotbolt
+Email:		100327,2305@compuserve.com
+Date:		26 Mar 1996
+
+TSRichEdit is a descendent of TRichEdit which lets you get and set
+the caret position and top line index, and respond to VScroll and
+HScroll events without resorting to API calls.
+
+<< Using TSRichEdit >>
+
+TSMemo has all the properties, methods and events of a normal
+TRichEdit, with the following additions:
+
+<< New Properties >>
+
+---------------------------------------------------------------------
+CurrentLine - integer, read/write.
+
+When read, returns the line number (first line = 0) containing the
+caret.
+
+When written, the caret is placed at the start of the specified line. 
+If greater than the last line, the caret goes to the start of the
+last line. You can deliberately set a large value to get to the last
+line of the control.
+
+---------------------------------------------------------------------
+CurrentPosition - integer, read/write.
+
+When read, returns the character position (before first char = 0) of
+the caret within the line containing the caret.
+
+When written, puts the caret at the specified character position 
+on the current line (0 = before first character). Tabs (if used)
+are treated as single characters. If the specified position is beyond
+the end of the line, the caret goes to the end of the line. You can
+deliberately set a large value to get to the end of each line.
+
+---------------------------------------------------------------------
+TopLine - integer, read/write.
+
+When read, returns the line number (first line = 0) of the top 
+line currently displayed.
+
+When written, the control scrolls so that the specified line appears
+at the top. 
+
+---------------------------------------------------------------------
+LinesVisible - integer, read only
+
+When read, returns the number of lines that are currently visible.
+This value is based on the current settings of the Font property, and
+will only be a guide if the control contains different font sizes or
+styles.
+
+---------------------------------------------------------------------
+MaxLinesVisible - integer, read only
+
+When read, returns the maximum number of lines that can be
+displayed in the memo before it scrolls, based on the current
+settings of the Font property.
+
+In conjunction with the TopLine property, you can use this for
+example to center the selected line on the screen.
+
+e.g. MySRichEdit.TopLine := MyLine - (MySRichEdit.MaxLinesVisible div 2);
+
+---------------------------------------------------------------------
+
+<< New Events >>
+
+You can use the scroll events below to synchronize two controls.
+
+---------------------------------------------------------------------
+OnHScroll - generated when you click on the control's horizontal
+scroll bar and again when the mouse is released.
+
+--------------------------------------------------------------------- 
+OnVScroll - generated when you click on the control's vertical
+scroll bar and again when the mouse is released.
+
+---------------------------------------------------------------------
+
+
+<< Installation >>
+
+Backup your 'cmplib32.dcl' file as a precaution.
+Select 'Component', 'Install'.
+Select 'Add', 'Browse'.
+Select the directory containing the TRECode files.
+Select 'TRECODE' and click OK on each box that appears.
+The TSRichEdit control will be added to the 'Samples' section of your
+component toolbar.
+If anything goes wrong, restore your backed-up cmplib32.dcl and try
+again after correcting any obvious problems.

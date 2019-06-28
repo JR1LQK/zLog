@@ -1,0 +1,124 @@
+LOCUS       AB019603                2972 bp    DNA     circular SYN 21-MAY-2003
+DEFINITION  Cloning vector pTH18kr DNA, complete sequence.
+ACCESSION   AB019603
+VERSION     AB019603.1
+KEYWORDS    .
+SOURCE      Cloning vector pTH18kr
+  ORGANISM  Cloning vector pTH18kr
+            artificial sequences; vectors.
+REFERENCE   1  (bases 1 to 2972)
+  AUTHORS   Hashimoto-Gotoh,T.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (10-NOV-1998) to the DDBJ/EMBL/GenBank databases.
+            Tamotsu Hashimoto-Gotoh, Res. Inst. for Geriatrics, Kyoto Pref.
+            Univ. Med., Biochem. and Mol. Genet.; Kawaramachi-Hirokoji,
+            Kajii-Cho 465, Kamigyo-ku, Kyoto, Kyoto 602-8566, Japan
+            (E-mail:e54093@sakura.kudpc.kyoto-u.ac.jp, Tel:81-75-251-5798,
+            Fax:81-75-251-5799)
+REFERENCE   2  
+  AUTHORS   Hashimoto-Gotoh,T., Yamaguchi,M., Yasojima,K., Tsujimura,A.,
+            Wakabayashi,Y. and Watanabe,Y.
+  TITLE     A set of temperature sensitive-replication/-segregation and
+            temperature resistant plasmid vectors with different copy numbers
+            and in an isogenic background (chloramphenicol, kanamycin, lacZ,
+            repA, par, polA)
+  JOURNAL   Gene 241, 185-191 (2000)
+COMMENT     The copy number of pKF28wt is 5 per chromosome.
+            Drug concentration for kanamycin selection is 20 microgramms per
+            ml.
+            TOP10 but neither DH5alpha nor JM109 is advisable as a host strain
+            for alpha-complemetation selection.
+            The multiple cloning sites are as in pKF18k (Gene, 1995; 167,
+            333-334).
+FEATURES             Location/Qualifiers
+     source          1..2972
+                     /mol_type="other DNA"
+                     /note="plasmid vector"
+                     /organism="Cloning vector pTH18kr"
+                     /specific_host="Escherichia coli"
+     CDS             1..309
+                     /codon_start=1
+                     /gene="lacZ'"
+                     /note="MCS as those in pKF18k"
+                     /product="beta-galactosidase alpha-peptide"
+                     /protein_id="BAA34741.1"
+                     /transl_table=11
+                     /translation="MTMITPNSSSVPGDPLESTCRHASLLAVVLQRRDWENPGVTQLN
+                     RLAAHPPFASWRNSEEARTDRPSQQLRSLNGECDLFNKAAVPSSQRNALPVLQPINQF
+                     "
+     CDS             complement(310..1125)
+                     /codon_start=1
+                     /gene="agp-5"
+                     /product="aminoglucoside phosphotransferase"
+                     /protein_id="BAA34742.1"
+                     /transl_table=11
+                     /translation="MSHIQRETSCSKPRLNSNMDADLYGYKWARDNVGQSGATIYRLY
+                     GKPDAPELFLKHGKGSVANDVTDEMVRLNWLTEFMPLPTIKHFIRTPDDAWLLTTAIP
+                     GKTAFQVLEEYPDSGENIVDALAVFLRRLHSIPVCNCPFNSDRVFRLAQAQSRMNNGL
+                     VDASDFDDERNGWPVEQVWKEMHKLLPFSPDSVVTHGDFSLDNLIFDEGKLIGCIDVG
+                     RVGIADRYQDLAILWNCLGEFSPSLQKRLFQKYGIDNPDMNKLQFHLMLDEFF"
+     CDS             1815..2765
+                     /codon_start=1
+                     /note="wild type repA in pSC101"
+                     /product="replication initiator"
+                     /protein_id="BAA34743.1"
+                     /transl_table=11
+                     /translation="MSELVVFKANELAISRYDLTEHETKLILCCVALLNPTIENPTRK
+                     ERTVSFTYNQYAQMMNISRENAYGVLAKATRELMTRTVEIRNPLVKGFEIFQWTNYAK
+                     FSSEKLELVFSEEILPYLFQLKKFIKYNLEHVKSFENKYSMRIYEWLLKELTQKKTHK
+                     ANIEISLDEFKFMLMLENNYHEFKRLNQWVLKPISKDLNTYSNMKLVVDKRGRPTDTL
+                     IFQVELDRQMDLVTELENNQIKMNGDKIPTTITSDSYLHNGLRKTLHDALTAKIQLTS
+                     FEAKFLSDMQSKYDLNGSFSWLTQKQRTTLENILAKYGRI"
+BASE COUNT          950 a          634 c          595 g          793 t
+ORIGIN      
+        1 atgaccatga ttacgccgaa ttcgagctcg gtacccgggg atcctctaga gtcgacctgc
+       61 aggcatgcaa gcttactggc cgtcgtttta caacgtcgtg actgggaaaa ccctggcgtt
+      121 acccaactta atcgccttgc agcacatccc cctttcgcca gctggcgtaa tagcgaagag
+      181 gcccgcaccg atcgcccttc ccaacagttg cgcagcctga atggcgaatg cgatttattc
+      241 aacaaagccg ccgtcccgtc aagtcagcgt aatgctctgc cagtgttaca accaattaac
+      301 caattctgat tagaaaaact catcgagcat caaatgaaac tgcaatttat tcatatcagg
+      361 attatcaata ccatattttt gaaaaagccg tttctgtaat gaaggagaaa actcaccgag
+      421 gcagttccat aggatggcaa gatcctggta tcggtctgcg attccgactc gtccaacatc
+      481 aatacaacct attaatttcc cctcgtcaaa aataaggtta tcaagtgaga aatcaccatg
+      541 agtgacgact gaatccggtg agaatggcaa gagcttatgc atttctttcc agacttgttc
+      601 aacaggccag ccattacgct cgtcatcaaa atcactcgca tcaaccaaac cgttattcat
+      661 tcgtgactgc gcctgagcga gacgaaatac gcgatcgctg ttaaaaggac aattacaaac
+      721 aggaatcgaa tgcaaccggc gcaggaacac tgccagcgca tcaacaatat tttcacctga
+      781 atcaggatat tcttctaata cctggaatgc tgtttttccg gggatcgcag tggtgagtaa
+      841 ccatgcatca tcaggagtac ggataaaatg cttgatggtc ggaagaggca taaattccgt
+      901 cagccagttt agtctgacca tctcatctgt aacatcattg gcaacgctac ctttgccatg
+      961 tttcagaaac aactctggcg catcgggctt cccatacaac cgatagattg tcgcacctga
+     1021 ttgcccgaca ttatcgcgcg cccatttata cccatataaa tcagcatcca tgttggaatt
+     1081 taatcgcggc ttcgagcaag acgtttcccg ttgaatatgg ctcataacac cccttgtatt
+     1141 actgtttatg taagcagaca gttttattgt tcatgatgat atatttttat cttgtgcaat
+     1201 gtaacatcag agattttgag acacaacgtg gctttgttga ataaatcgaa cttttgctga
+     1261 gttgaaggat cagatcacgc atcttcccga caacgcagac cgttccgtgc tgtagtgcca
+     1321 tttaccccca ttcactgcca gagccgtgag cgcagcgaac tgaatgtcac gaaaaagaca
+     1381 gcgactcagg tgcctgatgg tcggagacaa aaggaatatt cagcgatttg cccgagcttg
+     1441 cgagggtgct acttaagcct ttagggtttt aaggtctgtt ttgtagagga gcaaacagcg
+     1501 tttgcgacat ccttttgtaa tactgcggaa ctgactaaag tagtgagtta tacacagggc
+     1561 tgggatctat tctttttatc tttttttatt ctttctttat tctataaatt ataaccactt
+     1621 gaatataaac aaaaaaaaca cacaaaggtc tagcggaatt tacagagggt ctagcagaat
+     1681 ttacaagttt tccagcaaag gtctagcaga atttacagat acccacaact caaaggaaaa
+     1741 ggactagtaa ttatcattga ctagcccatc tcaattggta tagtgattaa aatcacctag
+     1801 accaattgag atgtatgtct gaattagttg ttttcaaagc aaatgaacta gcgattagtc
+     1861 gctatgactt aacggagcat gaaaccaagc taattttatg ctgtgtggca ctactcaacc
+     1921 ccacgattga aaaccctaca aggaaagaac ggacggtatc gttcacttat aaccaatacg
+     1981 ctcagatgat gaacatcagt agggaaaatg cttatggtgt attagctaaa gcaaccagag
+     2041 agctgatgac gagaactgtg gaaatcagga atcctttggt taaaggcttt gagattttcc
+     2101 agtggacaaa ctatgccaag ttctcaagcg aaaaattaga attagttttt agtgaagaga
+     2161 tattgcctta tcttttccag ttaaaaaaat tcataaaata taatctggaa catgttaagt
+     2221 cttttgaaaa caaatactct atgaggattt atgagtggtt attaaaagaa ctaacacaaa
+     2281 agaaaactca caaggcaaat atagagatta gccttgatga atttaagttc atgttaatgc
+     2341 ttgaaaataa ctaccatgag tttaaaaggc ttaaccaatg ggttttgaaa ccaataagta
+     2401 aagatttaaa cacttacagc aatatgaaat tggtggttga taagcgaggc cgcccgactg
+     2461 atacgttgat tttccaagtt gaactagata gacaaatgga tctcgtaacc gaacttgaga
+     2521 acaaccagat aaaaatgaat ggtgacaaaa taccaacaac cattacatca gattcctacc
+     2581 tacataacgg actaagaaaa acactacacg atgctttaac tgcaaaaatt cagctcacca
+     2641 gttttgaggc aaaatttttg agtgacatgc aaagtaagta tgatctcaat ggttcgttct
+     2701 catggctcac gcaaaaacaa cgaaccacac tagagaacat actggctaaa tacggaagga
+     2761 tctgaggttc ttatggctct tgtatctatc agtgaagcat caagactaac aaacaaaagt
+     2821 agaacaactg ttcaccgtta catatcaaag ggaaaactgt ccataatgtg agttagctca
+     2881 ctcattaggc accccaggct ttacacttta tgcttccggc tcgtatgttg tgtggaattg
+     2941 tgagcggata acaatttcac acaggaaaac at
+//

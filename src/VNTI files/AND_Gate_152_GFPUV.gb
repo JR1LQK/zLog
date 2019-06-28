@@ -1,0 +1,139 @@
+LOCUS       AND\Gate\152\GFP        3135 bp    DNA     circular     11-JAN-2008
+SOURCE      
+  ORGANISM  
+COMMENT     This file is best viewed with a free Vector NTI Viewer:
+            http://www.informaxinc.com/
+            
+COMMENT     This file is created by Vector NTI
+            http://www.invitrogen.com/
+COMMENT     ORIGDB|GenBank
+COMMENT     VNTDATE|471021163|
+COMMENT     VNTDBDATE|471021163|
+COMMENT     LSOWNER|
+COMMENT     VNTNAME|AND Gate 152 GFPUV|
+COMMENT     VNTAUTHORNAME|Yokobayashi Lab|
+COMMENT     VNTREPLTYPE|Plasmid
+FEATURES             Location/Qualifiers
+     rep_origin      1734..2372
+                     /vntifkey="33"
+                     /label=ColE1
+     terminator      1506..1610
+                     /vntifkey="43"
+                     /label=T1
+                     /note="transcription termination sequence"
+     terminator      complement(2431..2536)
+                     /vntifkey="43"
+                     /label=T0
+                     /note="transcription termination sequence"
+     CDS             complement(2562..284)
+                     /vntifkey="4"
+                     /label=AmpR
+     promoter        complement(285..383)
+                     /vntifkey="30"
+                     /label=P(bla)
+     primer_bind     complement(474..495)
+                     /vntifkey="28"
+                     /label=BLI06
+     primer_bind     137..158
+                     /vntifkey="28"
+                     /label=bla-rev2
+     misc_feature    2648..2669
+                     /vntifkey="21"
+                     /label=bla-rev?
+     primer_bind     326..345
+                     /vntifkey="28"
+                     /label=pbla-rev\(Sequencing\Primer)
+                     /note="sequencing primer"
+     promoter        498..601
+                     /vntifkey="30"
+                     /label=P(lac)
+     primer          517..537
+                     /vntifkey="27"
+                     /label=PlacF
+     -35_signal      545..550
+                     /vntifkey="48"
+                     /label=-35
+     protein_bind    581..601
+                     /vntifkey="31"
+                     /label=lacO
+     mutation        496..497
+                     /vntifkey="62"
+                     /label=AG\insertion
+                     /note="two base insertion found in sequencing"
+     misc_feature    581..581
+                     /vntifkey="21"
+                     /label=+1
+     -10_signal      569..574
+                     /vntifkey="47"
+                     /label=-10
+     misc_feature    656..730
+                     /vntifkey="21"
+                     /label=TPP\Aptamer
+     misc_feature    609..635
+                     /vntifkey="21"
+                     /label=Theo28\Aptamer
+     primer          complement(618..635)
+                     /vntifkey="27"
+                     /label=Theo28r
+     misc_feature    636..655
+                     /vntifkey="21"
+                     /label=N20\Linker
+     CDS             759..1499
+                     /vntifkey="4"
+                     /label=gfpuv
+BASE COUNT      851 a       763 c       728 g       793 t 
+ORIGIN
+        1 tagtgtatgc ggcgaccgag ttgctcttgc ccggcgtcaa tacgggataa taccgcgcca 
+       61 catagcagaa ctttaaaagt gctcatcatt ggaaaacgtt cttcggggcg aaaactctca 
+      121 aggatcttac cgctgttgag atccagttcg atgtaaccca ctcgtgcacc caactgatct 
+      181 tcagcatctt ttactttcac cagcgtttct gggtgagcaa aaacaggaag gcaaaatgcc 
+      241 gcaaaaaagg gaataagggc gacacggaaa tgttgaatac tcatactctt cctttttcaa 
+      301 tattattgaa gcatttatca gggttattgt ctcatgagcg gatacatatt tgaatgtatt 
+      361 tagaaaaata aacaaatagg ggttccgcgc acatttcccc gaaaagtgcc acctgacgtc 
+      421 taagaaacca ttattatcat gacattaacc tataaaaata ggcgtatcac gaggcccttt 
+      481 cgtcttcacc tcgagagcgc aacgcaatta atgtgagtta gctcactcat taggcacccc 
+      541 aggctttaca ctttatgctt ccggctcgta tgttgtgtgg aattgtgagc ggataacaat 
+      601 tgaattctga taccagccga aaggcccttg gcagcagcag ttcatcccaa caatagactc 
+      661 ggggtgccct tctgcgtgaa ggctgagaaa tacccgtatc acctgatctg gataatgcca 
+      721 gcgtagggaa gctattacaa gaagatcagg agcaaactat gcaagtcgac ctgctggatc 
+      781 cattgagtaa aggagaagaa cttttcactg gagttgtccc aattcttgtt gaattagatg 
+      841 gtgatgttaa tgggcacaaa ttttctgtca gtggagaggg tgaaggtgat gcaacatacg 
+      901 gaaaacttac ccttaaattt atttgcacta ctggaaaact acctgttcca tggccaacac 
+      961 ttgtcactac tttctcttat ggtgttcaat gcttttcccg ttatccggat catatgaaac 
+     1021 ggcatgactt tttcaagagt gccatgcccg aaggttatgt acaggaacgc actatatctt 
+     1081 tcaaagatga cgggaactac aagacgcgtg ctgaagtcaa gtttgaaggt gatacccttg 
+     1141 ttaatcgtat cgagttaaaa ggtattgatt ttaaagaaga tggaaacatt ctcggacaca 
+     1201 aactcgagta caactataac tcacacaatg tatacatcac ggcagacaaa caaaagaatg 
+     1261 gaatcaaagc taacttcaaa attcgccaca acattgaaga tggatccgtt caactagcag 
+     1321 accattatca acaaaatact ccaattggcg atggccctgt ccttttacca gacaaccatt 
+     1381 acctgtcgac acaatctgcc ctttcgaaag atcccaacga aaagcgtgac cacatggtcc 
+     1441 ttcttgagtt tgtaactgct gctgggatta cacatggcat ggatgagctc tacaaataat 
+     1501 ctagaggcat caaataaaac gaaaggctca gtcgaaagac tgggcctttc gttttatctg 
+     1561 ttgtttgtcg gtgaacgctc tcctgagtag gacaaatccg ccgccctaga cctaggcgtt 
+     1621 cggctgcggc gagcggtatc agctcactca aaggcggtaa tacggttatc cacagaatca 
+     1681 ggggataacg caggaaagaa catgtgagca aaaggccagc aaaaggccag gaaccgtaaa 
+     1741 aaggccgcgt tgctggcgtt tttccatagg ctccgccccc ctgacgagca tcacaaaaat 
+     1801 cgacgctcaa gtcagaggtg gcgaaacccg acaggactat aaagatacca ggcgtttccc 
+     1861 cctggaagct ccctcgtgcg ctctcctgtt ccgaccctgc cgcttaccgg atacctgtcc 
+     1921 gcctttctcc cttcgggaag cgtggcgctt tctcaatgct cacgctgtag gtatctcagt 
+     1981 tcggtgtagg tcgttcgctc caagctgggc tgtgtgcacg aaccccccgt tcagcccgac 
+     2041 cgctgcgcct tatccggtaa ctatcgtctt gagtccaacc cggtaagaca cgacttatcg 
+     2101 ccactggcag cagccactgg taacaggatt agcagagcga ggtatgtagg cggtgctaca 
+     2161 gagttcttga agtggtggcc taactacggc tacactagaa ggacagtatt tggtatctgc 
+     2221 gctctgctga agccagttac cttcggaaaa agagttggta gctcttgatc cggcaaacaa 
+     2281 accaccgctg gtagcggtgg tttttttgtt tgcaagcagc agattacgcg cagaaaaaaa 
+     2341 ggatctcaag aagatccttt gatcttttct acggggtctg acgctcagtg gaacgaaaac 
+     2401 tcacgttaag ggattttggt catgactagt gcttggattc tcaccaataa aaaacgcccg 
+     2461 gcggcaaccg agcgttctga acaaatccag atggagttct gaggtcatta ctggatctat 
+     2521 caacaggagt ccaagcgagc tcaaacttgg tctgacagtt accaatgctt aatcagtgag 
+     2581 gcacctatct cagcgatctg tctatttcgt tcatccatag ttgcctgact ccccgtcgtg 
+     2641 tagataacta cgatacggga gggcttacca tctggcccca gtgctgcaat gataccgcga 
+     2701 gacccacgct caccggctcc agatttatca gcaataaacc agccagccgg aagggccgag 
+     2761 cgcagaagtg gtcctgcaac tttatccgcc tccatccagt ctattaattg ttgccgggaa 
+     2821 gctagagtaa gtagttcgcc agttaatagt ttgcgcaacg ttgttgccat tgctacaggc 
+     2881 atcgtggtgt cacgctcgtc gtttggtatg gcttcattca gctccggttc ccaacgatca 
+     2941 aggcgagtta catgatcccc catgttgtgc aaaaaagcgg ttagctcctt cggtcctccg 
+     3001 atcgttgtca gaagtaagtt ggccgcagtg ttatcactca tggttatggc agcactgcat 
+     3061 aattctctta ctgtcatgcc atccgtaaga tgcttttctg tgactggtga gtactcaacc 
+     3121 aagtcattct gagaa 
+//

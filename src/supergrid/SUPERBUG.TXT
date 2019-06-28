@@ -1,0 +1,158 @@
+Bug fixes after release of Version 1.0
+--------------------------------------
+
+--------------------------------------------------------------------------------
+Number        : B-1
+Date          : 2/18/96
+Affected file : Super.PAS
+Description   : OnDrawCell was not being called.
+Fix           : Changed the order of drawing operation so that:
+                If DefaultDrawing is True AND there is a column definition for
+                this cell, I draw the text according to the properties in the
+                TColumn object. If there is no column definition, I call the
+                inherited method to draw the text. In either case, the
+                OnDrawCell event is triggered after the text is drawn. Note
+                that if there is a column definition, when the OnDrawCell
+                event is called, the canvas attributes will be those set in the
+                TColumn object.
+
+                If DefaultDrawing is False, no drawing is done, and the canvas
+                attributes are left alone. Note that in this case,
+                OnGetCellCanvasInfo is NOT triggered.
+
+                OnGetCellCanvasInfo is called Only if DefaultDrawing is True.
+                It is triggered regardless of whether there is a column
+                definition for the current column. If there is a column
+                definition, the canvas attributes, when OnGetCellCanvasInfo is
+                triggered, will be those in the TColumn object, otherwise, they
+                will be the ones that TStringGrid set.
+--------------------------------------------------------------------------------
+Number        : B-2
+Date          : 2/18/96
+Affected file : Super.PAS
+Description   : GPF when stripping leading and trailing spaces is set and the
+                value read in is two quotes ( "" ).
+Fix           : Added a check for the string length before stripping. I thought
+                that if you called Delete( Token , 1 , 0 ) it would not delete
+                any characters, but I was wrong, so I made the check myself.
+--------------------------------------------------------------------------------
+Number        : B-3
+Date          : 2/18/96
+Affected file : Dialog.DFM
+Description   : When the folder button is clicked and the file name typed does
+                not exists, the dialog will prompt to create it AND notepad will
+                prompt to create it.
+Fix           : Removed the ofCreatePrompt option from the open dialog component.
+--------------------------------------------------------------------------------
+Number        : B-4
+Date          : 2/20/96
+Affected file : Dialog.DFM
+Description   : Every time the user presses 'Apply', the combo box containig the
+                rows is reset to row zero regardless of which row was selected.
+Fix           : Reset the user's selection after re-populating the combo, if the
+                selected row still exists, otherwise set the the selection to
+                row zero.
+
+================================================================================
+
+Enhancements after release of Version 1.0
+-----------------------------------------
+
+Number        : E-1
+Date          : 2/21/96
+Affected file : Dialog.PAS
+Description   : Added the capability to load bitmaps, icons, or windows meta
+                files from the delimited data file. To do so, place the file
+                name of the graphic enclosed in '{' and  '}'. The graphic is
+                drawn at the top left corner of the cell, and the OnDrawCell
+                event gets passed the rectangle to the right of the graphic.
+                Graphic is not loaded and error not reported if the file given
+                in the data file does not exist.
+
+================================================================================
+
+Bug Fixes after release of Version 1.2
+--------------------------------------
+
+--------------------------------------------------------------------------------
+Number        : B-5
+Date          : 2/28/96
+Affected file : Super.PAS
+Description   : Wrong font colors with different combinations of goRangeSelect,
+                goRowSelect and goDrawFocusSelected.
+Fix           : Forced original colors depending on the options above.
+
+--------------------------------------------------------------------------------
+Number        : B-6
+Date          : 2/28/96
+Affected file : Super.PAS
+Description   : When deriving a component from TSuperGrid, the inherited DrawCell
+                method is not visible.
+Fix           : Made DrawCell protected, as it should be.
+
+--------------------------------------------------------------------------------
+Number        : B-7
+Date          : 2/28/96
+Affected file : Dialog.PAS
+Description   : When creating a new column definition, if the columns is fixed,
+                its background color is set to clBtnFace.
+Fix           : The background color is now set to the grid's FixedColor, whatever
+                it may be.
+
+--------------------------------------------------------------------------------
+Number        : B-8
+Date          : 2/28/96
+Affected file : Dialog.PAS
+Description   : Unexpected results when dragging column definitions.
+Fix           : When a column definition is dragged to a fixed column, its content
+                color is set to the grid's FixedColor. When dragging a column
+                definition from a fixed column to a scrolling column, its content
+                color is set to the grid's Color.
+
+--------------------------------------------------------------------------------
+Number        : B-9
+Date          : 2/28/96
+Affected file : Super.PAS
+Description   : When multiple fixed rows are used, only the top one is painted
+                with the title color, all others are painted with the column color.
+Fix           : Used title color for all fixed rows.
+
+--------------------------------------------------------------------------------
+Number        : B-10
+Date          : 3/16/95
+Affected file : All
+Description   : The file names conflicted with other component installations.
+Fix           : Renamed all the files as follows
+
+                Super.PAS       SuperGrd.PAS
+                Dialog.PAS      SuperDlg.PAS
+                Dialog.DFM      SuperDlg.DFM
+                Columns.PAS     SuperCol.PAS
+                Install.PAS     SuperReg.PAS
+                Install.DCR     SuperReg.DCR
+
+
+================================================================================
+
+Bug Fixes after release of Version 1.3
+--------------------------------------
+
+--------------------------------------------------------------------------------
+Number        : B-11
+Date          : 3/28/96
+Affected file : Super.PAS
+Description   : Leading spaces at the begging of a line were being trimmed
+                regardless of the grid's settings.
+Fix           : Change SeekEof to just plain EOF to detect end of file, it seems
+                that SeekEof actually skips characters in the file.
+                A side effect of the change is that empty lines will now be
+                correctly interpreted as empty rows!
+                Thanks to Stefan Hoffmeister for pointing this one out.
+
+================================================================================
+
+Enhancements after release of Version 1.3
+-----------------------------------------
+
+Many! See the help file.
+
