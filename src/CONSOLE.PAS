@@ -402,7 +402,7 @@ type
     Action: Byte;
   end;
 
-const
+var
   ReadActive: Boolean = False;  { Anybody in a Readln? }
 
 { Scroll keys table }
