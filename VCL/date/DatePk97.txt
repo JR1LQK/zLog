@@ -1,0 +1,143 @@
+File Name.......: DatePk97.Zip
+File Version....: Version 3.5
+File Description: DateTime field with drop down calendar like '97 (database version too).
+                  tDateFromTo component.
+Targets.........: Delphi 1, 2, 3 & C++ Builder.
+Author Name.....: BOURMAD Mehdi
+EMail...........: bourmad@mygale.org
+WEB.............: http://www.mygale.org/~bourmad
+File Status.....: Freeware
+Category........: Application with source.
+
+(-----------------------------------------------------------------)
+As usual :
+
+Free to use and redistribute, but my name must
+appear somewhere in the source code, or in the software.
+No warranty is given by the author, expressed or implied.
+
+WARNING! THE CODE IS PROVIDED AS IS WITH NO GUARANTEES OF ANY KIND!
+USE THIS AT YOUR OWN RISK - YOU ARE THE ONLY PERSON RESPONSIBLE FOR
+ANY DAMAGE THIS CODE MAY CAUSE - YOU HAVE BEEN WARNED!
+
+(-----------------------------------------------------------------)
+
+Files :
+
+DateRG97 : file for Register components. Install this one in Delphi.
+DateEd97 : contains tDateEdit97 component.
+DateDB97 : contains tDBDateEdit97 component.
+DateFT97 : contains tDateFromTo97 component.
+CalPop97 : popup calendar file.
+DEd97_b  : alternate resource files for button's bitmaps.
+
+Delphi 16bits (1) users :
+You need to rename resource files from 16bits ones.
+ - Rename *.R16 files in *.RES files.
+ - Rename *.D16 files in *.DCR files.
+
+Delphi 32bits (2&3) users :
+You need to rename resource files from 32bits ones.
+ - Rename *.R32 files in *.RES files.
+ - Rename *.D32 files in *.DCR files.
+
+(-----------------------------------------------------------------)
+
+History :
+
+26/12/97 - Version 3.5 :
+  Correct problems with the editmask when ShortDateFormat is with 2 digits years
+    and when year is not the last field.
+  Now, you can use this component with 2 or 4 digits year in your system date.
+  Correct problem when day or month have only one number.
+  Add property IsMasked to enable/disable editmask.
+
+11/11/97 - Version 3.4 :
+  Add an edit mask, properties for configure hotkeys.
+  Resize resource bitmaps (13x13 pixels).
+  Add new property EmptyAsToday.
+  When set to true, an empty fieds is used like "today" date.
+
+22/10/97 - Version 3.3 :
+  Now compatible with C++ Builder (constant OBM_COMBO redefined).
+  tDateEdit97 is now derived from tCustomEdit instead of tEdit.
+  Add new color for Week-End dates.
+  Reduce size of buttons bitmap.
+  Add property PopupToday. If true, popup calendar always start with today's date.
+  Keep focus when popup is hidden.
+  Add new event OnAfterClick, called before popup calendar is shown.
+  Add new button ValidateDate, and event OnValidateClick.
+  New public functions SetValidDate (set date valid or invalid),
+    AfterClick and ValidateDate calling associated events.
+  Minor changes in Calpop97 source.
+  Correct bugs (GPF) when ClearButton isn't used (CanClear=false).
+
+23/09/97 - Version 3.2 :
+  Add property ColorError (when date in invalid), and property FocusOnError (keep focus
+    when date is invalid).
+  Add property ButtonTabStop for enable or disable TabStop for Clear and Popup buttons,
+    property ButtonStyle (bsNew, bsWin31, bsAutodetect)
+    and property ButtonBorderStyle (bsSingle bsNone).
+  Add About property in each components.
+  Now, caption of tDateFromTo is hidden.
+  Changed some functions in tDbDateEdit97 component, correcting some bugs with
+  with keyboard usage.
+  Correct bug with Enabled property.
+  Change method to deactivate popup.
+
+13/08/97 - Version 3.1 :
+  This package is now compatible with C++ Builder.
+  Add property IsModal, now you can show popup calendar as Modal or Modeless form.
+  Add property CanPopup for enable or disable popup calendar button.
+  Make public ClearDate and PopupCalendar procedures,
+    so the date can be cleared and calendar popuped with program.
+  Correct Delphi 2 problem with OBM_COMBO constant.
+  Disable "mask" for entering dates manually because it's bugged. Now you can enter
+    dates manually (but without validity check).
+  When click on clear button, set focus to edit field.
+  Redraw bitmaps for buttons.
+  Enable/Disable buttons when Enable/Disable DateEdit component.
+  Correct bug with events OnEnter and OnExit.
+  Remove event OnDateChange, need to use OnChage.
+  Some bugs correction with DateDB97 (and inherited field Date).
+
+18/07/97 - Version 3.01 :
+  Correct new bug with DbDateEdit97 : Field is not switched in EditMode when date change.
+  Rename Calpop Unit to Calpop97 (frmCalPop to FrmCalPop97 component).
+
+10/07/97 - Version 3.0 :
+  Add a new component : tDateFromTo97, a panel with 2 DateEdit components.
+  Popup calendar is now modeless.
+    Now, you can close it by clicking anywhere in the screen.
+  You can hit ALT+SPACE or ALT+ARROWKEY DOWN for open popup calendar.
+  Add new properties ColorTitle, ColorDays, ColorArrow
+    and rename ValidDateColor to ColorValidDate.
+  Add new property ButtonDateStyle for choose between Calendar or DropDown bitmap
+    for open popup.
+  Can change CanClear property (visible or not) in design mode.
+  Font attribules for popup calendar (font, size, ...) are herited from parent.
+  Work around TWinControl.UpdateBounds bug. Thanks to Sam Liddicott.
+  And some minor improvements and corrections...
+
+20/05/97 - Version 2.1b :
+  Add resource files for 32bits version.
+  Other updates in previous release :
+    Add property StartOfWeek for indicate begin of week in popup calendar.
+    Correct height error of popup.
+    Correct problem with highlighted date on MouseMove.
+  Special Thanks to Claes Norreen for some updates.
+
+18/05/97 - Version 2.1 :
+  Add button for clear Date.
+  From Popup calendar, add buttons for mavigate throught years, and for cancel edition.
+  Can change caption for Month and Day.
+  Added property CanClear for view (or not) Clear Button.
+
+18/04/97 - Version 2.0 :
+  Rename components to tDateEd97 and tDbDateEd97
+      (you need to remove the old components from your library).
+  Add tDateEd97 and tDbDateEd97 in the same source file.
+  Those components looks like '97 (mouse sensitive popup calendar).
+
+24/03/97 - Version 1.0 :
+  Primary version.

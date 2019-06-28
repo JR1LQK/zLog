@@ -1,0 +1,63 @@
+***  Installation Started 01/04/99 1:29  ***
+Title: ColorMemo 2.x Installation
+Source: C:\WINDOWS\ÃÞ½¸Ä¯Ìß\CM2X.EXE
+Made Dir: D:\Borland3\Delphi 3\VCL\CM2x
+File Copy: D:\Borland3\Delphi 3\VCL\CM2x\UNWISE.EXE
+RegDB Key: Software\Microsoft\Windows\CurrentVersion\Uninstall\ColorMemo 2.x
+RegDB Val: ColorMemo 2.x
+RegDB Name: DisplayName
+RegDB Root: 2
+RegDB Key: Software\Microsoft\Windows\CurrentVersion\Uninstall\ColorMemo 2.x
+RegDB Val: D:\BORLAND3\DELPHI~1\VCL\CM2X\UNWISE.EXE D:\BORLAND3\DELPHI~1\VCL\CM2X\INSTALL.LOG
+RegDB Name: UninstallString
+RegDB Root: 2
+Made Dir: D:\Borland3\Delphi 3\VCL\CM2x\Delphi3
+File Copy: D:\Borland3\Delphi 3\VCL\CM2x\Delphi3\Colmemo.res
+File Copy: D:\Borland3\Delphi 3\VCL\CM2x\Delphi3\Colmemo.dcu
+File Copy: D:\Borland3\Delphi 3\VCL\CM2x\Delphi3\Cmemo.dfm
+File Copy: D:\Borland3\Delphi 3\VCL\CM2x\Delphi3\Cmemo.dcu
+File Copy: D:\Borland3\Delphi 3\VCL\CM2x\Delphi3\Cmemo.dcr
+File Copy: D:\Borland3\Delphi 3\VCL\CM2x\Delphi3\Bs_cm.res
+File Copy: D:\Borland3\Delphi 3\VCL\CM2x\Delphi3\Bs_cm.dpl
+File Copy: D:\Borland3\Delphi 3\VCL\CM2x\Delphi3\Bs_cm.dpk
+File Copy: D:\Borland3\Delphi 3\VCL\CM2x\Delphi3\Bs_cm.dcu
+Made Dir: D:\Borland3\Delphi 3\VCL\CM2x\Delphi4
+File Copy: D:\Borland3\Delphi 3\VCL\CM2x\Delphi4\Colmemo.dcu
+File Copy: D:\Borland3\Delphi 3\VCL\CM2x\Delphi4\Cmemo.dfm
+File Copy: D:\Borland3\Delphi 3\VCL\CM2x\Delphi4\Colmemo.res
+File Copy: D:\Borland3\Delphi 3\VCL\CM2x\Delphi4\Cmemo.dcu
+File Copy: D:\Borland3\Delphi 3\VCL\CM2x\Delphi4\Cmemo.dcr
+File Copy: D:\Borland3\Delphi 3\VCL\CM2x\Delphi4\Bs_cm.res
+File Copy: D:\Borland3\Delphi 3\VCL\CM2x\Delphi4\Bs_cm.dpk
+File Copy: D:\Borland3\Delphi 3\VCL\CM2x\Delphi4\Bs_cm.dcu
+File Copy: D:\Borland3\Delphi 3\VCL\CM2x\Delphi4\Bs_cm.bpl
+Made Dir: D:\Borland3\Delphi 3\VCL\CM2x\Demo
+File Copy: D:\Borland3\Delphi 3\VCL\CM2x\Demo\cm2_demo.res
+File Copy: D:\Borland3\Delphi 3\VCL\CM2x\Demo\cm_hyper.dfm
+File Copy: D:\Borland3\Delphi 3\VCL\CM2x\Demo\cm_html.dfm
+File Copy: D:\Borland3\Delphi 3\VCL\CM2x\Demo\cm_pasc.dfm
+File Copy: D:\Borland3\Delphi 3\VCL\CM2x\Demo\Main.dfm
+File Copy: D:\Borland3\Delphi 3\VCL\CM2x\Demo\cm2_demo.dpr
+File Copy: D:\Borland3\Delphi 3\VCL\CM2x\Demo\cm_even.pas
+File Copy: D:\Borland3\Delphi 3\VCL\CM2x\Demo\cm_hyper.pas
+File Copy: D:\Borland3\Delphi 3\VCL\CM2x\Demo\cm_html.pas
+File Copy: D:\Borland3\Delphi 3\VCL\CM2x\Demo\cm_pasc.pas
+File Copy: D:\Borland3\Delphi 3\VCL\CM2x\Demo\Main.pas
+File Copy: D:\Borland3\Delphi 3\VCL\CM2x\Demo\cm_even.dfm
+Made Dir: D:\Borland3\Delphi 3\VCL\CM2x\Help
+File Copy: D:\Borland3\Delphi 3\VCL\CM2x\Help\colormemo.hlp
+File Copy: D:\Borland3\Delphi 3\VCL\CM2x\Help\colormemo.cnt
+File Copy: D:\Borland3\Delphi 3\VCL\CM2x\readme.txt
+File Copy: D:\Borland3\Delphi 3\VCL\CM2x\Baltic Solutions.url
+File Copy: D:\Borland3\Delphi 3\VCL\CM2x\install.txt
+File Copy: D:\Borland3\Delphi 3\VCL\CM2x\licence.txt
+File Copy: D:\Borland3\Delphi 3\VCL\CM2x\news.txt
+File Copy: D:\Borland3\Delphi 3\VCL\CM2x\ordering.txt
+Made Dir: C:\WINDOWS\½À°Ä ÒÆ­°\ÌßÛ¸Þ×Ñ\ColorMemo
+Shell Link: C:\WINDOWS\½À°Ä ÒÆ­°\ÌßÛ¸Þ×Ñ\ColorMemo\Baltic Solutions web site.lnk
+Shell Link: C:\WINDOWS\½À°Ä ÒÆ­°\ÌßÛ¸Þ×Ñ\ColorMemo\Installation instructions.lnk
+Shell Link: C:\WINDOWS\½À°Ä ÒÆ­°\ÌßÛ¸Þ×Ñ\ColorMemo\Software licence.lnk
+Shell Link: C:\WINDOWS\½À°Ä ÒÆ­°\ÌßÛ¸Þ×Ñ\ColorMemo\News since last version.lnk
+Shell Link: C:\WINDOWS\½À°Ä ÒÆ­°\ÌßÛ¸Þ×Ñ\ColorMemo\Ordering information.lnk
+Shell Link: C:\WINDOWS\½À°Ä ÒÆ­°\ÌßÛ¸Þ×Ñ\ColorMemo\Readme first.lnk
+Shell Link: C:\WINDOWS\½À°Ä ÒÆ­°\ÌßÛ¸Þ×Ñ\ColorMemo\ColorMemo Help File.lnk
