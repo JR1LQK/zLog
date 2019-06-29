@@ -1,0 +1,210 @@
+AABsoftGraph Delphi 16/32 Component (Version:  1.11)
+
+Purpose:
+?	Simple and small charts component like ChartFX
+?	Extremely easy to use (certainly easier than ChartFX)
+?	Includes some features not implemented in ChartFX
+?	But, just a small set of all the features implemented in ChartFX
+?	No need for a VBX or other add-on
+?	Works with Delphi 1.0 and Delphi 2.0
+?	Source code included
+
+Installation:
+?	Install right component version, as any other Delphi component
+?	Component file is called: AABGRAPH.PAS
+?	Component installes under 'SAMPLES': AABsoftGraph (like TImage)
+
+Usage:
+?	Easisest way to find out, is to look at the Test-project included in this package
+?	It supports multiple series, colors, color schemes (up to 100 series * 100 values: 10.000 values)
+?	A lot of features are not demonstrated in the demo project
+?	Check out public procedures/properties in the interface description for other features
+?	You may also draw directly upon the finished graph (like TImage component)
+
+Main new features in version 1.11:
+* Bug fix for AutoFormatGraph
+* No compiled version supplied, only component source.
+
+Main new features in version 1.10:
+?	New chart type: DELTA_AVERAGE. call ShowAsDeltaAverage. Shows the DIFFERENCE between the values and the average line (average line is either calulated by  the chart component or may be set by calling separate function)
+?	Procedure for printing the chart on open printer canvas: AddGraphToOpenPrintCanvas.  May be used for ADDING the chart on other print job, for instance text report.
+?	New properties for setting the COLOR of the texts and legends
+?	DROPPED support for metafile clipboard format, as it did not work properly.
+?	Minor bug fixes in chart layouts, especially in the stacked 100 % bar chart.
+
+Main new features in version 1.05b (as in beta; as this metafile is still a bit unfinished, advice needed!):
+?	New procedure for copying the graph to the clipboard:   GraphToClipboardAsMetaFile;
+?	Some other MINOR changes
+
+Main new features in version 1.02:
+?	New functions for retrieving information from the graph:
+?	New function    GetValue(nSeries,nIndex:Integer): real; {*}
+?	New function    GetYGap: real; {*}
+?	New function    GetYGapCount: Integer; {*}
+?	New function    GetHeader: String; {*}
+?	New function    GetXAxisHeader: String; {*}
+?	New function    GetSeriesLegend(nSeries: Integer) : String; {*}
+?	New function    GetXLegend(nXValue:Integer) :String; {*}
+?	Improvement in the legend drawing function and mouse message/hint function.
+?	Minor bug fixes
+
+Main new features in version 1.01:
+?	New chart types: Line with Mark, Mark. Procedures: ShowAsLineWithMark, ShowAsMark 
+?	A minor bug fix
+
+Main new features in version 1.00a:
+?	New procedure: SetYMaxMin(nMaxValue,nMinValue:real); A frequently asked feature for setting the maximum and minimum y-value of the chart.
+?	New property MouseInfo: old MouseEdit property splitted into MouseInfo and MouseEdit properties. MouseInfo enables the mouse values on the screen. The editing of the texts are enabled by MouseEdit
+?	A major bug fix: frees the memory allocated for the display graph at destruction of the component (in Windows 3.X, the memory used by the component was not released)
+?	Minor bug fixes including: mouse click values correctly mapped, chart legend font size change resizes the corresponding header area (large headers used to run of the screen)
+
+Main new features in version 0.72:
+?	No new features
+?	Minor bug fixes: AutoFormatGraph function on negative values, y-axis legend mapping, pie chart legend, etc
+?	New procedure: SetNegativeYGapCount(nValue:Integer);
+
+Main new features in version 0.7:
+?	Support for negative values
+?	Support PIE chart
+?	Extended font support (new procedures)
+?	Minor improvents features added in version 0.6
+
+Main new features in version 0.6:
+?	Support for large graphs; 100 series * 100 values
+?	User mouse support: click on headers for editing texts, click on graph to see their actual values, drag left side of legend text box to resize it...
+?	New procedures for setting the graph fonts and color scheme settings file
+?	New property AxisLineWidth: line width for the xy-axis
+?	New property ThickLineWidth: line graph width
+?	New property MouseEdit: enabling user mouse support
+?	New property DefaultGraphType: default graph used by AutoFormatGraph
+?	New property DefaultYLegends: how many y-lines to display used by AutoFormatGraph
+?	New property LegendWidth: the width of the separate legend text box
+?	New property AutoUpdateGraph: updates the graph automatically when something is changed 
+?	New property ShowLegend: whether or not to show the separate legend box
+?	New property HeaderFontSize: font size
+?	New property LegendFontSize: font size
+?	New property AxisFontSize: font size
+?	and lots of other minor improvements
+
+Future developments:
+?	I cannot promise to implement anything else, but if you send me a good idea and I have time to look into it, I might implement it.
+?	If any bugs are found; I'll try to fix them.
+?	Also if you find fix any bugs or improve the component, and you want to share them with other users, please send me your solution (including the changes to the source codes). I will release the improved component after some testing. I will give the credit to anyone supplying improvements, unless wished otherwise.
+
+Source codes:
+?	Due to huge interest in the previous source codes, I included in this package an encrypted zip file that contains the current source codes
+?	Current approved holders of the previous source codes, can email me to get the password for this file (same as in previous release)
+?	New users: if you want them, email me and explain to me your need for the source codes, I may give you the password for free (no commercial use allowed)
+?	If you need the source codes for commercial use (altering the component for a commercial use), I charge a fee of 80 US dollars. Current approved holders of previous source codes, may use the upgraded version of source codes.
+?	The source codes may NOT be transfered further to a third party or reselled
+
+Limitations:
+?	Maximum series count and value count is 100 (eg. 100*100). This is due to the Delphi 1.0 memory allocation limit of 64KB (100*100*real 6 bytes: is almost 64 Kb). This could be a lot higher in Delphi 2.0.
+?	Usually this limitation should be high enough for anyone
+?	Limitations can be changed in source code only.
+
+Warranty:
+?	None at all
+?	Use at your own risk
+
+You have comments, want source code or you need help: 
+?	Send email to: moti@aabsoft.pp.fi
+?	Latest version, bug list and help is also available at my homepage: http://personal.eunet.fi/pp/aabsoft/
+
+
+unit Aabgraph;
+interface
+:
+:
+type
+  TAABsoftGraph = class(TImage)
+  private
+	:
+	:
+  protected
+    procedure   MouseDown(Button: TMouseButton;Shift:TShiftState;X,Y:Integer); override;
+    procedure   MouseUp(Button: TMouseButton;Shift:TShiftState;X,Y:Integer); override;
+  public
+   {Public declarations}
+    constructor Create(AOwner: TComponent); override;
+    destructor  Destroy; override;
+   {General procedures for the graph...}
+    procedure   ResetGraphModule;   {Call this before totally new values and series}
+    procedure   AutoFormatGraph;    {Call this after new values}
+    procedure   PlotGraph;          {Update screen / draw graph to screen}
+    procedure   PrintGraph;         {Send picture to printer; all printing done by component}
+    procedure   AddGraphToOpenPrintCanvas(XStartPos,YStartPos,GraphWidth,GraphHeight : LongInt);     
+                                    {adds the graph to the "OPEN" printer canvas}
+                                    {printing control=outside this component; add other text etc}
+    procedure   GraphToClipboard;   {Puts picture on clipboard}
+    procedure   UpdateGraphToScreen;{Call this after screen resize and after start up}
+    {Procedures to update graph values...}
+    procedure   SetValue(nSeries,nIndex:Integer; nValue:real); {Values here!}
+    function    GetValue(nSeries,nIndex:Integer): real;
+    procedure   SetYGap(nValue:real); {Sets the vertical gap between dotted lines}
+    function    GetYGap: real;
+    procedure   SetYGapCount(nValue:Integer); {How many lines to display...}
+    function    GetYGapCount: Integer;
+    procedure   SetAverageLineValue(nIndex:Integer; nValue:real); {Overrides the values calculated by AutoFormatGraph}
+    procedure   SetNegativeYGapCount(nValue:Integer); {How many lines on the negative side...}
+    procedure   SetYMaxMin(nMaxValue,nMinValue:real);
+    {Procedures to update graph texts...}
+    procedure   SetHeader(strHeader : String);
+    function    GetHeader: String;
+    procedure   SetXAxisHeader(strHeader : String);
+    function    GetXAxisHeader: String;
+    procedure   SetSeriesLegend(nSeries:Integer; strLegend:String);
+    function    GetSeriesLegend(nSeries: Integer) : String;
+    procedure   SetXLegend(nXValue:Integer; strLegend:String);
+    function    GetXLegend(nXValue:Integer) :String;
+    procedure   SetHeaderFontName(strFont:String);
+    procedure   SetLegendFontName(strFont:String);
+    procedure   SetAxisFontName(strFont:String);
+    function    GetHeaderFontName : String;
+    function    GetLegendFontName : String;
+    function    GetAxisFontName : String;
+    {Display graph in different ways...}
+    procedure   ShowAsBar;
+    procedure   ShowAsStackedBar;
+    procedure   ShowAsLine;
+    procedure   ShowAsBarWithAve;
+    procedure   ShowAs100StackedBar;
+    procedure   ShowAsPie;
+    procedure   ShowAsLineWithMark;
+    procedure   ShowAsMark;
+    procedure   ShowAsDeltaAverage;
+    function    GetGraphType: integer;
+    procedure   ChangeXValuesWithSeries; {Switches the x values with series! Resets AverageLine}
+    {Changes the color of the graph...}
+    procedure   SetColorToScheme(nScheme,nIndex:Integer; nColor:TColor);
+    function    GetColorFromScheme(nScheme,nIndex:Integer) : TColor;
+    procedure   UseColorIniFile(strFileName : string); {COMPASS.INI if not used}
+    {These are for my own purpose...or why I did this in the first place}
+    procedure   UsePFITemplate;
+    procedure   UseICFTemplate;
+    procedure   UseTLETemplate;
+    procedure   UseBMSTemplate;
+    procedure   UseEZTemplate;
+    procedure   UseJDSTemplate;
+    procedure   UseBackgroundTemplate;
+  published
+    { Published declarations }
+    property    ColorScheme     : Integer read FColorScheme write FColorScheme default 1;
+    property    DefaultGraphType: Integer read FDefaultGraphType write FDefaultGraphType default 1;
+    property    DefaultYLegends : Integer read FDefaultYLegends write FDefaultYLegends default DEFAULT_Y_LEGENDS;
+    property    AutoUpdateGraph : Boolean read FAutoUpdateGraph write FAutoUpdateGraph default False;
+    property    MouseEdit       : Boolean read FMouseEdit write FMouseEdit default True;
+    property    MouseInfo       : Boolean read FMouseInfo write FMouseInfo default True;
+    property    ShowLegend      : Boolean read FShowLegend write FShowLegend default True;
+    property    LegendWidth     : Integer read FLegendWidth write FLegendWidth default 150;
+    property    ThickLineWidth  : Integer read FThickLineWidth write FThickLineWidth default 3;
+    property    AxisLineWidth   : Integer read FAxisLineWidth write FAxisLineWidth default 3;
+    property    HeaderFontSize  : Integer read FHeaderFontSize write FHeaderFontSize default DEFAULT_HEADER_FONT_SIZE;
+    property    LegendFontSize  : Integer read FLegendFontSize write FLegendFontSize default DEFAULT_LEGEND_FONT_SIZE;
+    property    AxisFontSize    : Integer read FAxisFontSize write FAxisFontSize default DEFAULT_AXIS_FONT_SIZE;
+    property    HeaderFontColor : TColor  read FHeaderFontColor write FHeaderFontColor default clNavy; 
+    property    LegendFontColor : TColor  read FLegendFontColor write FLegendFontColor default clNavy;
+    property    AxisFontColor   : TColor  read FAxisFontColor write FAxisFontColor default clNavy;
+  end;
+:
+:

@@ -1,0 +1,62 @@
+                             TVicRes version 1.0
+
+                        Copyright (C) 1998 Victor Ishikeev
+                     e-mail: ivi@ufanet.ru, tools@entechtaiwan.com
+                     http://www.entechatiwan.com/tools.htm
+
+                            All Rights Reserved
+
+                                VENDOR.TXT
+                                ==========
+
+This file provides information for Shareware Distributors and Disk Vendors
+who wish to distribute the TVicRes 1.0 class, including an extract from
+the license agreement and suggested program descriptions and keywords.
+
+
+                               Distribution
+                            ==================
+
+The complete license agreement is contained in the file LICENSE.TXT.
+
+The following two paragraphs are extracts from the license agreement
+regarding the distribution of the TVicRes:
+
+You are hereby licensed to make as many copies of this software and its
+documentation as you wish; give exact copies (including all files) of the
+original version to anyone; and distribute the software and documentation in
+its unmodified form via electronic means. There is no charge for any of the
+above.
+
+You are specifically prohibited from charging, or requesting donations, for
+any such copies (a small handling fee is acceptable). You are further
+prohibited from distributing the software and/or documentation with other
+products (commercial or otherwise) without prior written permission.
+
+
+                Suggested One Line Program Description:
+
+1. Delphi 2.x, Delphi 3.x, Delphi 4.x, C++Builder 1.x and C++Builder 3.x class.
+
+Allows see all hardware resources (ports, memory, IRQs, DMA) assigned to the
+any device in system.
+                          Suggested Keywords:
+
+Windows 95 Windows 98 Delphi C++ Builder Component I/O Ports Hardware Physical 
+Memory Interrupt IRQ DMA
+
+
+                         Suggested Description
+
+TVicRes is a programming tool (class) for Win32 applications that allows see all 
+hardware resources (ports, memory, IRQs, DMA) assigned to the any device in system.
+
+This release (1.0) of TVicRes is a shareware ($15US).
+
+                           Other Information
+
+Requirements:  Windows 95, Windows 98.
+
+Author:        Victor Ishikeev 
+e-mail: ivi@ufanet.ru, tools@entechtaiwan.com
+http://www.entechatiwan.com/tools.htm

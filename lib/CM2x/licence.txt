@@ -1,0 +1,106 @@
+SOFTWARE LICENCE
+
+This license does not in anyway imply that you will have to pay royalty 
+fees for the use of the product in your applications. It is intended to 
+be a licence between Baltic Solutions and developers that use the 
+ColorMemo to build applications.  If you have 3 developers in your 
+company that use the ColorMemo when building software, then you would
+require 3 licensed versions.  Any applications that are created with 
+the ColorMemo can be distributed to any number of end users in any 
+fashion that you see fit.
+
+The use of this package indicates your understanding and acceptance of 
+the following terms and conditions. This license shall supersede any 
+verbal, or prior verbal or written, statement or agreement to the 
+contrary. If you do not understand or accept these terms, or your local 
+regulations prohibit "after sale" license agreements or limited 
+disclaimers, you must cease and desist using this product immediately.
+
+This product is © Copyright 1996,1997 Baltic Solutions, all rights 
+reserved. This product is protected by international copyright laws, 
+international treaties and all other applicable national or 
+international laws. This software product and documentation may not, 
+in whole or in part, be copied, photocopied, translated, or reduced to 
+any electronic medium or machine readable form, without prior consent 
+in writing, from Baltic Solutions and according to all applicable laws. 
+The sole owner of this product is Baltic Solutions.
+
+Liability disclaimer:
+
+This product and/or license is provided as is, without any 
+representation or warranty of any kind, either express or implied, 
+including without limitation any representations or endorsements 
+regarding the use of, the results of, or performance of the product, 
+its appropriateness, accuracy, reliability, or correctness. The entire 
+risk as to the use of this product is assumed by the user and/or 
+licensee. Baltic Solutions does not assume liability for the use of 
+this program beyond the original purchase price of the software. In no 
+event will Baltic Solutions be liable for additional direct or indirect 
+damages including any lost profits, lost savings, or other incidental 
+or consequential damages arising from any defects, or the use or 
+inability to use these programs, even if Baltic Solutions have been 
+advised of the possibility of such damages.
+
+Restrictions:
+
+You may not use, copy, modify, translate, or transfer the programs, 
+documentation, or any copy except as expressly defined in this 
+agreement. You may not attempt to unlock or bypass any 
+"copy-protection" or authentication algorithm utilized by the program.
+You may not remove or modify any copyright notice or the method by 
+which it may be invoked.
+
+Operating license:
+
+You have the non-exclusive right to use any enclosed program only by a 
+single person, on a single computer at a time. You may physically 
+transfer the program from one computer to another, provided that the 
+program is used only by a single person, on a single computer at a 
+time. In group projects where multiple persons will use the program, 
+you must purchase an individual license for each member of the group. 
+Use over a "local area network" (within the same locale) is permitted 
+provided that the program is used only by a single person, on a single 
+computer at a time. Use over a "wide area network" (outside the same 
+locale) is strictly prohibited under any and all circumstances.
+
+Linking and distribution license:
+
+In order to link and distribute compiled ColorMemo code in 
+accordance to this license, you must be registered with Baltic 
+Solutions as an authorized licensee, and must have submitted a signed 
+copy of this license stating you agree to be bound by its terms and 
+conditions. You may not reproduce or distribute copies of the complete 
+package, any of the source, interface, or code (.DCU) units, any of the 
+documentation, nor may you supply any means by which your users could 
+create, modify, or incorporate the ColorMemo component in their 
+own products. Violations will be prosecuted to the maximum extent 
+possible under the law.
+
+Back-up and transfer:
+
+You may make one copy of the program solely for "back-up" purposes, 
+as prescribed by international copyright laws. You must reproduce and 
+include the copyright notice on the back-up copy. You may transfer the 
+product to another party only if the other party agrees to the terms 
+and conditions of this agreement, and completes and returns 
+registration information (name, address, etc.) to Baltic Solutions 
+within 30 days of the transfer. If you transfer the program you must at 
+the same time transfer the documentation and back-up copy, or transfer 
+the documentation and destroy the back-up copy. You may not retain any 
+portion of the program, in any form, under any circumstance.
+
+Terms:
+
+This license is effective until terminated. You may terminate it by 
+destroying the program, the documentation and copies thereof. This 
+license will also terminate if you fail to comply with any terms or 
+conditions of this agreement. You agree upon such termination to 
+destroy all copies of the program and of the documentation, or return 
+them to Baltic Solutions for disposal.  Note that by registering this 
+product you give Baltic Solutions permission to reference your name in 
+product advertisements.
+
+Other rights and restrictions: 
+
+All other rights and restrictions not specifically granted in this 
+license are reserved by Baltic Solutions.

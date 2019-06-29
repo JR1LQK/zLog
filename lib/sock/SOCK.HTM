@@ -1,0 +1,868 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>TSock Documentation</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<p>&nbsp; </p>
+
+<table border="0" width="100%">
+    <tr>
+        <td valign="top" width="75"><img src="sock.jpg"
+        width="56" height="56"></td>
+        <td width="100%"><font size="3" face="Arial"><b>Sock.pas</b></font><br>
+        <font size="3" face="Arial">TSock Component Class</font> <br>
+        <font size="3" face="Arial">Version 1.0f</font> <font
+        size="3" face="Arial"><em>FREEWARE</em></font><br>
+        <font size="3" face="Arial">Written By Tom Bradford</font>
+        <br>
+        <font size="3" face="Arial">© Copyright 1997 By Beach
+        Dog Software</font> <br>
+        <font size="3" face="Arial">® All Rights Reserved</font>
+        <p><font size="3" face="Arial">Visit Our Web Site At </font><a
+        href="http://www.beachdogsoftware.com"><font size="3"
+        face="Arial">http://www.beachdogsoftware.com</font></a><font
+        size="3" face="Arial"> For Updates</font></p>
+        </td>
+    </tr>
+</table>
+
+<hr>
+
+<p><a name="Contents"></a><font face="Arial"><b>Contents</b></font>
+</p>
+
+<blockquote>
+    <p><a href="#Introduction" strong><font face="Arial">Introduction</font></a>
+    <br>
+    <a href="#ReleaseNotes"><font face="Arial">Release Notes</font></a>
+    <br>
+    <a href="#Features"><font face="Arial">Features</font></a> <br>
+    <a href="#Properties"><font face="Arial">Properties</font></a>
+    <br>
+    <a href="#Events"><font face="Arial">Events</font></a> <br>
+    <a href="#Methods"><font face="Arial">Methods</font></a> <br>
+    <a href="#SupportRoutines"><font face="Arial">Support
+    Routines</font></a> <br>
+    <a href="#Examples"><font face="Arial">Examples</font></a></p>
+</blockquote>
+
+<hr>
+
+<p><a name="Introduction"></a><font face="Arial"><b>Introduction</b></font>
+</p>
+
+<blockquote>
+    <p><font face="Arial">Welcome to the 1.0f release of TSock.
+    TSock is FREEWARE. Thousands of people are using the
+    component and there is no way in hell that I can handle
+    updates, registration and support. I will still update the
+    product and I will be happy to answer email questions
+    regarding it. If you still want to send me money in
+    appreciation, feel free to do so. You can find our address on
+    our home page.</font></p>
+    <p><font color="#FF0000" face="Arial"><strong>As of version
+    1.0e, the TSock package is now shipped with the component
+    source code!</strong></font><font face="Arial"> If you are
+    able to isolate and fix a bug in the component, please email
+    the changes to Beach Dog Software for incorporation into
+    future releases of the component. The point of TSock is to
+    make it easier for everyone who develops socket applications.
+    Please do not redistribute modified versions of the TSock
+    component.</font></p>
+    <p><font face="Arial">Because it is FREEWARE, there is no
+    charge for using this component in your own applications. Be
+    aware that you use the component at your own risk. Beach Dog
+    Software and Tom Bradford are in no way responsible for
+    anything bad that might happen through the product's use.
+    When you do use it though, please give us credit for the
+    component, and maybe a hyperlink to our site. It would be
+    nice.</font></p>
+</blockquote>
+
+<p><a href="#Contents"><font face="Arial">Table Of Contents</font></a>
+<br>
+</p>
+
+<hr>
+
+<p><a name="ReleaseNotes"></a><font face="Arial"><b>1.0f Release
+Notes</b></font> </p>
+
+<blockquote>
+    <ul>
+        <li><font face="Arial">I Added the </font><a
+            href="#BlockingTimeout"><font face="Arial">BlockingTimeout</font></a><font
+            face="Arial"> property. </font><a
+            href="#BlockingTimeout"><font face="Arial">BlockingTimeout</font></a><font
+            face="Arial"> will force TSock to wait for a specific
+            number of milliseconds while attempting to fill its
+            receive buffer. Receives will return when the buffer
+            is filled or when the blocking timeout has elapsed
+            with no data.</font></li>
+        <li><font face="Arial">I Added the </font><a
+            href="#Stream"><font face="Arial">Stream</font></a><font
+            face="Arial"> property. </font><a href="#Stream"><font
+            face="Arial">Stream</font></a><font face="Arial">
+            returns a TStream compatible object for performing
+            Stream I/O on a TSock instance.</font></li>
+        <li><font face="Arial">I Added the </font><a
+            href="#ReceiveCount"><font face="Arial">ReceiveCount</font></a><font
+            face="Arial"> method. </font><a href="#ReceiveCount"><font
+            face="Arial">ReceiveCount</font></a><font
+            face="Arial"> allows you to limit the size of the
+            receive buffer.</font></li>
+        <li><font face="Arial">I entirely rewrote the threading
+            mechanism used by TSock for </font><a
+            href="#AutoAccept"><font face="Arial">AutoAccept</font></a><font
+            face="Arial"> Blocking Servers. The older mechanism
+            relied on Win32 C-Style CreateThread coding, which
+            caused Delphi to leak resources and blow up upon
+            program termination. The new mechanism uses Delphi's
+            TThread objects to perform multi-threading, which is
+            a lot safer.</font></li>
+    </ul>
+</blockquote>
+
+<p><font face="Arial"><b>1.0e Release Notes</b></font> </p>
+
+<blockquote>
+    <ul>
+        <li><font face="Arial">I was finally able to isolate and
+            squash the TSock.Free bug. It was a really stupid
+            oversight on my part and I should be shot for it.</font></li>
+        <li><font face="Arial">I have decided to release the
+            TSock source code to the general public. I think it
+            is better that others have access to the source code
+            to help debug and troubleshoot, as well as help us
+            add features to the component.</font></li>
+    </ul>
+</blockquote>
+
+<p><font face="Arial"><b>Release Notes Prior To 1.0e</b></font> </p>
+
+<blockquote>
+    <ul>
+        <li><font face="Arial">A bug was found in the reporting
+            of error status that would cause a false onConnect
+            event to be reported. This bug has been stomped.</font></li>
+        <li><font face="Arial">A bug was found in the dynamic
+            creation of asynchronous sockets that caused I/O to
+            become non-responsive. This problem has been
+            remedied.</font></li>
+        <li><font face="Arial">A bug was found in Datagram
+            Sockets that was not caught in our final QA. This
+            problem has been corrected.</font></li>
+        <li><font face="Arial">A bug was found in </font><a
+            href="#ReceiveLine"><font face="Arial">ReceiveLine</font></a><font
+            face="Arial">. </font><a href="#ReceiveLine"><font
+            face="Arial">ReceiveLine</font></a><font face="Arial">
+            short-circuited on </font><a href="#Blocking"><font
+            face="Arial">Blocking</font></a><font face="Arial">
+            Sockets if the the socket closed and there was still
+            data in the input buffer. This has been remedied. In
+            order to fix the problem, I have added a property
+            called </font><a href="#EOF"><font face="Arial">EndOfFile</font></a><font
+            face="Arial">. </font><a href="#EOF"><font
+            face="Arial">EndOfFile</font></a><font face="Arial">
+            will return <b>TRUE </b>if the socket is no longer
+            connected and the input buffer is empty. You should
+            use </font><a href="#EOF"><font face="Arial">EndOfFile</font></a><font
+            face="Arial"> if you are performing buffered input
+            using </font><a href="#ReceiveLine"><font
+            face="Arial">ReceiveLine</font></a><font face="Arial">.</font></li>
+        <li><font face="Arial">TSock now caches IP addresses in
+            the <i>IPCache</i> global variable. A user shouldn't
+            have to interact with this variable directly. If you
+            need to clear the cache, call the <i>IPCache.Clear </i>method.</font></li>
+        <li><a href="#Connected"><font face="Arial"><i>Connected</i></font></a><font
+            face="Arial"> is now determined in two places during
+            normal operation. With a non-blocking socket, </font><a
+            href="#Connected"><font face="Arial"><i>Connected</i>
+            </font></a><font face="Arial">is set to <b>TRUE </b>by
+            an FD_CONNECT message and set to <b>FALSE </b>by an
+            FD_CLOSE message. With a blocking socket, </font><a
+            href="#Connected"><font face="Arial"><i>Connected</i></font></a><font
+            face="Arial"> is set to <b>TRUE</b> by the socket
+            being opened and set to <b>FALSE </b>by </font><a
+            href="#Receive"><font face="Arial"><i>Receive</i></font></a><font
+            face="Arial"> returning 0 content when it performs a
+            WinSock recv.</font></li>
+        <li><font face="Arial">TSock allows its </font><a
+            href="#Socket"><font face="Arial"><i>Socket</i></font></a><font
+            face="Arial"> property to be assigned. When you
+            assign this property, the component will perform a
+            GetSockOpt to verify that SO_ACCEPTCONN (indicates
+            Listening) doesn't return <b>TRUE</b>. If it does
+            return <b>TRUE</b>, I throw an exception. The socket
+            can't verify that there isn't some other process
+            monitoring the socket, so it will not allow you to
+            assign a listening socket to it.</font></li>
+        <li><font face="Arial">The </font><a href="#Blocking"><font
+            face="Arial"><i>Blocking</i></font></a><font
+            face="Arial"> property has been rewritten so that you
+            can set it even when a connection is present. If set
+            to <b>TRUE</b>, the asynchronous message hook is
+            disabled, and IOCtlSocket is used to turn blocking
+            on. If set to <b>FALSE</b>, the asynchronous message
+            hook is installed. Please note that the TSock events
+            act differently in Blocking and Non-Blocking mode...
+            In asynchronous mode, all events prompt the
+            implementer to perform some action. In blocking mode,
+            with the exception of </font><a href="#OnAccept"><font
+            face="Arial"><i>OnAccept</i></font></a><font
+            face="Arial"> and </font><a href="#OnAutoAccept"><font
+            face="Arial"><i>OnAutoAccept</i></font></a><font
+            face="Arial">, if an event is triggered at all, it is
+            usually to report some sort of status.</font></li>
+        <li><font face="Arial">When dynamically creating a TSock
+            control, it is recommended that you perform an
+            InsertControl to insert the component into an
+            appropriate container. The control requires a <i>Parent
+            </i>to allocate a window handle. If <i>Parent </i>has
+            not been set, the control will use Screen.Forms[0] as
+            a <i>Parent</i>. Window handles are required to
+            perform asynchronous non-blocking socket calls.</font></li>
+    </ul>
+</blockquote>
+
+<p><a href="#Contents"><font face="Arial">Table Of Contents</font></a>
+<br>
+</p>
+
+<hr>
+
+<p><a name="Features"></a><font face="Arial"><b>Features</b></font>
+</p>
+
+<blockquote>
+    <ul>
+        <li><font face="Arial">Package caches resolved IP
+            Addresses for faster DNS lookups.</font></li>
+        <li><font face="Arial">Supports both TCP and UDP
+            protocols.</font></li>
+        <li><font face="Arial">Listening mode will automatically
+            accept incoming connections, create a new TSock
+            component for the connected socket, and spawn a new
+            thread of execution to handle concurrent blocking
+            server connections.</font></li>
+        <li><font face="Arial">Support for blocking and
+            non-blocking socket communications.</font></li>
+        <li><font face="Arial">Component can transfer blocks of
+            data up to 4 gigabytes in length.</font></li>
+        <li><font face="Arial">MIME-standard Base-64 encoding and
+            decoding routines.</font></li>
+        <li><font face="Arial">URL encoding and decoding
+            routines.</font></li>
+        <li><font face="Arial">Robust state information messaging
+            system for diagnostics and status.</font></li>
+        <li><font face="Arial">Support for multiple connections
+            utilizing multiple-threads.</font></li>
+    </ul>
+</blockquote>
+
+<p><a href="#Contents"><font face="Arial">Table Of Contents</font></a>
+<br>
+</p>
+
+<hr>
+
+<p><a name="Properties"></a><font face="Arial"><b>Properties</b></font>
+</p>
+
+<table border="1" width="100%">
+    <tr>
+        <th align="left" valign="top" width="10%"
+        bgcolor="#EAEAEA"><font size="2" face="Arial"><b>Property
+        Name</b></font></th>
+        <th align="left" valign="top" width="10%"
+        bgcolor="#EAEAEA"><font size="2" face="Arial"><b>Type</b></font></th>
+        <th align="left" valign="top" width="10%"
+        bgcolor="#EAEAEA"><font size="2" face="Arial"><b>Scope</b></font></th>
+        <th align="left" valign="top" width="40%"
+        bgcolor="#EAEAEA"><font size="2" face="Arial"><b>Description</b></font></th>
+    </tr>
+    <tr>
+        <td valign="top" width="10%" bgcolor="#EAEAEA"><a
+        name="SocketType"></a><font size="2" face="Arial"><b><i><tt>SocketType</tt></i></b></font></td>
+        <td valign="top" width="10%"><font size="2" face="Arial">TSocketType</font></td>
+        <td valign="top" width="10%"><font size="2" face="Arial">Design</font></td>
+        <td valign="top" width="40%"><font size="2" face="Arial">Type
+        of socket. This value can either be stStream or
+        stDatagram. If </font><a href="#Listen"><font size="2"
+        face="Arial"><i>Listen</i></font></a><font size="2"
+        face="Arial"> is set to <b>TRUE</b>, this property will
+        automatically be set to stStream because Datagram sockets
+        do not support listening mode. Likewise, if the socket
+        type is set to stDatagram, the </font><a href="#Listen"><font
+        size="2" face="Arial"><i>Listen</i></font></a><font
+        size="2" face="Arial"><b><i> </i></b>property will be set
+        to <b>False</b> (in design mode).</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="10%" bgcolor="#EAEAEA"><a
+        name="HostName"></a><font size="2" face="Arial"><b><i><tt>HostName</tt></i></b></font></td>
+        <td valign="top" width="10%"><font size="2" face="Arial">String</font></td>
+        <td valign="top" width="10%"><font size="2" face="Arial">Design</font></td>
+        <td valign="top" width="40%"><font size="2" face="Arial">Host
+        Name or IP Address. The Socket Component will
+        automatically distinguish a Host Name (ex:
+        www.cinteractive.com) from an IP Address (ex: 127.0.0.1).</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="10%" bgcolor="#EAEAEA"><a
+        name="PortName"></a><font size="2" face="Arial"><b><i><tt>PortName</tt></i></b></font></td>
+        <td valign="top" width="10%"><font size="2" face="Arial">String</font></td>
+        <td valign="top" width="10%"><font size="2" face="Arial">Design</font></td>
+        <td valign="top" width="40%"><font size="2" face="Arial">Port
+        Number or Service Name. Port Numbers are well known ports
+        such as 80 for HTTP or 7 for Echo. Service Names perform
+        a database lookup into the SERVICES file.</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="10%" bgcolor="#EAEAEA"><a
+        name="Blocking"></a><font size="2" face="Arial"><b><i><tt>Blocking</tt></i></b></font></td>
+        <td valign="top" width="10%"><font size="2" face="Arial">Boolean</font></td>
+        <td valign="top" width="10%"><font size="2" face="Arial">Design</font></td>
+        <td valign="top" width="40%"><font size="2" face="Arial">Blocking
+        Socket I/O. <b>TRUE</b> causes a socket to block while
+        connecting, waiting for incoming data and writing to the
+        socket. <b>FALSE</b> causes an asynchronous window
+        message to be sent when a connection is made, data is
+        available to be read and written.</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="10%" bgcolor="#E8E8E8"><a
+        name="BlockingTimeout"><font size="2" face="Arial"><em><strong><tt></tt></strong></em></font></a><font
+        size="2" face="Arial"><em><strong><tt>BlockingTimeout</tt></strong></em></font></td>
+        <td valign="top" width="10%"><font size="2" face="Arial">Integer</font></td>
+        <td valign="top" width="10%"><font size="2" face="Arial">Design</font></td>
+        <td valign="top"><font size="2" face="Arial">BlockingTimeout
+        will force TSock to wait for a specific number of
+        milliseconds while attempting to fill its receive buffer.
+        </font><a href="#Receive"><font size="2" face="Arial">Receive</font></a><font
+        size="2" face="Arial">s will return when the buffer is
+        filled or when the blocking timeout has elapsed with no
+        data.</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="10%" bgcolor="#EAEAEA"><a
+        name="AutoAccept"></a><font size="2" face="Arial"><b><i><tt>AutoAccept</tt></i></b></font></td>
+        <td valign="top" width="10%"><font size="2" face="Arial">Boolean</font></td>
+        <td valign="top" width="10%"><font size="2" face="Arial">Design</font></td>
+        <td valign="top" width="40%"><font size="2" face="Arial">Auto-Accept
+        Incoming Connections. <b>TRUE</b> causes a Listening
+        socket (</font><a href="#Listen"><font size="2"
+        face="Arial"><i>Listen</i></font></a><font size="2"
+        face="Arial"> = <b>TRUE</b>) to automatically accept an
+        incoming connection and call </font><a
+        href="#OnAutoAccept"><font size="2" face="Arial"><i>OnAutoAccept</i></font></a><font
+        size="2" face="Arial"> as a new thread. If no </font><a
+        href="#OnAutoAccept"><font size="2" face="Arial"><i>OnAutoAccept</i></font></a><font
+        size="2" face="Arial"> is defined, </font><a
+        href="#OnAccept"><font size="2" face="Arial"><i>OnAccept</i></font></a><font
+        size="2" face="Arial"> is called. If No </font><a
+        href="#OnAccept"><font size="2" face="Arial"><i>OnAccept</i></font></a><font
+        size="2" face="Arial"> is defined, the incoming
+        connection will linger.</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="10%" bgcolor="#EAEAEA"><a
+        name="Listen"></a><font size="2" face="Arial"><b><i><tt>Listen</tt></i></b></font></td>
+        <td valign="top" width="10%"><font size="2" face="Arial">Boolean</font></td>
+        <td valign="top" width="10%"><font size="2" face="Arial">Design</font></td>
+        <td valign="top" width="40%"><font size="2" face="Arial">Listen
+        For Incoming Connections. If <b>TRUE</b>, creates a
+        thread that loops, listening for incoming sockets and
+        handling them based on the </font><a href="#AutoAccept"><font
+        size="2" face="Arial"><i>AutoAccept</i></font></a><font
+        size="2" face="Arial">, </font><a href="#OnAccept"><font
+        size="2" face="Arial"><i>OnAccept</i></font></a><font
+        size="2" face="Arial">, and </font><a
+        href="#OnAutoAccept"><font size="2" face="Arial"><i>OnAutoAccept</i></font></a><font
+        size="2" face="Arial"><i> </i>properties.</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="10%" bgcolor="#EAEAEA"><a
+        name="Connected"></a><font size="2" face="Arial"><b><i><tt>Connected</tt></i></b></font></td>
+        <td valign="top" width="10%"><font size="2" face="Arial">Boolean</font></td>
+        <td valign="top" width="10%"><font size="2" face="Arial">RunTime</font></td>
+        <td valign="top" width="40%"><font size="2" face="Arial">Connect
+        Socket Or Check Connection. If set to <b>TRUE</b>, the
+        component attempts to open a socket connection. If set to
+        <b>FALSE</b>, the component closes a current connection.
+        If the value returned is <b>TRUE</b>, the socket is
+        connected, otherwise, it is not.</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="10%" bgcolor="#EAEAEA"><a
+        name="EOF"></a><font size="2" face="Arial"><b><i><tt>EndOfFile</tt></i></b></font></td>
+        <td valign="top" width="10%"><font size="2" face="Arial">Boolean</font></td>
+        <td valign="top" width="10%"><font size="2" face="Arial">RunTime</font></td>
+        <td valign="top" width="40%"><font size="2" face="Arial">EndOfFile
+        will return <b>TRUE </b>if the socket is no longer
+        connected and the input buffer is empty. You should use
+        EndOfFile if you are performing buffered input using </font><a
+        href="#ReceiveLine"><font size="2" face="Arial">ReceiveLine</font></a><font
+        size="2" face="Arial">.</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="10%" bgcolor="#EAEAEA"><a
+        name="Socket"></a><font size="2" face="Arial"><b><i><tt>Socket</tt></i></b></font></td>
+        <td valign="top" width="10%"><font size="2" face="Arial">TSocket</font></td>
+        <td valign="top" width="10%"><font size="2" face="Arial">RunTime</font></td>
+        <td valign="top" width="40%"><font size="2" face="Arial">Returns
+        Socket Value. Returns the value of a connected socket.
+        Returns <b>INVALID_SOCKET</b> (-1) if the socket isn't
+        currently connected. This property also allows the user
+        to set the value of the socket, but this is inadvisable.</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="10%" bgcolor="#E8E8E8"><a
+        name="Stream"><font size="2" face="Arial"><em><strong><tt></tt></strong></em></font></a><font
+        size="2" face="Arial"><em><strong><tt>Stream</tt></strong></em></font></td>
+        <td valign="top" width="10%"><font size="2" face="Arial">TStream</font></td>
+        <td valign="top" width="10%"><font size="2" face="Arial">RunTime</font></td>
+        <td valign="top"><font size="2" face="Arial">Returns a
+        TStream compatible object to allow performing
+        Stream-based I/O on a TSock instance.</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="10%" bgcolor="#EAEAEA"><a
+        name="Text"></a><font size="2" face="Arial"><b><i><tt>Text</tt></i></b></font></td>
+        <td valign="top" width="10%"><font size="2" face="Arial">String</font></td>
+        <td valign="top" width="10%"><font size="2" face="Arial">RunTime</font></td>
+        <td valign="top" width="40%"><font size="2" face="Arial">Sends
+        And Receives Text. If being assigned to, the value being
+        assigned will be sent to the socket. If being read from,
+        any incoming data from the socket will be returned.</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="10%" bgcolor="#EAEAEA"><a
+        name="LineBreak"></a><font size="2" face="Arial"><b><i><tt>LineBreak</tt></i></b></font></td>
+        <td valign="top" width="10%"><font size="2" face="Arial">TLineBreak</font></td>
+        <td valign="top" width="10%"><font size="2" face="Arial">Design</font></td>
+        <td valign="top"><font size="2" face="Arial">Sets the
+        method of scanning incoming data for possible line
+        breaks. This property is used in cooperation with the </font><a
+        href="#ReceiveLine"><font size="2" face="Arial"><i>ReceiveLine</i></font></a><font
+        size="2" face="Arial"> method for reading an incoming
+        data stream 1 text line at a time. The possible values
+        for this property are lbCR, lbLF, lbCRLF and lbSmart.
+        lbSmart will make guesses as to the form of the incoming
+        data stream based upon content and break the lines
+        accordingly.</font></td>
+    </tr>
+</table>
+
+<p><a href="#Contents"><font face="Arial">Table Of Contents</font></a>
+<br>
+</p>
+
+<hr>
+
+<p><a name="Events"></a><font color="#000000" face="Arial"><b>Events</b></font>
+</p>
+
+<table border="1" width="100%">
+    <tr>
+        <th align="left" valign="top" width="35%"
+        bgcolor="#EAEAEA"><font color="#000000" size="2"
+        face="Arial"><b>Event Name</b></font></th>
+        <th align="left" valign="top" width="60%"
+        bgcolor="#EAEAEA"><font size="2" face="Arial"><b>Event
+        Description</b></font></th>
+    </tr>
+    <tr>
+        <td valign="top" width="35%" bgcolor="#EAEAEA"><a
+        name="OnConnect"></a><font size="2" face="Arial"><b><i><tt>OnConnect</tt></i></b></font>
+        <br>
+        <font size="2" face="Arial"><tt>(TObject)</tt></font></td>
+        <td valign="top" width="60%"><font size="2" face="Arial">Occurs
+        when a client socket connects to a remote host.</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="35%" bgcolor="#EAEAEA"><a
+        name="OnDisconnect"></a><font size="2" face="Arial"><b><i><tt>OnDisconnect</tt></i></b></font>
+        <br>
+        <font size="2" face="Arial"><tt>(TObject)</tt></font></td>
+        <td valign="top" width="60%"><font size="2" face="Arial">Occurs
+        when a client socket disconnects from a remote host or
+        when the connection is unexpectedly terminated.</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="35%" bgcolor="#EAEAEA"><a
+        name="OnInfo"></a><font size="2" face="Arial"><b><i><tt>OnInfo</tt></i></b></font>
+        <br>
+        <font size="2" face="Arial"><tt>(TObject, TSocketInfo,
+        String)</tt></font></td>
+        <td valign="top" width="60%"><font size="2" face="Arial">Occurs
+        when the component produces a state message. This event
+        sends a TSocketInfo parameter as well as a string with
+        information specific to the task that is being reported
+        on.</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="35%" bgcolor="#EAEAEA"><a
+        name="OnRead"></a><font size="2" face="Arial"><b><i><tt>OnRead</tt></i></b></font>
+        <br>
+        <font size="2" face="Arial"><tt>(TObject, Integer)</tt></font></td>
+        <td valign="top" width="60%"><font size="2" face="Arial">Occurs
+        when data is available to be read from the socket.</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="35%" bgcolor="#EAEAEA"><a
+        name="OnWrite"></a><font size="2" face="Arial"><b><i><tt>OnWrite</tt></i></b></font>
+        <br>
+        <font size="2" face="Arial"><tt>(TObject)</tt></font></td>
+        <td valign="top" width="60%"><font size="2" face="Arial">Occurs
+        when the socket will allow data to be written.</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="35%" bgcolor="#EAEAEA"><a
+        name="OnAccept"></a><font size="2" face="Arial"><b><i><tt>OnAccept</tt></i></b></font>
+        <br>
+        <font size="2" face="Arial"><tt>(TObject)</tt></font></td>
+        <td valign="top" width="60%"><font size="2" face="Arial">Occurs
+        when a socket is in queue to be accepted. This event can
+        be used in cooperation with the </font><a href="#Accept"><font
+        size="2" face="Arial"><i>Accept</i></font></a><font
+        size="2" face="Arial"> method to perform multi-client
+        server operations.</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="35%" bgcolor="#EAEAEA"><a
+        name="OnAutoAccept"></a><font size="2" face="Arial"><b><i><tt>OnAutoAccept</tt></i></b></font>
+        <br>
+        <font size="2" face="Arial"><tt>(TObject, TSock)</tt></font></td>
+        <td valign="top" width="60%"><font size="2" face="Arial">Occurs
+        when </font><a href="#AutoAccept"><font size="2"
+        face="Arial"><i>AutoAccept</i></font></a><font size="2"
+        face="Arial"> is <b>TRUE</b>. Creates a new client socket
+        and invokes </font><a href="#OnAutoAccept"><font size="2"
+        face="Arial"><i>OnAutoAccept</i></font></a><font size="2"
+        face="Arial"> as a thread separate from the main
+        application. It is the implementer's responsibility to <i>Free</i>
+        the TSock component that is passed.</font></td>
+    </tr>
+</table>
+
+<p><a href="#Contents"><font face="Arial">Table Of Contents</font></a>
+<br>
+</p>
+
+<hr>
+
+<p><a name="Methods"></a><font face="Arial"><b>Methods</b></font>
+</p>
+
+<table border="1" width="100%">
+    <tr>
+        <th align="left" valign="top" width="35%"
+        bgcolor="#EAEAEA"><font size="2" face="Arial"><b>Method
+        Name</b></font></th>
+        <th align="left" valign="top" width="65%"
+        bgcolor="#EAEAEA"><font size="2" face="Arial"><b>Method
+        Description</b></font></th>
+    </tr>
+    <tr>
+        <td valign="top" width="35%" bgcolor="#EAEAEA"><a
+        name="Open"></a><font size="2" face="Arial"><b><tt>Open</tt></b><tt>
+        : Boolean</tt></font></td>
+        <td valign="top" width="65%"><font size="2" face="Arial">Opens
+        a connection to the remote </font><a href="#HostName"><font
+        size="2" face="Arial"><i>HostName</i></font></a><font
+        size="2" face="Arial"> using </font><a href="#PortName"><font
+        size="2" face="Arial"><i>PortName</i></font></a><font
+        size="2" face="Arial"><i>. </i>Returns <b>TRUE</b> if
+        successful. Returns <b>FALSE</b> if the connection could
+        not be established.</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="35%" bgcolor="#EAEAEA"><a
+        name="Close"></a><font size="2" face="Arial"><b><tt>Close</tt></b><tt>
+        : Boolean</tt></font></td>
+        <td valign="top" width="65%"><font size="2" face="Arial">Closes
+        any existing remote connection.</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="35%" bgcolor="#EAEAEA"><a
+        name="Send"></a><font size="2" face="Arial"><b><tt>Send</tt></b><tt>(String)
+        : Boolean</tt></font></td>
+        <td valign="top" width="65%"><font size="2" face="Arial">Sends
+        a string to the remote connection. Returns <b>TRUE</b> if
+        successful.</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="35%" bgcolor="#EAEAEA"><a
+        name="Receive"></a><font size="2" face="Arial"><b><tt>Receive</tt></b><tt>
+        : String</tt></font></td>
+        <td valign="top" width="65%"><font size="2" face="Arial">Returns
+        any incoming data from the socket. Will block while
+        waiting for data if </font><a href="#Blocking"><font
+        size="2" face="Arial"><i>Blocking</i></font></a><font
+        size="2" face="Arial"><i> </i>is set to <b>TRUE</b> and
+        no data is available in the queue.</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="35%" bgcolor="#E8E8E8"><a
+        name="ReceiveCount"><font size="2" face="Arial"><strong><tt></tt></strong></font></a><font
+        size="2" face="Arial"><strong><tt>ReceiveCount</tt></strong><tt>(Integer)
+        : String</tt></font></td>
+        <td valign="top" width="100%"><font size="2" face="Arial">ReceiveCount
+        allows you to limit the size of the receive buffer.
+        ReceiveCount doesn't necessarily force the size of the
+        returned string, but does ensure that </font><a
+        href="#BlockingTimeout"><font size="2" face="Arial">BlockingTimeout</font></a><font
+        size="2" face="Arial"> will return when it is able to
+        fill to requested buffer size.</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="35%" bgcolor="#EAEAEA"><a
+        name="SendDatagram"></a><font size="2" face="Arial"><b><tt>SendDatagram</tt></b><tt>(String,
+        String) : Boolean</tt></font></td>
+        <td valign="top" width="65%"><font size="2" face="Arial">Sends
+        the text in the first String parameter as a Datagram to
+        the </font><a href="#HostName"><font size="2"
+        face="Arial">HostName</font></a><font size="2"
+        face="Arial"> address defined in the second String
+        parameter. Because UDP is by-definition unreliable, this
+        method always returns <b>TRUE</b>.</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="35%" bgcolor="#EAEAEA"><a
+        name="ReceiveDatagram"></a><font size="2" face="Arial"><b><tt>ReceiveDatagram</tt></b><tt>(Var
+        String) : String</tt></font></td>
+        <td valign="top" width="65%"><font size="2" face="Arial">Returns
+        a string with the Datagram content received from any
+        address through the bound UDP </font><a href="#PortName"><font
+        size="2" face="Arial">PortName</font></a><font size="2"
+        face="Arial">. </font><a href="#ReceiveDatagram"><font
+        size="2" face="Arial">ReceiveDatagram</font></a><font
+        size="2" face="Arial"> will set the String parameter to
+        the IP address of the Datagram's originator.</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="35%" bgcolor="#EAEAEA"><a
+        name="ReceiveLine"></a><font size="2" face="Arial"><b><tt>ReceiveLine</tt></b><tt>
+        : String</tt></font></td>
+        <td valign="top" width="65%"><font size="2" face="Arial">Returns
+        the next input line from the input stream for a socket
+        with </font><a href="#SocketType"><font size="2"
+        face="Arial">SocketType</font></a><font size="2"
+        face="Arial"> set to stStream. This method uses the </font><a
+        href="#LineBreak"><font size="2" face="Arial">LineBreak</font></a><font
+        size="2" face="Arial"> property to determine how to scan
+        the input stream. If the </font><a href="#SocketType"><font
+        size="2" face="Arial">SocketType</font></a><font size="2"
+        face="Arial"> is set to stDatagram, this method returns
+        the next incoming Datagram in its entirety. Because the
+        entire Input Stream isn't returned by this method, the
+        socket may have already determined that the connection
+        has been closed. In this case, it is the user's
+        responsibility to check for incoming data even if the
+        socket is no longer connected.</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="35%" bgcolor="#EAEAEA"><a
+        name="Accept"></a><font size="2" face="Arial"><b><tt>Accept</tt></b><tt>(TSock)
+        : Boolean</tt></font></td>
+        <td valign="top" width="65%"><font size="2" face="Arial">Accepts
+        the next available incoming socket from the listening
+        loop. Accept return <b>TRUE</b> if successful. This
+        method also assigned the TSock parameter to a valid TSock
+        connection component. It is the implementer's
+        responsibility to <i>Free </i>this component when it is
+        no longer needed. Also, the new component is created with
+        no Event handlers, so the implementer is responsible for
+        assigning them if the socket is non-blocking. This event
+        will only be triggered if </font><a href="#Listen"><font
+        size="2" face="Arial"><i>Listen</i></font></a><font
+        size="2" face="Arial"> is <b>TRUE.</b></font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="35%" bgcolor="#EAEAEA"><a
+        name="HostLookup"></a><font size="2" face="Arial"><b><tt>HostLookup</tt></b><tt>(String)
+        : TInAddr</tt></font></td>
+        <td valign="top" width="65%"><font size="2" face="Arial">Looks
+        up a remote host using the String parameter. The
+        parameter can either be an IP address (ex:
+        111.111.111.111) or a domain name (ex:
+        www.cinteractive.com). The value that is returned is a
+        TInAddr structure that can be used when building a
+        TSockAddrIn for binding a socket to an address.</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="35%" bgcolor="#EAEAEA"><a
+        name="PortLookup"></a><font size="2" face="Arial"><b><tt>PortLookup</tt></b><tt>(String)
+        : Word</tt></font></td>
+        <td valign="top" width="65%"><font size="2" face="Arial">Looks
+        up a service port using the String parameter. The
+        parameter can either be a textual service name (ex: echo
+        or Finger) or a port number (ex: 80). The value that is
+        returned is a unsigned short in network byte order.</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="35%" bgcolor="#EAEAEA"><a
+        name="StartListen"></a><font size="2" face="Arial"><b><tt>StartListen</tt></b><tt>
+        : Boolean</tt></font></td>
+        <td valign="top" width="65%"><font size="2" face="Arial">Sets
+        the socket component into listening mode. The result is <b>TRUE</b>
+        if successful and <b>FALSE</b> otherwise. This method is
+        the same as setting </font><a href="#Listen"><font
+        size="2" face="Arial"><i>Listen</i></font></a><font
+        size="2" face="Arial">=<b>TRUE</b> and then checking the
+        value of </font><a href="#Listen"><font size="2"
+        face="Arial"><i>Listen</i></font></a><font size="2"
+        face="Arial">.</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="35%" bgcolor="#EAEAEA"><a
+        name="StopListen"></a><font size="2" face="Arial"><b><tt>StopListen</tt></b><tt>
+        : Boolean</tt></font></td>
+        <td valign="top" width="65%"><font size="2" face="Arial">Turns
+        listening mode off.</font></td>
+    </tr>
+</table>
+
+<p><a href="#Contents"><font face="Arial">Table Of Contents</font></a>
+<br>
+</p>
+
+<hr>
+
+<p><a name="SupportRoutines"></a><font color="#000000"
+face="Arial"><b>Support Routines</b></font> </p>
+
+<table border="1" width="100%">
+    <tr>
+        <th align="left" valign="top" width="35%"
+        bgcolor="#EAEAEA"><font size="2" face="Arial"><b>Routine
+        Name</b></font></th>
+        <th align="left" valign="top" width="65%"
+        bgcolor="#EAEAEA"><font size="2" face="Arial"><b>Routine
+        Description</b></font></th>
+    </tr>
+    <tr>
+        <td valign="top" width="35%" bgcolor="#EAEAEA"><a
+        name="WSDescription"></a><font size="2" face="Arial"><b><tt>WSDescription</tt></b><tt>
+        : String</tt></font></td>
+        <td valign="top" width="65%"><font size="2" face="Arial">Returns
+        a vendor-defined string that describes the presently
+        running WinSock implementation. This information is
+        obtained while performing an initial <i>WSAStartup</i>
+        WinSock call.</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="35%" bgcolor="#EAEAEA"><a
+        name="WSASystemStatus"></a><font size="2" face="Arial"><b><tt>WSASystemStatus</tt></b><tt>
+        : String</tt></font></td>
+        <td valign="top" width="65%"><font size="2" face="Arial">Returns
+        a vendor-defined string containing system status.</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="35%" bgcolor="#EAEAEA"><a
+        name="SocketInfoText"></a><font size="2" face="Arial"><b><tt>SocketInfoText</tt></b><tt>(TSocketInfo)
+        : String</tt></font></td>
+        <td valign="top" width="65%"><font size="2" face="Arial">Given
+        the TSocketInfo parameter, returns a string that
+        describes the parameter. This function can be used in
+        conjunction with an </font><a href="#OnInfo"><font
+        size="2" face="Arial"><i>OnInfo</i></font></a><font
+        size="2" face="Arial"> event.</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="35%" bgcolor="#EAEAEA"><a
+        name="ErrToStr"></a><font size="2" face="Arial"><b><tt>ErrToStr</tt></b><tt>(Integer)
+        : String</tt></font></td>
+        <td valign="top" width="65%"><font size="2" face="Arial">Given
+        the Integer parameter, returns the WinSock defined string
+        associated with a particular error code. TSock uses this
+        support routine internally for translating asynchronous
+        errors to TSockException exceptions.</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="35%" bgcolor="#EAEAEA"><a
+        name="Base64Encode"></a><font size="2" face="Arial"><b><tt>Base64Encode</tt></b><tt>(String)
+        : String</tt></font></td>
+        <td valign="top" width="65%"><font size="2" face="Arial">Converts
+        the String parameter to a MIME-standard Base-64 encoded
+        block and returns the conversion as the String result.</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="35%" bgcolor="#EAEAEA"><a
+        name="Base64Decode"></a><font size="2" face="Arial"><b><tt>Base64Decode</tt></b><tt>(String)
+        : String</tt></font></td>
+        <td valign="top" width="65%"><font size="2" face="Arial">Converts
+        the String parameter from a MIME-standard Base-64 encoded
+        block and returns the conversion as the String result.</font></td>
+    </tr>
+    <tr>
+        <td valign="top" bgcolor="#EAEAEA"><a name="URLEncode"></a><font
+        size="2" face="Arial"><b><tt>URLEncode</tt></b><tt>(String)
+        : String</tt></font></td>
+        <td width="65%"><font size="2" face="Arial">Converts the
+        String parameter to a URLEncoding scheme and returns the
+        conversion as the String result.</font></td>
+    </tr>
+    <tr>
+        <td valign="top" bgcolor="#EAEAEA"><a name="URLDecode"></a><font
+        size="2" face="Arial"><b><tt>URLDecode</tt></b><tt>(String)
+        : String</tt></font></td>
+        <td width="65%"><font size="2" face="Arial">Converts the
+        String parameter from a URLEncoding scheme and returns
+        the conversion as the String result.</font></td>
+    </tr>
+</table>
+
+<p><a href="#Contents"><font face="Arial">Table Of Contents</font></a>
+<br>
+</p>
+
+<hr>
+
+<p><a name="Examples"></a><font face="Arial"><b>Examples</b></font>
+</p>
+
+<blockquote>
+    <p><font face="Arial">There are a few sample applications and
+    more on the way. These samples are by no means real
+    applications. They are flaky and buggy. They are meant only
+    to show you how to perform certain tasks using the component.</font>
+    </p>
+    <ul>
+        <li><font face="Arial"><b>UDPTester </b>is a Datagram
+            testing program that implements a simple chat system.</font></li>
+        <li><font face="Arial"><b>SockTest</b> is a general
+            purpose socket testing client. It demonstrates the
+            non-blocking application of the TSock component. It
+            allows a user to open any port on any host, send any
+            data, and watch what comes back.</font></li>
+        <li><font face="Arial"><b>SrvTest</b> is an
+            implementation of the Echo protocol. This protocol is
+            simple. Once the server answers, it spits back
+            whatever the client sends to it. This application
+            demonstrates how to write a multi-threaded blocking
+            server.</font></li>
+        <li><font face="Arial"><b>Test64</b> is a general-purpose
+            Base-64 and URL encoding and decoding tester.</font></li>
+        <li><font face="Arial"><b>Proxy</b> is a simple HTTP
+            proxy server. It demonstrates how to write a
+            multi-threaded blocking server as well as how to
+            dynamically create TSock objects and connect them to
+            a remote port. The proxy server itself does not
+            perform content caching but it serves as a good
+            starting point for a custom implementation.</font></li>
+    </ul>
+</blockquote>
+
+<p><a href="#Contents"><font face="Arial">Table Of Contents</font></a>
+</p>
+</body>
+</html>

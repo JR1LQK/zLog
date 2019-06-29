@@ -1,0 +1,6 @@
+
+
+  Common installation procedure should be used when installing
+  this component into the version of Delphi that you use.
+   
+  Please refer to Delphi documentation
