@@ -2,7 +2,7 @@ program zLog;
 
 uses
   Forms,
-  Main in 'main.pas' {MainForm},
+  main in 'main.pas' {MainForm},
   zLogGlobal in 'zLogGlobal.pas',
   UBasicScore in 'UBasicScore.pas' {BasicScore},
   UBasicMulti in 'UBasicMulti.pas' {BasicMulti},
@@ -98,7 +98,9 @@ uses
   UBandScope2 in 'UBandScope2.pas' {BandScope2},
   UELogJapanese in 'UELogJapanese.pas' {ELogJapanese},
   CONSOLE in 'CONSOLE.PAS',
-  console2 in 'console2.pas';
+  console2 in 'console2.pas',
+  TnCnx in '..\lib\telnet\TnCnx.pas',
+  WSockets in '..\lib\WSockets\WSockets.pas';
 
 {$R *.RES}
 
