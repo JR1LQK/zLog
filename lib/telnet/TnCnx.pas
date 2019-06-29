@@ -48,7 +48,7 @@ interface
 
 uses
   SysUtils, WinTypes, WinProcs, Messages, Classes, Controls, Forms,
-  WSocket, Winsock;
+  WSockets;
 
 const
   TnCnxVersion    = 203;
