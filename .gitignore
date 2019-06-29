@@ -1,6 +1,8 @@
 # Delphi generated files
 *.dcu
 *.res
+*.stat
+*.identcache
 
 # Delphi history files
 src/__history
