@@ -462,16 +462,16 @@ begin
       Exit;
     end;
 
-  ServEnt:= getservbyname(PChar(Port), ProtoEnt^.p_name);
+  ServEnt:= getservbyname(PAnsiChar(Port), ProtoEnt^.p_name);
   if ServEnt = nil then
     SockAddrIn.sin_port:= htons(StrToInt(Port))
   else
     SockAddrIn.sin_port:= ServEnt^.s_port;
 
-  SockAddrIn.sin_addr.s_addr:= inet_addr(PChar(Host));
+  SockAddrIn.sin_addr.s_addr:= inet_addr(PAnsiChar(Host));
   if SockAddrIn.sin_addr.s_addr = INADDR_NONE then
     begin
-      HostEnt:= gethostbyname(PChar(Host));
+      HostEnt:= gethostbyname(PAnsiChar(Host));
       if HostEnt = nil then
         begin
          SocketError(WSAGetLastError);
@@ -495,7 +495,7 @@ begin
   if ProtoEnt = nil then
     Exit;
 
-  ServEnt:= getservbyname(PChar(Port), ProtoEnt^.p_name);
+  ServEnt:= getservbyname(PAnsiChar(Port), ProtoEnt^.p_name);
   if ServEnt = nil then
     SockAddrIn.sin_port:= htons(StrToInt(Port))
   else
@@ -518,7 +518,7 @@ begin
   if ProtoEnt = nil then
     Exit;
 
-  ServEnt:= getservbyname(PChar(Port), ProtoEnt^.p_name);
+  ServEnt:= getservbyname(PAnsiChar(Port), ProtoEnt^.p_name);
   if ServEnt = nil then
     SockAddrIn.sin_port:= htons(StrToInt(Port))
   else
@@ -1019,7 +1019,7 @@ begin
     end;
 
   SockOpt:= true; {Enable OOB Data inline}
-  if setsockopt(FLocalSocket, SOL_SOCKET, SO_OOBINLINE, PChar(@SockOpt), SizeOf(SockOpt)) <> 0 then
+  if setsockopt(FLocalSocket, SOL_SOCKET, SO_OOBINLINE, PAnsiChar(@SockOpt), SizeOf(SockOpt)) <> 0 then
     begin
       SocketError(WSAGetLastError);
       closesocket(FLocalSocket);
@@ -1136,7 +1136,7 @@ begin
         end;
 
       SockOpt:= true; {Enable OOB Data inline}
-      if setsockopt(NewSocket, SOL_SOCKET, SO_OOBINLINE	, PChar(@SockOpt), SizeOf(SockOpt)) <> 0 then
+      if setsockopt(NewSocket, SOL_SOCKET, SO_OOBINLINE	, PAnsiChar(@SockOpt), SizeOf(SockOpt)) <> 0 then
         begin
           SocketError(WSAGetLastError);
           closesocket(NewSocket);
@@ -1495,7 +1495,7 @@ begin
     end;
 
   SockOpt:= true; {Enable Broadcasting on this Socket}
-  if setsockopt(FLocalSocket, SOL_SOCKET, SO_BROADCAST, PChar(@SockOpt), SizeOf(SockOpt)) <> 0 then
+  if setsockopt(FLocalSocket, SOL_SOCKET, SO_BROADCAST, PAnsiChar(@SockOpt), SizeOf(SockOpt)) <> 0 then
     begin
       SocketError(WSAGetLastError);
       closesocket(FLocalSocket);
