@@ -352,6 +352,8 @@
         <DCCReference Include="UELogJapanese.pas">
             <Form>ELogJapanese</Form>
         </DCCReference>
+        <DCCReference Include="CONSOLE.PAS"/>
+        <DCCReference Include="console2.pas"/>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

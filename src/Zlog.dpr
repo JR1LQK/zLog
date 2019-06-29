@@ -96,7 +96,9 @@ uses
   ToneGen in 'ToneGen.pas',
   UQuickRef in 'UQuickRef.pas' {QuickRef},
   UBandScope2 in 'UBandScope2.pas' {BandScope2},
-  UELogJapanese in 'UELogJapanese.pas' {ELogJapanese};
+  UELogJapanese in 'UELogJapanese.pas' {ELogJapanese},
+  CONSOLE in 'CONSOLE.PAS',
+  console2 in 'console2.pas';
 
 {$R *.RES}
 
