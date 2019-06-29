@@ -1,2 +1,6 @@
+# Delphi generated files
 *.dcu
+*.res
+
+# Delphi history files
 src/__history
