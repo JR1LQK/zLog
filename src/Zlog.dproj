@@ -336,13 +336,13 @@
         <DCCReference Include="UWAEMulti.pas">
             <Form>WAEMulti</Form>
         </DCCReference>
-        <DCCReference Include="..\..\VCL\async32_x\CommInt.pas"/>
-        <DCCReference Include="..\..\VCL\HID\HidControllerClass.pas"/>
-        <DCCReference Include="..\..\VCL\HID\Hid.pas"/>
+        <DCCReference Include="..\lib\async32_x\CommInt.pas"/>
+        <DCCReference Include="..\lib\HID\HidControllerClass.pas"/>
+        <DCCReference Include="..\lib\HID\Hid.pas"/>
         <DCCReference Include="UVoiceForm.pas">
             <Form>VoiceForm</Form>
         </DCCReference>
-        <DCCReference Include="..\..\VCL\ToneGen.pas"/>
+        <DCCReference Include="ToneGen.pas"/>
         <DCCReference Include="UQuickRef.pas">
             <Form>QuickRef</Form>
         </DCCReference>
