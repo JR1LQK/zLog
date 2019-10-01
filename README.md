@@ -34,3 +34,14 @@ RSTと送信マルチがつながってしまい，自動解析ができませ�
 
 JARLコンテスト委員会は横林さんからzLog for Windowsのソースコードをいただき，
 ここにMITライセンスによるオープンソースとして公開します．有志による改良を期待します．
+
+------
+ビルド方法 de JR8PPG
+(1)Delphi 10.3.2でビルドするにあたり、ICSは下記のサイトのICSV8.58を使用
+http://www.overbyte.eu/frame_index.html?redirTo=/products/ics.html
+InstallフォルダのD103Install.groupprojを開き、ビルド→インストール 
+
+(2)VCLフォルダのzlog_requires.dpkを開き、ビルド→インストール
+(3)zlogフォルダのzlog.dprojを開き、ビルド
+(4)完成
+
