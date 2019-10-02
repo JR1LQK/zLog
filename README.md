@@ -42,6 +42,14 @@ http://www.overbyte.eu/frame_index.html?redirTo=/products/ics.html
 InstallフォルダのD103Install.groupprojを開き、ビルド→インストール 
 
 (2)VCLフォルダのzlog_requires.dpkを開き、ビルド→インストール
-(3)zlogフォルダのzlog.dprojを開き、ビルド
-(4)完成
+(3)オプション－言語－DelphiでライブラリパスにVCLフォルダとその下を追加
+(4)zlogフォルダのzlog.dprojを開き、ビルド
+(5)完成
+
+オリジナルからの変更点
+(1)JARL ELOG 2.0に対応
+(2)LPTポート対応廃止
+(3)Voice対応廃止
+(4)Windows7/10で目立つ不具合修正
+(5)など
 
