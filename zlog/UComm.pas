@@ -190,11 +190,13 @@ var boo, noport : boolean;
     s : string;
 begin
   noport := false;
+
   case Options.Settings._clusterport of
     0 : noport := True;
-    1..6 : boo := Options.Settings._clusterlocalechoCOM;
-    7 : boo := Options.Settings._clusterlocalechoTELNET;
+    1..6 : boo := Options.Settings._cluster_com.FLocalEcho;
+    7 : boo := Options.Settings._cluster_telnet.FLocalEcho;
   end;
+
   s := '';
   if Key = Chr($0D) then
     begin
@@ -232,29 +234,29 @@ end;
 
 procedure TCommForm.ImplementOptions;
 begin
-  if Options.Settings._clusterbaud <> 99 then
-    //AsyncComm.BaudRate := TBaudRate(Options.Settings._clusterbaud);
-    ClusterComm.BaudRate := TBaudRate(Options.Settings._clusterbaud+1);
-  if Options.Settings._clusterport in [1..6] then
-    begin
+   if Options.Settings._clusterbaud <> 99 then begin
+      //AsyncComm.BaudRate := TBaudRate(Options.Settings._clusterbaud);
+      ClusterComm.BaudRate := TBaudRate(Options.Settings._clusterbaud+1);
+   end;
+
+   if Options.Settings._clusterport in [1..6] then begin
       ClusterComm.Port := TPortNumber(Options.Settings._clusterport);
       ClusterComm.Connect;
       //AsyncComm.DeviceName := 'COM'+IntToStr(Options.Settings._clusterport);
       //AsyncComm.Open;
-    end
-  else
-    begin
+   end
+   else begin
       ClusterComm.Disconnect;
       //AsyncComm.Close;
-    end;
+   end;
 
-  case Options.Settings._clusterport of
-    1..6 : Console.LineBreak := TConsole2LineBreak(Options.Settings._clusterlinebreakCOM);
-    7 :    Console.LineBreak := TConsole2LineBreak(Options.Settings._clusterlinebreakTELNET);
-  end;
-  Telnet.Host := Options.Settings._clusterhost;
-  Telnet.Port := IntToStr(Options.Settings._clustertelnetport);
-  //Telnet.Port := IntToStr(Options.Settings._clusterhostport);
+   case Options.Settings._clusterport of
+      1..6 : Console.LineBreak := TConsole2LineBreak(Options.Settings._cluster_com.FLineBreak);
+      7 :    Console.LineBreak := TConsole2LineBreak(Options.Settings._cluster_telnet.FLineBreak);
+   end;
+
+   Telnet.Host := Options.Settings._cluster_telnet.FHostName;
+   Telnet.Port := IntToStr(Options.Settings._cluster_telnet.FPortNumber);
 end;
 
 procedure TCommForm.FormCreate(Sender: TObject);
@@ -334,7 +336,7 @@ begin
 end;
 
 procedure TCommForm.ProcessSpot(Sp : TSpot);
-var temp : string;
+var
     i : integer;
     D : TBSData;
     S : TSpot;
@@ -418,9 +420,8 @@ begin
 end;
 
 procedure TCommForm.CommProcess;
-var max , i, j, x : integer;
-    str, currstr : string;
-    temp : string;
+var max , i, j: integer;
+    str: string;
     Sp : TSpot;
 begin
   max := CommBuffer.Count - 1;

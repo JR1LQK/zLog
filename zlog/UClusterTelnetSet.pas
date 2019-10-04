@@ -2,63 +2,82 @@ unit UClusterTelnetSet;
 
 interface
 
-uses Windows, SysUtils, Classes, Graphics, Forms, Controls, StdCtrls, 
+uses
+  Windows, SysUtils, Classes, Graphics, Forms, Controls, StdCtrls,
   Buttons, ExtCtrls, Spin;
 
 type
-  TClusterTelnetSet = class(TForm)
-    OKBtn: TButton;
-    CancelBtn: TButton;
+  TformClusterTelnetSet = class(TForm)
+    buttonOK: TButton;
+    buttonCancel: TButton;
     Bevel1: TBevel;
-    HostName: TComboBox;
-    LineBreak: TComboBox;
-    LocalEcho: TCheckBox;
+    comboHostName: TComboBox;
+    comboLineBreak: TComboBox;
+    checkLocalEcho: TCheckBox;
     Label1: TLabel;
     Label2: TLabel;
     spPortNumber: TSpinEdit;
     Label3: TLabel;
-    procedure FormShow(Sender: TObject);
-    procedure CancelBtnClick(Sender: TObject);
-    procedure OKBtnClick(Sender: TObject);
   private
     { Private declarations }
+    function GetHostName(): string;
+    procedure SetHostName(v: string);
+    function GetLineBreak(): Integer;
+    procedure SetLineBreak(v: Integer);
+    function GetPortNumber(): Integer;
+    procedure SetPortNumber(v: Integer);
+    function GetLocalEcho(): Boolean;
+    procedure SetLocalEcho(v: Boolean);
   public
-    procedure SetVisuals; virtual;
     { Public declarations }
+    property HostName: string read GetHostName write SetHostName;
+    property LineBreak: Integer read GetLineBreak write SetLineBreak;
+    property PortNumber: Integer read GetPortNumber write SetPortNumber;
+    property LocalEcho: Boolean read GetLocalEcho write SetLocalEcho;
   end;
-
-var
-  ClusterTelnetSet: TClusterTelnetSet;
 
 implementation
 
-uses UOptions;
-
 {$R *.DFM}
 
-
-procedure TClusterTelnetSet.SetVisuals;
+function TformClusterTelnetSet.GetHostName(): string;
 begin
-  HostName.Text := Options.Settings._clusterhost;
-  LineBreak.ItemIndex := Options.Settings._clusterlinebreakTELNET;
-  LocalEcho.Checked := Options.Settings._clusterlocalechoTELNET;
-  sPportNumber.Value := Options.Settings._clustertelnetport;
+   Result := comboHostName.Text;
 end;
 
-procedure TClusterTelnetSet.FormShow(Sender: TObject);
+procedure TformClusterTelnetSet.SetHostName(v: string);
 begin
-  {SetVisuals;}
+   comboHostName.Text := v;
 end;
 
-procedure TClusterTelnetSet.CancelBtnClick(Sender: TObject);
+function TformClusterTelnetSet.GetLineBreak(): Integer;
 begin
-  SetVisuals;
-  Close;
+   Result := comboLineBreak.ItemIndex;
 end;
 
-procedure TClusterTelnetSet.OKBtnClick(Sender: TObject);
+procedure TformClusterTelnetSet.SetLineBreak(v: Integer);
 begin
-  Close;
+   comboLineBreak.ItemIndex := v;
+end;
+
+function TformClusterTelnetSet.GetPortNumber(): Integer;
+begin
+   Result := spPortNumber.Value;
+end;
+
+procedure TformClusterTelnetSet.SetPortNumber(v: Integer);
+begin
+   spPortNumber.Value := v;
+end;
+
+function TformClusterTelnetSet.GetLocalEcho(): Boolean;
+begin
+   Result := checkLocalEcho.Checked;
+end;
+
+procedure TformClusterTelnetSet.SetLocalEcho(v: Boolean);
+begin
+   checkLocalEcho.Checked := v;
 end;
 
 end.

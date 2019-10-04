@@ -775,13 +775,9 @@ end;
 
 procedure TZLinkForm.ImplementOptions;
 begin
-   case Options.Settings._zlinkport of
-      1..6 : Console.LineBreak := TConsole2LineBreak(Options.Settings._zlinklinebreakCOM);
-      7 :    Console.LineBreak := TConsole2LineBreak(Options.Settings._zlinklinebreakTELNET);
-   end;
-
    try
-      ZSocket.Addr := Options.Settings._zlinkhost;
+      Console.LineBreak := TConsole2LineBreak(Options.Settings._zlink_telnet.FLineBreak);
+      ZSocket.Addr := Options.Settings._zlink_telnet.FHostName;
    except
       on ESocketException do begin
          MainForm.WriteStatusLine('Cannnot resolve host name', true);
@@ -791,12 +787,10 @@ end;
 
 
 procedure TZLinkForm.EditKeyPress(Sender: TObject; var Key: Char);
-var boo : boolean;
+var
+   boo: Boolean;
 begin
-   case Options.Settings._zlinkport of
-      1..6 : boo := Options.Settings._zlinklocalechoCOM;
-      7 : boo := Options.Settings._zlinklocalechoTELNET;
-   end;
+   boo := Options.Settings._zlink_telnet.FLocalEcho;
 
    if Key = Chr($0D) then begin
       WriteData(Edit.Text+LineBreakCode[ord(Console.LineBreak)]);
@@ -829,7 +823,7 @@ begin
    end
    else begin
       Button.Caption := 'Connecting...';
-      ZSocket.Addr := Options.Settings._zlinkhost;
+      ZSocket.Addr := Options.Settings._zlink_telnet.FHostName;
       ZSocket.Port := 'telnet';
       ZSocket.Connect;
    end;

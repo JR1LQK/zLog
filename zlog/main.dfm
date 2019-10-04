@@ -3,7 +3,7 @@ object MainForm: TMainForm
   Top = 138
   VertScrollBar.Visible = False
   Caption = 'zLog for Windows'
-  ClientHeight = 468
+  ClientHeight = 448
   ClientWidth = 507
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -34,7 +34,7 @@ object MainForm: TMainForm
   end
   object StatusLine: TStatusBar
     Left = 0
-    Top = 448
+    Top = 428
     Width = 507
     Height = 20
     Panels = <
@@ -56,7 +56,7 @@ object MainForm: TMainForm
     Left = 0
     Top = 99
     Width = 507
-    Height = 322
+    Height = 302
     TabStop = False
     Align = alClient
     ColCount = 10
@@ -93,6 +93,207 @@ object MainForm: TMainForm
       64
       64
       64)
+    RowHeights = (
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16
+      16)
   end
   object MainToolBar: TPanel
     Left = 0
@@ -2298,7 +2499,7 @@ object MainForm: TMainForm
   end
   object EditPanel: TPanel
     Left = 0
-    Top = 421
+    Top = 401
     Width = 507
     Height = 27
     Align = alBottom

@@ -470,15 +470,19 @@ var
 begin
    if IntrIntvl = 0 then
       exit;
+
    if before = 0 then
       i := 1
    else
       i := before;
+
    _pttbefore := Trunc(i * 1000 / IntrIntvl);
+
    if after = 0 then
       i := 1
    else
       i := after;
+
    _pttafter := Trunc(i * 1000 / IntrIntvl);
 end;
 

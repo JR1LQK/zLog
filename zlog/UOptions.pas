@@ -61,10 +61,6 @@ const maxbank = 3; // bank 3 reserved for rtty
       maxstr = 8;
       maxmaxstr = 12; // f11 and f12 only accessible via zlog.ini
 
-      LPTMAX = 2;
-
-//var   LPTport : array[1..LPTMAX] of word; // holds the base port + 2
-
 type
   TCWSettingsParam = record
     _speed : integer;
@@ -89,6 +85,14 @@ type
 
   end;
 
+  TCommParam = record
+    FHostName: string;
+    FPortNumber: Integer;
+    FBaudRate: Integer;
+    FLineBreak: Integer;
+    FLocalEcho: Boolean;
+  end;
+
   TSettingsParam = record
     _AFSK : boolean; // Use AFSK instead of RTTY for rig control
     _dontallowsameband : boolean; // same band on two rigs?
@@ -104,16 +108,8 @@ type
     _iaruzone : string[3];
     _sendfreq : double;
 
- {  _cqcountry : string[50];
-    _dxcccountry : string[50];
-    _cqzone : string[3];
-    _iaruzone : string[3];
-    _continent : string[20];  }
-
     _autobandmap: boolean;
     _activebands : array[b19..HiBand] of boolean;
-    _SoundFiles : array[1..10] of string;
-    _SoundComments : array[1..10] of string;
     CW : TCWSettingsParam;
     _clusterport : integer; {0 : none 1-4 : com# 5 : telnet}
     _rig1port : integer; {0 : none 1-4 : com#}
@@ -122,29 +118,14 @@ type
     _rig2name : integer;
     _zlinkport : integer; {0 : none 1-4 : com# 5: telnet}
     _clusterbaud : integer; {}
-    _rigbaud : integer; //not used
-    _zlinkbaud : integer;
     _icombaudrate : integer;
-    _clusterhost : string;
-    _clustertelnetport : integer;
-    _clusterlinebreakTELNET : integer; {0 : CRLF, 1 : CR, 2 : LF}
-    _clusterlocalechoTELNET : boolean;
-    _clusterlinebreakCOM : integer;
-    _clusterlocalechoCOM : boolean;
-    _zlinkhost : string;
-    _zlinklinebreakTELNET : integer; {0 : CR, 1 : CR+LF, 2 : LF}
-    _zlinklocalechoTELNET : boolean;
-    _zlinklinebreakCOM : integer;
-    _zlinklocalechoCOM : boolean;
-    _multistationwarning : boolean; // true by default. turn off not new mult warning dialog
-    _specificcwport : word; {specific assignment of cw out port#}
-    _lptnr : integer; {1 : LPT1; 2 : LPT2;  11:COM1; 12 : COM2;  21: USB}
-    //_usedata : boolean; {default = False; use data out if true}
-                        {not supported now}
-    _reverselogic : boolean; {default = false. reverse logic for keying}
-    _rigreverse : boolean; //  default = false
-    _pttreverse : boolean;
 
+    _cluster_telnet: TCommParam;
+    _cluster_com: TCommParam;
+    _zlink_telnet: TCommParam;
+
+    _multistationwarning : boolean; // true by default. turn off not new mult warning dialog
+    _lptnr : integer; {1 : LPT1; 2 : LPT2;  11:COM1; 12 : COM2;  21: USB}
     _sentstr : string; {exchanges sent $Q$P$O etc. Set at menu select}
 
     _backuppath : string;
@@ -155,7 +136,7 @@ type
     _pttbefore : word;
     _pttafter  : word;
     _txnr : byte;
-    _pcname : string[32];
+    _pcname : string;
     _saveevery : word;
     _scorecoeff : extended;
     _age : string[3]; // all asian
@@ -192,8 +173,6 @@ type
     _displaydatepartialcheck : boolean;
   end;
 
-
-
 type
   TOptions = class(TForm)
     PageControl: TPageControl;
@@ -204,9 +183,8 @@ type
     TabSheet5: TTabSheet;
     tbRigControl: TTabSheet;
     Panel1: TPanel;
-    OKButton: TButton;
-    Button2: TButton;
-    Button3: TButton;
+    buttonOK: TButton;
+    buttonCancel: TButton;
     GroupBox1: TGroupBox;
     SingleOpRadioBtn: TRadioButton;
     MultiOpRadioBtn: TRadioButton;
@@ -302,11 +280,10 @@ type
     Label30: TLabel;
     ClusterCombo: TComboBox;
     Port: TLabel;
-    PCsetButton: TButton;
+    buttonClusterSettings: TButton;
     OpenDialog1: TOpenDialog;
     Label32: TLabel;
     ZLinkCombo: TComboBox;
-    Button1: TButton;
     buttonZLinkSettings: TButton;
     vButton1: TButton;
     vButton2: TButton;
@@ -398,26 +375,27 @@ type
     cbIcomBaudRate: TComboBox;
     Label54: TLabel;
     radioCwNone: TRadioButton;
+    checkUseMultiStationWarning: TCheckBox;
+    Label55: TLabel;
+    editZLinkPcName: TEdit;
+    checkZLinkSyncSerial: TCheckBox;
     procedure MultiOpRadioBtnClick(Sender: TObject);
     procedure SingleOpRadioBtnClick(Sender: TObject);
-    procedure OKButtonClick(Sender: TObject);
+    procedure buttonOKClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure AddClick(Sender: TObject);
     procedure DeleteClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure Button2Click(Sender: TObject);
-    procedure OpEditKeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
+    procedure buttonCancelClick(Sender: TObject);
+    procedure OpEditKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure OpEditEnter(Sender: TObject);
     procedure OpEditExit(Sender: TObject);
-    procedure Button3Click(Sender: TObject);
     procedure SpeedBarChange(Sender: TObject);
     procedure WeightBarChange(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure vButtonClick(Sender: TObject);
     procedure ClusterComboChange(Sender: TObject);
-    procedure PCsetButtonClick(Sender: TObject);
-    procedure CreateParams(var Params: TCreateParams); override;
+    procedure buttonClusterSettingsClick(Sender: TObject);
     procedure ZLinkComboChange(Sender: TObject);
     procedure buttonZLinkSettingsClick(Sender: TObject);
     procedure BrowsePathClick(Sender: TObject);
@@ -434,54 +412,77 @@ type
     TempVoiceFiles : array[1..10] of string;
     TempCurrentBank : integer;
     TempCWStrBank : array[1..maxbank,1..maxmaxstr] of string[255]; // used temporarily while options window is open
+
+    FTempClusterTelnet: TCommParam;
+    FTempClusterCom: TCommParam;
+    FTempZLinkTelnet: TCommParam;
+
+    procedure LoadIniFile; {loads Settings from zlog.ini}
+    procedure LoadIniFileBS(ini: TIniFile); // called from loadinifile
+
+    function GetMyCall(): string;
+    procedure SetMyCall(s: string);
+    function GetBand(): Integer;
+    procedure SetBand(b: Integer);
+    function GetMode(): Integer;
+    procedure SetMode(m: Integer);
+    function GetMultiOp(): Integer;
+    procedure SetMultiOp(i: Integer);
+    function GetContestMenuNo() : Integer;
+    procedure SetContestMenuNo(i: Integer);
+    function GetSpeed(): Integer;
+    procedure SetSpeed(i: Integer);
+    function GetFIFO(): Boolean;
+    procedure SetFIFO(b: Boolean);
+    function GetSideTone(): Boolean;
+    procedure SetSideTone(b: Boolean);
+    function GetTXNr(): Byte;
+    procedure SetTXNr(i: Byte);
+    function GetPTTEnabled(): Boolean;
+
+    procedure SetPaddle(boo : boolean);      // unuse
+    procedure SetCQMax(i : integer);
+    procedure SetCQRepeat(r : double);
+    procedure SetSendFreq(r : double);
+    procedure SetPaddleReverse(boo : boolean);
+    procedure ReadWin2(WinName : string; var F : TForm);  // unuse
+    procedure RenewCWStrBankDisp();
   public
     OpList : TStringList;
     Settings : TSettingsParam;
     CurrentPower : array[b19..HiBand] of TPower;
     CurrentPower2 : array[b19..HiBand] of integer; {Power2 for ARRLDX}
-    procedure SetOpPower(var aQSO : TQSO);
+
     procedure SaveCurrentSettings; {saves Settings to zlog.ini}
-    procedure LoadIniFileBS; // called from loadinifile
-    procedure LoadIniFile; {loads Settings from zlog.ini}
-    function MultiOp : integer;
-    function Band : integer;
-    function Mode : integer;
-    function ContestMenuNo : integer;
-    function Speed : integer;
-    function FIFO : boolean;
-    function SideTone : boolean;
-    procedure SetMultiOp(i : integer);
-    procedure SetBand(b : integer);
+
+    property MyCall: string read GetMyCall write SetMyCall;
+    property Band: Integer read GetBand write SetBand;
+    property Mode: Integer read GetMode write SetMode;
+    property MultiOp: Integer read GetMultiOp write SetMultiOp;
+    property ContestMenuNo: Integer read GetContestMenuNo write SetContestMenuNo;
+    property Speed: Integer read GetSpeed write SetSpeed;
+    property FIFO: Boolean read GetFIFO write SetFIFO;
+    property SideTone: Boolean read GetSideTone write SetSideTone;
+    property TXNr: Byte read GetTXNr write SetTXNr;
+    property PTTEnabled: Boolean read GetPTTEnabled;
+
+    procedure SetOpPower(var aQSO : TQSO);
     procedure SetWeight(i : integer);
-    procedure SetMode(m : integer);
-    procedure SetCurrentContestNo(i : integer);
-    procedure SetFIFO(boo : boolean);
-    procedure SetSpeed(i : integer);
-    procedure SetSideTone(boo : boolean);
-    procedure SetPaddle(boo : boolean);
     procedure SetTonePitch(i : integer);
-    procedure SetCQMax(i : integer);
-    procedure SetCQRepeat(r : double);
-    procedure SetSendFreq(r : double);
-    procedure SetMyCall(s : string);
-    function MyCall : shortstring;
-    procedure SetTXNr(i : byte);
     procedure SetScoreCoeff(E : Extended);
-    function GetTXNr : byte;
+
     function CWMessage(bank, i : integer) : shortstring;
     procedure ImplementSettings(_OnCreate : boolean); {Sets various parameters according to Settings}
     procedure RenewSettings; {Reads controls and updates Settings}
-    procedure SetPaddleReverse(boo : boolean);
     procedure ReversePaddle;
     function GetAge(aQSO : TQSO) : string;
-    procedure RenewCWStrBankDisp;
-    function PTTEnabled : boolean;
     function Rig1NameStr : string; // returns the selected rig name
     function Rig2NameStr : string; // returns the selected rig name
-    procedure ReadWin(WinName : string; var Open : boolean; var X, Y, H, W : integer);
+
     procedure RecordSuperCheckColumns(c : integer);
     function GetSuperCheckColumns : integer;
-    procedure ReadWin2(WinName : string; var F : TForm);
+
+    procedure ReadWin(WinName : string; var Open : boolean; var X, Y, H, W : integer);
     procedure RecordWin(WinName : string; Open : boolean; X, Y : integer);
     procedure RestoreMainForm(var X, Y, W, H : integer; var TB1, TB2 : boolean);
     procedure RecordWin2(WinName : string; F : TForm);
@@ -514,19 +515,25 @@ var
    i: integer;
 begin
    Result := '??';
-   if aQSO.QSO.Operator = '' then
-      Result := Settings._age
-   else
+
+   if aQSO.QSO.Operator = '' then begin
+      Result := Settings._age;
+   end
+   else begin
       for i := 0 to OpList.Count - 1 do begin
          if TrimRight(Copy(OpList.Strings[i], 1, 20)) = aQSO.QSO.Operator then begin
             str := OpList.Strings[i];
-            if length(str) <= 20 then
+            if length(str) <= 20 then begin
                exit;
+            end;
+
             System.Delete(str, 1, 20);
-            str := TrimLeft(TrimRight(str));
+
+            str := Trim(str);
             Result := str;
          end;
       end;
+   end;
 end;
 
 procedure TOptions.SetOpPower(var aQSO: TQSO);
@@ -538,13 +545,17 @@ begin
    for i := 0 to OpList.Count - 1 do begin
       if TrimRight(Copy(OpList.Strings[i], 1, 20)) = aQSO.QSO.Operator then begin
          str := OpList.Strings[i];
-         if length(str) <= 20 then
+         if length(str) <= 20 then begin
             exit;
+         end;
+
          System.Delete(str, 1, 20);
+
          if OldBandOrd(aQSO.QSO.Band) + 1 <= length(str) then
             P := str[OldBandOrd(aQSO.QSO.Band) + 1]
          else
             P := UpCase(str[1]);
+
          case P of
             'P':
                aQSO.QSO.Power := pwrP;
@@ -559,36 +570,10 @@ begin
    end;
 end;
 
-procedure TOptions.CreateParams(var Params: TCreateParams);
-begin
-   inherited CreateParams(Params);
-   Params.ExStyle := Params.ExStyle or WS_EX_APPWINDOW;
-end;
-
-procedure TOptions.SetMyCall(s: string);
-begin
-   Settings._mycall := s;
-end;
-
-function TOptions.MyCall: shortstring;
-begin
-   Result := Settings._mycall;
-end;
-
-procedure TOptions.SetTXNr(i: byte);
-begin
-   Settings._txnr := i;
-end;
-
 procedure TOptions.SetScoreCoeff(E: extended);
 begin
    Settings._scorecoeff := E;
    TQSO(Log.List[0]).QSO.RSTRcvd := Trunc(E * 100);
-end;
-
-function TOptions.GetTXNr: byte;
-begin
-   Result := Settings._txnr;
 end;
 
 procedure TOptions.SetTonePitch(i: integer);
@@ -627,13 +612,6 @@ begin
    Result := Settings.CW.CWStrBank[bank, i];
 end;
 
-procedure TOptions.SetSpeed(i: integer);
-begin
-   if i in [0 .. 60] then
-      Settings.CW._speed := i;
-   BGK32Lib.SetCWSpeed(Settings.CW._speed);
-end;
-
 procedure TOptions.SetWeight(i: integer);
 begin
    if i in [0 .. 100] then
@@ -641,51 +619,19 @@ begin
    BGK32Lib.SetWeight(Settings.CW._weight);
 end;
 
-procedure TOptions.SetSideTone(boo: boolean);
+function TOptions.GetMyCall(): string;
 begin
-   BGK32Lib.SetSideTone(boo);
-   Settings.CW._sidetone := boo;
+   Result := Settings._mycall;
 end;
 
-function TOptions.FIFO: boolean;
+procedure TOptions.SetMyCall(s: string);
 begin
-   Result := Settings.CW._FIFO;
+   Settings._mycall := s;
 end;
 
-function TOptions.Speed: integer;
-begin
-   Result := Settings.CW._speed;
-end;
-
-function TOptions.SideTone: boolean;
-begin
-   Result := Settings.CW._sidetone;
-end;
-
-function TOptions.MultiOp: integer;
-begin
-   Result := Settings._multiop;
-end;
-
-function TOptions.Band: integer;
+function TOptions.GetBand: integer;
 begin
    Result := Settings._band;
-end;
-
-function TOptions.Mode: integer;
-begin
-   Result := Settings._mode;
-end;
-
-function TOptions.ContestMenuNo: integer;
-begin
-   Result := Settings._contestmenuno;
-end;
-
-procedure TOptions.SetMultiOp(i: integer);
-begin
-   Settings._multiop := i;
-   zLogGlobal.OperatorCategory := i;
 end;
 
 procedure TOptions.SetBand(b: integer);
@@ -706,9 +652,89 @@ begin
    end;
 end;
 
+function TOptions.GetMode: integer;
+begin
+   Result := Settings._mode;
+end;
+
 procedure TOptions.SetMode(m: integer);
 begin
    Settings._mode := m;
+end;
+
+function TOptions.GetMultiOp(): Integer;
+begin
+   Result := Settings._multiop;
+end;
+
+procedure TOptions.SetMultiOp(i: integer);
+begin
+   Settings._multiop := i;
+end;
+
+function TOptions.GetContestMenuNo(): Integer;
+begin
+   Result := Settings._contestmenuno;
+end;
+
+procedure TOptions.SetContestMenuNo(i: integer);
+begin
+   Settings._contestmenuno := i;
+end;
+
+function TOptions.GetSpeed(): Integer;
+begin
+   Result := Settings.CW._speed;
+end;
+
+procedure TOptions.SetSpeed(i: integer);
+begin
+   if i in [0 .. 60] then begin
+      Settings.CW._speed := i;
+   end;
+
+   BGK32Lib.SetCWSpeed(Settings.CW._speed);
+end;
+
+function TOptions.GetFIFO(): Boolean;
+begin
+   Result := Settings.CW._FIFO;
+end;
+
+procedure TOptions.SetFIFO(b: boolean);
+begin
+   Settings.CW._FIFO := b;
+end;
+
+function TOptions.GetSideTone: boolean;
+begin
+   Result := Settings.CW._sidetone;
+end;
+
+procedure TOptions.SetSideTone(b: boolean);
+begin
+   BGK32Lib.SetSideTone(b);
+   Settings.CW._sidetone := b;
+end;
+
+function TOptions.GetTXNr(): Byte;
+begin
+   Result := Settings._txnr;
+end;
+
+procedure TOptions.SetTXNr(i: Byte);
+begin
+   Settings._txnr := i;
+end;
+
+function TOptions.GetPTTEnabled: Boolean;
+begin
+   Result := Settings._pttenabled;
+end;
+
+procedure TOptions.SetPaddle(boo: boolean);
+begin
+   Settings.CW._paddle := boo;
 end;
 
 procedure TOptions.SetPaddleReverse(boo: boolean);
@@ -722,16 +748,6 @@ begin
    SetPaddleReverse(not(Settings.CW._paddlereverse));
 end;
 
-procedure TOptions.SetCurrentContestNo(i: integer);
-begin
-   Settings._contestmenuno := i;
-end;
-
-procedure TOptions.SetFIFO(boo: boolean);
-begin
-   Settings.CW._FIFO := boo;
-end;
-
 procedure TOptions.MultiOpRadioBtnClick(Sender: TObject);
 begin
    OpListBox.Enabled := True;
@@ -742,11 +758,6 @@ begin
    OpListBox.Enabled := False;
 end;
 
-procedure TOptions.SetPaddle(boo: boolean);
-begin
-   Settings.CW._paddle := boo;
-end;
-
 procedure TOptions.SaveCurrentSettings;
 var
    i: integer;
@@ -754,25 +765,11 @@ var
 begin
    ini := TIniFile.Create(ChangeFileExt(Application.ExeName, '.ini'));
    try
-      ini.WriteBool('Preferences', 'SaveWhenNoCW', Settings._savewhennocw);
-      ini.WriteBool('Preferences', 'MultiStationWarning', Settings._multistationwarning);
-      ini.WriteBool('Preferences', 'JMode', Settings._jmode);
-      ini.WriteBool('Preferences', 'MoveToMemoWithSpace', Settings._movetomemo);
-      ini.WriteBool('Preferences', 'AutoEnterSuper', Settings._entersuperexchange);
+      //
+      // Preferences
+      //
 
-      ini.WriteInteger('Misc', 'SearchAfter', Settings._searchafter);
-
-      ini.WriteInteger('Misc', 'MaxSuperHit', Settings._maxsuperhit);
-      ini.WriteInteger('Misc', 'BandScopeExpire', Settings._bsexpire);
-      ini.WriteInteger('Misc', 'SpotExpire', Settings._spotexpire);
-      ini.WriteBool('Misc', 'UpdateUsingThread', Settings._renewbythread);
-      ini.WriteBool('Misc', 'DisplayDatePartialCheck', Settings._displaydatepartialcheck);
-
-      ini.WriteInteger('Rig', 'BandDataMode', Settings._banddatamode);
-      ini.WriteBool('Rig', 'DontAllowSameBand', Settings._dontallowsameband);
-      ini.WriteBool('Rig', 'AutoBandMap', Settings._autobandmap);
-      ini.WriteBool('Rig', 'UseAFSK', Settings._AFSK);
-
+      // Active bands
       ini.WriteBool('Profiles', 'Active1.9MHz', Settings._activebands[b19]);
       ini.WriteBool('Profiles', 'Active3.5MHz', Settings._activebands[b35]);
       ini.WriteBool('Profiles', 'Active7MHz', Settings._activebands[b7]);
@@ -790,52 +787,71 @@ begin
       ini.WriteBool('Profiles', 'Active5600MHz', Settings._activebands[b5600]);
       ini.WriteBool('Profiles', 'Active10GHz', Settings._activebands[b10g]);
 
-      ini.WriteString('Preferences', 'BackUpPath', Settings._backuppath);
-      ini.WriteString('Preferences', 'CFGDATPath', Settings._cfgdatpath);
-      ini.WriteString('Preferences', 'LogsPath', Settings._logspath);
+      // Automatically enter exchange from SuperCheck
+      ini.WriteBool('Preferences', 'AutoEnterSuper', Settings._entersuperexchange);
 
-      ini.WriteInteger('Preferences', 'SaveEvery', Settings._saveevery);
-      ini.WriteBool('Preferences', 'AllowDupe', Settings._allowdupe);
+      // Display exchange on other bands
+      ini.WriteBool('Preferences', 'SameExchange', Settings._sameexchange);
+
+      // Multi Station Warning
+      ini.WriteBool('Preferences', 'MultiStationWarning', Settings._multistationwarning);
+
+      // 10 min count down
       ini.WriteBool('Preferences', 'CountDown', Settings._countdown);
-      ini.WriteBool('Preferences', 'QSYCount', Settings._qsycount);
-      ini.WriteBool('Categories', 'MultiStn', Settings._multistation);
-      ini.WriteInteger('Categories', 'Operator2', Settings._multiop);
-      ini.WriteInteger('Categories', 'Band', Settings._band);
-      ini.WriteInteger('Categories', 'Contest', Settings._contestmenuno);
-      ini.WriteInteger('Categories', 'Mode', Settings._mode);
-      ini.WriteInteger('Categories', 'TXNumber', Settings._txnr);
-      ini.WriteString('Categories', 'MyCall', Settings._mycall);
 
+      // QSY count / hr
+      ini.WriteBool('Preferences', 'QSYCount', Settings._qsycount);
+
+      // J-mode
+      ini.WriteBool('Preferences', 'JMode', Settings._jmode);
+
+      // Allow to log dupes
+      ini.WriteBool('Preferences', 'AllowDupe', Settings._allowdupe);
+
+      // Save when not sending CW
+      ini.WriteBool('Preferences', 'SaveWhenNoCW', Settings._savewhennocw);
+
+      // Save every N QSOs
+      ini.WriteInteger('Preferences', 'SaveEvery', Settings._saveevery);
+
+      // Back up path
+      ini.WriteString('Preferences', 'BackUpPath', Settings._backuppath);
+
+      //
+      // Categories
+      //
+
+      // Operator
+      ini.WriteInteger('Categories', 'Operator2', Settings._multiop);
+
+      // Band
+      ini.WriteInteger('Categories', 'Band', Settings._band);
+
+      // Mode
+      ini.WriteInteger('Categories', 'Mode', Settings._mode);
+
+      // Prov/State($V)
       ini.WriteString('Profiles', 'Province/State', Settings._prov);
+
+      // CITY
       ini.WriteString('Profiles', 'City', Settings._city);
+
+      // CQ Zone
       ini.WriteString('Profiles', 'CQZone', Settings._cqzone);
+
+      // ITU Zone
       ini.WriteString('Profiles', 'IARUZone', Settings._iaruzone);
 
-      { ini.WriteString('Profiles', 'CQCountry', Settings._cqcountry);
-        ini.WriteString('Profiles', 'CQZone', Settings._cqzone);
-        ini.WriteString('Profiles', 'DXCCCountry', Settings._dxcccountry);
-        ini.WriteString('Profiles', 'IARUZone', Settings._iaruzone);
-        ini.WriteString('Profiles', 'Continent', Settings._continent); }
+      // Sent
 
-      ini.WriteInteger('CW', 'Speed', Settings.CW._speed);
-      ini.WriteInteger('CW', 'FixedSpeed', Settings.CW._fixwpm);
-      ini.WriteInteger('CW', 'Weight', Settings.CW._weight);
-      ini.WriteInteger('CW', 'CQMax', Settings.CW._cqmax);
-      ini.WriteInteger('CW', 'Pitch', Settings.CW._tonepitch);
-      ini.WriteBool('CW', 'PaddleReverse', Settings.CW._paddlereverse);
+      // Multi Station
+      ini.WriteBool('Categories', 'MultiStn', Settings._multistation);
 
-      ini.WriteBool('CW', 'PaddleEnabled', Settings.CW._paddle);
+      //
+      // CW/RTTY
+      //
 
-      ini.WriteBool('CW', 'SideTone', Settings.CW._sidetone);
-      ini.WriteFloat('CW', 'CQRepeat', Settings.CW._cqrepeat);
-      ini.WriteFloat('Rig', 'SendFreq', Settings._sendfreq);
-      ini.WriteBool('Rig', 'RecordFreqInMemo', Settings._recrigfreq);
-      ini.WriteBool('CW', 'FIFO', Settings.CW._FIFO);
-      ini.WriteBool('CW', 'CQSP', Settings._switchcqsp);
-      ini.WriteString('CW', 'Zero', Settings.CW._zero);
-      ini.WriteString('CW', 'One', Settings.CW._one);
-      ini.WriteString('CW', 'Nine', Settings.CW._nine);
-
+      // Messages
       for i := 1 to maxstr do begin
          ini.WriteString('CW', 'F' + IntToStr(i), Settings.CW.CWStrBank[1, i]);
          ini.WriteString('CW', 'F' + IntToStr(i) + 'B', Settings.CW.CWStrBank[2, i]);
@@ -851,64 +867,177 @@ begin
       ini.WriteString('CW', 'CQ2', Settings.CW.CQStrBank[1]);
       ini.WriteString('CW', 'CQ3', Settings.CW.CQStrBank[2]);
 
-      for i := 1 to maxstr do begin
-         ini.WriteString('Voice', 'F' + IntToStr(i), Settings._SoundFiles[i]);
-      end;
-      ini.WriteString('Voice', 'CQ2', Settings._SoundFiles[9]);
-      ini.WriteString('Voice', 'CQ3', Settings._SoundFiles[10]);
+      // Switch TAB/; with CW bank
+      ini.WriteBool('CW', 'CQSP', Settings._switchcqsp);
 
-      for i := 1 to maxstr do begin
-         ini.WriteString('Voice', 'F' + IntToStr(i) + '_Comment', Settings._SoundComments[i]);
-      end;
-      ini.WriteString('Voice', 'CQ2_Comment', Settings._SoundComments[9]);
-      ini.WriteString('Voice', 'CQ3_Comment', Settings._SoundComments[9]);
+      // Speed
+      ini.WriteInteger('CW', 'Speed', Settings.CW._speed);
+      ini.WriteInteger('CW', 'FixedSpeed', Settings.CW._fixwpm);
 
+      // Weight
+      ini.WriteInteger('CW', 'Weight', Settings.CW._weight);
+
+      // Paddle enabled
+      ini.WriteBool('CW', 'PaddleEnabled', Settings.CW._paddle);
+
+      // Paddle reverse
+      ini.WriteBool('CW', 'PaddleReverse', Settings.CW._paddlereverse);
+
+      // Side tone
+      ini.WriteBool('CW', 'SideTone', Settings.CW._sidetone);
+
+      // Que messages
+      ini.WriteBool('CW', 'FIFO', Settings.CW._FIFO);
+
+      // Tone Pitch (Hz)
+      ini.WriteInteger('CW', 'Pitch', Settings.CW._tonepitch);
+
+      // CQ max
+      ini.WriteInteger('CW', 'CQMax', Settings.CW._cqmax);
+
+      // Abbreviation (019)
+      ini.WriteString('CW', 'Zero', Settings.CW._zero);
+      ini.WriteString('CW', 'One', Settings.CW._one);
+      ini.WriteString('CW', 'Nine', Settings.CW._nine);
+
+      // CQ repeat interval (sec)
+      ini.WriteFloat('CW', 'CQRepeat', Settings.CW._cqrepeat);
+
+      //
+      // Hardware
+      //
+
+      // Ports
+
+      // PacketCluster
       ini.WriteInteger('Hardware', 'PacketCluster', Settings._clusterport);
-      ini.WriteInteger('Hardware', 'Rig', Settings._rig1port);
-      ini.WriteBool('Hardware', 'RitClear', Settings._ritclear);
-      ini.WriteInteger('Hardware', 'RigName', Settings._rig1name);
 
+      // COM
+      ini.WriteInteger('Hardware', 'PacketClusterBaud', Settings._clusterbaud);
+      ini.WriteInteger('PacketCluster', 'COMlinebreak', Settings._cluster_com.FLineBreak);
+      ini.WriteBool('PacketCluster', 'COMlocalecho', Settings._cluster_com.FLocalEcho);
+
+      // TELNET
+      ini.WriteString('PacketCluster', 'TELNEThost', Settings._cluster_telnet.FHostName);
+      ini.WriteInteger('PacketCluster', 'TELNETport', Settings._cluster_telnet.FPortNumber);
+      ini.WriteInteger('PacketCluster', 'TELNETlinebreak', Settings._cluster_telnet.FLineBreak);
+      ini.WriteBool('PacketCluster', 'TELNETlocalecho', Settings._cluster_telnet.FLocalEcho);
+
+      // Z-Link (Z-Server)
+      ini.WriteInteger('Hardware', 'Z-Link', Settings._zlinkport);
+
+      // PC Name
+      ini.WriteString('Z-Link', 'PCName', Settings._pcname);
+
+      // Sync. SerialNumber
+      ini.WriteBool('Z-Link', 'SyncSerial', Settings._syncserial);
+
+      // COM(unuse)
+//      ini.WriteInteger('Z-Link', 'COMlinebreak', Settings._zlinklinebreakCOM);
+//      ini.WriteBool('Z-Link', 'COMlocalecho', Settings._zlinklocalechoCOM);
+
+      // TELNET
+      ini.WriteString('Z-Link', 'TELNEThost', Settings._zlink_telnet.FHostName);
+      ini.WriteInteger('Z-Link', 'TELNETlinebreak', Settings._zlink_telnet.FLineBreak);
+      ini.WriteBool('Z-Link', 'TELNETlocalecho', Settings._zlink_telnet.FLocalEcho);
+
+      // RIG1
+      ini.WriteInteger('Hardware', 'Rig', Settings._rig1port);
+      ini.WriteInteger('Hardware', 'RigName', Settings._rig1name);
       ini.WriteBool('Hardware', 'Transverter1', Settings._transverter1);
       ini.WriteInteger('Hardware', 'Transverter1Offset', Settings._transverteroffset1);
+
+      // RIG2
+      ini.WriteInteger('Hardware', 'Rig2', Settings._rig2port);
+      ini.WriteInteger('Hardware', 'RigName2', Settings._rig2name);
       ini.WriteBool('Hardware', 'Transverter2', Settings._transverter2);
       ini.WriteInteger('Hardware', 'Transverter2Offset', Settings._transverteroffset2);
 
-      ini.WriteInteger('Hardware', 'Rig2', Settings._rig2port);
-      ini.WriteInteger('Hardware', 'RigName2', Settings._rig2name);
+      // CW/PTT port
+      ini.WriteInteger('Hardware', 'CWLPTPort', Settings._lptnr);
 
-      ini.WriteInteger('Hardware', 'Z-Link', Settings._zlinkport);
-
-      ini.WriteInteger('Hardware', 'PacketClusterBaud', Settings._clusterbaud);
-      ini.WriteInteger('Hardware', 'RigBaud', Settings._rigbaud);
+      // ICOM baud rate
       ini.WriteInteger('Hardware', 'IcomBaudRate', Settings._icombaudrate);
 
-      ini.WriteInteger('Hardware', 'Z-LinkBaud', Settings._zlinkbaud);
+      // CW PTT control
 
+      // Enable PTT control
       ini.WriteBool('Hardware', 'PTTEnabled', Settings._pttenabled);
+
+      // Before TX (ms)
       ini.WriteInteger('Hardware', 'PTTBefore', Settings._pttbefore);
+
+      // After TX paddle/keybd (ms)
       ini.WriteInteger('Hardware', 'PTTAfter', Settings._pttafter);
 
-      ini.WriteString('PacketCluster', 'TELNEThost', Settings._clusterhost);
-      ini.WriteInteger('PacketCluster', 'TELNETport', Settings._clustertelnetport);
-      ini.WriteInteger('PacketCluster', 'TELNETlinebreak', Settings._clusterlinebreakTELNET);
-      ini.WriteBool('PacketCluster', 'TELNETlocalecho', Settings._clusterlocalechoTELNET);
-      ini.WriteInteger('PacketCluster', 'COMlinebreak', Settings._clusterlinebreakCOM);
-      ini.WriteBool('PacketCluster', 'COMlocalecho', Settings._clusterlocalechoCOM);
+      //
+      // Rig control
+      //
 
-      ini.WriteString('Z-Link', 'TELNEThost', Settings._zlinkhost);
-      ini.WriteInteger('Z-Link', 'TELNETlinebreak', Settings._zlinklinebreakTELNET);
-      ini.WriteBool('Z-Link', 'TELNETlocalecho', Settings._zlinklocalechoTELNET);
-      ini.WriteInteger('Z-Link', 'COMlinebreak', Settings._zlinklinebreakCOM);
-      ini.WriteBool('Z-Link', 'COMlocalecho', Settings._zlinklocalechoCOM);
+      // Band data (LPT)
+      ini.WriteInteger('Rig', 'BandDataMode', Settings._banddatamode);
 
-      ini.WriteBool('Z-Link', 'SyncSerial', Settings._syncserial);
+      // Clear RIT after each QSO
+      ini.WriteBool('Hardware', 'RitClear', Settings._ritclear);
 
-      ini.WriteInteger('Hardware', 'UseCWPort', Settings._specificcwport);
-      ini.WriteInteger('Hardware', 'CWLPTPort', Settings._lptnr);
-      // ini.WriteBoolean('Hardware','CWUseData',Settings._usedata);
-      ini.WriteBool('Hardware', 'CWInvLogic', Settings._reverselogic);
-      ini.WriteBool('Hardware', 'RigInvLogic', Settings._rigreverse);
-      ini.WriteBool('Hardware', 'PTTInvLogic', Settings._pttreverse);
+      // Do not allow two rigs to be on same band
+      ini.WriteBool('Rig', 'DontAllowSameBand', Settings._dontallowsameband);
+
+      // Record rig frequency in memo
+      ini.WriteBool('Rig', 'RecordFreqInMemo', Settings._recrigfreq);
+
+      // Use AFSK mode for RTTY
+      ini.WriteBool('Rig', 'UseAFSK', Settings._AFSK);
+
+      // Automatically create band scope
+      ini.WriteBool('Rig', 'AutoBandMap', Settings._autobandmap);
+
+      // Send current freq every
+      ini.WriteFloat('Rig', 'SendFreq', Settings._sendfreq);
+
+      //
+      // Path
+      //
+
+      // CFG/DAT
+      ini.WriteString('Preferences', 'CFGDATPath', Settings._cfgdatpath);
+
+      // Logs
+      ini.WriteString('Preferences', 'LogsPath', Settings._logspath);
+
+      //
+      // Misc
+      //
+
+      // Start search after
+      ini.WriteInteger('Misc', 'SearchAfter', Settings._searchafter);
+
+      // Max super check search
+      ini.WriteInteger('Misc', 'MaxSuperHit', Settings._maxsuperhit);
+
+      // Delete band scope data after
+      ini.WriteInteger('Misc', 'BandScopeExpire', Settings._bsexpire);
+
+      // Delete spot data after
+      ini.WriteInteger('Misc', 'SpotExpire', Settings._spotexpire);
+
+      // Display date in partial check
+      ini.WriteBool('Misc', 'DisplayDatePartialCheck', Settings._displaydatepartialcheck);
+
+      // Update using a thread
+      ini.WriteBool('Misc', 'UpdateUsingThread', Settings._renewbythread);
+
+      //
+      // ここから隠し設定
+      //
+
+      ini.WriteBool('Preferences', 'MoveToMemoWithSpace', Settings._movetomemo);
+
+      ini.WriteInteger('Categories', 'Contest', Settings._contestmenuno);
+      ini.WriteInteger('Categories', 'TXNumber', Settings._txnr);
+      ini.WriteString('Categories', 'MyCall', Settings._mycall);
+
+      ini.WriteInteger('CW', 'Interval', Settings.CW._interval);
 
       ini.WriteInteger('Preferences', 'FontSize', Settings._mainfontsize);
       ini.WriteInteger('Preferences', 'RowHeight', Settings._mainrowheight);
@@ -919,85 +1048,79 @@ begin
    end;
 end;
 
-procedure TOptions.LoadIniFileBS;
+procedure TOptions.LoadIniFileBS(ini: TIniFile);
 var
    b: TBand;
    m: TMode;
-   ini: TIniFile;
 begin
-   ini := TIniFile.Create(ChangeFileExt(Application.ExeName, '.ini'));
-   try
-      Settings._bsminfreqarray[b19, mCW] := ini.ReadInteger('BandScope', '1.9MHzCWmin', 1800);
-      Settings._bsminfreqarray[b19, mSSB] := ini.ReadInteger('BandScope', '1.9MHzPHmin', 1800);
-      Settings._bsmaxfreqarray[b19, mCW] := ini.ReadInteger('BandScope', '1.9MHzCWmax', 1950);
-      Settings._bsmaxfreqarray[b19, mSSB] := ini.ReadInteger('BandScope', '1.9MHzPHmax', 1950);
-      Settings._bsminfreqarray[b35, mCW] := ini.ReadInteger('BandScope', '3.5MHzCWmin', 3500);
-      Settings._bsminfreqarray[b35, mSSB] := ini.ReadInteger('BandScope', '3.5MHzPHmin', 3500);
-      Settings._bsmaxfreqarray[b35, mCW] := ini.ReadInteger('BandScope', '3.5MHzCWmax', 3800);
-      Settings._bsmaxfreqarray[b35, mSSB] := ini.ReadInteger('BandScope', '3.5MHzPHmax', 3800);
-      Settings._bsminfreqarray[b7, mCW] := ini.ReadInteger('BandScope', '7MHzCWmin', 7000);
-      Settings._bsminfreqarray[b7, mSSB] := ini.ReadInteger('BandScope', '7MHzPHmin', 7000);
-      Settings._bsmaxfreqarray[b7, mCW] := ini.ReadInteger('BandScope', '7MHzCWmax', 7200);
-      Settings._bsmaxfreqarray[b7, mSSB] := ini.ReadInteger('BandScope', '7MHzPHmax', 7200);
-      Settings._bsminfreqarray[b10, mCW] := ini.ReadInteger('BandScope', '10MHzCWmin', 10100);
-      Settings._bsminfreqarray[b10, mSSB] := ini.ReadInteger('BandScope', '10MHzPHmin', 10100);
-      Settings._bsmaxfreqarray[b10, mCW] := ini.ReadInteger('BandScope', '10MHzCWmax', 10150);
-      Settings._bsmaxfreqarray[b10, mSSB] := ini.ReadInteger('BandScope', '10MHzPHmax', 10150);
-      Settings._bsminfreqarray[b14, mCW] := ini.ReadInteger('BandScope', '14MHzCWmin', 14000);
-      Settings._bsminfreqarray[b14, mSSB] := ini.ReadInteger('BandScope', '14MHzPHmin', 14000);
-      Settings._bsmaxfreqarray[b14, mCW] := ini.ReadInteger('BandScope', '14MHzCWmax', 14350);
-      Settings._bsmaxfreqarray[b14, mSSB] := ini.ReadInteger('BandScope', '14MHzPHmax', 14350);
-      Settings._bsminfreqarray[b18, mCW] := ini.ReadInteger('BandScope', '18MHzCWmin', 18060);
-      Settings._bsminfreqarray[b18, mSSB] := ini.ReadInteger('BandScope', '18MHzPHmin', 18060);
-      Settings._bsmaxfreqarray[b18, mCW] := ini.ReadInteger('BandScope', '18MHzCWmax', 18170);
-      Settings._bsmaxfreqarray[b18, mSSB] := ini.ReadInteger('BandScope', '18MHzPHmax', 18170);
-      Settings._bsminfreqarray[b21, mCW] := ini.ReadInteger('BandScope', '21MHzCWmin', 21000);
-      Settings._bsminfreqarray[b21, mSSB] := ini.ReadInteger('BandScope', '21MHzPHmin', 21000);
-      Settings._bsmaxfreqarray[b21, mCW] := ini.ReadInteger('BandScope', '21MHzCWmax', 21450);
-      Settings._bsmaxfreqarray[b21, mSSB] := ini.ReadInteger('BandScope', '21MHzPHmax', 21450);
-      Settings._bsminfreqarray[b24, mCW] := ini.ReadInteger('BandScope', '24MHzCWmin', 24890);
-      Settings._bsminfreqarray[b24, mSSB] := ini.ReadInteger('BandScope', '24MHzPHmin', 24890);
-      Settings._bsmaxfreqarray[b24, mCW] := ini.ReadInteger('BandScope', '24MHzCWmax', 24990);
-      Settings._bsmaxfreqarray[b24, mSSB] := ini.ReadInteger('BandScope', '24MHzPHmax', 24990);
-      Settings._bsminfreqarray[b28, mCW] := ini.ReadInteger('BandScope', '28MHzCWmin', 28000);
-      Settings._bsminfreqarray[b28, mSSB] := ini.ReadInteger('BandScope', '28MHzPHmin', 28000);
-      Settings._bsmaxfreqarray[b28, mCW] := ini.ReadInteger('BandScope', '28MHzCWmax', 28500);
-      Settings._bsmaxfreqarray[b28, mSSB] := ini.ReadInteger('BandScope', '28MHzPHmax', 28500);
+   Settings._bsminfreqarray[b19, mCW] := ini.ReadInteger('BandScope', '1.9MHzCWmin', 1800);
+   Settings._bsminfreqarray[b19, mSSB] := ini.ReadInteger('BandScope', '1.9MHzPHmin', 1800);
+   Settings._bsmaxfreqarray[b19, mCW] := ini.ReadInteger('BandScope', '1.9MHzCWmax', 1950);
+   Settings._bsmaxfreqarray[b19, mSSB] := ini.ReadInteger('BandScope', '1.9MHzPHmax', 1950);
+   Settings._bsminfreqarray[b35, mCW] := ini.ReadInteger('BandScope', '3.5MHzCWmin', 3500);
+   Settings._bsminfreqarray[b35, mSSB] := ini.ReadInteger('BandScope', '3.5MHzPHmin', 3500);
+   Settings._bsmaxfreqarray[b35, mCW] := ini.ReadInteger('BandScope', '3.5MHzCWmax', 3800);
+   Settings._bsmaxfreqarray[b35, mSSB] := ini.ReadInteger('BandScope', '3.5MHzPHmax', 3800);
+   Settings._bsminfreqarray[b7, mCW] := ini.ReadInteger('BandScope', '7MHzCWmin', 7000);
+   Settings._bsminfreqarray[b7, mSSB] := ini.ReadInteger('BandScope', '7MHzPHmin', 7000);
+   Settings._bsmaxfreqarray[b7, mCW] := ini.ReadInteger('BandScope', '7MHzCWmax', 7200);
+   Settings._bsmaxfreqarray[b7, mSSB] := ini.ReadInteger('BandScope', '7MHzPHmax', 7200);
+   Settings._bsminfreqarray[b10, mCW] := ini.ReadInteger('BandScope', '10MHzCWmin', 10100);
+   Settings._bsminfreqarray[b10, mSSB] := ini.ReadInteger('BandScope', '10MHzPHmin', 10100);
+   Settings._bsmaxfreqarray[b10, mCW] := ini.ReadInteger('BandScope', '10MHzCWmax', 10150);
+   Settings._bsmaxfreqarray[b10, mSSB] := ini.ReadInteger('BandScope', '10MHzPHmax', 10150);
+   Settings._bsminfreqarray[b14, mCW] := ini.ReadInteger('BandScope', '14MHzCWmin', 14000);
+   Settings._bsminfreqarray[b14, mSSB] := ini.ReadInteger('BandScope', '14MHzPHmin', 14000);
+   Settings._bsmaxfreqarray[b14, mCW] := ini.ReadInteger('BandScope', '14MHzCWmax', 14350);
+   Settings._bsmaxfreqarray[b14, mSSB] := ini.ReadInteger('BandScope', '14MHzPHmax', 14350);
+   Settings._bsminfreqarray[b18, mCW] := ini.ReadInteger('BandScope', '18MHzCWmin', 18060);
+   Settings._bsminfreqarray[b18, mSSB] := ini.ReadInteger('BandScope', '18MHzPHmin', 18060);
+   Settings._bsmaxfreqarray[b18, mCW] := ini.ReadInteger('BandScope', '18MHzCWmax', 18170);
+   Settings._bsmaxfreqarray[b18, mSSB] := ini.ReadInteger('BandScope', '18MHzPHmax', 18170);
+   Settings._bsminfreqarray[b21, mCW] := ini.ReadInteger('BandScope', '21MHzCWmin', 21000);
+   Settings._bsminfreqarray[b21, mSSB] := ini.ReadInteger('BandScope', '21MHzPHmin', 21000);
+   Settings._bsmaxfreqarray[b21, mCW] := ini.ReadInteger('BandScope', '21MHzCWmax', 21450);
+   Settings._bsmaxfreqarray[b21, mSSB] := ini.ReadInteger('BandScope', '21MHzPHmax', 21450);
+   Settings._bsminfreqarray[b24, mCW] := ini.ReadInteger('BandScope', '24MHzCWmin', 24890);
+   Settings._bsminfreqarray[b24, mSSB] := ini.ReadInteger('BandScope', '24MHzPHmin', 24890);
+   Settings._bsmaxfreqarray[b24, mCW] := ini.ReadInteger('BandScope', '24MHzCWmax', 24990);
+   Settings._bsmaxfreqarray[b24, mSSB] := ini.ReadInteger('BandScope', '24MHzPHmax', 24990);
+   Settings._bsminfreqarray[b28, mCW] := ini.ReadInteger('BandScope', '28MHzCWmin', 28000);
+   Settings._bsminfreqarray[b28, mSSB] := ini.ReadInteger('BandScope', '28MHzPHmin', 28000);
+   Settings._bsmaxfreqarray[b28, mCW] := ini.ReadInteger('BandScope', '28MHzCWmax', 28500);
+   Settings._bsmaxfreqarray[b28, mSSB] := ini.ReadInteger('BandScope', '28MHzPHmax', 28500);
 
-      Settings._bsminfreqarray[b50, mCW] := ini.ReadInteger('BandScope', '50MHzCWmin', 50000);
-      Settings._bsminfreqarray[b50, mSSB] := ini.ReadInteger('BandScope', '50MHzPHmin', 50000);
-      Settings._bsmaxfreqarray[b50, mCW] := ini.ReadInteger('BandScope', '50MHzCWmax', 51000);
-      Settings._bsmaxfreqarray[b50, mSSB] := ini.ReadInteger('BandScope', '50MHzPHmax', 51000);
-      Settings._bsminfreqarray[b144, mCW] := ini.ReadInteger('BandScope', '144MHzCWmin', 144000);
-      Settings._bsminfreqarray[b144, mSSB] := ini.ReadInteger('BandScope', '144MHzPHmin', 144600);
-      Settings._bsmaxfreqarray[b144, mCW] := ini.ReadInteger('BandScope', '144MHzCWmax', 145600);
-      Settings._bsmaxfreqarray[b144, mSSB] := ini.ReadInteger('BandScope', '144MHzPHmax', 145600);
-      Settings._bsminfreqarray[b430, mCW] := ini.ReadInteger('BandScope', '430MHzCWmin', 430000);
-      Settings._bsminfreqarray[b430, mSSB] := ini.ReadInteger('BandScope', '430MHzPHmin', 430000);
-      Settings._bsmaxfreqarray[b430, mCW] := ini.ReadInteger('BandScope', '430MHzCWmax', 434000);
-      Settings._bsmaxfreqarray[b430, mSSB] := ini.ReadInteger('BandScope', '430MHzPHmax', 434000);
+   Settings._bsminfreqarray[b50, mCW] := ini.ReadInteger('BandScope', '50MHzCWmin', 50000);
+   Settings._bsminfreqarray[b50, mSSB] := ini.ReadInteger('BandScope', '50MHzPHmin', 50000);
+   Settings._bsmaxfreqarray[b50, mCW] := ini.ReadInteger('BandScope', '50MHzCWmax', 51000);
+   Settings._bsmaxfreqarray[b50, mSSB] := ini.ReadInteger('BandScope', '50MHzPHmax', 51000);
+   Settings._bsminfreqarray[b144, mCW] := ini.ReadInteger('BandScope', '144MHzCWmin', 144000);
+   Settings._bsminfreqarray[b144, mSSB] := ini.ReadInteger('BandScope', '144MHzPHmin', 144600);
+   Settings._bsmaxfreqarray[b144, mCW] := ini.ReadInteger('BandScope', '144MHzCWmax', 145600);
+   Settings._bsmaxfreqarray[b144, mSSB] := ini.ReadInteger('BandScope', '144MHzPHmax', 145600);
+   Settings._bsminfreqarray[b430, mCW] := ini.ReadInteger('BandScope', '430MHzCWmin', 430000);
+   Settings._bsminfreqarray[b430, mSSB] := ini.ReadInteger('BandScope', '430MHzPHmin', 430000);
+   Settings._bsmaxfreqarray[b430, mCW] := ini.ReadInteger('BandScope', '430MHzCWmax', 434000);
+   Settings._bsmaxfreqarray[b430, mSSB] := ini.ReadInteger('BandScope', '430MHzPHmax', 434000);
 
-      Settings._bsminfreqarray[b1200, mCW] := ini.ReadInteger('BandScope', '1200MHzCWmin', 1294000);
-      Settings._bsminfreqarray[b1200, mSSB] := ini.ReadInteger('BandScope', '1200MHzPHmin', 1294600);
-      Settings._bsmaxfreqarray[b1200, mCW] := ini.ReadInteger('BandScope', '1200MHzCWmax', 1294500);
-      Settings._bsmaxfreqarray[b1200, mSSB] := ini.ReadInteger('BandScope', '1200MHzPHmax', 1295000);
-      Settings._bsminfreqarray[b2400, mCW] := ini.ReadInteger('BandScope', '2400MHzCWmin', 2400000);
-      Settings._bsminfreqarray[b2400, mSSB] := ini.ReadInteger('BandScope', '2400MHzPHmin', 2400000);
-      Settings._bsmaxfreqarray[b2400, mCW] := ini.ReadInteger('BandScope', '2400MHzCWmax', 2410000);
-      Settings._bsmaxfreqarray[b2400, mSSB] := ini.ReadInteger('BandScope', '2400MHzPHmax', 2410000);
-      Settings._bsminfreqarray[b5600, mCW] := ini.ReadInteger('BandScope', '5600MHzCWmin', 5600000);
-      Settings._bsminfreqarray[b5600, mSSB] := ini.ReadInteger('BandScope', '5600MHzPHmin', 5600000);
-      Settings._bsmaxfreqarray[b5600, mCW] := ini.ReadInteger('BandScope', '5600MHzCWmax', 5610000);
-      Settings._bsmaxfreqarray[b5600, mSSB] := ini.ReadInteger('BandScope', '5600MHzPHmax', 5610000);
+   Settings._bsminfreqarray[b1200, mCW] := ini.ReadInteger('BandScope', '1200MHzCWmin', 1294000);
+   Settings._bsminfreqarray[b1200, mSSB] := ini.ReadInteger('BandScope', '1200MHzPHmin', 1294600);
+   Settings._bsmaxfreqarray[b1200, mCW] := ini.ReadInteger('BandScope', '1200MHzCWmax', 1294500);
+   Settings._bsmaxfreqarray[b1200, mSSB] := ini.ReadInteger('BandScope', '1200MHzPHmax', 1295000);
+   Settings._bsminfreqarray[b2400, mCW] := ini.ReadInteger('BandScope', '2400MHzCWmin', 2400000);
+   Settings._bsminfreqarray[b2400, mSSB] := ini.ReadInteger('BandScope', '2400MHzPHmin', 2400000);
+   Settings._bsmaxfreqarray[b2400, mCW] := ini.ReadInteger('BandScope', '2400MHzCWmax', 2410000);
+   Settings._bsmaxfreqarray[b2400, mSSB] := ini.ReadInteger('BandScope', '2400MHzPHmax', 2410000);
+   Settings._bsminfreqarray[b5600, mCW] := ini.ReadInteger('BandScope', '5600MHzCWmin', 5600000);
+   Settings._bsminfreqarray[b5600, mSSB] := ini.ReadInteger('BandScope', '5600MHzPHmin', 5600000);
+   Settings._bsmaxfreqarray[b5600, mCW] := ini.ReadInteger('BandScope', '5600MHzCWmax', 5610000);
+   Settings._bsmaxfreqarray[b5600, mSSB] := ini.ReadInteger('BandScope', '5600MHzPHmax', 5610000);
 
-      for b := b19 to HiBand do begin
-         for m := mFM to mOther do begin
-            Settings._bsminfreqarray[b, m] := Settings._bsminfreqarray[b, mSSB];
-            Settings._bsmaxfreqarray[b, m] := Settings._bsmaxfreqarray[b, mSSB];
-         end;
+   for b := b19 to HiBand do begin
+      for m := mFM to mOther do begin
+         Settings._bsminfreqarray[b, m] := Settings._bsminfreqarray[b, mSSB];
+         Settings._bsmaxfreqarray[b, m] := Settings._bsmaxfreqarray[b, mSSB];
       end;
-   finally
-      ini.Free();
    end;
 end;
 
@@ -1010,28 +1133,243 @@ var
 begin
    ini := TIniFile.Create(ChangeFileExt(Application.ExeName, '.ini'));
    try
-      LoadIniFileBS;
+      // Band Scope
+      LoadIniFileBS(ini);
 
-      Settings._pcname := ini.ReadString('Z-Link', 'PCName', '');
+      //
+      // Preferences
+      //
+
+      // Active bands
+      Settings._activebands[b19] := ini.ReadBool('Profiles', 'Active1.9MHz', True);
+      Settings._activebands[b35] := ini.ReadBool('Profiles', 'Active3.5MHz', True);
+      Settings._activebands[b7] := ini.ReadBool('Profiles', 'Active7MHz', True);
+      Settings._activebands[b10] := ini.ReadBool('Profiles', 'Active10MHz', True);
+      Settings._activebands[b14] := ini.ReadBool('Profiles', 'Active14MHz', True);
+      Settings._activebands[b18] := ini.ReadBool('Profiles', 'Active18MHz', True);
+      Settings._activebands[b21] := ini.ReadBool('Profiles', 'Active21MHz', True);
+      Settings._activebands[b24] := ini.ReadBool('Profiles', 'Active24MHz', True);
+      Settings._activebands[b28] := ini.ReadBool('Profiles', 'Active28MHz', True);
+      Settings._activebands[b50] := ini.ReadBool('Profiles', 'Active50MHz', True);
+      Settings._activebands[b144] := ini.ReadBool('Profiles', 'Active144MHz', True);
+      Settings._activebands[b430] := ini.ReadBool('Profiles', 'Active430MHz', True);
+      Settings._activebands[b1200] := ini.ReadBool('Profiles', 'Active1200MHz', True);
+      Settings._activebands[b2400] := ini.ReadBool('Profiles', 'Active2400MHz', True);
+      Settings._activebands[b5600] := ini.ReadBool('Profiles', 'Active5600MHz', True);
+      Settings._activebands[b10g] := ini.ReadBool('Profiles', 'Active10GHz', True);
+
+      // Automatically enter exchange from SuperCheck
+      Settings._entersuperexchange := ini.ReadBool('Preferences', 'AutoEnterSuper', False);
+
+      // Display exchange on other bands
+      Settings._sameexchange := ini.ReadBool('Preferences', 'SameExchange', False);
+
+      // Multi Station Warning
       Settings._multistationwarning := ini.ReadBool('Preferences', 'MultiStationWarning', True);
 
-      Settings._recrigfreq := ini.ReadBool('Rig', 'RecordFreqInMemo', False);
-      Settings._bsexpire := ini.ReadInteger('Misc', 'BandScopeExpire', 60);
-      Settings._spotexpire := ini.ReadInteger('Misc', 'SpotExpire', 90);
+      // 10 min count down
+      Settings._countdown := ini.ReadBool('Preferences', 'CountDown', False);
 
-      Settings._savewhennocw := ini.ReadBool('Preferences', 'SaveWhenNoCW', False);
+      // QSY count / hr
+      Settings._qsycount := ini.ReadBool('Preferences', 'QSYCount', False);
+
+      // J-mode
       Settings._jmode := ini.ReadBool('Preferences', 'JMode', False);
-      Settings._movetomemo := ini.ReadBool('Preferences', 'MoveToMemoWithSpace', False);
 
-      Settings._searchafter := ini.ReadInteger('Misc', 'SearchAfter', 0);
-      Settings._maxsuperhit := ini.ReadInteger('Misc', 'MaxSuperHit', 100);
-      Settings._renewbythread := ini.ReadBool('Misc', 'UpdateUsingThread', False);
-      Settings._displaydatepartialcheck := ini.ReadBool('Misc', 'DisplayDatePartialCheck', False);
+      // Allow to log dupes
+      Settings._allowdupe := ini.ReadBool('Preferences', 'AllowDupe', False);
 
+      // Save when not sending CW
+      Settings._savewhennocw := ini.ReadBool('Preferences', 'SaveWhenNoCW', False);
+
+      // Save every N QSOs
+      Settings._saveevery := ini.ReadInteger('Preferences', 'SaveEvery', 3);
+
+      // Back up path
+      Settings._backuppath := ini.ReadString('Preferences', 'BackUpPath', '');
+
+      //
+      // Categories
+      //
+
+      // Operator
+      Settings._multiop := ini.ReadInteger('Categories', 'Operator2', 0);
+
+      // Band
+      Settings._band := ini.ReadInteger('Categories', 'Band', 0);
+
+      // Mode
+      Settings._mode := ini.ReadInteger('Categories', 'Mode', 0);
+
+      // Prov/State($V)
+      Settings._prov := ini.ReadString('Profiles', 'Province/State', '');
+
+      // CITY
+      Settings._city := ini.ReadString('Profiles', 'City', '');
+
+      // CQ Zone
+      Settings._cqzone := ini.ReadString('Profiles', 'CQZone', '');
+
+      // ITU Zone
+      Settings._iaruzone := ini.ReadString('Profiles', 'IARUZone', '');
+
+      // Sent
+
+      // Multi Station
+      Settings._multistation := ini.ReadBool('Categories', 'MultiStn', False);
+
+      //
+      // CW/RTTY
+      //
+
+      // Messages
+      Settings.CW.CWStrBank[1, 1] := ini.ReadString('CW', 'F1', 'CQ TEST $M $M TEST');
+      Settings.CW.CWStrBank[1, 2] := ini.ReadString('CW', 'F2', '$C 5NN$X');
+      Settings.CW.CWStrBank[1, 3] := ini.ReadString('CW', 'F3', 'TU $M TEST');
+      Settings.CW.CWStrBank[1, 4] := ini.ReadString('CW', 'F4', 'QSO B4 TU');
+      Settings.CW.CWStrBank[1, 5] := ini.ReadString('CW', 'F5', 'NR?');
+
+      for i := 6 to maxstr do begin
+         Settings.CW.CWStrBank[1, i] := ini.ReadString('CW', 'F' + IntToStr(i), '');
+      end;
+
+      Settings.CW.CWStrBank[3, 1] := ini.ReadString('RTTY', 'F1', 'CQ CQ CQ TEST $M $M $M TEST K');
+      Settings.CW.CWStrBank[3, 2] := ini.ReadString('RTTY', 'F2', '$C DE $M 599$X 599$X BK');
+      Settings.CW.CWStrBank[3, 3] := ini.ReadString('RTTY', 'F3', 'TU DE $M TEST');
+      Settings.CW.CWStrBank[3, 4] := ini.ReadString('RTTY', 'F4', 'QSO B4 TU');
+      Settings.CW.CWStrBank[3, 5] := ini.ReadString('RTTY', 'F5', 'NR? NR? AGN BK');
+
+      for i := 6 to maxstr do begin
+         Settings.CW.CWStrBank[3, i] := ini.ReadString('RTTY', 'F' + IntToStr(i), '');
+      end;
+
+      for i := 1 to maxstr do begin
+         Settings.CW.CWStrBank[2, i] := ini.ReadString('CW', 'F' + IntToStr(i) + 'B', '');
+      end;
+
+      for i := 11 to 12 do begin
+         Settings.CW.CWStrBank[1, i] := ini.ReadString('CW', 'F' + IntToStr(i), '');
+         Settings.CW.CWStrBank[2, i] := ini.ReadString('CW', 'F' + IntToStr(i) + 'B', '');
+         Settings.CW.CWStrBank[3, i] := ini.ReadString('RTTY', 'F' + IntToStr(i), '');
+      end;
+
+      Settings.CW.CQStrBank[1] := ini.ReadString('CW', 'CQ2', '');
+      Settings.CW.CQStrBank[2] := ini.ReadString('CW', 'CQ3', '');
+
+      // Switch TAB/; with CW bank
+      Settings._switchcqsp := ini.ReadBool('CW', 'CQSP', False);
+
+      // Speed
+      Settings.CW._speed := ini.ReadInteger('CW', 'Speed', 25);
+      Settings.CW._fixwpm := ini.ReadInteger('CW', 'FixedSpeed', 20);
+
+      // Weight
+      Settings.CW._weight := ini.ReadInteger('CW', 'Weight', 50);
+
+      // Paddle enabled
+      Settings.CW._paddle := ini.ReadBool('CW', 'PaddleEnabled', True);
+
+      // Paddle reverse
+      Settings.CW._paddlereverse := ini.ReadBool('CW', 'PaddleReverse', False);
+
+      // Side tone
+      Settings.CW._sidetone := ini.ReadBool('CW', 'SideTone', True);
+
+      // Que messages
+      Settings.CW._FIFO := ini.ReadBool('CW', 'FIFO', True);
+
+      // Tone Pitch (Hz)
+      Settings.CW._tonepitch := ini.ReadInteger('CW', 'Pitch', 800);
+
+      // CQ max
+      Settings.CW._cqmax := ini.ReadInteger('CW', 'CQMax', 15);
+
+      // Abbreviation (019)
+      s := ini.ReadString('CW', 'Zero', 'O');
+      Settings.CW._zero := char(s[1]);
+
+      s := ini.ReadString('CW', 'One', 'A');
+      Settings.CW._one := char(s[1]);
+
+      s := ini.ReadString('CW', 'Nine', 'N');
+      Settings.CW._nine := char(s[1]);
+
+      // CQ repeat interval (sec)
+      Settings.CW._cqrepeat := ini.ReadFloat('CW', 'CQRepeat', 2.0);
+
+      //
+      // Hardware
+      //
+
+      // Ports
+
+      // PacketCluster
+      Settings._clusterport := ini.ReadInteger('Hardware', 'PacketCluster', 0);
+
+      // COM
+      Settings._clusterbaud := ini.ReadInteger('Hardware', 'PacketClusterBaud', 6);
+      Settings._cluster_com.FLineBreak := ini.ReadInteger('PacketCluster', 'COMlinebreak', 0);
+      Settings._cluster_com.FLocalEcho := ini.ReadBool('PacketCluster', 'COMlocalecho', False);
+
+      // TELNET
+      Settings._cluster_telnet.FHostName := ini.ReadString('PacketCluster', 'TELNEThost', '');
+      Settings._cluster_telnet.FPortNumber := ini.ReadInteger('PacketCluster', 'TELNETport', 23);
+      Settings._cluster_telnet.FLineBreak := ini.ReadInteger('PacketCluster', 'TELNETlinebreak', 0);
+      Settings._cluster_telnet.FLocalEcho := ini.ReadBool('PacketCluster', 'TELNETlocalecho', False);
+
+      // Z-Link (Z-Server)
+      Settings._zlinkport := ini.ReadInteger('Hardware', 'Z-Link', 0);
+
+      // PC Name
+      Settings._pcname := ini.ReadString('Z-Link', 'PCName', '');
+
+      // Sync. SerialNumber
+      Settings._syncserial := ini.ReadBool('Z-Link', 'SyncSerial', False);
+
+      // COM(unuse)
+//      Settings._zlinklinebreakCOM := ini.ReadInteger('Z-Link', 'COMlinebreak', 0);
+//      Settings._zlinklocalechoCOM := ini.ReadBool('Z-Link', 'COMlocalecho', False);
+
+      // TELNET
+      Settings._zlink_telnet.FHostName := ini.ReadString('Z-Link', 'TELNEThost', '');
+      Settings._zlink_telnet.FLineBreak := ini.ReadInteger('Z-Link', 'TELNETlinebreak', 0);
+      Settings._zlink_telnet.FLocalEcho := ini.ReadBool('Z-Link', 'TELNETlocalecho', False);
+
+      // RIG1
+      Settings._rig1port := ini.ReadInteger('Hardware', 'Rig', 0);
+      Settings._rig1name := ini.ReadInteger('Hardware', 'RigName', 0);
+      Settings._transverter1 := ini.ReadBool('Hardware', 'Transverter1', False);
+      Settings._transverteroffset1 := ini.ReadInteger('Hardware', 'Transverter1Offset', 0);
+
+      // RIG2
+      Settings._rig2port := ini.ReadInteger('Hardware', 'Rig2', 0);
+      Settings._rig2name := ini.ReadInteger('Hardware', 'RigName2', 0);
+      Settings._transverter2 := ini.ReadBool('Hardware', 'Transverter2', False);
+      Settings._transverteroffset2 := ini.ReadInteger('Hardware', 'Transverter2Offset', 0);
+
+      // CW/PTT port
+      Settings._lptnr := ini.ReadInteger('Hardware', 'CWLPTPort', 0);
+
+      // ICOM baud rate
+      Settings._icombaudrate := ini.ReadInteger('Hardware', 'IcomBaudRate', 1);
+
+      // CW PTT control
+
+      // Enable PTT control
+      Settings._pttenabled := ini.ReadBool('Hardware', 'PTTEnabled', False);
+
+      // Before TX (ms)
+      Settings._pttbefore := ini.ReadInteger('Hardware', 'PTTBefore', 25);
+
+      // After TX paddle/keybd (ms)
+      Settings._pttafter := ini.ReadInteger('Hardware', 'PTTAfter', 0);
+
+      //
+      // Rig control
+      //
+
+      // Band data (LPT)
       Settings._banddatamode := ini.ReadInteger('Rig', 'BandDataMode', 1);
-      Settings._dontallowsameband := ini.ReadBool('Rig', 'DontAllowSameBand', False);
-      Settings._autobandmap := ini.ReadBool('Rig', 'AutoBandMap', False);
-      Settings._AFSK := ini.ReadBool('Rig', 'UseAFSK', False);
 
       Settings._BandData[b19] := ini.ReadInteger('Hardware', 'BandData1.9MHz', 0);
       Settings._BandData[b35] := ini.ReadInteger('Hardware', 'BandData3.5MHz', 1);
@@ -1050,22 +1388,61 @@ begin
       Settings._BandData[b5600] := ini.ReadInteger('Hardware', 'BandData5600MHz', 14);
       Settings._BandData[b10g] := ini.ReadInteger('Hardware', 'BandData10GHz', 15);
 
-      Settings._activebands[b19] := ini.ReadBool('Profiles', 'Active1.9MHz', True);
-      Settings._activebands[b35] := ini.ReadBool('Profiles', 'Active3.5MHz', True);
-      Settings._activebands[b7] := ini.ReadBool('Profiles', 'Active7MHz', True);
-      Settings._activebands[b10] := ini.ReadBool('Profiles', 'Active10MHz', True);
-      Settings._activebands[b14] := ini.ReadBool('Profiles', 'Active14MHz', True);
-      Settings._activebands[b18] := ini.ReadBool('Profiles', 'Active18MHz', True);
-      Settings._activebands[b21] := ini.ReadBool('Profiles', 'Active21MHz', True);
-      Settings._activebands[b24] := ini.ReadBool('Profiles', 'Active24MHz', True);
-      Settings._activebands[b28] := ini.ReadBool('Profiles', 'Active28MHz', True);
-      Settings._activebands[b50] := ini.ReadBool('Profiles', 'Active50MHz', True);
-      Settings._activebands[b144] := ini.ReadBool('Profiles', 'Active144MHz', True);
-      Settings._activebands[b430] := ini.ReadBool('Profiles', 'Active430MHz', True);
-      Settings._activebands[b1200] := ini.ReadBool('Profiles', 'Active1200MHz', True);
-      Settings._activebands[b2400] := ini.ReadBool('Profiles', 'Active2400MHz', True);
-      Settings._activebands[b5600] := ini.ReadBool('Profiles', 'Active5600MHz', True);
-      Settings._activebands[b10g] := ini.ReadBool('Profiles', 'Active10GHz', True);
+      // Clear RIT after each QSO
+      Settings._ritclear := ini.ReadBool('Hardware', 'RitClear', False);
+
+      // Do not allow two rigs to be on same band
+      Settings._dontallowsameband := ini.ReadBool('Rig', 'DontAllowSameBand', False);
+
+      // Record rig frequency in memo
+      Settings._recrigfreq := ini.ReadBool('Rig', 'RecordFreqInMemo', False);
+
+      // Use AFSK mode for RTTY
+      Settings._AFSK := ini.ReadBool('Rig', 'UseAFSK', False);
+
+      // Automatically create band scope
+      Settings._autobandmap := ini.ReadBool('Rig', 'AutoBandMap', False);
+
+      // Send current freq every
+      Settings._sendfreq := ini.ReadFloat('Rig', 'SendFreq', 1.0);
+
+      //
+      // Path
+      //
+
+      // CFG/DAT
+      Settings._cfgdatpath := ini.ReadString('Preferences', 'CFGDATPath', '');
+
+      // Logs
+      Settings._logspath := ini.ReadString('Preferences', 'LogsPath', '');
+
+      //
+      // Misc
+      //
+
+      // Start search after
+      Settings._searchafter := ini.ReadInteger('Misc', 'SearchAfter', 0);
+
+      // Max super check search
+      Settings._maxsuperhit := ini.ReadInteger('Misc', 'MaxSuperHit', 100);
+
+      // Delete band scope data after
+      Settings._bsexpire := ini.ReadInteger('Misc', 'BandScopeExpire', 60);
+
+      // Delete spot data after
+      Settings._spotexpire := ini.ReadInteger('Misc', 'SpotExpire', 90);
+
+      // Display date in partial check
+      Settings._displaydatepartialcheck := ini.ReadBool('Misc', 'DisplayDatePartialCheck', False);
+
+      // Update using a thread
+      Settings._renewbythread := ini.ReadBool('Misc', 'UpdateUsingThread', False);
+
+      //
+      // ここから隠し設定
+      //
+
+      Settings._movetomemo := ini.ReadBool('Preferences', 'MoveToMemoWithSpace', False);
 
       s := ini.ReadString('Profiles', 'Power', '');
       b := b19;
@@ -1090,146 +1467,13 @@ begin
          until NotWARC(b);
       end;
 
-      Settings._multiop := ini.ReadInteger('Categories', 'Operator2', 0);
-      Settings._multistation := ini.ReadBool('Categories', 'MultiStn', False);
-      Settings._band := ini.ReadInteger('Categories', 'Band', 0);
-      Settings._mode := ini.ReadInteger('Categories', 'Mode', 0);
       Settings._txnr := ini.ReadInteger('Categories', 'TXNumber', 0);
       Settings._contestmenuno := ini.ReadInteger('Categories', 'Contest', 1);
       Settings._mycall := ini.ReadString('Categories', 'MyCall', 'Your call sign');
 
-      Settings._backuppath := ini.ReadString('Preferences', 'BackUpPath', '');
-      Settings._cfgdatpath := ini.ReadString('Preferences', 'CFGDATPath', '');
-      Settings._logspath := ini.ReadString('Preferences', 'LogsPath', '');
-
-      Settings._allowdupe := ini.ReadBool('Preferences', 'AllowDupe', False);
-      Settings._saveevery := ini.ReadInteger('Preferences', 'SaveEvery', 3);
-
-      Settings._entersuperexchange := ini.ReadBool('Preferences', 'AutoEnterSuper', False);
-
-      Settings._countdown := ini.ReadBool('Preferences', 'CountDown', False);
-      Settings._qsycount := ini.ReadBool('Preferences', 'QSYCount', False);
-
-      Settings._prov := ini.ReadString('Profiles', 'Province/State', '');
-      Settings._city := ini.ReadString('Profiles', 'City', '');
-      Settings._cqzone := ini.ReadString('Profiles', 'CQZone', '');
-      Settings._iaruzone := ini.ReadString('Profiles', 'IARUZone', '');
-
-      Settings._clusterport := ini.ReadInteger('Hardware', 'PacketCluster', 0);
-
-      Settings._rig1port := ini.ReadInteger('Hardware', 'Rig', 0);
-      Settings._ritclear := ini.ReadBool('Hardware', 'RitClear', False);
-      Settings._rig1name := ini.ReadInteger('Hardware', 'RigName', 0);
-
-      Settings._rig2port := ini.ReadInteger('Hardware', 'Rig2', 0);
-      Settings._rig2name := ini.ReadInteger('Hardware', 'RigName2', 0);
-
-      Settings._zlinkport := ini.ReadInteger('Hardware', 'Z-Link', 0);
-
-      Settings._clusterbaud := ini.ReadInteger('Hardware', 'PacketClusterBaud', 6);
-      Settings._rigbaud := ini.ReadInteger('Hardware', 'RigBaud', 6);
-      Settings._icombaudrate := ini.ReadInteger('Hardware', 'IcomBaudRate', 1);
-
-      Settings._zlinkbaud := ini.ReadInteger('Hardware', 'Z-LinkBaud', 6);
-
-      Settings._pttenabled := ini.ReadBool('Hardware', 'PTTEnabled', False);
-      Settings._pttbefore := ini.ReadInteger('Hardware', 'PTTBefore', 25);
-      Settings._pttafter := ini.ReadInteger('Hardware', 'PTTAfter', 0);
-
-      Settings._clusterhost := ini.ReadString('PacketCluster', 'TELNEThost', '');
-      Settings._clustertelnetport := ini.ReadInteger('PacketCluster', 'TELNETport', 23);
-
-      Settings._clusterlinebreakTELNET := ini.ReadInteger('PacketCluster', 'TELNETlinebreak', 0);
-      Settings._clusterlocalechoTELNET := ini.ReadBool('PacketCluster', 'TELNETlocalecho', False);
-      Settings._clusterlinebreakCOM := ini.ReadInteger('PacketCluster', 'COMlinebreak', 0);
-      Settings._clusterlocalechoCOM := ini.ReadBool('PacketCluster', 'COMlocalecho', False);
-
-      Settings._zlinkhost := ini.ReadString('Z-Link', 'TELNEThost', '');
-      Settings._zlinklinebreakTELNET := ini.ReadInteger('Z-Link', 'TELNETlinebreak', 0);
-      Settings._zlinklocalechoTELNET := ini.ReadBool('Z-Link', 'TELNETlocalecho', False);
-      Settings._zlinklinebreakCOM := ini.ReadInteger('Z-Link', 'COMlinebreak', 0);
-      Settings._zlinklocalechoCOM := ini.ReadBool('Z-Link', 'COMlocalecho', False);
-
-      Settings._syncserial := ini.ReadBool('Z-Link', 'SyncSerial', False);
-
       Settings.CW._interval := ini.ReadInteger('CW', 'Interval', 1);
-      Settings.CW._speed := ini.ReadInteger('CW', 'Speed', 25);
-      Settings.CW._weight := ini.ReadInteger('CW', 'Weight', 50);
-      Settings.CW._cqmax := ini.ReadInteger('CW', 'CQMax', 15);
-      Settings.CW._tonepitch := ini.ReadInteger('CW', 'Pitch', 800);
-      Settings.CW._paddlereverse := ini.ReadBool('CW', 'PaddleReverse', False);
-      Settings.CW._paddle := ini.ReadBool('CW', 'PaddleEnabled', True);
-      Settings.CW._FIFO := ini.ReadBool('CW', 'FIFO', True);
-      Settings._switchcqsp := ini.ReadBool('CW', 'CQSP', False);
-      Settings.CW._sidetone := ini.ReadBool('CW', 'SideTone', True);
-      Settings.CW._cqrepeat := ini.ReadFloat('CW', 'CQRepeat', 2.0);
-      Settings._sendfreq := ini.ReadFloat('Rig', 'SendFreq', 1.0);
 
-      s := ini.ReadString('CW', 'Zero', 'O');
-      Settings.CW._zero := char(s[1]);
-
-      s := ini.ReadString('CW', 'One', 'A');
-      Settings.CW._one := char(s[1]);
-
-      s := ini.ReadString('CW', 'Nine', 'N');
-      Settings.CW._nine := char(s[1]);
-
-      Settings.CW.CWStrBank[1, 1] := ini.ReadString('CW', 'F1', 'CQ TEST $M $M TEST');
-      Settings.CW.CWStrBank[1, 2] := ini.ReadString('CW', 'F2', '$C 5NN$X');
-      Settings.CW.CWStrBank[1, 3] := ini.ReadString('CW', 'F3', 'TU $M TEST');
-      Settings.CW.CWStrBank[1, 4] := ini.ReadString('CW', 'F4', 'QSO B4 TU');
-      Settings.CW.CWStrBank[1, 5] := ini.ReadString('CW', 'F5', 'NR?');
-
-      for i := 6 to maxstr do begin
-         Settings.CW.CWStrBank[1, i] := ini.ReadString('CW', 'F' + IntToStr(i), '');
-      end;
-
-      Settings.CW.CWStrBank[3, 1] := ini.ReadString('RTTY', 'F1', 'CQ CQ CQ TEST $M $M $M TEST K');
-      Settings.CW.CWStrBank[3, 2] := ini.ReadString('RTTY', 'F2', '$C DE $M 599$X 599$X BK');
-      Settings.CW.CWStrBank[3, 3] := ini.ReadString('RTTY', 'F3', 'TU DE $M TEST');
-      Settings.CW.CWStrBank[3, 4] := ini.ReadString('RTTY', 'F4', 'QSO B4 TU');
-      Settings.CW.CWStrBank[3, 5] := ini.ReadString('RTTY', 'F5', 'NR? NR? AGN BK');
-
-      for i := 6 to maxstr do begin
-         Settings.CW.CWStrBank[3, i] := ini.ReadString('RTTY', 'F' + IntToStr(i), '');
-      end;
-
-      Settings._transverter1 := ini.ReadBool('Hardware', 'Transverter1', False);
-      Settings._transverteroffset1 := ini.ReadInteger('Hardware', 'Transverter1Offset', 0);
-      Settings._transverter2 := ini.ReadBool('Hardware', 'Transverter2', False);
-      Settings._transverteroffset2 := ini.ReadInteger('Hardware', 'Transverter2Offset', 0);
-
-      for i := 1 to maxstr do begin
-         Settings.CW.CWStrBank[2, i] := ini.ReadString('CW', 'F' + IntToStr(i) + 'B', '');
-      end;
-
-      for i := 11 to 12 do begin
-         Settings.CW.CWStrBank[1, i] := ini.ReadString('CW', 'F' + IntToStr(i), '');
-         Settings.CW.CWStrBank[2, i] := ini.ReadString('CW', 'F' + IntToStr(i) + 'B', '');
-         Settings.CW.CWStrBank[3, i] := ini.ReadString('RTTY', 'F' + IntToStr(i), '');
-      end;
-
-      Settings.CW.CQStrBank[1] := ini.ReadString('CW', 'CQ2', '');
-      Settings.CW.CQStrBank[2] := ini.ReadString('CW', 'CQ3', '');
-      Settings.CW._fixwpm := ini.ReadInteger('CW', 'FixedSpeed', 20);
-
-      for i := 1 to maxstr do begin
-         Settings._SoundFiles[i] := ini.ReadString('Voice', 'F' + IntToStr(i), 'select');
-         Settings._SoundComments[i] := ini.ReadString('Voice', 'F' + IntToStr(i) + '_Comment', '');
-      end;
-      Settings._SoundFiles[9] := ini.ReadString('Voice', 'CQ2', 'select');
-      Settings._SoundFiles[10] := ini.ReadString('Voice', 'CQ3', 'select');
-
-      Settings._SoundComments[9] := ini.ReadString('Voice', 'CQ2_Comment', '');
-      Settings._SoundComments[10] := ini.ReadString('Voice', 'CQ3_Comment', '');
-
-      Settings._specificcwport := ini.ReadInteger('Hardware', 'UseCWPort', 0 { $037A } );
-      Settings._lptnr := ini.ReadInteger('Hardware', 'CWLPTPort', 0);
-      // Settings._usedata := ini.ReadBool('Hardware','CWUseData',false);
-
-      Settings._reverselogic := ini.ReadBool('Hardware', 'CWInvLogic', False);
-      Settings._rigreverse := ini.ReadBool('Hardware', 'RigInvLogic', False);
-      Settings._pttreverse := ini.ReadBool('Hardware', 'PTTInvLogic', False);
+//      Settings._specificcwport := ini.ReadInteger('Hardware', 'UseCWPort', 0 { $037A } );
 
       Settings._mainfontsize := ini.ReadInteger('Preferences', 'FontSize', 9);
       Settings._mainrowheight := ini.ReadInteger('Preferences', 'RowHeight', 18);
@@ -1274,68 +1518,36 @@ begin
    CommForm.ImplementOptions;
    ZLinkForm.ImplementOptions;
 
-   // ver 1,3
-   // BGK32LIB.SetCWPortDirect(Settings._cwport);
-   if Settings._lptnr in [1 .. LPTMAX] then begin
-      // RigControl.ZCom3.Disconnect;
-      // BGK32LIB.KeyingPort := tkpParallel;
-      // BGK32LIB.SetCWPortDirect(LPTport[Settings._lptnr]);
-      // if Settings._specificcwport > 0 then
-      // BGK32LIB.SetCWPortDirect(Settings._specificcwport);
-      // if Settings._reverselogic then
-      // BGK32LIB.ReverseLogicKeying(True);
-      // if Settings._rigreverse then
-      // BGK32LIB.ReverseRigOut(True);
-      // if Settings._pttreverse then
-      // BGK32LIB.ReversePTTOut(True);
-      //
-      // if Settings.CW._paddle then
-      // begin
-      // BGK32LIB.SetPaddlePortDirect(LPTport[Settings._lptnr]-1);
-      // if PaddleThread = nil then // ver 1.3
-      // PaddleThread := TPaddleThread.Create(False);
-      // end
-      // else
-      // begin
-      // if PaddleThread <> nil then
-      // PaddleThread.Terminate;
-      // BGK32LIB.SetPaddlePortDirect($00);
-      // end;
-      //
-      // BGK32LIB.SetPTTportDirect(LPTport[Settings._lptnr] - 2);
-   end
-   else begin // Settings._lptnr <> parallel ports
-      Case Settings._lptnr of
-         0: begin
-               BGK32Lib.KeyingPort := tkpNone;
-            end;
-         11: begin
-               RigControl.SetSerialCWKeying(1);
-               BGK32Lib.KeyingPort := tkpSerial1;
-            end;
+   Case Settings._lptnr of
+      0: begin
+            BGK32Lib.KeyingPort := tkpNone;
+         end;
+      11: begin
+            RigControl.SetSerialCWKeying(1);
+            BGK32Lib.KeyingPort := tkpSerial1;
+         end;
 
-         12: begin
-               RigControl.SetSerialCWKeying(2);
-               BGK32Lib.KeyingPort := tkpSerial2;
-            end;
+      12: begin
+            RigControl.SetSerialCWKeying(2);
+            BGK32Lib.KeyingPort := tkpSerial2;
+         end;
 
-         21: begin // usb
-               BGK32Lib.KeyingPort := tkpUSB;
+      21: begin // usb
+            BGK32Lib.KeyingPort := tkpUSB;
 
-               if Settings.CW._paddle then begin
-                  BGK32Lib.SetPaddlePortDirect($99);
-                  if PaddleThread = nil then begin
-                     PaddleThread := TPaddleThread.Create(True);
-                  end;
-               end
-               else begin
-                  BGK32Lib.SetPaddlePortDirect($00);
-                  if PaddleThread = nil then begin
-                     PaddleThread := TPaddleThread.Create(True);
-                  end;
+            if Settings.CW._paddle then begin
+               BGK32Lib.SetPaddlePortDirect($99);
+               if PaddleThread = nil then begin
+                  PaddleThread := TPaddleThread.Create(True);
+               end;
+            end
+            else begin
+               BGK32Lib.SetPaddlePortDirect($00);
+               if PaddleThread = nil then begin
+                  PaddleThread := TPaddleThread.Create(True);
                end;
             end;
-      end;
+         end;
    end;
 
    RigControl.ImplementOptions;
@@ -1391,6 +1603,10 @@ begin
          end;
       end;
    end;
+
+   FTempClusterTelnet := Settings._cluster_telnet;
+   FTempClusterCom := Settings._cluster_com;
+   FTempZLinkTelnet := Settings._zlink_telnet;
 end;
 
 procedure TOptions.RenewSettings;
@@ -1473,25 +1689,10 @@ begin
    Settings.CW.CQStrBank[1] := Edit9.Text;
    Settings.CW.CQStrBank[2] := Edit10.Text;
 
-   for i := 1 to 10 do begin
-      Settings._SoundFiles[i] := TempVoiceFiles[i];
-   end;
-
    Settings._bsexpire := spBSExpire.Value;
    Settings._spotexpire := spSpotExpire.Value;
 
    Settings._icombaudrate := cbIcomBaudRate.ItemIndex;
-
-   Settings._SoundComments[1] := vEdit1.Text;
-   Settings._SoundComments[2] := vEdit2.Text;
-   Settings._SoundComments[3] := vEdit3.Text;
-   Settings._SoundComments[4] := vEdit4.Text;
-   Settings._SoundComments[5] := vEdit5.Text;
-   Settings._SoundComments[6] := vEdit6.Text;
-   Settings._SoundComments[7] := vEdit7.Text;
-   Settings._SoundComments[8] := vEdit8.Text;
-   Settings._SoundComments[9] := vEdit9.Text;
-   Settings._SoundComments[10] := vEdit10.Text;
 
    r := Settings.CW._cqrepeat;
    Settings.CW._cqrepeat := StrToFloatDef(CQRepEdit.Text, r);
@@ -1517,7 +1718,7 @@ begin
    end;
 
    Settings._clusterport := ClusterCombo.ItemIndex;
-   Settings._clusterbaud := ClusterCOMSet.BaudCombo.ItemIndex;
+//   Settings._clusterbaud := ClusterCOMSet.BaudCombo.ItemIndex;
    Settings._rig1port := Rig1PortCombo.ItemIndex;
    Settings._ritclear := cbRITClear.Checked;
    Settings._rig1name := Rig1Combo.ItemIndex;
@@ -1525,21 +1726,9 @@ begin
    Settings._rig2port := Rig2PortCombo.ItemIndex;
    Settings._rig2name := Rig2Combo.ItemIndex;
 
-   Settings._clusterhost := ClusterTelnetSet.HostName.Text;
-   Settings._clustertelnetport := ClusterTelnetSet.spPortNumber.Value;
-   Settings._clusterlinebreakTELNET := ClusterTelnetSet.LineBreak.ItemIndex;
-   Settings._clusterlocalechoTELNET := ClusterTelnetSet.LocalEcho.Checked;
-   Settings._clusterlinebreakCOM := ClusterCOMSet.LineBreak.ItemIndex;
-   Settings._clusterlocalechoCOM := ClusterCOMSet.LocalEcho.Checked;
-
    Settings._zlinkport := ZLinkCombo.ItemIndex;
-   // Settings._zlinkbaud := ZLinkCOMSet.BaudCombo.ItemIndex;
-
-   // Settings._zlinkhost := ZLinkTelnetSet.HostName.Text;
-   // Settings._zlinklinebreakTELNET := ZLinkTelnetSet.LineBreak.ItemIndex;
-   // Settings._zlinklocalechoTELNET := ZLinkTelnetSet.LocalEcho.Checked;
-   // Settings._zlinklinebreakCOM := ZLinkCOMSet.LineBreak.ItemIndex;
-   // Settings._zlinklocalechoCOM := ZLinkCOMSet.LocalEcho.Checked;
+   Settings._pcname := editZLinkPcName.Text;
+   Settings._syncserial := checkZLinkSyncSerial.Checked;
 
    Settings._pttenabled := PTTEnabledCheckBox.Checked;
    Settings._saveevery := SaveEvery.Value;
@@ -1551,15 +1740,6 @@ begin
 
    i := Settings._pttafter;
    Settings._pttafter := StrToIntDef(AfterEdit.Text, i);
-
-   { i := HexStrToInt(CWPortEdit.Text);
-     if i > 0 then
-     Settings._cwport := i; }
-
-   // if rbLPT1.Checked then
-   // Settings._lptnr := 1;
-   // if rbLPT2.Checked then
-   // Settings._lptnr := 2;
 
    if radioCwNone.Checked = True then begin
       Settings._lptnr := 0;
@@ -1587,19 +1767,18 @@ begin
    Settings._transverter1 := cbTransverter1.Checked;
    Settings._transverter2 := cbTransverter2.Checked;
    Settings._autobandmap := cbAutoBandMap.Checked;
+
+   Settings._cluster_telnet := FTempClusterTelnet;
+   Settings._cluster_com := FTempClusterCom;
+   Settings._zlink_telnet := FTempZLinkTelnet;
 end;
 
-procedure TOptions.OKButtonClick(Sender: TObject);
+procedure TOptions.buttonOKClick(Sender: TObject);
 begin
    RenewSettings;
    ImplementSettings(False);
    SaveCurrentSettings();
-
-   MainForm.RenewCWToolBar;
-   MainForm.RenewVoiceToolBar;
-
    Close;
-   MainForm.LastFocus.SetFocus;
 end;
 
 procedure TOptions.RenewCWStrBankDisp;
@@ -1618,7 +1797,6 @@ procedure TOptions.FormShow(Sender: TObject);
 var
    i, j: integer;
 begin
-
    cbSaveWhenNoCW.Checked := Settings._savewhennocw;
    cbJMode.Checked := Settings._jmode;
 
@@ -1693,31 +1871,6 @@ begin
    Edit9.Text := Settings.CW.CQStrBank[1];
    Edit10.Text := Settings.CW.CQStrBank[2];
 
-   vEdit1.Text := Settings._SoundComments[1];
-   vEdit2.Text := Settings._SoundComments[2];
-   vEdit3.Text := Settings._SoundComments[3];
-   vEdit4.Text := Settings._SoundComments[4];
-   vEdit5.Text := Settings._SoundComments[5];
-   vEdit6.Text := Settings._SoundComments[6];
-   vEdit7.Text := Settings._SoundComments[7];
-   vEdit8.Text := Settings._SoundComments[8];
-   vEdit9.Text := Settings._SoundComments[9];
-   vEdit10.Text := Settings._SoundComments[10];
-
-   vButton1.Caption := ExtractFileName(Settings._SoundFiles[1]);
-   vButton2.Caption := ExtractFileName(Settings._SoundFiles[2]);
-   vButton3.Caption := ExtractFileName(Settings._SoundFiles[3]);
-   vButton4.Caption := ExtractFileName(Settings._SoundFiles[4]);
-   vButton5.Caption := ExtractFileName(Settings._SoundFiles[5]);
-   vButton6.Caption := ExtractFileName(Settings._SoundFiles[6]);
-   vButton7.Caption := ExtractFileName(Settings._SoundFiles[7]);
-   vButton8.Caption := ExtractFileName(Settings._SoundFiles[8]);
-   vButton9.Caption := ExtractFileName(Settings._SoundFiles[9]);
-   vButton10.Caption := ExtractFileName(Settings._SoundFiles[10]);
-
-   for i := 1 to 10 do
-      TempVoiceFiles[i] := Settings._SoundFiles[i];
-
    CQRepEdit.Text := FloatToStrF(Settings.CW._cqrepeat, ffFixed, 3, 1);
    SendFreqEdit.Text := FloatToStrF(Settings._sendfreq, ffFixed, 3, 1);
    SpeedBar.Position := Settings.CW._speed;
@@ -1741,6 +1894,9 @@ begin
 
    ClusterCombo.ItemIndex := Settings._clusterport;
    ZLinkCombo.ItemIndex := Settings._zlinkport;
+   editZLinkPcName.Text := Settings._pcname;
+   checkZLinkSyncSerial.Checked := Settings._syncserial;
+
    Rig1PortCombo.ItemIndex := Settings._rig1port;
    cbRITClear.Checked := Settings._ritclear;
    Rig1Combo.ItemIndex := Settings._rig1name;
@@ -1751,46 +1907,15 @@ begin
 
    cbIcomBaudRate.ItemIndex := Settings._icombaudrate;
 
-   PCsetButton.Enabled := True;
-   case ClusterCombo.ItemIndex of
-      0:
-         PCsetButton.Enabled := False;
-      1 .. 6:
-         PCsetButton.Caption := 'COM port settings';
-      7:
-         PCsetButton.Caption := 'TELNET settings';
-   end;
+   // Packet Cluster通信設定ボタン
+   buttonClusterSettings.Enabled := True;
+   ClusterComboChange(nil);
 
+   // ZLink通信設定ボタン
    buttonZLinkSettings.Enabled := True;
-   case ZLinkCombo.ItemIndex of
-      0:
-         buttonZLinkSettings.Enabled := False;
-      1:
-         buttonZLinkSettings.Caption := 'TELNET settings';
-   end;
+   ZLinkComboChange(nil);
 
    SaveEvery.Value := Settings._saveevery;
-
-   ClusterCOMSet.SetVisuals;
-   ClusterTelnetSet.SetVisuals;
-
-   // ZLinkCOMSet.SetVisuals;
-   // ZLinkTelnetSet.SetVisuals;
-
-   // if LPTport[1] = 0 then
-   // rbLPT1.Enabled := False
-   // else
-   // rbLPT1.Enabled := True;
-
-   // if LPTport[2] = 0 then
-   // rbLPT2.Enabled := False
-   // else
-   // rbLPT2.Enabled := True;
-
-   // if Settings._lptnr = 1 then
-   // rbLPT1.Checked := True;
-   // if Settings._lptnr = 2 then
-   // rbLPT2.Checked := True;
 
    if Settings._lptnr = 0 then begin
       radioCwNone.Checked := True;
@@ -1840,10 +1965,13 @@ var
 begin
    if OpEdit.Text <> '' then begin
       str := OpEdit.Text;
-      if OpPowerEdit.Text <> '' then
+      if OpPowerEdit.Text <> '' then begin
          str := FillRight(str, 20) + OpPowerEdit.Text;
+      end;
+
       OpListBox.Items.Add(str);
    end;
+
    OpEdit.Text := '';
    OpPowerEdit.Text := '';
    OpEdit.SetFocus;
@@ -1851,7 +1979,6 @@ end;
 
 procedure TOptions.DeleteClick(Sender: TObject);
 begin
-
    OpListBox.Items.Delete(OpListBox.ItemIndex);
 end;
 
@@ -1860,16 +1987,7 @@ var
    filename: string;
    b: TBand;
    i: integer;
-   VerInfo: TOSVersionInfo;
 begin
-   VerInfo.dwOSVersionInfoSize := SizeOf(TOSVersionInfo);
-   GetVersionEx(VerInfo);
-
-   if VerInfo.dwPlatformId = VER_PLATFORM_WIN32_NT then begin
-      ZLOG_WIN2KMODE := True;
-      BGK32Lib._WIN2KMODE := ZLOG_WIN2KMODE;
-   end;
-
    for b := b19 to b10g do begin
       CurrentPower[b] := pwrP;
       CurrentPower2[b] := 500;
@@ -1904,10 +2022,9 @@ begin
    end;
 end;
 
-procedure TOptions.Button2Click(Sender: TObject);
+procedure TOptions.buttonCancelClick(Sender: TObject);
 begin
    Close;
-   MainForm.LastFocus.SetFocus;
 end;
 
 procedure TOptions.OpEditKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
@@ -1925,16 +2042,7 @@ end;
 
 procedure TOptions.OpEditExit(Sender: TObject);
 begin
-   OKButton.Default := True;
-end;
-
-procedure TOptions.Button3Click(Sender: TObject);
-begin
-   RenewSettings;
-   ImplementSettings(False);
-   SaveCurrentSettings; { Writes Settings to Inifile }
-   MainForm.RenewCWToolBar;
-   MainForm.RenewVoiceToolBar;
+   buttonOK.Default := True;
 end;
 
 procedure TOptions.SpeedBarChange(Sender: TObject);
@@ -1962,23 +2070,59 @@ end;
 
 procedure TOptions.ClusterComboChange(Sender: TObject);
 begin
-   PCsetButton.Enabled := True;
+   buttonClusterSettings.Enabled := True;
    case ClusterCombo.ItemIndex of
       0:
-         PCsetButton.Enabled := False;
+         buttonClusterSettings.Enabled := False;
       1 .. 6:
-         PCsetButton.Caption := 'COM port settings';
+         buttonClusterSettings.Caption := 'COM port settings';
       7:
-         PCsetButton.Caption := 'TELNET settings';
+         buttonClusterSettings.Caption := 'TELNET settings';
    end;
 end;
 
-procedure TOptions.PCsetButtonClick(Sender: TObject);
+procedure TOptions.buttonClusterSettingsClick(Sender: TObject);
+var
+   f: TForm;
 begin
-   if PCsetButton.Caption = 'COM port settings' then
-      ClusterCOMSet.ShowModal
-   else
-      ClusterTelnetSet.ShowModal;
+   if (ClusterCombo.ItemIndex >= 1) and (ClusterCombo.ItemIndex <= 6) then begin
+      f := TformClusterCOMSet.Create(Self);
+      try
+         TformClusterCOMSet(f).BaudRate  := FTempClusterCom.FBaudRate;
+         TformClusterCOMSet(f).LineBreak := FTempClusterCom.FLineBreak;
+         TformClusterCOMSet(f).LocalEcho := FTempClusterCom.FLocalEcho;
+
+         if f.ShowModal() <> mrOK then begin
+            Exit;
+         end;
+
+         FTempClusterCom.FBaudRate  := TformClusterCOMSet(f).BaudRate;
+         FTempClusterCom.FLineBreak := TformClusterCOMSet(f).LineBreak;
+         FTempClusterCom.FLocalEcho := TformClusterCOMSet(f).LocalEcho;
+      finally
+         f.Release();
+      end;
+   end
+   else if ClusterCombo.ItemIndex = 7 then begin
+      f := TformClusterTelnetSet.Create(Self);
+      try
+         TformClusterTelnetSet(f).HostName   := FTempClusterTelnet.FHostName;
+         TformClusterTelnetSet(f).LineBreak  := FTempClusterTelnet.FLineBreak;
+         TformClusterTelnetSet(f).LocalEcho  := FTempClusterTelnet.FLocalEcho;
+         TformClusterTelnetSet(f).PortNumber := FTempClusterTelnet.FPortNumber;
+
+         if f.ShowModal() <> mrOK then begin
+            Exit;
+         end;
+
+         FTempClusterTelnet.FHostName   := TformClusterTelnetSet(f).HostName;
+         FTempClusterTelnet.FLineBreak  := TformClusterTelnetSet(f).LineBreak;
+         FTempClusterTelnet.FLocalEcho  := TformClusterTelnetSet(f).LocalEcho;
+         FTempClusterTelnet.FPortNumber := TformClusterTelnetSet(f).PortNumber;
+      finally
+         f.Release();
+      end;
+   end;
 end;
 
 procedure TOptions.ZLinkComboChange(Sender: TObject);
@@ -1997,17 +2141,17 @@ var
 begin
    F := TformZLinkTelnetSet.Create(Self);
    try
-      F.HostName := Options.Settings._zlinkhost;
-      F.LineBreak := Options.Settings._zlinklinebreakTELNET;
-      F.LocalEcho := Options.Settings._zlinklocalechoTELNET;
+      F.HostName  := FTempZLinkTelnet.FHostName;
+      F.LineBreak := FTempZLinkTelnet.FLineBreak;
+      F.LocalEcho := FTempZLinkTelnet.FLocalEcho;
 
       if F.ShowModal() <> mrOK then begin
          exit;
       end;
 
-      Options.Settings._zlinkhost := F.HostName;
-      Options.Settings._zlinklinebreakTELNET := F.LineBreak;
-      Options.Settings._zlinklocalechoTELNET := F.LocalEcho;
+      FTempZLinkTelnet.FHostName  := F.HostName;
+      FTempZLinkTelnet.FLineBreak := F.LineBreak;
+      FTempZLinkTelnet.FLocalEcho := F.LocalEcho;
    finally
       F.Release();
    end;
@@ -2071,11 +2215,6 @@ procedure TOptions.CWBankClick(Sender: TObject);
 begin
    TempCurrentBank := TRadioButton(Sender).Tag;
    RenewCWStrBankDisp;
-end;
-
-function TOptions.PTTEnabled: boolean;
-begin
-   Result := Settings._pttenabled;
 end;
 
 procedure TOptions.ReadWin(WinName: string; var Open: boolean; var X, Y, H, W: integer);
@@ -2243,6 +2382,7 @@ begin
 
       IntegerDialog.Init(i, 'Please input the offset frequency in kHz');
       IntegerDialog.ShowModal;
+
       i := IntegerDialog.GetValue;
       if i <> -1 then begin
          if r = 1 then

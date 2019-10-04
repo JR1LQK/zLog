@@ -23,8 +23,8 @@ uses
   UWWMulti in 'UWWMulti.pas' {WWMulti},
   UWWZone in 'UWWZone.pas' {WWZone},
   UComm in 'UComm.pas' {CommForm},
-  UClusterTelnetSet in 'UClusterTelnetSet.pas' {ClusterTelnetSet},
-  UClusterCOMSet in 'UClusterCOMSet.pas' {ClusterCOMSet},
+  UClusterTelnetSet in 'UClusterTelnetSet.pas' {formClusterTelnetSet},
+  UClusterCOMSet in 'UClusterCOMSet.pas' {formClusterCOMSet},
   UJIDXMulti in 'UJIDXMulti.pas' {JIDXMulti},
   UJIDXScore in 'UJIDXScore.pas' {JIDXScore},
   UJIDXScore2 in 'UJIDXScore2.pas' {JIDXScore2},
@@ -109,17 +109,11 @@ begin
   Application.CreateForm(TOptions, Options);
   Application.CreateForm(TMainForm, MainForm);
   Application.CreateForm(TPartialCheck, PartialCheck);
-  //  Application.CreateForm(TBasicScore, BasicScore);
-//  Application.CreateForm(TBasicMulti, BasicMulti);
   Application.CreateForm(TEditDialog, EditDialog);
   Application.CreateForm(TAboutBox, AboutBox);
   Application.CreateForm(TRateDialog, RateDialog);
   Application.CreateForm(TSuperCheck, SuperCheck);
   Application.CreateForm(TCommForm, CommForm);
-  Application.CreateForm(TClusterTelnetSet, ClusterTelnetSet);
-  Application.CreateForm(TClusterCOMSet, ClusterCOMSet);
-//  Application.CreateForm(TZLinkCOMSet, ZLinkCOMSet);
-//  Application.CreateForm(TZLinkTelnetSet, ZLinkTelnetSet);
   Application.CreateForm(TPediScore, PediScore);
   Application.CreateForm(TCWKeyBoard, CWKeyBoard);
   Application.CreateForm(TChatForm, ChatForm);
@@ -140,10 +134,9 @@ begin
   Application.CreateForm(TNewPrefix, NewPrefix);
   Application.CreateForm(TScratchSheet, ScratchSheet);
   Application.CreateForm(TQTCForm, QTCForm);
-//  Application.CreateForm(TVoiceForm, VoiceForm);
   Application.CreateForm(TQuickRef, QuickRef);
   Application.CreateForm(TBandScope2, BandScope2);
-//  Application.CreateForm(TELogJapanese, ELogJapanese);
+
   Options.ImplementSettings(False);
 
    try

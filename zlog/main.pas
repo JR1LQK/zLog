@@ -6,7 +6,7 @@ uses
   SysUtils, Windows, Messages, Classes, Graphics, Controls,
   Forms, Dialogs, StdCtrls, Buttons, ExtCtrls, Menus, zLogGlobal, ComCtrls,
   Grids, UBasicMulti, UBasicScore, UALLJAMulti, UOptions, UEditDialog,
-  BGK32Lib, UzLogCW, Aligrid, Hemibtn, ShellAPI,
+  BGK32Lib, UzLogCW, Aligrid, Hemibtn, ShellAPI, UITypes,
   OEdit, URigControl, UConsolePad, URenewThread, USpotClass,
   UMMTTY, UTTYConsole, UPaddleThread, UELogJapanese;
 
@@ -757,6 +757,7 @@ type
     procedure SwitchLastQSOBandMode;
     procedure IncFontSize;
     procedure AutoInput(D : TBSData);
+    procedure ConsoleRigBandSet(B: TBand);
   end;
 
 var
@@ -862,7 +863,7 @@ var
 begin
 
    TL := TList.Create;
-   mytx := Options.GetTXNr;
+   mytx := Options.TXNr;
    for i := 1 to Log.TotalQSO do
       if TQSO(Log.List[i]).QSO.TX = mytx then
          TL.Add(TQSO(Log.List[i]));
@@ -898,7 +899,7 @@ begin
       exit;
 
    TL := TList.Create;
-   mytx := Options.GetTXNr;
+   mytx := Options.TXNr;
    for i := 1 to Log.TotalQSO do
       if TQSO(Log.List[i]).QSO.TX = mytx then
          TL.Add(TQSO(Log.List[i]));
@@ -1505,11 +1506,12 @@ med:
 
    // added for acag
    str := MainForm.NumberEdit.Text;
-   if str <> '' then
+   if str <> '' then begin
       if str[length(str)] in ['H', 'M', 'L', 'P'] then begin
          MainForm.NumberEdit.SelStart := length(str) - 1;
          MainForm.NumberEdit.SelLength := 1;
       end;
+   end;
 end;
 
 Procedure TContest.SpaceBarProc;
@@ -1644,11 +1646,14 @@ begin
 
    boo := false;
    for B := b19 to HiBand do begin
-      if MainForm.BandMenu.Items[Ord(B)].Visible and MainForm.BandMenu.Items[Ord(B)].Enabled then
+      if MainForm.BandMenu.Items[Ord(B)].Visible and MainForm.BandMenu.Items[Ord(B)].Enabled then begin
          boo := True;
+      end;
    end;
-   if boo = false then
+
+   if boo = false then begin
       exit; { No QRVable and Contest allowed band }
+   end;
 
    B0 := BB;
 
@@ -1678,26 +1683,29 @@ top:
          B0 := HiBand
       else
          dec(B0);
-      for B := B0 downto b19 do
+
+      for B := B0 downto b19 do begin
          if MainForm.BandMenu.Items[Ord(B)].Visible and MainForm.BandMenu.Items[Ord(B)].Enabled then begin
             if Options.Settings._dontallowsameband and RigControl.CheckSameBand(B) then begin
             end
             else
                goto xxx;
          end;
-      for B := HiBand downto B0 do
+      end;
+
+      for B := HiBand downto B0 do begin
          if MainForm.BandMenu.Items[Ord(B)].Visible and MainForm.BandMenu.Items[Ord(B)].Enabled then begin
             if Options.Settings._dontallowsameband and RigControl.CheckSameBand(B) then begin
             end
             else
                goto xxx;
          end;
+      end;
    end;
 
 xxx:
 
-   if RigControl.Rig <> nil then // keep band within Rig
-   begin
+   if RigControl.Rig <> nil then begin // keep band within Rig
       if (B > RigControl.Rig._maxband) or (B < RigControl.Rig._minband) then begin
          B0 := B;
          goto top;
@@ -2208,7 +2216,7 @@ var
 begin
    if Log.TotalQSO > 0 then begin
       T := Log.TotalQSO;
-      mytx := Options.GetTXNr;
+      mytx := Options.TXNr;
       if { Local = True } mytx = aQSO.QSO.TX then // same tx # could be through network
       begin
          boo := false;
@@ -2292,10 +2300,7 @@ procedure TContest.Renew;
 var
    i, j: integer;
    aQSO: TQSO;
-   temp: string;
-   B: TBand;
 begin
-
    if Options.Settings._renewbythread then begin
       RequestRenewThread;
       exit;
@@ -3260,8 +3265,7 @@ end;
 procedure TBasicEdit.Renew;
 var
    R: word;
-   i, j, _row, _toprow: integer;
-   temp: string[2];
+   i, _row, _toprow: integer;
 begin
    for i := 1 to MaxGridQSO do
       IndexArray[i] := 0;
@@ -3484,10 +3488,7 @@ begin
 end;
 
 constructor TGeneralEdit.Create;
-var
-   i: integer;
 begin
-
    inherited;
 
    colTime := 0;
@@ -4038,7 +4039,6 @@ var
    i, j, mSec: integer;
    M: TMenuItem;
    S, ss: string;
-   VerInfo: TOSVersionInfo;
    debugfile: textfile;
 begin
    if DEBUGMODE then begin
@@ -4081,13 +4081,14 @@ begin
       closefile(debugfile);
    end;
 
-   VerInfo.dwOSVersionInfoSize := SizeOf(TOSVersionInfo);
-   GetVersionEx(VerInfo);
-
-   if VerInfo.dwPlatformId = VER_PLATFORM_WIN32_NT then begin
-      ZLOG_WIN2KMODE := True;
-      BGK32Lib._WIN2KMODE := ZLOG_WIN2KMODE;
-   end;
+//   VerInfo.dwOSVersionInfoSize := SizeOf(TOSVersionInfo);
+//   GetVersionEx(VerInfo);
+//
+//   if VerInfo.dwPlatformId = VER_PLATFORM_WIN32_NT then begin
+//      ZLOG_WIN2KMODE := True;
+//      BGK32Lib._WIN2KMODE := ZLOG_WIN2KMODE;
+//   end;
+   BGK32Lib._WIN2KMODE := True;
 
    if DEBUGMODE then begin
       append(debugfile);
@@ -4095,10 +4096,10 @@ begin
       closefile(debugfile);
    end;
 
-   if HiWord(GetKeyState(VK_SHIFT)) <> 0 then begin // ver 1.9x
-      ZLOG_WIN2KMODE := True;
-      BGK32Lib._WIN2KMODE := ZLOG_WIN2KMODE;
-   end;
+//   if HiWord(GetKeyState(VK_SHIFT)) <> 0 then begin // ver 1.9x
+//      ZLOG_WIN2KMODE := True;
+//      BGK32Lib._WIN2KMODE := ZLOG_WIN2KMODE;
+//   end;
 
    if DEBUGMODE then begin
       append(debugfile);
@@ -4146,7 +4147,7 @@ begin
       Band := b7;
 
       Operator := '';
-      TX := Options.GetTXNr;
+      TX := Options.TXNr;
       Reserve3 := NewQSOID;
    end;
 
@@ -4342,30 +4343,40 @@ var
 begin
    f := CheckCall2;
    _RestoreWinState(f);
+
    f := PartialCheck;
    _RestoreWinState(f);
-   // _RestoreWinState(F);
+
    f := SuperCheck;
    _RestoreWinState(f);
-   // Options.ReadWin2('SuperCheck', F);
+
    f := CheckMulti;
    _RestoreWinState(f);
+
    f := CWKeyBoard;
    _RestoreWinState(f);
+
    f := RigControl;
    _RestoreWinState(f);
+
    { F := BandScope;
      _RestoreWinState(F); }
+
    f := BandScope2;
    _RestoreWinState(f);
+
    f := ChatForm;
    _RestoreWinState(f);
+
    f := FreqList;
    _RestoreWinState(f);
+
    f := CommForm;
    _RestoreWinState(f);
+
    f := ScratchSheet;
    _RestoreWinState(f);
+
    f := QuickRef;
    _RestoreWinState(f);
 
@@ -4376,6 +4387,7 @@ begin
       f.Left := X;
       f.top := Y;
    end;
+
    f := MyContest.ScoreForm;
    Options.ReadWin('ScoreForm', B, X, Y, H, W);
    if B = True then begin
@@ -4383,6 +4395,7 @@ begin
       f.Left := X;
       f.top := Y;
    end;
+
    Options.RestoreMainForm(X, Y, W, H, B, BB);
    if (W > 0) and (H > 0) then begin
       if B then begin
@@ -4399,6 +4412,7 @@ begin
       Width := W;
       Height := H;
    end;
+
    X := Options.GetSuperCheckColumns;
    SuperCheck.ListBox.Columns := X;
    SuperCheck.SpinEdit.Value := X;
@@ -4409,35 +4423,47 @@ var
    f: TForm;
 begin
    f := CheckCall2;
-   // Options.RecordWin(F.Name, F.Visible, F.Left, F.Top);
    Options.RecordWin2(f.Name, f);
+
    f := PartialCheck;
    Options.RecordWin2(f.Name, f);
+
    f := SuperCheck;
    Options.RecordWin2(f.Name, f);
+
    f := CheckMulti;
    Options.RecordWin2(f.Name, f);
+
    f := CWKeyBoard;
    Options.RecordWin2(f.Name, f);
+
    f := RigControl;
    Options.RecordWin2(f.Name, f);
+
    { F := BandScope;
      Options.RecordWin2(F.Name, F); }
+
    f := BandScope2;
    Options.RecordWin2(f.Name, f);
+
    f := ChatForm;
    Options.RecordWin2(f.Name, f);
+
    f := FreqList;
    Options.RecordWin2(f.Name, f);
+
    f := CommForm;
    Options.RecordWin2(f.Name, f);
+
    f := ScratchSheet;
    Options.RecordWin2(f.Name, f);
+
    f := QuickRef;
    Options.RecordWin2(f.Name, f);
 
    f := MyContest.MultiForm;
    Options.RecordWin('MultiForm', f.Visible, f.Left, f.top);
+
    f := MyContest.ScoreForm;
    Options.RecordWin('ScoreForm', f.Visible, f.Left, f.top);
 
@@ -4514,7 +4540,7 @@ begin
    ABoutBox.Show; { Add code to show program's About Box }
 end;
 
-procedure ConsoleRigBandSet(B: TBand);
+procedure TMainForm.ConsoleRigBandSet(B: TBand);
 var
    Q: TQSO;
 begin
@@ -4523,13 +4549,15 @@ begin
 
    if RigControl.Rig <> nil then begin
       RigControl.Rig.SetBand(Q);
-      if CurrentQSO.QSO.mode = mSSB then
+
+      if CurrentQSO.QSO.mode = mSSB then begin
          RigControl.Rig.SetMode(CurrentQSO);
+      end;
+
       RigControl.SetBandMask; // ver 1.9z
-      MainForm.UpdateBand(Q.QSO.Band);
-   end
-   else
-      MainForm.UpdateBand(Q.QSO.Band);
+   end;
+
+   UpdateBand(Q.QSO.Band);
 
    Q.Free;
 end;
@@ -4564,19 +4592,13 @@ begin
    // if S = 'ELOG' then
    // ELogJapanese.ShowModal;
 
-   if S = 'NTMODE' then begin
-      if ZLOG_WIN2KMODE = True then
-         WriteStatusLine('ZLOG_WIN2KMODE = True', false)
-      else
-         WriteStatusLine('ZLOG_WIN2KMODE = False', false)
-   end;
-
    if Pos('WANTED', S) = 1 then begin
       Delete(temp, 1, 6);
       temp := TrimRight(temp);
       if temp <> '' then begin
-         if temp[1] in ['_', '/', '-'] then
+         if CharInSet(temp[1], ['_', '/', '-']) = True then begin
             Delete(temp, 1, 1);
+         end;
          ZLinkForm.PostWanted(CurrentQSO.QSO.Band, temp);
          MyContest.PostWanted(IntToStr(Ord(CurrentQSO.QSO.Band)) + ' ' + temp);
       end;
@@ -4590,24 +4612,13 @@ begin
       Delete(temp, 1, 9);
       temp := TrimRight(temp);
       if temp <> '' then begin
-         if temp[1] in ['_', '/', '-'] then
+         if CharInSet(temp[1], ['_', '/', '-']) = True then begin
             Delete(temp, 1, 1);
+         end;
+
          ZLinkForm.DelWanted(CurrentQSO.QSO.Band, temp);
          MyContest.DelWanted(IntToStr(Ord(CurrentQSO.QSO.Band)) + ' ' + temp);
       end;
-   end;
-
-   if Pos('HARDWARE', S) = 1 then begin
-      if Pos('ON', S) > 0 then begin
-         ZLOG_WIN2KMODE := false;
-         BGK32Lib._WIN2KMODE := ZLOG_WIN2KMODE;
-         WriteStatusLine('Hardware access enabled', false);
-      end
-      else begin
-         ZLOG_WIN2KMODE := True;
-         BGK32Lib._WIN2KMODE := ZLOG_WIN2KMODE;
-         WriteStatusLine('Hardware access disabled', false);
-      end
    end;
 
    if (Pos('AUTOBANDSCOPE', S) = 1) or (Pos('AUTOBANDMAP', S) = 1) or (Pos('AUTOBS', S) = 1) then begin
@@ -4621,9 +4632,11 @@ begin
       end
    end;
 
-   if S = 'T' then
-      if TTYConsole <> nil then
+   if S = 'T' then begin
+      if TTYConsole <> nil then begin
          TTYConsole.Show;
+      end;
+   end;
 
    if S = 'MMTTY' then begin
       mnMMTTY.Tag := 1;
@@ -4666,35 +4679,37 @@ begin
          SetDispHeight(j);
    end;
 
-   if S = 'MMCLR' then
+   if S = 'MMCLR' then begin
       MMTTYBuffer := '';
+   end;
 
-   if S = 'SF' then
+   if S = 'SF' then begin
       ZLinkForm.SendRigStatus;
+   end;
 
    if S = 'CQ' then begin
       SetCQ(True);
-      // ZLinkForm.SendRigStatus;
    end;
 
    if S = 'SP' then begin
       SetCQ(false);
-      // ZLinkForm.SendRigStatus;
    end;
 
-   if S = 'DEBUG' then
+   if S = 'DEBUG' then begin
       WriteStatusLine('DEBUG_FLAG=' + IntToStr(DEBUG_FLAG), false);
+   end;
 
-   if S = 'CQ?' then
+   if S = 'CQ?' then begin
       if CurrentQSO.QSO.CQ then
          WriteStatusLine('CQ status : CQ', false)
       else
          WriteStatusLine('CQ status : SP', false);
+   end;
 
    if (S = 'MUL') or (S = 'MULTI') or (S = 'MULT') then begin
       Options.Settings._multistation := True;
-      Options.SetTXNr(2);
-      CurrentQSO.QSO.TX := Options.GetTXNr;
+      Options.TXNr := 2;
+      CurrentQSO.QSO.TX := Options.TXNr;
       WriteStatusLine('Multi station', True);
 
       if MainForm.SerialEdit.Visible then
@@ -4703,14 +4718,15 @@ begin
             MainForm.SerialEdit.Text := CurrentQSO.SerialStr;
          end;
 
-      MainForm.Caption := 'zLog for Windows - Multi station  ' + ExtractFileName(CurrentFileName);
+      Caption := 'zLog for Windows - Multi station  ' + ExtractFileName(CurrentFileName);
       ReEvaluateCountDownTimer;
       ReEvaluateQSYCount;
    end;
+
    if S = 'RUN' then begin
       Options.Settings._multistation := false;
-      Options.SetTXNr(1);
-      CurrentQSO.QSO.TX := Options.GetTXNr;
+      Options.TXNr := 1;
+      CurrentQSO.QSO.TX := Options.TXNr;
       WriteStatusLine('Running station', True);
 
       if MainForm.SerialEdit.Visible then
@@ -4719,29 +4735,36 @@ begin
             MainForm.SerialEdit.Text := CurrentQSO.SerialStr;
          end;
 
-      MainForm.Caption := 'zLog for Windows - Running station  ' + ExtractFileName(CurrentFileName);
+      Caption := 'zLog for Windows - Running station  ' + ExtractFileName(CurrentFileName);
       ReEvaluateCountDownTimer;
       ReEvaluateQSYCount;
    end;
 
-   if S = 'SERIALTYPE' then
+   if S = 'SERIALTYPE' then begin
       WriteStatusLine('SerialContestType = ' + IntToStr(SerialContestType), True);
+   end;
+
    if S = 'TUNE' then begin
       CtrlZCQLoop := True;
       TuneOn;
    end;
+
    if (S = 'LF') or (S = 'LASTF') then
       if RigControl.Rig <> nil then
          RigControl.Rig.MoveToLastFreq;
+
    if S = 'TV' then
       if RigControl.Rig <> nil then
          RigControl.Rig.ToggleVFO;
+
    if S = 'VA' then
       if RigControl.Rig <> nil then
          RigControl.Rig.SetVFO(0);
+
    if S = 'VB' then
       if RigControl.Rig <> nil then
          RigControl.Rig.SetVFO(1);
+
    if S = 'RC' then
       if RigControl.Rig <> nil then
          RigControl.Rig.RitClear;
@@ -4752,6 +4775,7 @@ begin
 
    if S = 'SC' then
       SuperCheckButtonClick(Self);
+
    if S = 'RESET' then
       if RigControl.Rig <> nil then
          RigControl.Rig.reset;
@@ -4770,8 +4794,9 @@ begin
          end;
       end;
 
-   if S = 'TR' then
+   if S = 'TR' then begin
       RigControl.ToggleCurrentRig;
+   end;
 
    if Pos('MAXRIG', S) = 1 then begin
       if length(temp) = 6 then
@@ -4803,9 +4828,11 @@ begin
             on EConvertError do
                exit;
          end;
-         if (j >= 0) and (j <= 99) then
-            Options.SetTXNr(j);
-         CurrentQSO.QSO.TX := Options.GetTXNr;
+         if (j >= 0) and (j <= 99) then begin
+            Options.TXNr := j;
+         end;
+
+         CurrentQSO.QSO.TX := Options.TXNr;
          WriteStatusLine('TX# set to ' + IntToStr(Options.Settings._txnr), True);
          ReEvaluateQSYCount;
       end;
@@ -4933,14 +4960,18 @@ begin
 
    if (S = 'LQ') or (S = 'L') then
       SwitchLastQSOBandMode;
-   if S = 'CWOFF' then
+
+   if S = 'CWOFF' then begin
       CloseBGK;
-   if S = 'CWON' then
+   end;
+
+   if S = 'CWON' then begin
       InitializeBGK(Options.Settings.CW._interval);
+   end;
 
    i := StrToFloatDef(S, 0);
 
-   if (i > 1799) and (i < 1000000) then
+   if (i > 1799) and (i < 1000000) then begin
       if RigControl.Rig <> nil then begin
          RigControl.Rig.SetFreq(round(i * 1000));
          if CurrentQSO.QSO.mode = mSSB then
@@ -4952,6 +4983,7 @@ begin
          RigControl.TempFreq[CurrentQSO.QSO.Band] := i;
          ZLinkForm.SendFreqInfo(round(i * 1000));
       end;
+   end;
 
    if Pos('SYNCSERIAL', S) = 1 then begin
       if Pos('OFF', S) > 0 then
@@ -5598,7 +5630,7 @@ begin
    CurrentQSO.QSO.Callsign := '';
    CurrentQSO.QSO.NrRcvd := '';
    CurrentQSO.QSO.Time := Date + Time;
-   CurrentQSO.QSO.TX := Options.GetTXNr;
+   CurrentQSO.QSO.TX := Options.TXNr;
    CurrentQSO.QSO.Serial := Q.QSO.Serial;
    CurrentQSO.QSO.Memo := '';
 
@@ -6193,7 +6225,7 @@ begin
          RigControl.Rig.RitClear;
 
       inc(CurrentQSO.QSO.Serial);
-      SerialArrayTX[Options.GetTXNr] := CurrentQSO.QSO.Serial;
+      SerialArrayTX[Options.TXNr] := CurrentQSO.QSO.Serial;
 
       if Not(PostContest) then
          CurrentQSO.UpdateTime;
@@ -6209,12 +6241,14 @@ begin
 
       CurrentQSO.QSO.Reserve2 := 0;
       CurrentQSO.QSO.Reserve3 := 0;
-      CurrentQSO.QSO.TX := Options.GetTXNr;
+      CurrentQSO.QSO.TX := Options.TXNr;
 
-      if CurrentQSO.QSO.mode in [mCW, mRTTY] then
-         CurrentQSO.QSO.RSTRcvd := 599
-      else
+      if CurrentQSO.QSO.mode in [mCW, mRTTY] then begin
+         CurrentQSO.QSO.RSTRcvd := 599;
+      end
+      else begin
          CurrentQSO.QSO.RSTRcvd := 59;
+      end;
 
       SerialEdit.Text := CurrentQSO.SerialStr;
       TimeEdit.Text := CurrentQSO.TimeStr;
@@ -6229,11 +6263,16 @@ begin
       PointEdit.Text := CurrentQSO.PointStr;
       OpEdit.Text := CurrentQSO.QSO.Operator;
       MemoEdit.Text := '';
-      if PostContest then
-         TimeEdit.SetFocus
-      else
+
+      if PostContest then begin
+         TimeEdit.SetFocus;
+      end
+      else begin
          CallsignEdit.SetFocus;
+      end;
+
       WriteStatusLine('', false);
+
       if workedZLO then begin
          MainForm.WriteStatusLine('QSO‚ ‚è‚ª‚Æ‚¤‚²‚´‚¢‚Ü‚·', false);
       end;
@@ -6338,7 +6377,7 @@ begin
    end;
 
    BandEdit.Text := MHzString[CurrentQSO.QSO.Band];
-   CurrentQSO.QSO.TX := Options.GetTXNr;
+   CurrentQSO.QSO.TX := Options.TXNr;
 
    UpdateBand(CurrentQSO.QSO.Band);
    UpdateMode(CurrentQSO.QSO.mode);
@@ -6383,18 +6422,17 @@ end;
 
 procedure TMainForm.SpeedBarChange(Sender: TObject);
 begin
-   Options.SetSpeed(SpeedBar.Position);
+   Options.Speed := SpeedBar.Position;
    SpeedLabel.Caption := IntToStr(SpeedBar.Position) + ' wpm';
-   if LastFocus <> nil then
+
+   if LastFocus <> nil then begin
       LastFocus.SetFocus;
+   end;
 end;
 
 procedure TMainForm.SideToneButtonClick(Sender: TObject);
 begin
-   if SideToneButton.Down then
-      Options.SetSideTone(True)
-   else
-      Options.SetSideTone(false);
+   Options.SideTone := SideToneButton.Down;
 end;
 
 procedure TMainForm.Button1Click(Sender: TObject);
@@ -6945,7 +6983,14 @@ end;
 procedure TMainForm.Options1Click(Sender: TObject);
 begin
    CenterWindow(Self, Options);
-   Options.Show;
+
+   if Options.ShowModal() <> mrOK then begin
+      Exit;
+   end;
+
+   RenewCWToolBar;
+   RenewVoiceToolBar;
+   LastFocus.SetFocus;
 end;
 
 procedure TMainForm.Edit1Click(Sender: TObject);
@@ -7022,18 +7067,15 @@ end;
 
 procedure TMainForm.ConnecttoZServer1Click(Sender: TObject);
 begin
-   { if ZLinkForm.ZServerConnected then
-     ZLinkForm.Sock1.Close
-     else
-     ZLinkForm.Sock1.Open; }
-   ZLinkForm.ZSocket.Addr := Options.Settings._zlinkhost;
+   ZLinkForm.ZSocket.Addr := Options.Settings._zlink_telnet.FHostName;
    ZLinkForm.ZSocket.Port := 'telnet';
    if ZLinkForm.ZServerConnected then begin
       ZLinkForm.DisconnectedByMenu := True;
       ZLinkForm.ZSocket.close;
    end
-   else
+   else begin
       ZLinkForm.ZSocket.Connect;
+   end;
 end;
 
 procedure TMainForm.DisableNetworkMenus;
@@ -7708,7 +7750,7 @@ var
 begin
    if Log.TotalQSO > 0 then begin
       T := Log.TotalQSO;
-      mytx := Options.GetTXNr;
+      mytx := Options.TXNr;
       boo := false;
       for i := T downto 1 do begin
          if TQSO(Log.List[i]).QSO.TX = mytx then begin
@@ -7716,6 +7758,7 @@ begin
             break;
          end;
       end;
+
       if boo = True then begin
 
          UpdateBand(TQSO(Log.List[i]).QSO.Band);

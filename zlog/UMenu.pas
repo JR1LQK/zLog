@@ -3,111 +3,105 @@ unit UMenu;
 interface
 
 uses
-  SysUtils, Windows, Messages, Classes, Graphics, Controls,
-  StdCtrls, ExtCtrls, Forms, BGK32Lib, UzLogCW, zLogGlobal, Dialogs,
-  Buttons, UMMTTY;
-
+   SysUtils, Windows, Messages, Classes, Graphics, Controls, StdCtrls, ExtCtrls,
+   Forms, UITypes, BGK32Lib, UzLogCW, zLogGlobal, Dialogs, Buttons, UMMTTY;
 
 var
-    SaveInBackGround : boolean = False;
+   SaveInBackGround: boolean = False;
 
 type
-  TMenuForm = class(TForm)
-    OKButton: TButton;
-    CancelButton: TButton;
-    Button3: TButton;
-    ContestGroup: TGroupBox;
-    OpGroup: TRadioGroup;
-    BandGroup: TRadioGroup;
-    rbALLJA: TRadioButton;
-    rb6D: TRadioButton;
-    rbFD: TRadioButton;
-    rbACAG: TRadioButton;
-    ModeGroup: TRadioGroup;
-    CallsignEdit: TEdit;
-    Label1: TLabel;
-    OpenDialog: TOpenDialog;
-    rbCQWW: TRadioButton;
-    rbJIDXJA: TRadioButton;
-    rbCQWPX: TRadioButton;
-    rbPedi: TRadioButton;
-    rbJIDXDX: TRadioButton;
-    rbGeneral: TRadioButton;
-    CFGOpenDialog: TOpenDialog;
-    SelectButton: TSpeedButton;
-    CheckBox1: TCheckBox;
-    rbARRLDX: TRadioButton;
-    rbARRLW: TRadioButton;
-    rbAPSprint: TRadioButton;
-    rbJA0in: TRadioButton;
-    rbJA0out: TRadioButton;
-    TXNrEdit: TEdit;
-    Label2: TLabel;
-    ScoreCoeffEdit: TEdit;
-    Label3: TLabel;
-    rbIARU: TRadioButton;
-    rbAllAsian: TRadioButton;
-    rbIOTA: TRadioButton;
-    rbARRL10: TRadioButton;
-    rbKCJ: TRadioButton;
-    rbWAE: TRadioButton;
-    {procedure CreateParams(var Params: TCreateParams); override;}
-    procedure OKButtonClick(Sender: TObject);
-    procedure CancelButtonClick(Sender: TObject);
-    procedure FormDestroy(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
-    procedure FormShow(Sender: TObject);
-    procedure MyIdleEvent(Sender: TObject; var Done: Boolean);
-    procedure MyMessageEvent(var Msg: TMsg; var Handled: Boolean);
-    procedure rbCQWWClick(Sender: TObject);
-    procedure rbGeneralEnter(Sender: TObject);
-    procedure rbGeneralExit(Sender: TObject);
-    procedure SelectButtonClick(Sender: TObject);
-    procedure CheckBox1Click(Sender: TObject);
-    procedure rbALLJAClick(Sender: TObject);
-    procedure rbPediClick(Sender: TObject);
-    procedure rbACAGClick(Sender: TObject);
-    procedure rb6DClick(Sender: TObject);
-    procedure rbFDClick(Sender: TObject);
-    procedure rbJA0inClick(Sender: TObject);
-    procedure rbARRLWClick(Sender: TObject);
-    procedure rbAPSprintClick(Sender: TObject);
-    procedure OpGroupClick(Sender: TObject);
-    procedure TXNrEditKeyPress(Sender: TObject; var Key: Char);
-    procedure UserDefClick(Sender: TObject);
-    procedure rbIARUClick(Sender: TObject);
-    procedure rbIOTAClick(Sender: TObject);
-    procedure rbARRL10Click(Sender: TObject);
-    procedure rbARRL10Exit(Sender: TObject);
-    procedure FnugrySingleInstance1AlreadyRunning(Sender: TObject;
-      hPrevInst, hPrevWnd: Integer);
-    procedure FormKeyPress(Sender: TObject; var Key: Char);
-    procedure rbKCJClick(Sender: TObject);
-    procedure rbWAEClick(Sender: TObject);
-    public
-      BandTemp : integer; // temporary storage for bandgroup.itemindex
-      TabPressed : boolean;
-      TabPressed2 : boolean; // for moving focus to numberedit
-      CFGFileName : string;
-    procedure EnableEveryThing;
-  end;
+   TMenuForm = class(TForm)
+      OKButton: TButton;
+      CancelButton: TButton;
+      Button3: TButton;
+      ContestGroup: TGroupBox;
+      OpGroup: TRadioGroup;
+      BandGroup: TRadioGroup;
+      rbALLJA: TRadioButton;
+      rb6D: TRadioButton;
+      rbFD: TRadioButton;
+      rbACAG: TRadioButton;
+      ModeGroup: TRadioGroup;
+      CallsignEdit: TEdit;
+      Label1: TLabel;
+      OpenDialog: TOpenDialog;
+      rbCQWW: TRadioButton;
+      rbJIDXJA: TRadioButton;
+      rbCQWPX: TRadioButton;
+      rbPedi: TRadioButton;
+      rbJIDXDX: TRadioButton;
+      rbGeneral: TRadioButton;
+      CFGOpenDialog: TOpenDialog;
+      SelectButton: TSpeedButton;
+      CheckBox1: TCheckBox;
+      rbARRLDX: TRadioButton;
+      rbARRLW: TRadioButton;
+      rbAPSprint: TRadioButton;
+      rbJA0in: TRadioButton;
+      rbJA0out: TRadioButton;
+      TXNrEdit: TEdit;
+      Label2: TLabel;
+      ScoreCoeffEdit: TEdit;
+      Label3: TLabel;
+      rbIARU: TRadioButton;
+      rbAllAsian: TRadioButton;
+      rbIOTA: TRadioButton;
+      rbARRL10: TRadioButton;
+      rbKCJ: TRadioButton;
+      rbWAE: TRadioButton;
+      { procedure CreateParams(var Params: TCreateParams); override; }
+      procedure OKButtonClick(Sender: TObject);
+      procedure CancelButtonClick(Sender: TObject);
+      procedure FormDestroy(Sender: TObject);
+      procedure FormCreate(Sender: TObject);
+      procedure FormShow(Sender: TObject);
+      procedure MyIdleEvent(Sender: TObject; var Done: boolean);
+      procedure MyMessageEvent(var Msg: TMsg; var Handled: boolean);
+      procedure rbCQWWClick(Sender: TObject);
+      procedure rbGeneralEnter(Sender: TObject);
+      procedure rbGeneralExit(Sender: TObject);
+      procedure SelectButtonClick(Sender: TObject);
+      procedure CheckBox1Click(Sender: TObject);
+      procedure rbALLJAClick(Sender: TObject);
+      procedure rbPediClick(Sender: TObject);
+      procedure rbACAGClick(Sender: TObject);
+      procedure rb6DClick(Sender: TObject);
+      procedure rbFDClick(Sender: TObject);
+      procedure rbJA0inClick(Sender: TObject);
+      procedure rbARRLWClick(Sender: TObject);
+      procedure rbAPSprintClick(Sender: TObject);
+      procedure OpGroupClick(Sender: TObject);
+      procedure TXNrEditKeyPress(Sender: TObject; var Key: Char);
+      procedure UserDefClick(Sender: TObject);
+      procedure rbIARUClick(Sender: TObject);
+      procedure rbIOTAClick(Sender: TObject);
+      procedure rbARRL10Click(Sender: TObject);
+      procedure rbARRL10Exit(Sender: TObject);
+      procedure FnugrySingleInstance1AlreadyRunning(Sender: TObject; hPrevInst, hPrevWnd: Integer);
+      procedure FormKeyPress(Sender: TObject; var Key: Char);
+      procedure rbKCJClick(Sender: TObject);
+      procedure rbWAEClick(Sender: TObject);
+   private
+      BandTemp: Integer; // temporary storage for bandgroup.itemindex
+      procedure EnableEveryThing;
+   public
+      TabPressed: boolean;
+      TabPressed2: boolean; // for moving focus to numberedit
+      CFGFileName: string;
+   end;
 
 var
-  MenuForm: TMenuForm;
-  LastTabPress : TDateTime;
+   MenuForm: TMenuForm;
+   LastTabPress: TDateTime;
 
 implementation
 
 uses
-  Main, UOptions, UACAGMulti, UALLJAMulti, UACAGScore,
-  UALLJAEditDialog, UALLJAScore, UWWMulti, UWWScore, UWWZone, UJIDXScore,
-  UJIDXMulti, UJIDXScore2, UWPXMulti, UWPXScore, UZLinkForm, UPediScore,
-  UJIDX_DX_Multi, UJIDX_DX_Score, UGeneralMulti2, UGeneralScore, UFDMulti,
-  UARRLDXMulti, UARRLDXScore, UARRLWMulti, UAPSprintScore, UJA0Multi,
-  UJA0Score, USixDownMulti, USixDownScore, UIARUMulti, UIARUScore,
-  UAllAsianScore, UAgeDialog, UIOTAMulti, UUTCDialog, UARRL10Score, UARRL10Multi,
-  USummaryInfo, UKCJMulti, UKCJScore, UKCJZone, UMultipliers, UTTYConsole,
-  UWAEScore, UWAEMulti, UELogJapanese;
+   Main, UOptions, UACAGMulti, UALLJAMulti, UACAGScore, UALLJAEditDialog, UALLJAScore, UWWMulti, UWWScore, UWWZone, UJIDXScore, UJIDXMulti,
+   UJIDXScore2, UWPXMulti, UWPXScore, UZLinkForm, UPediScore, UJIDX_DX_Multi, UJIDX_DX_Score, UGeneralMulti2, UGeneralScore, UFDMulti, UARRLDXMulti,
+   UARRLDXScore, UARRLWMulti, UAPSprintScore, UJA0Multi, UJA0Score, USixDownMulti, USixDownScore, UIARUMulti, UIARUScore, UAllAsianScore, UAgeDialog,
+   UIOTAMulti, UUTCDialog, UARRL10Score, UARRL10Multi, USummaryInfo, UKCJMulti, UKCJScore, UKCJZone, UMultipliers, UTTYConsole, UWAEScore, UWAEMulti,
+   UELogJapanese;
 
 {$R *.DFM}
 
@@ -116,42 +110,38 @@ var
    i: Integer;
    E: Extended;
 begin
-   Main.CurrentQSO.QSO.Serial := 1;
+   CurrentQSO.QSO.Serial := 1;
    MainForm.mPXListWPX.Visible := False;
 
-   Options.SetMultiOp(OpGroup.ItemIndex);
+   Options.MultiOp := OpGroup.ItemIndex;
+   zLogGlobal.OperatorCategory := OpGroup.ItemIndex;
 
    case BandGroup.ItemIndex of
-      0 .. 3:
-         Options.SetBand(BandGroup.ItemIndex);
-      4:
-         Options.SetBand(BandGroup.ItemIndex + 1);
-      5:
-         Options.SetBand(BandGroup.ItemIndex + 2);
-      6 .. 13:
-         Options.SetBand(BandGroup.ItemIndex + 3);
+      0 .. 3: Options.Band := BandGroup.ItemIndex;
+      4: Options.Band := BandGroup.ItemIndex + 1;
+      5: Options.Band := BandGroup.ItemIndex + 2;
+      6 .. 13: Options.Band := BandGroup.ItemIndex + 3;
    end;
 
-   // Options.SetBand(BandGroup.ItemIndex);
+   Options.Mode := ModeGroup.ItemIndex;
 
-   Options.SetMode(ModeGroup.ItemIndex);
-
-   Options.SetMyCall(CallsignEdit.Text);
+   Options.MyCall := CallsignEdit.Text;
 
    for i := 0 to ContestGroup.ControlCount - 1 do begin
       if ContestGroup.Controls[i] is TRadioButton then begin
          if TRadioButton(ContestGroup.Controls[i]).Checked then begin
-            break;
+            Break;
          end;
       end;
    end;
 
-   Options.SetCurrentContestNo(i);
+   Options.ContestMenuNo := i;
 
+   // TX#
    i := StrToIntDef(TXNrEdit.Text, 0);
 
    if OpGroup.ItemIndex > 0 then begin
-      Options.SetTXNr(i);
+      Options.TXNr := i;
       if Options.Settings._pcname = '' then begin
          Options.Settings._pcname := 'PC' + IntToStr(i);
       end;
@@ -173,8 +163,7 @@ begin
    end;
 
    if Log <> nil then begin
-      Log.Destroy;
-      Log := TQSOList.Create('default');
+      Log.Destroy; Log := TQSOList.Create('default');
    end;
 
    if MainForm.EditScreen <> nil then begin
@@ -209,8 +198,7 @@ begin
       Options.Settings._sentstr := '$Q$P';
    end;
 
-   if rbFD.Checked then begin
-      Application.CreateForm(TACAGMulti, ACAGMulti);
+   if rbFD.Checked then begin Application.CreateForm(TACAGMulti, ACAGMulti);
       Application.CreateForm(TFDMulti, FDMulti);
       Application.CreateForm(TACAGScore, ACAGScore);
       Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
@@ -462,14 +450,14 @@ begin
    end;
 
    if ModeGroup.ItemIndex = 1 then begin
-      Main.CurrentQSO.QSO.mode := mCW;
-      Main.CurrentQSO.QSO.RSTRcvd := 599;
-      Main.CurrentQSO.QSO.RSTSent := 599;
+      CurrentQSO.QSO.Mode := mCW;
+      CurrentQSO.QSO.RSTRcvd := 599;
+      CurrentQSO.QSO.RSTSent := 599;
    end
    else begin
-      Main.CurrentQSO.QSO.mode := mSSB;
-      Main.CurrentQSO.QSO.RSTRcvd := 59;
-      Main.CurrentQSO.QSO.RSTSent := 59;
+      CurrentQSO.QSO.mode := mSSB;
+      CurrentQSO.QSO.RSTRcvd := 59;
+      CurrentQSO.QSO.RSTSent := 59;
    end;
 
    if CurrentFileName = '' then begin
@@ -485,22 +473,15 @@ begin
       else begin // user hit cancel
          MessageDlg('Data will NOT be saved until you enter the file name', mtWarning, [mbOK], 0); { HELP context 0 }
       end;
-   end
-   else begin
    end;
 
    { Options.Settings.CW.CWStrBank[1, 2] := Options.Settings._sentstr; }
 
    MyContest.Renew;
 
-   if ModeGroup.ItemIndex = 0 then begin
-      MyContest.ScoreForm.CWButton.Visible := True
-   end
-   else begin
+   if ModeGroup.ItemIndex = 0 then begin MyContest.ScoreForm.CWButton.Visible := True end else begin
       MyContest.ScoreForm.CWButton.Visible := False;
    end;
-
-   // MainForm.EditScreen.Renew;  called from TContest.Renew;
 
    if TQSO(Log.List[0]).QSO.RSTSent = 0 then begin // JST = 0; UTC = $FFFF
       SummaryInfo.DecJapanese;
@@ -558,8 +539,6 @@ begin
 end;
 
 procedure TMenuForm.FormShow(Sender: TObject);
-var
-   i: Integer;
 begin
    if Options.Band = 0 then begin
       BandGroup.ItemIndex := 0;
@@ -567,7 +546,7 @@ begin
    else begin
       BandGroup.ItemIndex := OldBandOrd(TBand(Options.Band - 1)) + 1;
    end;
-   ModeGroup.ItemIndex := Options.mode;
+   ModeGroup.ItemIndex := Options.Mode;
 
    if Options.MultiOp > 0 then begin
       OpGroup.ItemIndex := Options.MultiOp;
@@ -578,7 +557,7 @@ begin
       TXNrEdit.Enabled := False;
    end;
 
-   TXNrEdit.Text := IntToStr(Options.GetTXNr);
+   TXNrEdit.Text := IntToStr(Options.TXNr);
 
    CallsignEdit.Text := Options.MyCall;
 
@@ -599,7 +578,6 @@ end;
 
 procedure TMenuForm.MyIdleEvent(Sender: TObject; var Done: boolean);
 var
-   A: word;
    boo: boolean;
 begin
    // PaddleProcess;
@@ -613,8 +591,9 @@ begin
    }
 
    boo := BGK32Lib.IsPlaying;
+
    if boo then begin
-      if Main.CurrentQSO.QSO.mode = mCW then begin
+      if CurrentQSO.QSO.mode = mCW then begin
          MainForm.CWPauseButton.Enabled := True;
          MainForm.CWPauseButton.Visible := True;
          MainForm.CWPlayButton.Visible := False;
@@ -625,7 +604,7 @@ begin
    end
    else begin
       // if Paused = False then
-      if Main.CurrentQSO.QSO.mode = mCW then begin
+      if CurrentQSO.QSO.mode = mCW then begin
          TabPressed := False;
       end;
 
@@ -643,7 +622,7 @@ begin
       end;
    end;
 
-   if Main.CurrentQSO.QSO.mode = mRTTY then begin
+   if CurrentQSO.QSO.mode = mRTTY then begin
       if TTYConsole <> nil then begin
          if TTYConsole.Sending = False then begin
             TabPressed := False;
@@ -656,6 +635,7 @@ begin
          if Trunc((Now - LastTabPress) * 24 * 60 * 60 * 1000) > 100 then begin
             MainForm.OnTabPress;
          end;
+
          LastTabPress := Now;
       end;
    end;
@@ -677,15 +657,12 @@ begin
    end;
 end;
 
-procedure TMenuForm.rbGeneralEnter(Sender: TObject);
-begin
-   // SelectButton.Enabled := True;
+procedure TMenuForm.rbGeneralEnter(Sender: TObject); begin
+// SelectButton.Enabled := True;
 end;
 
-procedure TMenuForm.rbGeneralExit(Sender: TObject);
-begin
-   OKButton.Enabled := True;
-   // SelectButton.Enabled := False;
+procedure TMenuForm.rbGeneralExit(Sender: TObject); begin OKButton.Enabled := True;
+// SelectButton.Enabled := False;
 end;
 
 procedure TMenuForm.SelectButtonClick(Sender: TObject);
@@ -693,6 +670,7 @@ begin
    CFGOpenDialog.InitialDir := Options.Settings._cfgdatpath;
    if CFGOpenDialog.Execute then begin
       CFGFileName := CFGOpenDialog.FileName;
+
       rbGeneral.Caption := GetContestName(CFGFileName);
       if UsesCoeff(CFGFileName) then begin
          ScoreCoeffEdit.Enabled := True;
@@ -716,10 +694,13 @@ var
 begin
    for i := 0 to BandGroup.Items.Count - 1 do
       BandGroup.Controls[i].Enabled := True;
+
    for i := 0 to OpGroup.Items.Count - 1 do
       OpGroup.Controls[i].Enabled := True;
+
    for i := 0 to ModeGroup.Items.Count - 1 do
       ModeGroup.Controls[i].Enabled := True;
+
    TXNrEdit.Enabled := True;
    OpGroup.OnClick(Self);
    SelectButton.Enabled := False;
@@ -735,7 +716,8 @@ begin
    BandGroup.Controls[1].Enabled := False;
    for i := 8 to 13 do
       BandGroup.Controls[i].Enabled := False;
-   // ModeGroup.Controls[2].Enabled := False;
+
+// ModeGroup.Controls[2].Enabled := False;
    ModeGroup.Controls[3].Enabled := False;
 end;
 
@@ -745,12 +727,10 @@ begin
 end;
 
 procedure TMenuForm.rbACAGClick(Sender: TObject);
-var
-   i: Integer;
 begin
    EnableEveryThing;
    BandGroup.Controls[1].Enabled := False;
-   // ModeGroup.Controls[2].Enabled := False;
+// ModeGroup.Controls[2].Enabled := False;
    ModeGroup.Controls[3].Enabled := False;
 end;
 
@@ -761,73 +741,40 @@ begin
    EnableEveryThing;
    for i := 1 to 6 do
       BandGroup.Controls[i].Enabled := False;
-   // ModeGroup.Controls[2].Enabled := False;
+
+// ModeGroup.Controls[2].Enabled := False;
    ModeGroup.Controls[3].Enabled := False;
 end;
 
 procedure TMenuForm.rbFDClick(Sender: TObject);
-var
-   i: Integer;
 begin
    EnableEveryThing;
    ScoreCoeffEdit.Enabled := True;
    BandGroup.Controls[1].Enabled := False;
-   // ModeGroup.Controls[2].Enabled := False;
+// ModeGroup.Controls[2].Enabled := False;
    ModeGroup.Controls[3].Enabled := False;
 end;
 
-procedure TMenuForm.rbJA0inClick(Sender: TObject);
-var
-   i: Integer;
-begin
-   EnableEveryThing;
-   for i := 0 to 1 do
-      BandGroup.Controls[i].Enabled := False;
-   BandGroup.Controls[4].Enabled := False;
-   for i := 7 to 13 do
-      BandGroup.Controls[i].Enabled := False;
-   ModeGroup.Controls[2].Enabled := False;
-   ModeGroup.Controls[3].Enabled := False;
-   OpGroup.Controls[1].Enabled := False;
-   TXNrEdit.Enabled := False;
-end;
+procedure TMenuForm.rbJA0inClick(Sender: TObject); var i: Integer; begin EnableEveryThing;
+for i := 0 to 1 do BandGroup.Controls[i].Enabled := False; BandGroup.Controls[4].Enabled := False;
+for i := 7 to 13 do BandGroup.Controls[i].Enabled := False; ModeGroup.Controls[2].Enabled := False; ModeGroup.Controls[3].Enabled := False;
+OpGroup.Controls[1].Enabled := False; TXNrEdit.Enabled := False; end;
 
-procedure TMenuForm.rbARRLWClick(Sender: TObject);
-var
-   i: Integer;
-begin
-   EnableEveryThing;
-   for i := 7 to 13 do
-      BandGroup.Controls[i].Enabled := False;
-   ModeGroup.Controls[0].Enabled := False;
-   ModeGroup.Controls[3].Enabled := False;
-end;
+procedure TMenuForm.rbARRLWClick(Sender: TObject); var i: Integer; begin EnableEveryThing;
+for i := 7 to 13 do BandGroup.Controls[i].Enabled := False; ModeGroup.Controls[0].Enabled := False; ModeGroup.Controls[3].Enabled := False; end;
 
-procedure TMenuForm.rbAPSprintClick(Sender: TObject);
-var
-   i: Integer;
-begin
-   EnableEveryThing;
-   for i := 1 to 13 do
-      BandGroup.Controls[i].Enabled := False;
-   ModeGroup.Controls[0].Enabled := False;
-   ModeGroup.Controls[3].Enabled := False;
-   OpGroup.Controls[1].Enabled := False;
-   TXNrEdit.Enabled := False;
-end;
+procedure TMenuForm.rbAPSprintClick(Sender: TObject); var i: Integer; begin EnableEveryThing;
+for i := 1 to 13 do BandGroup.Controls[i].Enabled := False; ModeGroup.Controls[0].Enabled := False; ModeGroup.Controls[3].Enabled := False;
+OpGroup.Controls[1].Enabled := False; TXNrEdit.Enabled := False; end;
 
-procedure TMenuForm.OpGroupClick(Sender: TObject);
-begin
-   if OpGroup.ItemIndex = 0 then
-      TXNrEdit.Enabled := False
-   else
-      TXNrEdit.Enabled := True;
-end;
+procedure TMenuForm.OpGroupClick(Sender: TObject); begin if OpGroup.ItemIndex = 0 then TXNrEdit.Enabled := False else TXNrEdit.Enabled :=
+  True; end;
 
 procedure TMenuForm.TXNrEditKeyPress(Sender: TObject; var Key: Char);
 begin
-   if not(Key in ['0' .. '9']) then
+   if CharInSet(Key, ['0' .. '9'])= False then begin
       Key := #0;
+   end;
 end;
 
 procedure TMenuForm.UserDefClick(Sender: TObject);
@@ -836,10 +783,11 @@ begin
    if CFGFileName <> '' then
       if UsesCoeff(CFGFileName) then
          ScoreCoeffEdit.Enabled := True;
+
    if CFGFileName = '' then
       OKButton.Enabled := False;
-   SelectButton.Enabled := True;
 
+   SelectButton.Enabled := True;
 end;
 
 procedure TMenuForm.rbIARUClick(Sender: TObject);
@@ -847,8 +795,10 @@ var
    i: Integer;
 begin
    EnableEveryThing;
+
    for i := 7 to 13 do
       BandGroup.Controls[i].Enabled := False;
+
    ModeGroup.Controls[3].Enabled := False;
 end;
 
@@ -860,6 +810,7 @@ begin
    BandGroup.Controls[1].Enabled := False;
    for i := 7 to 13 do
       BandGroup.Controls[i].Enabled := False;
+
    ModeGroup.Controls[3].Enabled := False;
 end;
 
@@ -870,6 +821,7 @@ begin
    EnableEveryThing;
    for i := 0 to 5 do
       BandGroup.Controls[i].Enabled := False;
+
    for i := 7 to 13 do
       BandGroup.Controls[i].Enabled := False;
 
@@ -891,20 +843,17 @@ end;
 
 procedure TMenuForm.FormKeyPress(Sender: TObject; var Key: Char);
 begin
-   if Key = ^X then
-      rbKCJ.Visible := True;
-   if Key = ^T then
-      rbKCJ.Visible := True;
+   if Key = ^X then rbKCJ.Visible := True;
+   if Key = ^T then rbKCJ.Visible := True;
 end;
 
 procedure TMenuForm.rbKCJClick(Sender: TObject);
-var
-   i: Integer;
+var i: Integer;
 begin
    EnableEveryThing;
-   // BandGroup.Controls[1].Enabled := False;
    for i := 8 to 13 do
       BandGroup.Controls[i].Enabled := False;
+
    ModeGroup.Controls[0].Enabled := False;
    ModeGroup.Controls[2].Enabled := False;
    ModeGroup.Controls[3].Enabled := False;
@@ -913,13 +862,14 @@ begin
 end;
 
 procedure TMenuForm.rbWAEClick(Sender: TObject);
-var
-   i: Integer;
+var i: Integer;
 begin
    EnableEveryThing;
    BandGroup.Controls[1].Enabled := False;
+
    for i := 7 to 13 do
       BandGroup.Controls[i].Enabled := False;
+
    ModeGroup.Controls[0].Enabled := False;
    ModeGroup.Controls[3].Enabled := False;
 end;

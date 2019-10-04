@@ -68,22 +68,23 @@ var Last : TDateTime;
     mytx, k : integer;
     aQSO : TQSO;
 begin
-  if not(Visible) then exit;
-  i := Log.TotalQSO;
-  if i < 10 then
-    exit;
+   if not(Visible) then exit;
+   i := Log.TotalQSO;
+   if i < 10 then begin
+      exit;
+   end;
 
-  mytx := Options.GetTXNr;
+   mytx := Options.TXNr;
 
-  k := 0;
-  repeat
-    aQSO := TQSO(Log.List[i]);
-    if aQSO.QSO.TX = mytx then
-      begin
-        inc(k);
+   k := 0;
+   repeat
+      aQSO := TQSO(Log.List[i]);
+      if aQSO.QSO.TX = mytx then begin
+         inc(k);
       end;
-    dec(i)
-  until (i = 0) or (k = 10);
+
+      dec(i)
+   until (i = 0) or (k = 10);
 
   if (k = 10) then
     begin

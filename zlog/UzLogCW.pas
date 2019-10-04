@@ -45,42 +45,50 @@ begin
 end;
 
 procedure IncCWSpeed;
-var i : integer;
+var
+   i : integer;
 begin
-  i := Options.Settings.CW._speed;
-  if i < 60 then
-    Options.SetSpeed(i+1);
-  MainForm.SpeedBar.Position := i+1;
-  MainForm.SpeedLabel.Caption := IntToStr(i+1)+' wpm';
+   i := Options.Settings.CW._speed;
+   if i < 60 then begin
+      Options.Speed := i + 1;
+   end;
+
+   MainForm.SpeedBar.Position := i + 1;
+   MainForm.SpeedLabel.Caption := IntToStr(i+1)+' wpm';
 end;
 
 procedure DecCWSpeed;
-var i : integer;
+var
+   i : integer;
 begin
-  i := Options.Settings.CW._speed;
-  if i > 2 then
-    Options.SetSpeed(i-1);
-  MainForm.SpeedBar.Position := i-1;
-  MainForm.SpeedLabel.Caption := IntToStr(i-1)+' wpm';
+   i := Options.Settings.CW._speed;
+   if i > 2 then begin
+      Options.Speed := i - 1;
+   end;
+
+   MainForm.SpeedBar.Position := i - 1;
+   MainForm.SpeedLabel.Caption := IntToStr(i-1)+' wpm';
 end;
 
 procedure ToggleFixedSpeed;
-var i : integer;
+var
+   i : integer;
 begin
-  FixedSpeed := not(FixedSpeed);
-  if FixedSpeed then
-    begin
+   FixedSpeed := not(FixedSpeed);
+   if FixedSpeed then begin
       i := Options.Settings.CW._fixwpm;
       SpeedBefore := Options.Settings.CW._speed;
-    end
-  else
-    begin
+   end
+   else begin
       i := SpeedBefore;
-    end;
-  if (i > 0) and (i < 61) then
-    Options.SetSpeed(i);
-  MainForm.SpeedBar.Position := i;
-  MainForm.SpeedLabel.Caption := IntToStr(i)+' wpm';
+   end;
+
+   if (i > 0) and (i < 61) then begin
+      Options.Speed := i;
+   end;
+
+   MainForm.SpeedBar.Position := i;
+   MainForm.SpeedLabel.Caption := IntToStr(i)+' wpm';
 end;
 
 function Abbreviate(S : shortstring) : shortstring;

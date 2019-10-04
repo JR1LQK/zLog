@@ -16,7 +16,7 @@ var CurrentFileName : string;
 var
   CONTESTNAME : string = '';
 
-  ZLOG_WIN2KMODE : boolean = false;
+//  ZLOG_WIN2KMODE : boolean = false;
 
 const
   // SerialContestType

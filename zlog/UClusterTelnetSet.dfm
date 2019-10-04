@@ -1,9 +1,9 @@
-object ClusterTelnetSet: TClusterTelnetSet
+object formClusterTelnetSet: TformClusterTelnetSet
   Left = 180
   Top = 157
   BorderStyle = bsDialog
   Caption = 'TELNET settings'
-  ClientHeight = 181
+  ClientHeight = 159
   ClientWidth = 265
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -12,16 +12,18 @@ object ClusterTelnetSet: TClusterTelnetSet
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = True
-  Position = poScreenCenter
+  Position = poOwnerFormCenter
   Scaled = False
-  OnShow = FormShow
+  DesignSize = (
+    265
+    159)
   PixelsPerInch = 96
   TextHeight = 13
   object Bevel1: TBevel
     Left = 7
     Top = 7
     Width = 251
-    Height = 136
+    Height = 114
     Shape = bsFrame
   end
   object Label1: TLabel
@@ -45,45 +47,45 @@ object ClusterTelnetSet: TClusterTelnetSet
     Height = 13
     Caption = 'Port #'
   end
-  object OKBtn: TButton
+  object buttonOK: TButton
     Left = 67
-    Top = 152
+    Top = 130
     Width = 63
     Height = 21
+    Anchors = [akLeft, akBottom]
     Caption = 'OK'
     Default = True
     ModalResult = 1
     TabOrder = 0
-    OnClick = OKBtnClick
+    ExplicitTop = 152
   end
-  object CancelBtn: TButton
+  object buttonCancel: TButton
     Left = 135
-    Top = 152
+    Top = 130
     Width = 63
     Height = 21
+    Anchors = [akLeft, akBottom]
     Cancel = True
     Caption = 'Cancel'
     ModalResult = 2
     TabOrder = 1
-    OnClick = CancelBtnClick
+    ExplicitTop = 152
   end
-  object HostName: TComboBox
+  object comboHostName: TComboBox
     Left = 80
     Top = 20
     Width = 169
     Height = 21
-    ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
     TabOrder = 2
     Text = 'Host name'
     Items.Strings = (
       'ac4et.ampr.org')
   end
-  object LineBreak: TComboBox
+  object comboLineBreak: TComboBox
     Left = 80
     Top = 52
     Width = 65
     Height = 21
-    ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
     TabOrder = 3
     Text = 'Line break'
     Items.Strings = (
@@ -91,7 +93,7 @@ object ClusterTelnetSet: TClusterTelnetSet
       'CR'
       'LF')
   end
-  object LocalEcho: TCheckBox
+  object checkLocalEcho: TCheckBox
     Left = 16
     Top = 88
     Width = 97
