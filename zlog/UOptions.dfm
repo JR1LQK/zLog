@@ -43,6 +43,10 @@ object formOptions: TformOptions
     TabOrder = 0
     object PrefTabSheet: TTabSheet
       Caption = 'Preferences'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Label40: TLabel
         Left = 184
         Top = 104
@@ -338,6 +342,10 @@ object formOptions: TformOptions
     end
     object TabSheet2: TTabSheet
       Caption = 'Categories'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Label14: TLabel
         Left = 248
         Top = 92
@@ -593,6 +601,10 @@ object formOptions: TformOptions
     end
     object CWTabSheet: TTabSheet
       Caption = 'CW/RTTY'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Label11: TLabel
         Left = 240
         Top = 0
@@ -1043,6 +1055,10 @@ object formOptions: TformOptions
     object VoiceTabSheet: TTabSheet
       Caption = 'Voice'
       TabVisible = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GroupBox4: TGroupBox
         Left = 8
         Top = 8
@@ -1342,6 +1358,10 @@ object formOptions: TformOptions
     end
     object TabSheet5: TTabSheet
       Caption = 'Hardware'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GroupBox6: TGroupBox
         Left = 3
         Top = 0
@@ -1664,6 +1684,10 @@ object formOptions: TformOptions
     end
     object tbRigControl: TTabSheet
       Caption = 'Rig control'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Label45: TLabel
         Left = 8
         Top = 138
@@ -1748,6 +1772,10 @@ object formOptions: TformOptions
     end
     object TabSheet1: TTabSheet
       Caption = 'Path'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Label50: TLabel
         Left = 16
         Top = 18
@@ -1816,6 +1844,10 @@ object formOptions: TformOptions
     end
     object tbMisc: TTabSheet
       Caption = 'Misc'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Label47: TLabel
         Left = 16
         Top = 88

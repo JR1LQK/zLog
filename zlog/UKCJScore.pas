@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  UBasicScore, Grids, Aligrid, StdCtrls, ExtCtrls, zLogGlobal, Buttons;
+  UBasicScore, Grids, Aligrid, StdCtrls, ExtCtrls, UzLogGlobal, Buttons;
 
 type
   TKCJScore = class(TBasicScore)
@@ -16,9 +16,6 @@ type
     procedure AddNoUpdate(var aQSO : TQSO);  override;
     procedure Update; override;
   end;
-
-var
-  KCJScore: TKCJScore;
 
 implementation
 

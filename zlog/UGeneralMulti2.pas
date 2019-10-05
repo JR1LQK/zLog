@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  UACAGMulti, StdCtrls, JLLabel, ExtCtrls, zLogGlobal, checklst, Grids,
+  UACAGMulti, StdCtrls, JLLabel, ExtCtrls, UzLogGlobal, checklst, Grids,
   Cologrid, UWPXMulti, UMultipliers, Menus;
 
 const  MAXLOCAL = 31;
@@ -19,6 +19,7 @@ type
     procedure FormShow(Sender: TObject);
   private
     { Private declarations }
+    function GetPX(aQSO : TQSO) : string;
   public
     BandLabelArray : array[0..BANDLABELMAX] of TRotateLabel;
 
@@ -36,6 +37,7 @@ type
     CutTailingAlphabets : boolean; // JARL/CUTTAILABT
     AllowUnlistedMulti : boolean; // allows unlisted multi to be logged but not counted as a multi.
     NoMulti : boolean;
+    WARC: Boolean;
     function IsLocal(aQSO : TQSO) : boolean;
     procedure SetActiveBands;
     procedure LoadDAT(Filename : string);
@@ -47,11 +49,7 @@ type
     procedure Reset; override;
     procedure Update; override;
     { Public declarations }
-
   end;
-
-var
-  GeneralMulti2: TGeneralMulti2;
 
 implementation
 
@@ -66,8 +64,8 @@ begin
   for band := b19 to HiBand do
     begin
       ActiveBands[band] := False;
-      if ((GeneralScore.WARC = False) and NotWARC(band)) or
-         (GeneralScore.WARC=True) then
+      if ((WARC = False) and NotWARC(band)) or
+         (WARC = True) then
         begin
           mb := MainForm.BandMenu.Items[ord(band)];
           if mb.Visible and mb.Enabled then
@@ -76,7 +74,7 @@ begin
     end;
 end;
 
-function GetPX(aQSO : TQSO) : string;
+function TGeneralMulti2.GetPX(aQSO : TQSO) : string;
 var s, px : string;
     i, slash : integer;
 begin
@@ -85,7 +83,7 @@ begin
   if s = '' then
     exit;
   slash := pos('/',s);
-  if GeneralMulti2.PXMulti = PX_WPX then
+  if PXMulti = PX_WPX then
     begin
       Result := UWPXMulti.GetWPXPrefix(aQSO);
       exit;

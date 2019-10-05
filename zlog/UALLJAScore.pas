@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  UBasicScore, Grids, Aligrid, StdCtrls, ExtCtrls, zLogGlobal, Buttons;
+  UBasicScore, Grids, Aligrid, StdCtrls, ExtCtrls, UzLogGlobal, Buttons;
 
 type
   TALLJAScore = class(TBasicScore)
@@ -19,9 +19,6 @@ type
     procedure Add(var aQSO : TQSO); override;
     { Public declarations }
   end;
-
-var
-  ALLJAScore: TALLJAScore;
 
 implementation
 

@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, zLogGlobal, UzLogGlobal, ExtCtrls, Buttons, Spin;
+  StdCtrls, UzLogGlobal, ExtCtrls, Buttons, Spin;
 
 const sortTime = 1;
       sortBand = 2;

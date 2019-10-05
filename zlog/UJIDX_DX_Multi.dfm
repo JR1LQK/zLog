@@ -43,7 +43,7 @@ inherited JIDX_DX_Multi: TJIDX_DX_Multi
       Font.Pitch = fpFixed
       Font.Style = []
       ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
-      ItemHeight = 14
+      ItemHeight = 13
       Items.Strings = (
         '01 Hokkaido'
         '02 Aomori'
@@ -109,8 +109,8 @@ inherited JIDX_DX_Multi: TJIDX_DX_Multi
       object RotateLabel1: TRotateLabel
         Left = 152
         Top = 9
-        Width = 14
-        Height = 15
+        Width = 15
+        Height = 14
         Escapement = 90
         TextStyle = tsNone
         Caption = '3.5'
@@ -125,8 +125,8 @@ inherited JIDX_DX_Multi: TJIDX_DX_Multi
       object RotateLabel2: TRotateLabel
         Left = 138
         Top = 9
-        Width = 14
-        Height = 15
+        Width = 15
+        Height = 14
         Escapement = 90
         TextStyle = tsNone
         Caption = '1.9'
@@ -141,8 +141,8 @@ inherited JIDX_DX_Multi: TJIDX_DX_Multi
       object RotateLabel3: TRotateLabel
         Left = 166
         Top = 9
-        Width = 14
-        Height = 15
+        Width = 15
+        Height = 14
         Escapement = 90
         TextStyle = tsNone
         Caption = '7   '
@@ -157,8 +157,8 @@ inherited JIDX_DX_Multi: TJIDX_DX_Multi
       object RotateLabel4: TRotateLabel
         Left = 181
         Top = 12
-        Width = 14
-        Height = 12
+        Width = 12
+        Height = 14
         Escapement = 90
         TextStyle = tsNone
         Caption = '14'
@@ -173,8 +173,8 @@ inherited JIDX_DX_Multi: TJIDX_DX_Multi
       object RotateLabel5: TRotateLabel
         Left = 195
         Top = 12
-        Width = 14
-        Height = 12
+        Width = 12
+        Height = 14
         Escapement = 90
         TextStyle = tsNone
         Caption = '21'
@@ -189,8 +189,8 @@ inherited JIDX_DX_Multi: TJIDX_DX_Multi
       object RotateLabel6: TRotateLabel
         Left = 209
         Top = 12
-        Width = 14
-        Height = 12
+        Width = 12
+        Height = 14
         Escapement = 90
         TextStyle = tsNone
         Caption = '28'
@@ -218,7 +218,7 @@ inherited JIDX_DX_Multi: TJIDX_DX_Multi
       Font.Pitch = fpFixed
       Font.Style = []
       ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
-      ItemHeight = 14
+      ItemHeight = 13
       Items.Strings = (
         '01 Hokkaido         . . . . . .                      '
         '02 Aomori                '

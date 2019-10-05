@@ -3,7 +3,7 @@ unit UzLogCW;
 interface
 
 uses
-  SysUtils, zLogGlobal, UzLogGlobal, BGK32LIB, UOptions;
+  SysUtils, UzLogGlobal, BGK32LIB, UOptions;
 
 var CtrlZCQLoop : boolean;
     QTHString : string[255];

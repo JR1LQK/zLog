@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, BGK32LIB, ExtCtrls, zLogGlobal, UzLogGlobal, UzLogCW, ClipBrd;
+  StdCtrls, BGK32LIB, ExtCtrls, UzLogGlobal, UzLogCW, ClipBrd;
 
 type
   TCWKeyBoard = class(TForm)

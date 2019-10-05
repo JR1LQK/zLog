@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  UFDMulti, StdCtrls, checklst, JLLabel, ExtCtrls, zLogGlobal, UACAGMulti,
+  UFDMulti, StdCtrls, checklst, JLLabel, ExtCtrls, UzLogGlobal,
   Grids, Cologrid, UMultipliers;
 
 type
@@ -15,9 +15,6 @@ type
   public
     { Public declarations }
   end;
-
-var
-  SixDownMulti: TSixDownMulti;
 
 implementation
 

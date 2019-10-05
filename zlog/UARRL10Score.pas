@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  UBasicScore, Grids, Cologrid, StdCtrls, ExtCtrls, zLogGlobal, Vcl.Buttons;
+  UBasicScore, Grids, Cologrid, StdCtrls, ExtCtrls, UzLogGlobal, Buttons;
 
 type
   TARRL10Score = class(TBasicScore)

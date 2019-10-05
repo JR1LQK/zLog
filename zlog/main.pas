@@ -5,8 +5,8 @@ interface
 uses
   SysUtils, Windows, Messages, Classes, Graphics, Controls,
   Forms, Dialogs, StdCtrls, Buttons, ExtCtrls, Menus, ComCtrls, Grids,
-  zLogGlobal, UzLogGlobal, UBasicMulti, UBasicScore, UALLJAMulti,
-  UOptions, UEditDialog,
+  UzLogGlobal, UBasicMulti, UBasicScore, UALLJAMulti,
+  UOptions, UEditDialog, UGeneralMulti2,
   BGK32Lib, UzLogCW, Aligrid, Hemibtn, ShellAPI, UITypes,
   OEdit, URigControl, UConsolePad, URenewThread, USpotClass,
   UMMTTY, UTTYConsole, UPaddleThread, UELogJapanese;
@@ -146,6 +146,7 @@ type
   TSerialGeneralEdit = class(TWPXEdit)
   private
   public
+    formMulti: TGeneralMulti2;
     constructor Create(AOwner: TComponent); override;
     function GetNewMulti1(aQSO : TQSO) : string; override;
   end;
@@ -343,18 +344,6 @@ type
     OpenDialog: TOpenDialog;
     SaveDialog: TSaveDialog;
     Grid: TStringGrid;
-    PowerMenu: TPopupMenu;
-    N1W1: TMenuItem;
-    N2W1: TMenuItem;
-    N5W1: TMenuItem;
-    N10W1: TMenuItem;
-    N20W1: TMenuItem;
-    N25W1: TMenuItem;
-    N50W1: TMenuItem;
-    N100W1: TMenuItem;
-    N200W1: TMenuItem;
-    N500W1: TMenuItem;
-    N1kW1: TMenuItem;
     BandMenu: TPopupMenu;
     N19MHz: TMenuItem;
     N35MHz: TMenuItem;
@@ -393,7 +382,6 @@ type
     BandEdit: TEdit;
     ModeEdit: TEdit;
     PointEdit: TEdit;
-    PowerEdit: TEdit;
     OpEdit: TEdit;
     OptionsButton: TSpeedButton;
     OpMenu: TPopupMenu;
@@ -572,8 +560,6 @@ type
     procedure EditKeyPress(Sender: TObject; var Key: Char);
     procedure CallsignEditChange(Sender: TObject);
     procedure NumberEditChange(Sender: TObject);
-    procedure PowerEditClick(Sender: TObject);
-    procedure PowerMenuClick(Sender: TObject);
     procedure BandMenuClick(Sender: TObject);
     procedure BandEditClick(Sender: TObject);
     procedure ModeMenuClick(Sender: TObject);
@@ -655,8 +641,6 @@ type
     procedure NewPowerMenuClick(Sender: TObject);
     procedure NewPowerEditClick(Sender: TObject);
     procedure OpEditClick(Sender: TObject);
-    procedure PowerEditKeyPress(Sender: TObject; var Key: Char);
-    procedure PowerEditChange(Sender: TObject);
     procedure CheckCall1Click(Sender: TObject);
     procedure GridClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
@@ -779,12 +763,12 @@ uses UPartials, UALLJAEditDialog, UAbout, URateDialog, UMenu, UACAGMulti,
   USuperCheck, UACAGScore, UALLJAScore, UWWMulti, UWWScore, UWWZone, UComm,
   UJIDXMulti, UJIDXScore, UJIDXScore2, UZLinkForm, UWPXMulti, UWPXScore,
   UPediScore, UCWKeyBoard, UJIDX_DX_Multi, UJIDX_DX_Score, UChat,
-  UGeneralMulti2, UGeneralScore, USpotForm, UFDMulti, UARRLDXMulti,
+  UGeneralScore, USpotForm, UFDMulti, UARRLDXMulti,
   UARRLDXScore, UARRLWMulti, UAPSprintScore, UJA0Multi, UJA0Score,
-  {UCheckCall,} UKCJMulti, USixDownMulti, USixDownScore, UIARUMulti,
+  UKCJMulti, USixDownMulti, USixDownScore, UIARUMulti,
   UIARUScore, UAllAsianScore, UIOTAMulti, {UIOTACategory,} UARRL10Multi,
   UARRL10Score, UFreqList, UCheckCall2, UCheckCountry, UCheckMulti,
-  {ubandscope,} uBandScope2, UIntegerDialog, UNewPrefix, UKCJScore, UScratchSheet,
+  UBandScope2, UIntegerDialog, UNewPrefix, UKCJScore, UScratchSheet,
   UQTCForm, UWAEScore, UWAEMulti, UQuickRef, UBGKMonitorThread;
 
 {$R *.DFM}
@@ -1045,7 +1029,6 @@ begin
       CallsignEdit.Text := CurrentQSO.QSO.Callsign;
       NumberEdit.Text := CurrentQSO.QSO.NrRcvd;
       BandEdit.Text := MHzString[CurrentQSO.QSO.Band];
-      PowerEdit.Text := CurrentQSO.PowerStr;
       NewPowerEdit.Text := NewPowerString[CurrentQSO.QSO.Power];
       PointEdit.Text := CurrentQSO.PointStr;
       RcvdRSTEdit.Text := CurrentQSO.RSTStr;
@@ -1793,12 +1776,6 @@ begin
       NewPowerEdit.Text := CurrentQSO.NewPowerStr;
    end;
 
-   if PowerEdit.Visible then begin
-      CurrentQSO.QSO.Power2 := dmZlogGlobal.CurrentPower2[B];
-      // dmZlogGlobal.SetOpPower(CurrentQSO);
-      PowerEdit.Text := CurrentQSO.PowerStr;
-   end;
-
    if MyContest <> nil then
       if MyContest.MultiForm.Visible then
          MyContest.MultiForm.Update;
@@ -2419,8 +2396,8 @@ end;
 constructor TJIDXContest.Create(N: string);
 begin
    inherited;
-   MultiForm := JIDXMulti;
-   ScoreForm := JIDXScore2;
+   MultiForm := TJIDXMulti.Create(MainForm);
+   ScoreForm := TJIDXScore2.Create(MainForm);
    CheckCountry.ParentMulti := JIDXMulti;
    UseUTC := True;
    TQSO(Log.List[0]).QSO.RSTsent := _USEUTC; // JST = 0; UTC = $FFFF
@@ -2428,7 +2405,7 @@ end;
 
 procedure TJIDXContest.SetPoints(var aQSO: TQSO);
 begin
-   JIDXScore2.CalcPoints(aQSO);
+   TJIDXScore2(ScoreForm).CalcPoints(aQSO);
 end;
 
 constructor TARRLDXContestDX.Create(N: string);
@@ -2501,8 +2478,8 @@ end;
 constructor TJIDXContestDX.Create(N: string);
 begin
    inherited;
-   MultiForm := JIDX_DX_Multi;
-   ScoreForm := JIDX_DX_Score;
+   MultiForm := TJIDX_DX_Multi.Create(MainForm);
+   ScoreForm := TJIDX_DX_Score.Create(MainForm);
    PastEditForm := TALLJAEditDialog.Create(MainForm);
    MainForm.EditScreen := TGeneralEdit.Create(MainForm);
    MainForm.BandMenu.Items[Ord(b50)].Visible := false;
@@ -2873,15 +2850,10 @@ end;
 constructor TPedi.Create(N: string);
 begin
    inherited;
-   MainForm.MultiButton.Enabled := false; // toolbar
-   MainForm.Multipliers1.Enabled := false; // menu
-   MultiForm := BasicMulti;
-   ScoreForm := PediScore;
+   MultiForm := TBasicMulti.Create(MainForm);
+   ScoreForm := TPediScore.Create(MainForm);
    PastEditForm := TALLJAEditDialog.Create(MainForm);
    MainForm.EditScreen := TGeneralEdit.Create(MainForm);
-   MainForm.BandMenu.Items[Ord(b10)].Visible := True;
-   MainForm.BandMenu.Items[Ord(b18)].Visible := True;
-   MainForm.BandMenu.Items[Ord(b24)].Visible := True;
 
    Log.AcceptDifferentMode := True;
    if UseUTC then
@@ -2898,34 +2870,19 @@ end;
 constructor TALLJAContest.Create(N: string);
 begin
    inherited;
-   MultiForm := ALLJAMulti;
-   ScoreForm := ALLJAScore;
+   MultiForm := TALLJAMulti.Create(MainForm);
+   ScoreForm := TALLJAScore.Create(MainForm);
    PastEditForm := TALLJAEditDialog.Create(MainForm);
    MainForm.EditScreen := TALLJAEdit.Create(MainForm);
-   MainForm.BandMenu.Items[Ord(b19)].Visible := false;
-   MainForm.BandMenu.Items[Ord(b144)].Visible := false;
-   MainForm.BandMenu.Items[Ord(b430)].Visible := false;
-   MainForm.BandMenu.Items[Ord(b1200)].Visible := false;
-   MainForm.BandMenu.Items[Ord(b2400)].Visible := false;
-   MainForm.BandMenu.Items[Ord(b5600)].Visible := false;
-   MainForm.BandMenu.Items[Ord(b10G)].Visible := false;
 end;
 
 constructor TKCJContest.Create(N: string);
 begin
    inherited;
-   MultiForm := KCJMulti;
-   ScoreForm := KCJScore;
+   MultiForm := TKCJMulti.Create(MainForm);
+   ScoreForm := TKCJScore.Create(MainForm);
    PastEditForm := TALLJAEditDialog.Create(MainForm);
    MainForm.EditScreen := TKCJEdit.Create(MainForm);
-   MainForm.BandMenu.Items[Ord(b19)].Visible := True;
-   // MainForm.BandMenu.Items[ord(b50)].Visible := False;
-   MainForm.BandMenu.Items[Ord(b144)].Visible := false;
-   MainForm.BandMenu.Items[Ord(b430)].Visible := false;
-   MainForm.BandMenu.Items[Ord(b1200)].Visible := false;
-   MainForm.BandMenu.Items[Ord(b2400)].Visible := false;
-   MainForm.BandMenu.Items[Ord(b5600)].Visible := false;
-   MainForm.BandMenu.Items[Ord(b10G)].Visible := false;
 end;
 
 function TALLJAContest.QTHString: string;
@@ -2984,51 +2941,37 @@ end;
 constructor TACAGContest.Create(N: string);
 begin
    inherited;
-//   MainForm.BandMenu.Items[Ord(b19)].Visible := false;
-//      Application.CreateForm(TACAGMulti, ACAGMulti);
-//      Application.CreateForm(TACAGScore, ACAGScore);
-//      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
    MultiForm := TACAGMulti.Create(MainForm);
    ScoreForm := TACAGScore.Create(MainForm);
    PastEditForm := TALLJAEditDialog.Create(MainForm);
-   // MainForm.EditScreen := TALLJAEdit.Create;
    MainForm.EditScreen := TACAGEdit.Create(MainForm);
 end;
 
 constructor TFDContest.Create(N: string);
 begin
    inherited;
-   MainForm.BandMenu.Items[Ord(b19)].Visible := false;
-   MultiForm := FDMulti;
+   MultiForm := TFDMulti.Create(MainForm);
    ScoreForm := TALLJAScore.Create(MainForm);
    PastEditForm := TALLJAEditDialog.Create(MainForm);
-   // MainForm.EditScreen := TALLJAEdit.Create;
    MainForm.EditScreen := TACAGEdit.Create(MainForm);
 end;
 
 constructor TSixDownContest.Create(N: string);
 begin
    inherited;
-   MainForm.BandMenu.Items[Ord(b19)].Visible := false;
-   MainForm.BandMenu.Items[Ord(b35)].Visible := false;
-   MainForm.BandMenu.Items[Ord(b7)].Visible := false;
-   MainForm.BandMenu.Items[Ord(b14)].Visible := false;
-   MainForm.BandMenu.Items[Ord(b21)].Visible := false;
-   MainForm.BandMenu.Items[Ord(b28)].Visible := false;
-   MultiForm := SixDownMulti;
-   ScoreForm := SixDownScore;
+   MultiForm := TSixDownMulti.Create(MainForm);
+   ScoreForm := TSixDownScore.Create(MainForm);
    PastEditForm := TALLJAEditDialog.Create(MainForm);
-   // MainForm.EditScreen := TALLJAEdit.Create;
    MainForm.EditScreen := TACAGEdit.Create(MainForm);
 end;
 
 constructor TGeneralContest.Create(N: string);
 begin
    inherited;
-
-   MultiForm := GeneralMulti2;
-   ScoreForm := GeneralScore;
-   GeneralScore.LoadCFG(MenuForm.CFGFileName);
+   MultiForm := TGeneralMulti2.Create(MainForm);
+   ScoreForm := TGeneralScore.Create(MainForm);
+   TGeneralScore(ScoreForm).formMulti := TGeneralMulti2(MultiForm);
+   TGeneralScore(ScoreForm).LoadCFG(MenuForm.CFGFileName);
    PastEditForm := TALLJAEditDialog.Create(MainForm);
 
    if SerialContestType = 0 then begin
@@ -3036,16 +2979,16 @@ begin
    end
    else begin
       MainForm.EditScreen := TSerialGeneralEdit.Create(MainForm);
+      TSerialGeneralEdit(MainForm.EditScreen).formMulti := TGeneralMulti2(MultiForm);
       TQSO(Log.List[0]).QSO.Serial := $01; // uses serial number
       SameExchange := false;
       dmZlogGlobal.Settings._sameexchange := SameExchange;
    end;
-   // MultiForm.Update;
 end;
 
 procedure TGeneralContest.SetPoints(var aQSO: TQSO);
 begin
-   GeneralScore.CalcPoints(aQSO);
+   TGeneralScore(ScoreForm).CalcPoints(aQSO);
 end;
 
 constructor TBasicEdit.Create(AOwner: TComponent);
@@ -3108,7 +3051,6 @@ begin
    end;
 
    MainForm.SerialEdit.Visible := false;
-   MainForm.PowerEdit.Visible := false;
    MainForm.NewPowerEdit.Visible := false;
    MainForm.ModeEdit.Visible := True;
 
@@ -3367,12 +3309,6 @@ begin
       end;
       MainForm.ModeEdit.Tag := colMode;
 
-      if colPower >= 0 then begin
-         Cells[colPower, 0] := 'pwr';
-         ColWidths[colPower] := 3 * CWid;
-      end;
-      MainForm.PowerEdit.Tag := colPower;
-
       if colNewPower >= 0 then begin
          Cells[colNewPower, 0] := 'pwr';
          ColWidths[colNewPower] := NewPowerWid * CWid;
@@ -3457,10 +3393,6 @@ begin
       if colMode >= 0 then begin
          ModeEdit.Width := MainForm.Grid.ColWidths[colMode];
          ModeEdit.Left := GetLeft(colMode);
-      end;
-      if colPower >= 0 then begin
-         PowerEdit.Width := MainForm.Grid.ColWidths[colPower];
-         PowerEdit.Left := GetLeft(colPower);
       end;
       if colNewPower >= 0 then begin
          NewPowerEdit.Width := MainForm.Grid.ColWidths[colNewPower];
@@ -3587,7 +3519,6 @@ begin
    colOp := 9;
    colMemo := 10;
    MainForm.Grid.ColCount := 11;
-   MainForm.PowerEdit.Visible := True;
    if dmZlogGlobal.MultiOp > 0 then begin
       OpWid := 6;
       MemoWid := 7;
@@ -3845,7 +3776,7 @@ var
    temp: string;
 begin
    Result := '';
-   if GeneralMulti2.PXMulti = 0 then begin
+   if formMulti.PXMulti = 0 then begin
       if aQSO.QSO.NewMulti1 then
          Result := aQSO.QSO.Multi1;
    end
@@ -4162,7 +4093,6 @@ begin
 
    NumberEdit.Text := '';
    BandEdit.Text := MHzString[CurrentQSO.QSO.Band];
-   PowerEdit.Text := CurrentQSO.PowerStr;
    NewPowerEdit.Text := NewPowerString[CurrentQSO.QSO.Power];
    PointEdit.Text := CurrentQSO.PointStr;
    RcvdRSTEdit.Text := CurrentQSO.RSTStr;
@@ -4221,7 +4151,7 @@ begin
       end;
    end;
 
-   CurrentFileName := '';
+   dmZlogGlobal.SetLogFileName('');
 
    Hide;
 
@@ -4238,15 +4168,11 @@ begin
 
    if OpenDialog.Execute then begin
       MainForm.WriteStatusLine('Loading...', false);
-      { MyContest.LoadFromFile(OpenDialog.FileName); }
-      CurrentFileName := OpenDialog.filename;
-      MainForm.LoadNewContestFromFile(CurrentFileName);
+      dmZLogGlobal.SetLogFileName(OpenDialog.filename);
+      MainForm.LoadNewContestFromFile(OpenDialog.filename);
       MyContest.Renew;
-      // EditScreen.Renew;
-      // EditScreen.RefreshScreen;
       MainForm.WriteStatusLine('', false);
-      MainForm.Caption := 'zLog for Windows  ' + ExtractFileName(CurrentFileName);
-      { Add code to open OpenDialog.FileName }
+      MainForm.Caption := 'zLog for Windows  ' + ExtractFileName(OpenDialog.filename);
    end;
 end;
 
@@ -4263,14 +4189,12 @@ end;
 
 procedure TMainForm.FileSaveAs(Sender: TObject);
 begin
-   // CloseBGK; {hangs up when FDD is selected. why?}
    if SaveDialog.Execute then begin
       Log.SaveToFile(SaveDialog.filename);
-      CurrentFileName := SaveDialog.filename;
-      MainForm.Caption := 'zLog for Windows  ' + ExtractFileName(CurrentFileName);
+      dmZLogGlobal.SetLogFileName(SaveDialog.filename);
+      MainForm.Caption := 'zLog for Windows  ' + ExtractFileName(SaveDialog.filename);
       { Add code to save current file under SaveDialog.FileName }
    end;
-   // InitializeBGK;
 end;
 
 function ExecuteFile(const filename, Params, DefaultDir: string; ShowCmd: integer): THandle;
@@ -5238,7 +5162,7 @@ begin
                Q := Log.QuickDupe(CurrentQSO);
                if Q <> nil then begin
                   MessageBeep(0);
-                  if AllowDupe then begin
+                  if dmZLogGlobal.Settings._allowdupe = True then begin
                      WriteStatusLineRed(Q.PartialSummary(dmZlogGlobal.Settings._displaydatepartialcheck), True);
                      NumberEdit.SetFocus;
                      exit;
@@ -5388,18 +5312,18 @@ begin
    CurrentQSO.QSO.NrRcvd := NumberEdit.Text;
 end;
 
-procedure TMainForm.PowerEditClick(Sender: TObject);
-begin
-   PowerMenu.Popup(PowerEdit.Left + 50, PowerEdit.top + 40);
-end;
-
-procedure TMainForm.PowerMenuClick(Sender: TObject);
-begin
-   PowerEdit.Text := PowerString[TPower(TMenuItem(Sender).Tag)];
-   CurrentQSO.QSO.Power := TPower(TMenuItem(Sender).Tag);
-   dmZlogGlobal.CurrentPower[CurrentQSO.QSO.Band] := CurrentQSO.QSO.Power;
-   LastFocus.SetFocus;
-end;
+//procedure TMainForm.PowerEditClick(Sender: TObject);
+//begin
+//   PowerMenu.Popup(PowerEdit.Left + 50, PowerEdit.top + 40);
+//end;
+//
+//procedure TMainForm.PowerMenuClick(Sender: TObject);
+//begin
+//   PowerEdit.Text := PowerString[TPower(TMenuItem(Sender).Tag)];
+//   CurrentQSO.QSO.Power := TPower(TMenuItem(Sender).Tag);
+//   dmZlogGlobal.CurrentPower[CurrentQSO.QSO.Band] := CurrentQSO.QSO.Power;
+//   LastFocus.SetFocus;
+//end;
 
 procedure TMainForm.BandEditClick(Sender: TObject);
 begin
@@ -5504,8 +5428,7 @@ begin
    boo := Log.AcceptDifferentMode;
    Boo2 := Log.CountHigherPoints;
 
-   Log.Destroy;
-   Log := TQSOList.Create('test');
+   dmZLogGlobal.CreateLog();
 
    Log.AcceptDifferentMode := boo;
    Log.CountHigherPoints := Boo2;
@@ -5557,7 +5480,6 @@ begin
    NumberEdit.Text := CurrentQSO.QSO.NrRcvd;
    ModeEdit.Text := CurrentQSO.ModeStr;
    BandEdit.Text := CurrentQSO.BandStr;
-   PowerEdit.Text := CurrentQSO.PowerStr;
    NewPowerEdit.Text := CurrentQSO.NewPowerStr;
    PointEdit.Text := CurrentQSO.PointStr;
    OpEdit.Text := CurrentQSO.QSO.Operator;
@@ -6111,7 +6033,7 @@ begin
       if CurrentFileName <> '' then begin
          if Log.TotalQSO mod dmZlogGlobal.Settings._saveevery = 0 then begin
             if dmZlogGlobal.Settings._savewhennocw then
-               UMenu.SaveInBackGround := True
+               SaveInBackGround := True
             else
                SaveFileAndBackUp;
          end;
@@ -6168,7 +6090,6 @@ begin
       NumberEdit.Text := CurrentQSO.QSO.NrRcvd;
       ModeEdit.Text := CurrentQSO.ModeStr;
       BandEdit.Text := CurrentQSO.BandStr;
-      PowerEdit.Text := CurrentQSO.PowerStr;
       NewPowerEdit.Text := CurrentQSO.NewPowerStr;
       PointEdit.Text := CurrentQSO.PointStr;
       OpEdit.Text := CurrentQSO.QSO.Operator;
@@ -6188,7 +6109,7 @@ begin
       end;
    end
    else begin
-      if AllowDupe then begin
+      if dmZLogGlobal.Settings._allowdupe = True then begin
          CurrentQSO.QSO.Dupe := True;
          CurrentQSO.QSO.Points := 0;
          CurrentQSO.QSO.NewMulti1 := false;
@@ -7179,40 +7100,6 @@ end;
 procedure TMainForm.OpEditClick(Sender: TObject);
 begin
    OpMenu.Popup(MainForm.Left + OpEdit.Left + 20, MainForm.top + EditPanel.top + OpEdit.top);
-end;
-
-procedure TMainForm.PowerEditKeyPress(Sender: TObject; var Key: Char);
-begin
-   if AnsiChar(Key) in ['A' .. 'J', 'L' .. 'V', 'X' .. 'Z'] then begin
-      Key := #0;
-   end;
-end;
-
-procedure TMainForm.PowerEditChange(Sender: TObject);
-var
-   i: integer;
-begin
-   i := 0;
-   if (PowerEdit.Text = 'KW') then
-      i := 9999;
-   if (PowerEdit.Text = '1KW') then
-      i := 10000;
-   if (PowerEdit.Text = 'K') then
-      i := 10001;
-
-   if i > 0 then begin
-      CurrentQSO.QSO.Power2 := i;
-      dmZlogGlobal.CurrentPower2[CurrentQSO.QSO.Band] := i;
-      exit;
-   end;
-
-   try
-      i := StrToInt(PowerEdit.Text);
-   except
-      i := 0;
-   end;
-   CurrentQSO.QSO.Power2 := i;
-   dmZlogGlobal.CurrentPower2[CurrentQSO.QSO.Band] := i;
 end;
 
 procedure TMainForm.CheckCall1Click(Sender: TObject);

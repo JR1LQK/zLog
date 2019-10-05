@@ -5,10 +5,7 @@ interface
 uses
    SysUtils, Windows, Messages, Classes, Graphics, Controls, StdCtrls, ExtCtrls,
    Forms, UITypes, Dialogs, Buttons,
-   BGK32Lib, UzLogCW, zLogGlobal, UzLogGlobal, UMMTTY;
-
-var
-   SaveInBackGround: boolean = False;
+   BGK32Lib, UzLogCW, UzLogGlobal, UMMTTY;
 
 type
    TMenuForm = class(TForm)
@@ -110,12 +107,12 @@ procedure TMenuForm.OKButtonClick(Sender: TObject);
 var
    i: Integer;
    E: Extended;
+   F: TForm;
 begin
    CurrentQSO.QSO.Serial := 1;
    MainForm.mPXListWPX.Visible := False;
 
    dmZlogGlobal.MultiOp := OpGroup.ItemIndex;
-   zLogGlobal.OperatorCategory := OpGroup.ItemIndex;
 
    case BandGroup.ItemIndex of
       0 .. 3: dmZlogGlobal.Band := BandGroup.ItemIndex;
@@ -163,28 +160,33 @@ begin
       MyContest.Free;
    end;
 
-   if Log <> nil then begin
-      Log.Destroy; Log := TQSOList.Create('default');
-   end;
+   dmZLogGlobal.CreateLog();
 
    if MainForm.EditScreen <> nil then begin
       MainForm.EditScreen.Free;
    end;
 
    if rbKCJ.Checked then begin
-      Application.CreateForm(TKCJMulti, KCJMulti);
-      Application.CreateForm(TKCJScore, KCJScore);
-      Application.CreateForm(TKCJZone, KCJZone);
-//      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
+      MainForm.BandMenu.Items[Ord(b19)].Visible := True;
+      MainForm.BandMenu.Items[Ord(b144)].Visible := false;
+      MainForm.BandMenu.Items[Ord(b430)].Visible := false;
+      MainForm.BandMenu.Items[Ord(b1200)].Visible := false;
+      MainForm.BandMenu.Items[Ord(b2400)].Visible := false;
+      MainForm.BandMenu.Items[Ord(b5600)].Visible := false;
+      MainForm.BandMenu.Items[Ord(b10G)].Visible := false;
       MyContest := TKCJContest.Create('KCJ コンテスト');
       QTHString := dmZlogGlobal.Settings._prov;
       dmZlogGlobal.Settings._sentstr := 'TK';
    end;
 
    if rbALLJA.Checked then begin
-      Application.CreateForm(TALLJAMulti, ALLJAMulti);
-      Application.CreateForm(TALLJAScore, ALLJAScore);
-//      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
+      MainForm.BandMenu.Items[Ord(b19)].Visible := false;
+      MainForm.BandMenu.Items[Ord(b144)].Visible := false;
+      MainForm.BandMenu.Items[Ord(b430)].Visible := false;
+      MainForm.BandMenu.Items[Ord(b1200)].Visible := false;
+      MainForm.BandMenu.Items[Ord(b2400)].Visible := false;
+      MainForm.BandMenu.Items[Ord(b5600)].Visible := false;
+      MainForm.BandMenu.Items[Ord(b10G)].Visible := false;
       MyContest := TALLJAContest.Create('ALL JA コンテスト');
       QTHString := dmZlogGlobal.Settings._prov;
       dmZlogGlobal.Settings._sentstr := '$V$P';
@@ -192,40 +194,31 @@ begin
 
    if rbACAG.Checked then begin
       MainForm.BandMenu.Items[Ord(b19)].Visible := false;
-//      Application.CreateForm(TACAGMulti, ACAGMulti);
-//      Application.CreateForm(TACAGScore, ACAGScore);
-//      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
       MyContest := TACAGContest.Create('全市全郡コンテスト');
       QTHString := dmZlogGlobal.Settings._city;
       dmZlogGlobal.Settings._sentstr := '$Q$P';
    end;
 
    if rbFD.Checked then begin
-//      Application.CreateForm(TACAGMulti, ACAGMulti);
-      Application.CreateForm(TFDMulti, FDMulti);
-//      Application.CreateForm(TACAGScore, ACAGScore);
-//      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
+      MainForm.BandMenu.Items[Ord(b19)].Visible := false;
       MyContest := TFDContest.Create('フィールドデーコンテスト');
       QTHString := dmZlogGlobal.Settings._city;
       dmZlogGlobal.Settings._sentstr := '$Q$P';
    end;
 
    if rb6D.Checked then begin
-//      Application.CreateForm(TACAGMulti, ACAGMulti);
-      Application.CreateForm(TFDMulti, FDMulti);
-      Application.CreateForm(TSixDownMulti, SixDownMulti);
-      Application.CreateForm(TSixDownScore, SixDownScore);
-//      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
+      MainForm.BandMenu.Items[Ord(b19)].Visible := false;
+      MainForm.BandMenu.Items[Ord(b35)].Visible := false;
+      MainForm.BandMenu.Items[Ord(b7)].Visible := false;
+      MainForm.BandMenu.Items[Ord(b14)].Visible := false;
+      MainForm.BandMenu.Items[Ord(b21)].Visible := false;
+      MainForm.BandMenu.Items[Ord(b28)].Visible := false;
       MyContest := TSixDownContest.Create('6m and DOWNコンテスト');
       QTHString := dmZlogGlobal.Settings._city;
       dmZlogGlobal.Settings._sentstr := '$Q$P';
    end;
 
    if rbGeneral.Checked then begin
-//      Application.CreateForm(TACAGMulti, ACAGMulti);
-      Application.CreateForm(TGeneralMulti2, GeneralMulti2);
-      Application.CreateForm(TGeneralScore, GeneralScore);
-//      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
       QTHString := dmZlogGlobal.Settings._city;
       dmZlogGlobal.Settings._sentstr := '$Q';
       MyContest := TGeneralContest.Create(rbGeneral.Caption);
@@ -256,23 +249,17 @@ begin
    end;
 
    if rbJIDXJA.Checked then begin // now determines JA/DX from callsign
-      Application.CreateForm(TWWZone, WWZone);
-      Application.CreateForm(TWWMulti, WWMulti);
       if { WWMulti. } MyCountry = 'JA' then begin
-         Application.CreateForm(TJIDXMulti, JIDXMulti);
-         Application.CreateForm(TJIDXScore2, JIDXScore2);
-//         Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
+         Application.CreateForm(TWWZone, WWZone);
+         Application.CreateForm(TWWMulti, WWMulti);
          MyContest := TJIDXContest.Create('JIDX Contest (JA)');
          QTHString := dmZlogGlobal.Settings._prov;
          dmZlogGlobal.Settings._sentstr := '$V';
-      end
-      else begin
          WWMulti.Release;
          WWZone.Release;
+      end
+      else begin
          Application.ProcessMessages;
-         Application.CreateForm(TJIDX_DX_Multi, JIDX_DX_Multi);
-         Application.CreateForm(TJIDX_DX_Score, JIDX_DX_Score);
-//         Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
          MyContest := TJIDXContestDX.Create('JIDX Contest (DX)');
          QTHString := dmZlogGlobal.Settings._prov;
          dmZlogGlobal.Settings._sentstr := '$V';
@@ -412,18 +399,17 @@ begin
    end;
 
    if rbPedi.Checked then begin
-      Application.CreateForm(TALLJAMulti, ALLJAMulti);
-      Application.CreateForm(TPediScore, PediScore);
-//      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
+      F := TUTCDialog.Create(Self);
+      F.ShowModal();
+      F.Release();
 
-      Application.CreateForm(TUTCDialog, UTCDialog);
-      UTCDialog.ShowModal;
-      UTCDialog.Free;
-
+      MainForm.BandMenu.Items[Ord(b10)].Visible := True;
+      MainForm.BandMenu.Items[Ord(b18)].Visible := True;
+      MainForm.BandMenu.Items[Ord(b24)].Visible := True;
+      MainForm.MultiButton.Enabled := false; // toolbar
+      MainForm.Multipliers1.Enabled := false; // menu
       MyContest := TPedi.Create('Pedition mode');
-
       QTHString := dmZlogGlobal.Settings._prov;
-      // TQSO(Log.List[0]).QSO.memo := 'Pedition mode';
       dmZlogGlobal.Settings._sentstr := '';
    end;
 
@@ -465,12 +451,12 @@ begin
 
    if CurrentFileName = '' then begin
       OpenDialog.InitialDir := dmZlogGlobal.Settings._logspath;
+
       if OpenDialog.Execute then begin
-         CurrentFileName := OpenDialog.FileName;
-         if FileExists(CurrentFileName) then begin
-            MainForm.LoadNewContestFromFile(CurrentFileName);
-            { MyContest.Renew;
-              MainForm.EditScreen.Renew; }
+         dmZLogGlobal.SetLogFileName(OpenDialog.FileName);
+
+         if FileExists(OpenDialog.FileName) then begin
+            MainForm.LoadNewContestFromFile(OpenDialog.FileName);
          end;
       end
       else begin // user hit cancel
@@ -482,7 +468,10 @@ begin
 
    MyContest.Renew;
 
-   if ModeGroup.ItemIndex = 0 then begin MyContest.ScoreForm.CWButton.Visible := True end else begin
+   if ModeGroup.ItemIndex = 0 then begin
+      MyContest.ScoreForm.CWButton.Visible := True
+   end
+   else begin
       MyContest.ScoreForm.CWButton.Visible := False;
    end;
 
@@ -517,7 +506,7 @@ var
    i: Integer;
 begin
    if HiWord(GetKeyState(VK_SPACE)) <> 0 then begin
-      zLogGlobal.DEBUGMODE := True;
+      DEBUGMODE := True;
       BGK32Lib.DEBUGMODE := True;
    end;
    LastTabPress := Now;
@@ -538,7 +527,6 @@ begin
    TabPressed := False;
    TabPressed2 := False;
    CFGFileName := '';
-   MAINPATH := ExtractFilePath(Application.EXEName);
 end;
 
 procedure TMenuForm.FormShow(Sender: TObject);
@@ -660,12 +648,14 @@ begin
    end;
 end;
 
-procedure TMenuForm.rbGeneralEnter(Sender: TObject); begin
+procedure TMenuForm.rbGeneralEnter(Sender: TObject);
+begin
 // SelectButton.Enabled := True;
 end;
 
-procedure TMenuForm.rbGeneralExit(Sender: TObject); begin OKButton.Enabled := True;
-// SelectButton.Enabled := False;
+procedure TMenuForm.rbGeneralExit(Sender: TObject);
+begin
+   OKButton.Enabled := True;
 end;
 
 procedure TMenuForm.SelectButtonClick(Sender: TObject);
@@ -758,20 +748,58 @@ begin
    ModeGroup.Controls[3].Enabled := False;
 end;
 
-procedure TMenuForm.rbJA0inClick(Sender: TObject); var i: Integer; begin EnableEveryThing;
-for i := 0 to 1 do BandGroup.Controls[i].Enabled := False; BandGroup.Controls[4].Enabled := False;
-for i := 7 to 13 do BandGroup.Controls[i].Enabled := False; ModeGroup.Controls[2].Enabled := False; ModeGroup.Controls[3].Enabled := False;
-OpGroup.Controls[1].Enabled := False; TXNrEdit.Enabled := False; end;
+procedure TMenuForm.rbJA0inClick(Sender: TObject);
+var
+   i: Integer;
+begin
+   EnableEveryThing;
+   for i := 0 to 1 do
+      BandGroup.Controls[i].Enabled := False;
 
-procedure TMenuForm.rbARRLWClick(Sender: TObject); var i: Integer; begin EnableEveryThing;
-for i := 7 to 13 do BandGroup.Controls[i].Enabled := False; ModeGroup.Controls[0].Enabled := False; ModeGroup.Controls[3].Enabled := False; end;
+   BandGroup.Controls[4].Enabled := False;
 
-procedure TMenuForm.rbAPSprintClick(Sender: TObject); var i: Integer; begin EnableEveryThing;
-for i := 1 to 13 do BandGroup.Controls[i].Enabled := False; ModeGroup.Controls[0].Enabled := False; ModeGroup.Controls[3].Enabled := False;
-OpGroup.Controls[1].Enabled := False; TXNrEdit.Enabled := False; end;
+   for i := 7 to 13 do
+      BandGroup.Controls[i].Enabled := False;
 
-procedure TMenuForm.OpGroupClick(Sender: TObject); begin if OpGroup.ItemIndex = 0 then TXNrEdit.Enabled := False else TXNrEdit.Enabled :=
-  True; end;
+   ModeGroup.Controls[2].Enabled := False;
+   ModeGroup.Controls[3].Enabled := False;
+   OpGroup.Controls[1].Enabled := False;
+   TXNrEdit.Enabled := False;
+end;
+
+procedure TMenuForm.rbARRLWClick(Sender: TObject);
+var
+   i: Integer;
+begin
+   EnableEveryThing;
+   for i := 7 to 13 do
+      BandGroup.Controls[i].Enabled := False;
+
+   ModeGroup.Controls[0].Enabled := False;
+   ModeGroup.Controls[3].Enabled := False;
+end;
+
+procedure TMenuForm.rbAPSprintClick(Sender: TObject);
+var
+   i: Integer;
+begin
+   EnableEveryThing;
+   for i := 1 to 13 do
+      BandGroup.Controls[i].Enabled := False;
+
+   ModeGroup.Controls[0].Enabled := False;
+   ModeGroup.Controls[3].Enabled := False;
+   OpGroup.Controls[1].Enabled := False;
+   TXNrEdit.Enabled := False;
+end;
+
+procedure TMenuForm.OpGroupClick(Sender: TObject);
+begin
+   if OpGroup.ItemIndex = 0 then
+      TXNrEdit.Enabled := False
+   else
+      TXNrEdit.Enabled := True;
+end;
 
 procedure TMenuForm.TXNrEditKeyPress(Sender: TObject; var Key: Char);
 begin

@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ExtCtrls, Grids, Aligrid, zLogGlobal;
+  StdCtrls, ExtCtrls, Grids, Aligrid, UzLogGlobal;
 
 type
   TWWZone = class(TForm)

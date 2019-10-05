@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  UBasicScore, zLogGlobal, Grids, Aligrid, StdCtrls, ExtCtrls, Buttons;
+  UBasicScore, UzLogGlobal, Grids, Aligrid, StdCtrls, ExtCtrls, Buttons;
 
 type
   TWWScore = class(TBasicScore)

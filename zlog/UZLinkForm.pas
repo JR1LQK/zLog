@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  ExtCtrls, Console2, StdCtrls, ComCtrls, zLogGlobal, UzLogGlobal,
+  ExtCtrls, Console2, StdCtrls, ComCtrls, UzLogGlobal,
   UScratchSheet, OverbyteIcsWndControl, OverbyteIcsWSocket;
 
 type

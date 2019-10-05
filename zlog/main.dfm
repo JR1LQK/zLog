@@ -2565,23 +2565,6 @@ object MainForm: TMainForm
       OnKeyDown = EditKeyDown
       OnKeyPress = EditKeyPress
     end
-    object PowerEdit: TEdit
-      Left = 256
-      Top = 4
-      Width = 65
-      Height = 18
-      TabStop = False
-      AutoSelect = False
-      AutoSize = False
-      CharCase = ecUpperCase
-      ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
-      MaxLength = 4
-      TabOrder = 4
-      Text = 'POWEREDIT'
-      OnChange = PowerEditChange
-      OnKeyDown = EditKeyDown
-      OnKeyPress = PowerEditKeyPress
-    end
     object OpEdit: TEdit
       Left = 37
       Top = 4
@@ -2594,7 +2577,7 @@ object MainForm: TMainForm
       PopupMenu = OpMenu
       ReadOnly = True
       ShowHint = False
-      TabOrder = 5
+      TabOrder = 4
       OnClick = OpEditClick
       OnKeyDown = EditKeyDown
     end
@@ -2606,7 +2589,7 @@ object MainForm: TMainForm
       TabStop = False
       AutoSize = False
       ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
-      TabOrder = 6
+      TabOrder = 5
       Visible = False
       OnChange = SerialEditChange
       OnKeyDown = EditKeyDown
@@ -2620,7 +2603,7 @@ object MainForm: TMainForm
       AutoSize = False
       ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
       PopupMenu = NewPowerMenu
-      TabOrder = 7
+      TabOrder = 6
       Visible = False
       OnClick = NewPowerEditClick
       OnKeyDown = EditKeyDown
@@ -2636,7 +2619,7 @@ object MainForm: TMainForm
       CharCase = ecUpperCase
       ImeMode = imDisable
       ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
-      TabOrder = 8
+      TabOrder = 7
       OnChange = CallsignEditChange
       OnEnter = EditEnter
       OnKeyDown = EditKeyDown
@@ -2655,7 +2638,7 @@ object MainForm: TMainForm
       CharCase = ecUpperCase
       ImeMode = imClose
       ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
-      TabOrder = 9
+      TabOrder = 8
       Text = 'NUMBER'
       OnChange = NumberEditChange
       OnEnter = EditEnter
@@ -2672,7 +2655,7 @@ object MainForm: TMainForm
       TabStop = False
       AutoSize = False
       ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
-      TabOrder = 10
+      TabOrder = 9
       OnChange = MemoEditChange
       OnKeyDown = EditKeyDown
       OnKeyPress = MemoEditKeyPress
@@ -2687,7 +2670,7 @@ object MainForm: TMainForm
       AutoSize = False
       ImeMode = imClose
       ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
-      TabOrder = 11
+      TabOrder = 10
       Text = 'TIME'
       OnChange = TimeEditChange
       OnDblClick = TimeEditDblClick
@@ -2704,7 +2687,7 @@ object MainForm: TMainForm
       AutoSize = False
       ImeMode = imClose
       ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
-      TabOrder = 12
+      TabOrder = 11
       Text = 'date'
       Visible = False
       OnChange = DateEditChange
@@ -4657,65 +4640,6 @@ object MainForm: TMainForm
     Filter = 'zLog binary file (.ZLO)|*.zlo'
     Left = 380
     Top = 253
-  end
-  object PowerMenu: TPopupMenu
-    Alignment = paRight
-    Left = 160
-    Top = 296
-    object N1W1: TMenuItem
-      Caption = '1W'
-      OnClick = PowerMenuClick
-    end
-    object N2W1: TMenuItem
-      Tag = 1
-      Caption = '2W'
-      OnClick = PowerMenuClick
-    end
-    object N5W1: TMenuItem
-      Tag = 2
-      Caption = '5W'
-      OnClick = PowerMenuClick
-    end
-    object N10W1: TMenuItem
-      Tag = 3
-      Caption = '10W'
-      OnClick = PowerMenuClick
-    end
-    object N20W1: TMenuItem
-      Tag = 4
-      Caption = '20W'
-      OnClick = PowerMenuClick
-    end
-    object N25W1: TMenuItem
-      Tag = 5
-      Caption = '25W'
-      OnClick = PowerMenuClick
-    end
-    object N50W1: TMenuItem
-      Tag = 6
-      Caption = '50W'
-      OnClick = PowerMenuClick
-    end
-    object N100W1: TMenuItem
-      Tag = 7
-      Caption = '100W'
-      OnClick = PowerMenuClick
-    end
-    object N200W1: TMenuItem
-      Tag = 8
-      Caption = '200W'
-      OnClick = PowerMenuClick
-    end
-    object N500W1: TMenuItem
-      Tag = 9
-      Caption = '500W'
-      OnClick = PowerMenuClick
-    end
-    object N1kW1: TMenuItem
-      Tag = 10
-      Caption = '1 kW'
-      OnClick = PowerMenuClick
-    end
   end
   object BandMenu: TPopupMenu
     Left = 96

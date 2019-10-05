@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ExtCtrls, Spin, zLogGlobal, UzLogGlobal;
+  StdCtrls, ExtCtrls, Spin, UzLogGlobal;
 
 type
   TSuperData = class
@@ -167,7 +167,7 @@ begin
       end;
    end;
 
-   filename := MAINPATH + 'ZLOG.SPC';
+   filename := ExtractFilePath(Application.EXEName) + 'ZLOG.SPC';
    if FileExists(filename) = False then begin
       Exit;
    end;

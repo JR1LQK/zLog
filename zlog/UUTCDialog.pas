@@ -2,8 +2,9 @@ unit UUTCDialog;
 
 interface
 
-uses Windows, SysUtils, Classes, Graphics, Forms, Controls, StdCtrls, 
-  Buttons, ExtCtrls, zLogGlobal;
+uses
+  Windows, SysUtils, Classes, Graphics, Forms, Controls, StdCtrls,
+  Buttons, ExtCtrls, UzLogGlobal;
 
 type
   TUTCDialog = class(TForm)
@@ -16,9 +17,6 @@ type
   public
     { Public declarations }
   end;
-
-var
-  UTCDialog: TUTCDialog;
 
 implementation
 

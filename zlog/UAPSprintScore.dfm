@@ -5,10 +5,6 @@ inherited APSprintScore: TAPSprintScore
   Position = poScreenCenter
   PixelsPerInch = 96
   TextHeight = 13
-  inherited Panel1: TPanel
-    ExplicitTop = 197
-    ExplicitWidth = 278
-  end
   object Grid: TStringAlignGrid
     Left = 8
     Top = 8
@@ -38,28 +34,28 @@ inherited APSprintScore: TAPSprintScore
     Cells = (
       0
       0
-      #18509'zp'
+      #31295'p'#29556
       0
       1
       '7'
       0
       2
-      #13361#0
+      '?'#0
       0
       3
-      #12594#0
+      '?'#0
       0
       4
-      #28500#24948#8300#21329#10063'scl'#57728#10281#1
+      #35212#53404#37951#16346#25459#62060#16200#1#55872#11752#1#0#5#0#28664
       0
       5
-      #28500#24948#8300#22608#0#9818'5'#0
+      #35212#53404#16191#16128'5'#0#0#0#55872#11752
       0
       6
-      #25427#29295'es'#29376
+      #16191#29541'?'#0#44272
       1
       0
-      #21329'Om'
+      #55956#27983#0#0
       1
       1
       '0'
@@ -86,7 +82,7 @@ inherited APSprintScore: TAPSprintScore
       -12
       'Arial'
       0
-      955489280
+      2549286912
       0
       0
       4
@@ -95,7 +91,7 @@ inherited APSprintScore: TAPSprintScore
       -12
       'Arial'
       0
-      955489280
+      2549286912
       0
       0
       5
@@ -104,7 +100,7 @@ inherited APSprintScore: TAPSprintScore
       -12
       'Arial'
       0
-      955489280
+      2549286912
       0
       0
       6
@@ -113,7 +109,7 @@ inherited APSprintScore: TAPSprintScore
       -12
       'Arial'
       0
-      955489280
+      2549286912
       0)
     PropCol = (
       0
@@ -122,7 +118,7 @@ inherited APSprintScore: TAPSprintScore
       -12
       'Arial'
       0
-      955490304
+      2549287936
       0)
     PropRow = (
       0
@@ -131,7 +127,7 @@ inherited APSprintScore: TAPSprintScore
       -12
       'Arial'
       0
-      955490304
+      2549287936
       0)
     PropFixedCol = ()
     PropFixedRow = ()

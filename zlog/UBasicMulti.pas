@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  zLogGlobal, Menus, UComm, USpotClass;
+  UzLogGlobal, Menus, UComm, USpotClass;
 
 type
   TBasicMulti = class(TForm)

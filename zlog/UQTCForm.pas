@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, Spin, zLogGlobal, Main, uzLogCW, UZLinkForm, BGK32LIB;
+  StdCtrls, Spin, UzLogGlobal, Main, uzLogCW, UZLinkForm, BGK32LIB;
 
 type
   TQTCForm = class(TForm)

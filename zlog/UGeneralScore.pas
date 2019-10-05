@@ -4,8 +4,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  UBasicScore, Aligrid, StdCtrls, ExtCtrls, zLogGlobal, UzLogGlobal, Menus, Grids,
-  UMultipliers, Buttons;
+  UBasicScore, Aligrid, StdCtrls, ExtCtrls, UzLogGlobal, Menus, Grids,
+  UMultipliers, Buttons, UGeneralMulti2;
 
 
 type
@@ -17,9 +17,9 @@ type
     procedure FormShow(Sender: TObject);
   private
     { Private declarations }
-    procedure ResetParams; // called from LoadCFG
+    procedure ResetParams(); // called from LoadCFG
   public
-    WARC : boolean;
+//    WARC : boolean;
 
     SameCTYPoints, SameCONTPoints : boolean;
     PointsTable : TPointsTable;
@@ -32,6 +32,7 @@ type
 
     AlphabetPointsTable : array[ord('0')..ord('Z')] of Integer;
     AlphabetPoints : boolean;
+    formMulti: TGeneralMulti2;
     procedure SetPointsTable(var PT : TPointsTable; str : string);
     procedure CalcPoints(var aQSO : TQSO);
     procedure AddNoUpdate(var aQSO : TQSO); override;
@@ -42,12 +43,10 @@ type
     { Public declarations }
   end;
 
-var
-  GeneralScore: TGeneralScore;
-
 implementation
 
-uses UGeneralMulti, UGeneralMulti2, UOptions, Main;
+uses
+  Main;
 
 {$R *.DFM}
 
@@ -96,7 +95,7 @@ begin
     end;
 end;
 
-procedure TGeneralScore.ResetParams;
+procedure TGeneralScore.ResetParams();
 var B : TBand;
     M : TMode;
     i : integer;
@@ -121,7 +120,7 @@ begin
   for B := b19 to HiBand do
     SerialArray[B] := 1;
 
-  with GeneralMulti2 do
+  with formMulti do
     begin
       for i := 0 to MAXLOCAL do
         LocalString[i] := '';
@@ -139,7 +138,7 @@ var zfile : textfile;
 const TAB = #$09;
 
 begin
- ResetParams;
+ ResetParams();
  System.Assign(zfile, FIlename);
  {$I-}
  System.reset(zfile);
@@ -419,12 +418,12 @@ begin
 
                if com = 'LOCALCTY' then
                  begin
-                   GeneralMulti2.LocalCTY := UpperCase(opr);
+                   formMulti.LocalCTY := UpperCase(opr);
                  end;
 
                if com = 'LOCALCONT' then
                  begin
-                   GeneralMulti2.LocalCONT := UpperCase(opr);
+                   formMulti.LocalCONT := UpperCase(opr);
                  end;
 
 
@@ -435,14 +434,14 @@ begin
                      begin
                        if opr[i]=',' then
                          begin
-                           GeneralMulti2.LocalString[k]:=tstr;
+                           formMulti.LocalString[k]:=tstr;
                            if k<MAXLOCAL then inc(k);
                            tstr:='';
                          end
                        else
                          tstr:=tstr+opr[i];
                      end;
-                   if k<=MAXLOCAL then GeneralMulti2.LocalString[k]:=tstr;
+                   if k<=MAXLOCAL then formMulti.LocalString[k]:=tstr;
                  end;
 
 
@@ -478,14 +477,14 @@ begin
                        work := -99;
                    end;
                    if work >= 0 then
-                     GeneralMulti2.MinLocalLen := work;
+                     formMulti.MinLocalLen := work;
                  end;
 
 
 
                if com='SENDNR' then
                  begin
-                   dmZLogGlobal.Settings._sentstr := opr;
+                   dmZlogGlobal.Settings._sentstr := opr;
                  end;
 
                if com='DAT' then
@@ -493,7 +492,7 @@ begin
                    tstr := opr;
                    if Pos('.',tstr)=0 then
                      tstr := tstr +'.DAT';
-                   GeneralMulti2.LoadDAT(tstr);
+                   formMulti.LoadDAT(tstr);
                  end;
 
 
@@ -506,20 +505,20 @@ begin
 
                if com='CTY' then
                  begin
-                   GeneralMulti2.LoadCTY(UpperCase(opr));
+                   formMulti.LoadCTY(UpperCase(opr));
                  end;
 
                if com='COUNTMULTIONCE' then
                  begin
                    if opr = 'ON' then
-                     GeneralMulti2.CountOnce := True
+                     formMulti.CountOnce := True
                    else
-                     GeneralMulti2.CountOnce := False;
+                     formMulti.CountOnce := False;
                  end;
 
                if com='NOCTYMULTI' then
                  begin
-                   GeneralMulti2.NoCTYMulti := UpperCase(opr);
+                   formMulti.NoCTYMulti := UpperCase(opr);
                  end;
 
 
@@ -543,7 +542,7 @@ begin
                        work := -99;
                    end;
                    if work <> -99 then
-                     GeneralMulti2._cut := work;
+                     formMulti._cut := work;
                  end;
 
                if com='LCUT' then
@@ -555,7 +554,7 @@ begin
                        work := -99;
                    end;
                    if work <> -99 then
-                     GeneralMulti2._lcut := work;
+                     formMulti._lcut := work;
                  end;
 
                if com='TAIL' then
@@ -567,7 +566,7 @@ begin
                        work := -99;
                    end;
                    if work <> -99 then
-                     GeneralMulti2._tail := work;
+                     formMulti._tail := work;
                  end;
 
                if com='LTAIL' then
@@ -579,25 +578,25 @@ begin
                        work := -99;
                    end;
                    if work <> -99 then
-                     GeneralMulti2._ltail := work;
+                     formMulti._ltail := work;
                  end;
 
                if com = 'UNDEFMULTI' then
                  begin
                    if opr = 'ON' then
-                     GeneralMulti2.UndefMulti := True;
+                     formMulti.UndefMulti := True;
                  end;
 
                 if com = 'JARL' then
                  begin
                    if opr = 'ON' then
-                     GeneralMulti2.CutTailingAlphabets := True;
+                     formMulti.CutTailingAlphabets := True;
                  end;
 
                 if com = 'CUTTAILABT' then //equivalent to JARL
                  begin
                    if opr = 'ON' then
-                     GeneralMulti2.CutTailingAlphabets := True;
+                     formMulti.CutTailingAlphabets := True;
                  end;
 
                if com='POWER' then
@@ -637,12 +636,12 @@ begin
 
                if com='UNLISTEDMULTI' then
                  begin
-                   if opr='ON' then GeneralMulti2.AllowUnlistedMulti := True;
+                   if opr='ON' then formMulti.AllowUnlistedMulti := True;
                  end;
 
                if com='NOMULTI' then
                  begin
-                   if opr='ON' then GeneralMulti2.NoMulti := True;
+                   if opr='ON' then formMulti.NoMulti := True;
                  end;
 
                if com='PXMULTI' then
@@ -651,16 +650,16 @@ begin
                    if opr='NORMAL' then
                      begin
                        //undefMulti := True;
-                       GeneralMulti2.PXMulti := PX_Normal;
+                       formMulti.PXMulti := PX_Normal;
                      end;
                    if opr='WPX' then
                      begin
                        //undefMulti := True;
-                       GeneralMulti2.PXMulti := PX_WPX;
+                       formMulti.PXMulti := PX_WPX;
                      end;
                    if opr='OFF' then
                      begin
-                       GeneralMulti2.PXMulti := 0;
+                       formMulti.PXMulti := 0;
                      end;
                  end;
 
@@ -687,7 +686,7 @@ begin
                  begin
                    if opr = 'ON' then
                      begin
-                       WARC := True;
+                       formMulti.WARC := True;
                        MainForm.BandMenu.Items[ord(b10)].Visible := True;
                        MainForm.BandMenu.Items[ord(b18)].Visible := True;
                        MainForm.BandMenu.Items[ord(b24)].Visible := True;
@@ -781,7 +780,7 @@ begin
       Grid.Cells[5,0] := 'CW %';
     end;
 
-  GeneralMulti2.SetActiveBands;
+  formMulti.SetActiveBands;
   for band := b19 to HiBand do
     begin
       TotQSO := TotQSO + QSO[band];
@@ -793,7 +792,7 @@ begin
           Grid.Cells[0,row] := MHzString[band];
           Grid.Cells[1,row] := IntToStr(QSO[band]);
           Grid.Cells[2,row] := IntToStr(Points[band]);
-          if GeneralMulti2.NoMulti then
+          if formMulti.NoMulti then
             Grid.Cells[3,row] := '-'
           else
             Grid.Cells[3,row] := IntToStr(Multi[band]);
@@ -815,7 +814,7 @@ begin
   Grid.Cells[0, row] := 'Total';
   Grid.Cells[1, row] := IntToStr(TotQSO);
   Grid.Cells[2, row] := IntToStr(TotPoints);
-  if GeneralMulti2.NoMulti then
+  if formMulti.NoMulti then
     Grid.Cells[3, row] := '-'
   else
     Grid.Cells[3, row] := IntToStr(TotMulti);
@@ -834,12 +833,12 @@ begin
   Grid.Cells[0, row] := 'Score';
   Grid.Cells[1, row] := '';
   Grid.Cells[2, row] := '';
-  if GeneralMulti2.NoMulti then
+  if formMulti.NoMulti then
     Grid.Cells[3, row] := IntToStr(TotPoints)
   else
     Grid.Cells[3, row] := IntToStr(TotPoints*TotMulti);
   Grid.Height := 16*(row+1);
-  GeneralScore.Height := Grid.Height + (333-256);
+  Height := Grid.Height + (333-256);
 end;
 
 
@@ -850,7 +849,7 @@ var i : integer;
 begin
   aQSO.QSO.Points := PointsTable[aQSO.QSO.Band, aQSO.QSO.Mode];
 
-  if GeneralMulti2._DXTEST then
+  if formMulti._DXTEST then
     begin
       if SameCTYPoints or SameCONTPoints then
         begin
@@ -867,7 +866,7 @@ begin
         end;
     end;
 
-  if GeneralMulti2.IsLocal(aQSO) then
+  if formMulti.IsLocal(aQSO) then
     aQSO.QSO.Points := LocalPointsTable[aQSO.QSO.Band, aQSO.QSO.Mode];
 
   if AlphabetPoints then
@@ -925,7 +924,7 @@ var B : TBand;
     M : TMode;
 begin
   inherited;
-  WARC := False;
+//  WARC := False;
 end;
 
 procedure TGeneralScore.Reset;

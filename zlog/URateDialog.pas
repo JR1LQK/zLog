@@ -3,7 +3,7 @@ unit URateDialog;
 interface
 
 uses Windows, SysUtils, Classes, Graphics, Forms, Controls, StdCtrls,
-  Buttons, ExtCtrls, zLogGlobal, wsaGraph, UOptions, UzLogGlobal;
+  Buttons, ExtCtrls, wsaGraph, UOptions, UzLogGlobal;
 
 type
   TRateDialog = class(TForm)

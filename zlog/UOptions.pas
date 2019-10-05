@@ -4,7 +4,7 @@ interface
 
 uses
   SysUtils, Windows, Messages, Classes, Graphics, Controls,
-  StdCtrls, ExtCtrls, Forms, ComCtrls, zLogGlobal, Spin, IniFiles,
+  StdCtrls, ExtCtrls, Forms, ComCtrls, Spin,
   BGK32Lib, Dialogs, Menus, FileCtrl, UPaddleThread,
   UIntegerDialog, UzLogGlobal;
 
@@ -361,8 +361,6 @@ begin
 
       BGK32Lib.SetSpaceFactor(Settings.CW._spacefactor);
       BGK32Lib.SetEISpaceFactor(Settings.CW._eispacefactor);
-
-      AllowDupe := Settings._allowdupe;
 
       if Settings._backuppath = '' then begin
          MainForm.BackUp1.Enabled := False;

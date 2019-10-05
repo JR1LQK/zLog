@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, ExtCtrls, zLogGlobal, IniFiles;
+  Dialogs, StdCtrls, ExtCtrls, UzLogGlobal, IniFiles;
 
 type
   TformELogJarl = class(TForm)

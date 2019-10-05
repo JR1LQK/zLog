@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  UBasicMulti, Grids, Aligrid, StdCtrls, ExtCtrls, zLogGlobal;
+  UBasicMulti, Grids, Aligrid, StdCtrls, ExtCtrls, UzLogGlobal, UKCJZone;
 
 const maxindex = 70;
 
@@ -35,8 +35,11 @@ type
     procedure combBandChange(Sender: TObject);
     procedure cbStayOnTopClick(Sender: TObject);
     procedure Button2Click(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
   private
     { Private declarations }
+    MultiMap: TKCJZone;
+    function GetCurrentBand : TBand;
   public
     { Public declarations }
     MultiArray : array[b19..b50, 0..maxindex] of boolean;
@@ -48,20 +51,16 @@ type
     function ValidMulti(aQSO : TQSO) : boolean; override;
   end;
 
-
-var
-  KCJMulti: TKCJMulti;
-
 implementation
 
-uses Main, UKCJZone;
+uses Main;
 
 {$R *.DFM}
 
-function GetCurrentBand : TBand;
+function TKCJMulti.GetCurrentBand : TBand;
 begin
   Result := b19;
-  case KCJMulti.combBand.ItemIndex of
+  case combBand.ItemIndex of
     0 : Result := b19;
     1 : Result := b35;
     2 : Result := b7;
@@ -137,8 +136,9 @@ begin
     end;
   end;
   UpdateBand(B);
-  if KCJZone.Visible then
-    KCJZone.Update;
+
+  if MultiMap.Visible then
+    MultiMap.Update;
 end;
 
 procedure TKCJMulti.AddNoUpdate(var aQSO : TQSO);
@@ -221,16 +221,19 @@ end;
 
 
 procedure TKCJMulti.FormCreate(Sender: TObject);
-var x, i, j, k : word;
 begin
-  inherited;
-  Reset;
-  combBand.ItemIndex := 0;
-  //Update;
+   inherited;
+   Reset;
+   combBand.ItemIndex := 0;
+   MultiMap := TKCJZone.Create(Owner);
+   MultiMap.formMulti := Self;
 end;
 
-
-
+procedure TKCJMulti.FormDestroy(Sender: TObject);
+begin
+   inherited;
+   MultiMap.Release();
+end;
 
 procedure TKCJMulti.Button1Click(Sender: TObject);
 begin
@@ -254,7 +257,7 @@ end;
 
 procedure TKCJMulti.Button2Click(Sender: TObject);
 begin
-  KCJZone.Show;
+  MultiMap.Show;
 end;
 
 end.

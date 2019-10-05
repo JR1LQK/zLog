@@ -4,8 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  Aligrid, StdCtrls, ExtCtrls, zLogGlobal, UBasicScore, UWWScore, Grids,
-  Vcl.Buttons;
+  Aligrid, StdCtrls, ExtCtrls, UzLogGlobal, UBasicScore, UWWScore, Grids;
 
 type
   TJIDXScore = class(TWWScore)
@@ -16,9 +15,6 @@ type
     { Public declarations }
     procedure AddNoUpdate(var aQSO : TQSO);  override;
   end;
-
-var
-  JIDXScore: TJIDXScore;
 
 implementation
 
@@ -33,7 +29,7 @@ begin
   if aQSO.QSO.Dupe then
     exit;
 
-  BasicScore.AddNoUpdate(aQSO);
+  Inherited AddNoUpdate(aQSO);
   band := aQSO.QSO.band;
   if aQSO.QSO.NewMulti2 then
     inc(Multi2[band]);
@@ -53,6 +49,7 @@ procedure TJIDXScore.FormCreate(Sender: TObject);
 var i : integer;
 begin
   inherited;
+  i := 0;
 end;
 
 end.

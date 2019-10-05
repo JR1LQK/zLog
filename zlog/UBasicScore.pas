@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  zLogGlobal, StdCtrls, ExtCtrls, Buttons;
+  UzLogGlobal, StdCtrls, ExtCtrls, Buttons;
 
 type
   TBasicScore = class(TForm)
@@ -14,7 +14,6 @@ type
     CWButton: TSpeedButton;
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
-    procedure CreateParams(var Params: TCreateParams); override;
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure StayOnTopClick(Sender: TObject);
@@ -45,9 +44,6 @@ type
     function _TotalMulti : integer;
     function _TotalPoints : integer;
   end;
-
-var
-  BasicScore: TBasicScore;
 
 implementation
 
@@ -82,9 +78,8 @@ begin
 end;
 
 procedure TBasicScore.SaveSummary(FileName : string);
-var
-   f : textfile;
-//   b : TBand;
+var f : textfile;
+    b : TBand;
 begin
   if SummaryInfo.ShowModal <> mrOK then
     exit;
@@ -133,17 +128,11 @@ begin
   CloseFile(f);
 end;
 
-procedure TBasicScore.CreateParams(var Params: TCreateParams);
-begin
-  inherited CreateParams(Params);
-  Params.ExStyle := Params.ExStyle or WS_EX_APPWINDOW;
-end;
-
 constructor TBasicScore.Create(AOwner: TComponent);
 begin
-  Inherited Create(AOwner);
-  ShowCWRatio := False;
-  Reset;
+   Inherited Create(AOwner);
+   ShowCWRatio := False;
+   Reset;
 end;
 
 procedure TBasicScore.Renew;
@@ -253,7 +242,7 @@ begin
 end;
 
 procedure TBasicScore.CWButtonClick(Sender: TObject);
-//var boo : boolean;
+var boo : boolean;
 begin
   if CWButton.Down then
     ShowCWRatio := True

@@ -5,7 +5,7 @@ interface
 uses
   Windows, SysUtils, Classes, Graphics, Forms, Controls, StdCtrls,
   Buttons, ExtCtrls, Menus,
-  zLogGlobal, UzLogGlobal, UzLogCW, BGK32LIB;
+  UzLogGlobal, UzLogCW, BGK32LIB;
 
 
 const _ActInsert = 0;
@@ -250,8 +250,8 @@ begin
 end;
 
 procedure TEditDialog.EditKeyPress(Sender: TObject; var Key: Char);
-var dupeindex : integer;
-    j : integer;
+var
+   dupeindex : integer;
 begin
   MainForm.CommonEditKeyProcess(Sender, Key);
   case Key of
@@ -611,9 +611,6 @@ begin
   ModeLabel.Visible := ModeEdit.Visible;
   ModeLabel.Left := ModeEdit.Left+1;
 
-  PowerEdit.Left := MainForm.PowerEdit.Left + offset;
-  PowerEdit.Width := MainForm.PowerEdit.Width;
-  PowerEdit.Visible := MainForm.PowerEdit.Visible;
   PowerLabel.Visible := PowerEdit.Visible;
   PowerLabel.Left := PowerEdit.Left+1;
 

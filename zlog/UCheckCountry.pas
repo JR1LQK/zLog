@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  UCheckWin, StdCtrls, ExtCtrls, UWWMulti, UMultipliers, zLogGlobal, Main;
+  UCheckWin, StdCtrls, ExtCtrls, UWWMulti, UMultipliers, UzLogGlobal, Main;
 
 type
   TCheckCountry = class(TCheckWin)

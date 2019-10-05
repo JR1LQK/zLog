@@ -2,7 +2,7 @@ unit USpotClass;
 
 interface
 
-uses SysUtils, Windows, Classes, zLogGlobal;
+uses SysUtils, Windows, Classes, UzLogGlobal;
 
 type
   TBaseSpot = class

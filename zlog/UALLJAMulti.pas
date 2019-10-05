@@ -4,7 +4,7 @@ interface
 
 uses
   SysUtils, Windows, Messages, Classes, Graphics, Controls,
-  StdCtrls, ExtCtrls, Forms, ComCtrls, zLogGlobal, UBasicMulti, JLLabel;
+  StdCtrls, ExtCtrls, Forms, ComCtrls, UzLogGlobal, UBasicMulti, JLLabel;
 
 type
 
@@ -71,8 +71,6 @@ const KenNames : array[m101..m50] of string[15] =
  '37  “¿“‡','38  ˆ¤•Q','39  ‚’m','40  •Ÿ‰ª','41  ²‰ê','42  ’·è','43  ŒF–{',
  '44  ‘å•ª','45  ‹{è','46  ­™“‡','47  ‰«“ê','48  ¬Š}Œ´','49  ‰«ƒm’¹“‡',
  '50  “ì’¹“‡');
-var
-  ALLJAMulti: TALLJAMulti;
 
 implementation
 

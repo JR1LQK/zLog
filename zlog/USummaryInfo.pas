@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, zLogGlobal, UzLogGlobal;
+  StdCtrls, UzLogGlobal;
 
 type
   TSummaryInfo = class(TForm)

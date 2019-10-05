@@ -4,7 +4,6 @@ uses
   Forms,
   ActiveX,
   main in 'main.pas' {MainForm},
-  zLogGlobal in 'zLogGlobal.pas',
   UBasicScore in 'UBasicScore.pas' {BasicScore},
   UBasicMulti in 'UBasicMulti.pas' {BasicMulti},
   UALLJAMulti in 'UALLJAMulti.pas' {ALLJAMulti},
@@ -103,7 +102,6 @@ uses
 
 {$R *.RES}
 
-
 begin
   CoInitialize(nil); // <-- manually call CoInitialize()
   Application.Initialize;
@@ -137,7 +135,7 @@ begin
   Application.CreateForm(TScratchSheet, ScratchSheet);
   Application.CreateForm(TQTCForm, QTCForm);
   Application.CreateForm(TBandScope2, BandScope2);
-//  Options.ImplementSettings(False);
+  //  Options.ImplementSettings(False);
 
    try
       MenuForm.Show();

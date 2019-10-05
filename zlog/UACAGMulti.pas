@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms,
-  StdCtrls, ExtCtrls, Grids, zLogGlobal, JLLabel, UBasicMulti, checklst,
+  StdCtrls, ExtCtrls, Grids, UzLogGlobal, JLLabel, UBasicMulti, checklst,
   Cologrid, UMultipliers;
 
 
@@ -54,9 +54,6 @@ type
     procedure SetNumberEditFocus; override;
     { Public declarations }
   end;
-
-//var
-//  ACAGMulti: TACAGMulti;
 
 implementation
 

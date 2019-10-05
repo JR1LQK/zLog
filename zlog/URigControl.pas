@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  zLogGlobal, UzLogGlobal, StdCtrls, BGK32Lib, ExtCtrls, CPDrv, OleServer,
+  UzLogGlobal, StdCtrls, BGK32Lib, ExtCtrls, CPDrv, OleServer,
   OmniRig_TLB;
 
 

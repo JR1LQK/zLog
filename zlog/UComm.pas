@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, Console, ExtCtrls, zLogGlobal, UzLogGlobal, ComCtrls,
+  StdCtrls, Console, ExtCtrls, UzLogGlobal, ComCtrls,
   Console2, USpotClass, CPDrv, Menus,
   OverbyteIcsWndControl, OverbyteIcsTnCnx;
 
@@ -92,7 +92,8 @@ var
 
 implementation
 
-uses Main, UOptions, UZLinkForm, URigControl, uBandScope2;
+uses
+  Main, UOptions, UZLinkForm, URigControl, uBandScope2;
 
 {$R *.DFM}
 

@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  Grids, Aligrid, StdCtrls, ExtCtrls, zLogGlobal;
+  Grids, Aligrid, StdCtrls, ExtCtrls, UzLogGlobal;
 
 type
   TKCJZone = class(TForm)
@@ -22,15 +22,14 @@ type
     { Private declarations }
   public
     { Public declarations }
+    formMulti: TForm;
     procedure Update;
   end;
 
-var
-  KCJZone: TKCJZone;
-
 implementation
 
-uses UKCJMulti;
+uses
+  UKCJMulti;
 
 {$R *.DFM}
 
@@ -58,7 +57,7 @@ begin
       for B := b19 to b50 do
         if NotWARC(B) then
           begin
-            if KCJMulti.MultiArray[B, i] then
+            if TKCJMulti(formMulti).MultiArray[B, i] then
               Grid1.Cells[BandCol(B),i+1] := '*'
             else
               Grid1.Cells[BandCol(B),i+1] := '.';
@@ -69,7 +68,7 @@ begin
       for B := b19 to b50 do
         if NotWARC(B) then
           begin
-            if KCJMulti.MultiArray[B, i] then
+            if TKCJMulti(formMulti).MultiArray[B, i] then
               Grid2.Cells[BandCol(B),i-23] := '*'
             else
               Grid2.Cells[BandCol(B),i-23] := '.';
@@ -80,7 +79,7 @@ begin
       for B := b19 to b50 do
         if NotWARC(B) then
           begin
-            if KCJMulti.MultiArray[B, i] then
+            if TKCJMulti(formMulti).MultiArray[B, i] then
               Grid3.Cells[BandCol(B),i-47] := '*'
             else
               Grid3.Cells[BandCol(B),i-47] := '.';

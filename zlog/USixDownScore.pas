@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  UBasicScore, Grids, Aligrid, StdCtrls, ExtCtrls, zLogGlobal, Buttons;
+  UBasicScore, Grids, Aligrid, StdCtrls, ExtCtrls, UzLogGlobal, Buttons;
 
 type
   TSixDownScore = class(TBasicScore)
@@ -21,9 +21,6 @@ type
     procedure Reset; override;
     procedure Add(var aQSO : TQSO); override;
   end;
-
-var
-  SixDownScore: TSixDownScore;
 
 implementation
 

@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  UBasicMulti, StdCtrls, ExtCtrls, zLogGlobal;
+  UBasicMulti, StdCtrls, ExtCtrls, UzLogGlobal;
 
 type
   TJA0Multi = class(TBasicMulti)

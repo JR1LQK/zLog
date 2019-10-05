@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms,
   Dialogs, ExtCtrls, StdCtrls, Grids, Menus, Cologrid,
-  USpotClass, zLogGlobal, UzLogGlobal;
+  USpotClass, UzLogGlobal;
 
 type
   TBandScope2 = class(TForm)

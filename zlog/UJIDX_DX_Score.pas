@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  UBasicScore, StdCtrls, ExtCtrls, Grids, Aligrid, zLogGlobal, Buttons;
+  UBasicScore, StdCtrls, ExtCtrls, Grids, Aligrid, UzLogGlobal, Buttons;
 
 type
   TJIDX_DX_Score = class(TBasicScore)

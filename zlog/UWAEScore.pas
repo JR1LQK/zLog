@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  UBasicScore, Grids, Aligrid, StdCtrls, Buttons, ExtCtrls, zLogGlobal;
+  UBasicScore, Grids, Aligrid, StdCtrls, Buttons, ExtCtrls, UzLogGlobal;
 
 const BandFactor : array[b19..b28] of integer =
            (0, 4, 3, 0, 2, 0, 2, 0, 2);    // multi bonus factor

@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, {UWWMulti}UMultipliers, zLogGlobal;
+  StdCtrls, {UWWMulti}UMultipliers, UzLogGlobal;
 
 type
   TNewPrefix = class(TForm)

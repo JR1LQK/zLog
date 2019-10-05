@@ -2,13 +2,8 @@ inherited ARRL10Score: TARRL10Score
   Left = 237
   Top = 284
   Caption = 'Score'
-  Font.Charset = DEFAULT_CHARSET
   PixelsPerInch = 96
   TextHeight = 13
-  inherited Panel1: TPanel
-    ExplicitTop = 197
-    ExplicitWidth = 278
-  end
   object Grid: TMgrid
     Left = 5
     Top = 8

@@ -3,8 +3,7 @@ unit UMultipliers;
 interface
 
 uses
-  SysUtils, Windows, Classes, Dialogs,
-  zLogGlobal, UzLogGlobal;
+  SysUtils, Windows, Classes, Dialogs, UzLogGlobal;
 
 const testCQWW = $03;
       MAXCQZONE = 40;

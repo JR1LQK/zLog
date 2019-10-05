@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  UEditDialog, StdCtrls, ExtCtrls, zLogGlobal, Menus;
+  UEditDialog, StdCtrls, ExtCtrls, UzLogGlobal, Menus;
 
 type
   TALLJAEditDialog = class(TEditDialog)
@@ -14,9 +14,6 @@ type
   public
     { Public declarations }
   end;
-
-//var
-//  ALLJAEditDialog: TALLJAEditDialog;
 
 implementation
 

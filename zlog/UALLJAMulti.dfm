@@ -135,8 +135,8 @@ object ALLJAMulti: TALLJAMulti
         object RotateLabel2: TRotateLabel
           Left = 84
           Top = 4
-          Width = 11
-          Height = 14
+          Width = 14
+          Height = 15
           Escapement = 90
           TextStyle = tsNone
           Caption = '3.5'
@@ -150,7 +150,7 @@ object ALLJAMulti: TALLJAMulti
         object RotateLabel3: TRotateLabel
           Left = 96
           Top = 13
-          Width = 11
+          Width = 14
           Height = 6
           Escapement = 90
           TextStyle = tsNone
@@ -165,7 +165,7 @@ object ALLJAMulti: TALLJAMulti
         object RotateLabel4: TRotateLabel
           Left = 108
           Top = 7
-          Width = 11
+          Width = 14
           Height = 12
           Escapement = 90
           TextStyle = tsNone
@@ -180,7 +180,7 @@ object ALLJAMulti: TALLJAMulti
         object RotateLabel5: TRotateLabel
           Left = 120
           Top = 7
-          Width = 11
+          Width = 14
           Height = 12
           Escapement = 90
           TextStyle = tsNone
@@ -195,7 +195,7 @@ object ALLJAMulti: TALLJAMulti
         object RotateLabel6: TRotateLabel
           Left = 132
           Top = 7
-          Width = 11
+          Width = 14
           Height = 12
           Escapement = 90
           TextStyle = tsNone
@@ -210,7 +210,7 @@ object ALLJAMulti: TALLJAMulti
         object RotateLabel7: TRotateLabel
           Left = 144
           Top = 7
-          Width = 11
+          Width = 14
           Height = 12
           Escapement = 90
           TextStyle = tsNone

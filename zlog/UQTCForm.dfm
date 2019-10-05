@@ -21,8 +21,8 @@ object QTCForm: TQTCForm
   object Label1: TLabel
     Left = 24
     Top = 56
-    Width = 41
-    Height = 15
+    Width = 43
+    Height = 17
     Caption = 'Label1'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -34,8 +34,8 @@ object QTCForm: TQTCForm
   object Label2: TLabel
     Left = 24
     Top = 32
-    Width = 41
-    Height = 15
+    Width = 43
+    Height = 17
     Caption = 'Label2'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -47,8 +47,8 @@ object QTCForm: TQTCForm
   object Label3: TLabel
     Left = 24
     Top = 11
-    Width = 139
-    Height = 15
+    Width = 136
+    Height = 17
     Caption = '# of QTCs to be sent'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText

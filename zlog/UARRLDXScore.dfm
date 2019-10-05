@@ -33,34 +33,34 @@ inherited ARRLDXScore: TARRLDXScore
     Cells = (
       0
       0
-      #18509'zp'
+      #31295'p'#29556
       0
       1
-      #11825'9z'
+      #14655'z'#0
       0
       2
-      #11827'59'
+      #13631'9p'
       0
       3
       '7'
       0
       4
-      #13361#0
+      '?'#0
       0
       5
-      #12594#0
+      '?'#0
       0
       6
-      #14386#0
+      '?'#0
       0
       7
-      #28500#24948'li'#64512
+      #35212#53404#26988'?'#44272#11756#932
       0
       8
-      #25427#29295'eU'#64512
+      #16191#21861'?'#0#44272
       1
       0
-      #21329'O'#0
+      #65533'O'#0#0
       1
       1
       '0'
@@ -84,7 +84,7 @@ inherited ARRLDXScore: TARRLDXScore
       '0'
       2
       0
-      #28496#28265#29556#0#64512#10620
+      #16191'?'#16191#0#44272#11756
       2
       1
       '0'
@@ -108,7 +108,7 @@ inherited ARRLDXScore: TARRLDXScore
       '0'
       3
       0
-      #30029#29804'i'#0#64512
+      #22497#26943#16128#0#44272#11756
       3
       1
       '0'
@@ -141,7 +141,7 @@ inherited ARRLDXScore: TARRLDXScore
       -12
       'Arial'
       0
-      955489280
+      2549286912
       0
       0
       7
@@ -150,7 +150,7 @@ inherited ARRLDXScore: TARRLDXScore
       -12
       'Arial'
       0
-      955489280
+      2549286912
       0
       0
       8
@@ -159,7 +159,7 @@ inherited ARRLDXScore: TARRLDXScore
       -12
       'Arial'
       0
-      955489280
+      2549286912
       0)
     PropCol = (
       0
@@ -168,7 +168,7 @@ inherited ARRLDXScore: TARRLDXScore
       -12
       'Arial'
       0
-      955490304
+      2549287936
       0)
     PropRow = (
       0
@@ -177,7 +177,7 @@ inherited ARRLDXScore: TARRLDXScore
       -12
       'Arial'
       0
-      955490304
+      2549287936
       0)
     PropFixedCol = ()
     PropFixedRow = ()

@@ -33,31 +33,31 @@ inherited WAEScore: TWAEScore
     Cells = (
       0
       0
-      #18509'zp'
+      #31295'p'#29556
       0
       1
-      #11827'5z'
+      #13631'z'#0
       0
       2
       '7'
       0
       3
-      #13361#0
+      '?'#0
       0
       4
-      #12594#0
+      '?'#0
       0
       5
-      #14386#0
+      '?'#0
       0
       6
-      #28500#24948'l'#0#55200
+      #35212#53404'l?'#8016#12152#932
       0
       7
-      #25427#29295'e'#0#55200
+      #16191'e?'#0#8016
       1
       0
-      #21329'O'#0
+      #65533'O'#0#0
       1
       1
       '0'
@@ -78,7 +78,7 @@ inherited WAEScore: TWAEScore
       '0'
       2
       0
-      #21585'C'#0
+      #65533'C'#0#0
       2
       1
       '0'
@@ -99,7 +99,7 @@ inherited WAEScore: TWAEScore
       '0'
       3
       0
-      #30029#29804#0#0
+      #22497'?'#0#0#8016
       3
       1
       '0'
@@ -129,7 +129,7 @@ inherited WAEScore: TWAEScore
       -12
       'Arial'
       0
-      955489280
+      2549286912
       0
       0
       6
@@ -138,7 +138,7 @@ inherited WAEScore: TWAEScore
       -12
       'Arial'
       0
-      955489280
+      2549286912
       0
       0
       7
@@ -147,7 +147,7 @@ inherited WAEScore: TWAEScore
       -12
       'Arial'
       0
-      955489280
+      2549286912
       0)
     PropCol = (
       0
@@ -156,7 +156,7 @@ inherited WAEScore: TWAEScore
       -12
       'Arial'
       0
-      955490304
+      2549287936
       0)
     PropRow = (
       0
@@ -165,7 +165,7 @@ inherited WAEScore: TWAEScore
       -12
       'Arial'
       0
-      955490304
+      2549287936
       0)
     PropFixedCol = ()
     PropFixedRow = ()

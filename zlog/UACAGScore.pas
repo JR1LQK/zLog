@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  UBasicScore, Grids, StdCtrls, ExtCtrls, Aligrid, zLogGlobal, menus,
+  UBasicScore, Grids, StdCtrls, ExtCtrls, Aligrid, UzLogGlobal, menus,
   Buttons;
 
 type
@@ -20,9 +20,6 @@ type
     procedure Add(var aQSO : TQSO); override;
     { Public declarations }
   end;
-
-//var
-//  ACAGScore: TACAGScore;
 
 implementation
 

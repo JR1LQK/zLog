@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ExtCtrls, zLogGlobal, URigControl;
+  StdCtrls, ExtCtrls, UzLogGlobal, URigControl;
 
 type
   TSpotForm = class(TForm)
