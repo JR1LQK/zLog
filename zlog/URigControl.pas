@@ -4,8 +4,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  zLogGlobal, StdCtrls, BGK32Lib, ExtCtrls, CPDrv, OleServer,
-  ActiveX{???COinitialize/UnCoinitialize}, OmniRig_TLB;
+  zLogGlobal, UzLogGlobal, StdCtrls, BGK32Lib, ExtCtrls, CPDrv, OleServer,
+  OmniRig_TLB;
 
 
 type
@@ -395,7 +395,7 @@ begin
   s := '';
   //if Rig <> nil then
     //begin
-      if Options.Settings._multistation = True then
+      if dmZlogGlobal.Settings._multistation = True then
         ss := '30'
       else
         ss := IntToStr(Ord(Main.CurrentQSO.QSO.Band));
@@ -411,7 +411,7 @@ begin
       else
         ss := 'SP '+ss+' ';
         //ss := ss + ' SP ';
-      s := s + ss + ' ['+  Options.Settings._pcname + ']';
+      s := s + ss + ' ['+  dmZlogGlobal.Settings._pcname + ']';
     //end;
   Result := s;
 end;
@@ -422,7 +422,7 @@ begin
   s := '';
   //if Rig <> nil then
     //begin
-      if Options.Settings._multistation = True then
+      if dmZlogGlobal.Settings._multistation = True then
         ss := '30'
       else
         ss := IntToStr(Ord(Main.CurrentQSO.QSO.Band));
@@ -438,7 +438,7 @@ begin
       else
         ss := 'SP '+ss+' ';
         //ss := ss + ' SP ';
-      s := s + ss + ' ['+Options.Settings._pcname+']';
+      s := s + ss + ' ['+dmZlogGlobal.Settings._pcname+']';
     //end;
   Result := s;
 end;
@@ -546,14 +546,14 @@ procedure TRigControl.SetBandMask;
 var B : TBand;
 begin
   B := b19;
-  case Options.Settings._banddatamode of
+  case dmZlogGlobal.Settings._banddatamode of
     1 : if Rig1 <> nil then
           B := Rig1._currentband;
     2 : if Rig2 <> nil then
           B := Rig2._currentband;
     3 : B := Main.CurrentQSO.QSO.Band;
   end;
-  BGK32LIB._bandmask := (Options.Settings._BandData[B] * 16);
+  BGK32LIB._bandmask := (dmZlogGlobal.Settings._BandData[B] * 16);
   BGK32LIB.UpdateDataPort;
 end;
 
@@ -916,13 +916,13 @@ procedure TRigControl.ImplementOptions;
 var rname : string;
     i : integer;
 begin
-  UseAFSK := Options.Settings._AFSK;
+  UseAFSK := dmZlogGlobal.Settings._AFSK;
 
   if Rig1 <> nil then
     Rig1.Free;
   Rig1 := nil;
 
-  if Options.Rig1NameStr = 'Omni-Rig' then
+  if dmZlogGlobal.Rig1NameStr = 'Omni-Rig' then
     begin
       Rig1 := TOmni.Create(1);
       Rig1._minband := b19;
@@ -932,9 +932,9 @@ begin
   else
     btnOmniRig.Enabled := False;
 
-  if Options.Settings._rig1port in [1..6] then
+  if dmZlogGlobal.Settings._rig1port in [1..6] then
     begin
-      rname := Options.Rig1NameStr;
+      rname := dmZlogGlobal.Rig1NameStr;
       if rname = 'None' then
         exit;
 
@@ -1064,16 +1064,16 @@ begin
     Rig2.Free;
   Rig2 := nil;
 
-  if Options.Rig2NameStr = 'Omni-Rig' then
+  if dmZlogGlobal.Rig2NameStr = 'Omni-Rig' then
     begin
       Rig2 := TOmni.Create(2);
       Rig2._minband := b19;
       Rig2._maxband := b1200;
     end;
 
-  if Options.Settings._rig2port in [1..6] then
+  if dmZlogGlobal.Settings._rig2port in [1..6] then
     begin
-      rname := Options.Rig2NameStr;
+      rname := dmZlogGlobal.Rig2NameStr;
       if rname = 'None' then
         exit; 
 
@@ -1203,15 +1203,15 @@ begin
 
   if Rig1 <> nil then
     begin
-      if Options.Settings._transverter1 then
-        Rig1._freqoffset := 1000*Options.Settings._transverteroffset1
+      if dmZlogGlobal.Settings._transverter1 then
+        Rig1._freqoffset := 1000*dmZlogGlobal.Settings._transverteroffset1
       else
         Rig1._freqoffset := 0;
     end;
   if Rig2 <> nil then
     begin
-      if Options.Settings._transverter2 then
-        Rig2._freqoffset := 1000*Options.Settings._transverteroffset2
+      if dmZlogGlobal.Settings._transverter2 then
+        Rig2._freqoffset := 1000*dmZlogGlobal.Settings._transverteroffset2
       else
         Rig2._freqoffset := 0;
     end;
@@ -1237,12 +1237,12 @@ begin
   _rignumber := RigNum;
   if _rignumber = 1 then
     begin
-      prtnr := Options.Settings._rig1port;
+      prtnr := dmZlogGlobal.Settings._rig1port;
       Comm := RigControl.ZCom1;
     end
   else
     begin
-      prtnr := Options.Settings._rig2port;
+      prtnr := dmZlogGlobal.Settings._rig2port;
       Comm := RigControl.ZCom2;
     end;
   Comm.Disconnect;
@@ -1373,7 +1373,7 @@ constructor TICOM.Create(RigNum : integer);
 begin
   inherited;
   Comm.BaudRate := br1200;
-  case Options.Settings._icombaudrate of
+  case dmZlogGlobal.Settings._icombaudrate of
     0 : Comm.BaudRate := br300;
     1 : Comm.BaudRate := br1200;
     2 : Comm.BaudRate := br2400;
@@ -2913,12 +2913,5 @@ procedure TRigControl.btnOmniRigClick(Sender: TObject);
 begin
   RigControl.OmniRig.DialogVisible := True;
 end;
-
-initialization
-  CoInitialize(nil); // <-- manually call CoInitialize()
-
-finalization
-  CoUnInitialize; // <-- free memory
-
 
 end.

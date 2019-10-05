@@ -2,8 +2,9 @@ unit UAgeDialog;
 
 interface
 
-uses Windows, SysUtils, Classes, Graphics, Forms, Controls, StdCtrls,
-  Buttons, ExtCtrls;
+uses
+  Windows, SysUtils, Classes, Graphics, Forms, Controls, StdCtrls,
+  Buttons, ExtCtrls, UzLogGlobal;
 
 type
   TAgeDialog = class(TForm)
@@ -24,14 +25,11 @@ var
 
 implementation
 
-uses UOptions;
-
 {$R *.DFM}
-
 
 procedure TAgeDialog.OKBtnClick(Sender: TObject);
 begin
-  Options.Settings._age := Edit1.Text;
+  dmZLogGlobal.Settings._age := Edit1.Text;
   Close;
 end;
 

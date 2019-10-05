@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, Console, ExtCtrls, zLogGlobal, ComCtrls,
+  StdCtrls, Console, ExtCtrls, zLogGlobal, UzLogGlobal, ComCtrls,
   Console2, USpotClass, CPDrv, Menus,
   OverbyteIcsWndControl, OverbyteIcsTnCnx;
 
@@ -120,7 +120,7 @@ end;
 
 function TCommForm.MaybeConnected : boolean;
 begin
-  if (Options.Settings._clusterport = 7) and (Telnet.IsConnected = False) then
+  if (dmZlogGlobal.Settings._clusterport = 7) and (Telnet.IsConnected = False) then
     Result := False
   else
     Result := True;
@@ -156,7 +156,7 @@ end;
 
 procedure TCommForm.WriteData(str : string);
 begin
-  case Options.Settings._clusterport of
+  case dmZlogGlobal.Settings._clusterport of
     1..6 :
       begin
         if ClusterComm.Connected then
@@ -191,10 +191,10 @@ var boo, noport : boolean;
 begin
   noport := false;
 
-  case Options.Settings._clusterport of
+  case dmZlogGlobal.Settings._clusterport of
     0 : noport := True;
-    1..6 : boo := Options.Settings._cluster_com.FLocalEcho;
-    7 : boo := Options.Settings._cluster_telnet.FLocalEcho;
+    1..6 : boo := dmZlogGlobal.Settings._cluster_com.FLocalEcho;
+    7 : boo := dmZlogGlobal.Settings._cluster_telnet.FLocalEcho;
   end;
 
   s := '';
@@ -234,15 +234,15 @@ end;
 
 procedure TCommForm.ImplementOptions;
 begin
-   if Options.Settings._clusterbaud <> 99 then begin
-      //AsyncComm.BaudRate := TBaudRate(Options.Settings._clusterbaud);
-      ClusterComm.BaudRate := TBaudRate(Options.Settings._clusterbaud+1);
+   if dmZlogGlobal.Settings._clusterbaud <> 99 then begin
+      //AsyncComm.BaudRate := TBaudRate(dmZlogGlobal.Settings._clusterbaud);
+      ClusterComm.BaudRate := TBaudRate(dmZlogGlobal.Settings._clusterbaud+1);
    end;
 
-   if Options.Settings._clusterport in [1..6] then begin
-      ClusterComm.Port := TPortNumber(Options.Settings._clusterport);
+   if dmZlogGlobal.Settings._clusterport in [1..6] then begin
+      ClusterComm.Port := TPortNumber(dmZlogGlobal.Settings._clusterport);
       ClusterComm.Connect;
-      //AsyncComm.DeviceName := 'COM'+IntToStr(Options.Settings._clusterport);
+      //AsyncComm.DeviceName := 'COM'+IntToStr(dmZlogGlobal.Settings._clusterport);
       //AsyncComm.Open;
    end
    else begin
@@ -250,13 +250,13 @@ begin
       //AsyncComm.Close;
    end;
 
-   case Options.Settings._clusterport of
-      1..6 : Console.LineBreak := TConsole2LineBreak(Options.Settings._cluster_com.FLineBreak);
-      7 :    Console.LineBreak := TConsole2LineBreak(Options.Settings._cluster_telnet.FLineBreak);
+   case dmZlogGlobal.Settings._clusterport of
+      1..6 : Console.LineBreak := TConsole2LineBreak(dmZlogGlobal.Settings._cluster_com.FLineBreak);
+      7 :    Console.LineBreak := TConsole2LineBreak(dmZlogGlobal.Settings._cluster_telnet.FLineBreak);
    end;
 
-   Telnet.Host := Options.Settings._cluster_telnet.FHostName;
-   Telnet.Port := IntToStr(Options.Settings._cluster_telnet.FPortNumber);
+   Telnet.Host := dmZlogGlobal.Settings._cluster_telnet.FHostName;
+   Telnet.Port := IntToStr(dmZlogGlobal.Settings._cluster_telnet.FPortNumber);
 end;
 
 procedure TCommForm.FormCreate(Sender: TObject);
@@ -268,7 +268,7 @@ begin
   CommTemp := '';
   Timer1.Enabled := True;
   ImplementOptions;
-  {if Options.Settings._clusterport in [1..6] then
+  {if dmZlogGlobal.Settings._clusterport in [1..6] then
     begin
       try
         Comm.StartComm;
@@ -346,7 +346,7 @@ begin
   dupe := false;
   _deleted := false;
 
-  Expire := Options.Settings._spotexpire/(60*24);
+  Expire := dmZlogGlobal.Settings._spotexpire/(60*24);
   for i := 0 to SpotList.Count - 1 do
     begin
       S := TSpot(SpotList[i]);
@@ -402,7 +402,7 @@ end;
 
 procedure TCommForm.TransmitSpot(S : string); // local or via network
 begin
-  if Options.Settings._clusterport = 0 then
+  if dmZlogGlobal.Settings._clusterport = 0 then
     ZLinkForm.SendSpotViaNetwork(S)
   else
     WriteLine(S);
@@ -490,7 +490,7 @@ procedure TCommForm.ConnectButtonClick(Sender: TObject);
 begin
   Edit.SetFocus;
 
-  if Options.Settings._clusterport = 0 then
+  if dmZlogGlobal.Settings._clusterport = 0 then
     begin
       ZLinkForm.PushRemoteConnect;
       exit;
@@ -510,7 +510,7 @@ end;
 
 procedure TCommForm.RemoteConnectButtonPush;
 begin
-  if (Options.Settings._clusterport = 0) then
+  if (dmZlogGlobal.Settings._clusterport = 0) then
     begin
       //ZLinkForm.PushRemoteConnect;
       exit;
@@ -558,7 +558,7 @@ end;*)
 
 procedure TCommForm.FormShow(Sender: TObject);
 begin
-  ConnectButton.Enabled := (Options.Settings._clusterport = 7);
+  ConnectButton.Enabled := (dmZlogGlobal.Settings._clusterport = 7);
 end;
 
 procedure TCommForm.StayOnTopClick(Sender: TObject);

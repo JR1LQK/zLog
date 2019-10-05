@@ -4,7 +4,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  UWWMulti, UMultipliers, StdCtrls, ExtCtrls, JLLabel, zLogGlobal, Grids, Cologrid;
+  UWWMulti, UMultipliers, StdCtrls, ExtCtrls, JLLabel, zLogGlobal, Grids, Cologrid,
+  UzLogGlobal;
 
 type
   TARRLWMulti = class(TWWMulti)
@@ -139,10 +140,10 @@ begin
   MyContinent := 'AS';
   MyCountry := 'JA';
 
-  if (Options.Settings._mycall <> '') and (Options.Settings._mycall <> 'Your callsign') then
+  if (dmZlogGlobal.Settings._mycall <> '') and (dmZlogGlobal.Settings._mycall <> 'Your callsign') then
     begin
       aQSO := TQSO.Create;
-      aQSO.QSO.callsign := UpperCase(Options.Settings._mycall);
+      aQSO.QSO.callsign := UpperCase(dmZlogGlobal.Settings._mycall);
       i := GetCountryIndex(aQSO);
       if i > 0 then
         begin

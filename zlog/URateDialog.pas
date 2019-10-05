@@ -3,7 +3,7 @@ unit URateDialog;
 interface
 
 uses Windows, SysUtils, Classes, Graphics, Forms, Controls, StdCtrls,
-  Buttons, ExtCtrls, zLogGlobal, wsaGraph, UOptions;
+  Buttons, ExtCtrls, zLogGlobal, wsaGraph, UOptions, UzLogGlobal;
 
 type
   TRateDialog = class(TForm)
@@ -28,7 +28,6 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
-    procedure CreateParams(var Params: TCreateParams); override;
     procedure StayOnTopClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure ShowLastComboChange(Sender: TObject);
@@ -54,12 +53,6 @@ uses Main;
 
 {$R *.DFM}
 
-procedure TRateDialog.CreateParams(var Params: TCreateParams);
-begin
-  inherited CreateParams(Params);
-  Params.ExStyle := Params.ExStyle or WS_EX_APPWINDOW;
-end;
-
 procedure TRateDialog.TimerTimer(Sender: TObject);
 var Last : TDateTime;
     Diff, Rate : double;
@@ -74,7 +67,7 @@ begin
       exit;
    end;
 
-   mytx := Options.TXNr;
+   mytx := dmZlogGlobal.TXNr;
 
    k := 0;
    repeat

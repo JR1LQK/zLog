@@ -1,8 +1,8 @@
-object Options: TOptions
+object formOptions: TformOptions
   Left = 532
   Top = 236
   BorderStyle = bsDialog
-  Caption = 'Options'
+  Caption = 'formOptions'
   ClientHeight = 381
   ClientWidth = 358
   Color = clBtnFace
@@ -12,6 +12,7 @@ object Options: TOptions
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = True
+  Position = poOwnerFormCenter
   Scaled = False
   OnCreate = FormCreate
   OnDestroy = FormDestroy
@@ -40,10 +41,8 @@ object Options: TOptions
     ActivePage = PrefTabSheet
     Align = alClient
     TabOrder = 0
-    ExplicitHeight = 288
     object PrefTabSheet: TTabSheet
       Caption = 'Preferences'
-      ExplicitHeight = 260
       object Label40: TLabel
         Left = 184
         Top = 104
@@ -339,7 +338,6 @@ object Options: TOptions
     end
     object TabSheet2: TTabSheet
       Caption = 'Categories'
-      ExplicitHeight = 260
       object Label14: TLabel
         Left = 248
         Top = 92
@@ -595,7 +593,6 @@ object Options: TOptions
     end
     object CWTabSheet: TTabSheet
       Caption = 'CW/RTTY'
-      ExplicitHeight = 260
       object Label11: TLabel
         Left = 240
         Top = 0
@@ -1046,7 +1043,6 @@ object Options: TOptions
     object VoiceTabSheet: TTabSheet
       Caption = 'Voice'
       TabVisible = False
-      ExplicitHeight = 260
       object GroupBox4: TGroupBox
         Left = 8
         Top = 8
@@ -1346,7 +1342,6 @@ object Options: TOptions
     end
     object TabSheet5: TTabSheet
       Caption = 'Hardware'
-      ExplicitHeight = 260
       object GroupBox6: TGroupBox
         Left = 3
         Top = 0
@@ -1443,7 +1438,6 @@ object Options: TOptions
           Height = 21
           Caption = 'COM port settings'
           Default = True
-          ModalResult = 1
           TabOrder = 1
           OnClick = buttonClusterSettingsClick
         end
@@ -1466,7 +1460,6 @@ object Options: TOptions
           Height = 21
           Caption = 'TELNET settings'
           Default = True
-          ModalResult = 1
           TabOrder = 5
           OnClick = buttonZLinkSettingsClick
         end
@@ -1671,7 +1664,6 @@ object Options: TOptions
     end
     object tbRigControl: TTabSheet
       Caption = 'Rig control'
-      ExplicitHeight = 260
       object Label45: TLabel
         Left = 8
         Top = 138
@@ -1756,7 +1748,6 @@ object Options: TOptions
     end
     object TabSheet1: TTabSheet
       Caption = 'Path'
-      ExplicitHeight = 260
       object Label50: TLabel
         Left = 16
         Top = 18
@@ -1825,7 +1816,6 @@ object Options: TOptions
     end
     object tbMisc: TTabSheet
       Caption = 'Misc'
-      ExplicitHeight = 260
       object Label47: TLabel
         Left = 16
         Top = 88
@@ -1933,7 +1923,6 @@ object Options: TOptions
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitTop = 288
     DesignSize = (
       358
       37)

@@ -4,7 +4,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  UWWMulti, UMultipliers, StdCtrls, ExtCtrls, JLLabel, zLogGlobal, Grids, Cologrid;
+  UWWMulti, UMultipliers, StdCtrls, ExtCtrls, JLLabel, zLogGlobal, Grids, Cologrid,
+  UzLogGlobal;
 
 type
 
@@ -324,10 +325,10 @@ begin
   MyCountry := 'JA';
   MyZone := '25';
 
-  if (Options.Settings._mycall <> '') and (Options.Settings._mycall <> 'Your call sign') then
+  if (dmZlogGlobal.Settings._mycall <> '') and (dmZlogGlobal.Settings._mycall <> 'Your call sign') then
     begin
       aQSO := TQSO.Create;
-      aQSO.QSO.callsign := Uppercase(Options.Settings._mycall);
+      aQSO.QSO.callsign := Uppercase(dmZlogGlobal.Settings._mycall);
 
       P := GetPrefix(aQSO);
       //i := GetCountryIndex(aQSO);
@@ -340,9 +341,9 @@ begin
           MyCountry := TCountry(CountryList.List[i]).Country;
           //MyZone := IntToStr(TCountry(CountryList.List[i]).Zone);
 
-          if Options.Settings._iaruzone = '' then
-            Options.Settings._iaruzone := GuessZone(aQSO);
-          MyZone := Options.Settings._iaruzone;
+          if dmZlogGlobal.Settings._iaruzone = '' then
+            dmZlogGlobal.Settings._iaruzone := GuessZone(aQSO);
+          MyZone := dmZlogGlobal.Settings._iaruzone;
 
           //MyContinent := TCountry(CountryList.List[i]).Continent;
           if P.OvrContinent = '' then

@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, BGK32LIB, ExtCtrls, zLogGlobal, UzLogCW, ClipBrd;
+  StdCtrls, BGK32LIB, ExtCtrls, zLogGlobal, UzLogGlobal, UzLogCW, ClipBrd;
 
 type
   TCWKeyBoard = class(TForm)
@@ -107,7 +107,7 @@ begin
     VK_F1..VK_F8 :
       begin
         i := Key - VK_F1 + 1;
-        S := Options.CWMessage(Options.Settings.CW.CurrentBank,i);
+        S := dmZlogGlobal.CWMessage(dmZlogGlobal.Settings.CW.CurrentBank,i);
         S := SetStr(S, Main.CurrentQSO);
         zLogSendStr(S);
 

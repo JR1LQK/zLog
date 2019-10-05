@@ -14,7 +14,7 @@ type
   public
     { Public declarations }
     Multi2 : array[b19..HiBand] of LongInt;
-    constructor Create; override;
+    constructor Create(AOwner: TComponent); override;
     procedure Renew; override;
     procedure Reset; override;
     procedure AddNoUpdate(var aQSO : TQSO);  override;
@@ -29,10 +29,10 @@ implementation
 
 {$R *.DFM}
 
-constructor TJIDXScore2.Create;
+constructor TJIDXScore2.Create(AOwner: TComponent);
 var band : TBand;
 begin
-  inherited;
+  inherited Create(AOwner);
   for band := b19 to HiBand do
     begin
       Multi2[band] := 0;

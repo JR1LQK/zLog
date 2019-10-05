@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   UWWMulti, UMultipliers, StdCtrls, JLLabel, ExtCtrls, zLogGlobal, Grids, Cologrid,
-  UComm, USpotClass;
+  UComm, USpotClass, UzLogGlobal;
 
 type
   TWPXMulti = class(TWWMulti)
@@ -191,10 +191,10 @@ begin
   MyContinent := 'AS';
   MyCountry := 'JA';
 
-  if (Options.Settings._mycall <> '') and (Options.Settings._mycall <> 'Your call sign') then
+  if (dmZlogGlobal.Settings._mycall <> '') and (dmZlogGlobal.Settings._mycall <> 'Your call sign') then
     begin
       aQSO := TQSO.Create;
-      aQSO.QSO.callsign := UpperCase(Options.Settings._mycall);
+      aQSO.QSO.callsign := UpperCase(dmZlogGlobal.Settings._mycall);
       i := GetCountryIndex(aQSO);
       if i > 0 then
         begin

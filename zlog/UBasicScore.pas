@@ -30,7 +30,7 @@ type
     Points : array[b19..HiBand] of LongInt;
     Multi : array[b19..HiBand] of LongInt;
     ShowCWRatio : boolean;
-    constructor Create; virtual;
+    constructor Create(AOwner: TComponent); virtual;
     procedure Renew; virtual;
     procedure Update; virtual;
     procedure AddNoUpdate(var aQSO : TQSO); virtual;
@@ -139,8 +139,9 @@ begin
   Params.ExStyle := Params.ExStyle or WS_EX_APPWINDOW;
 end;
 
-constructor TBasicScore.Create;
+constructor TBasicScore.Create(AOwner: TComponent);
 begin
+  Inherited Create(AOwner);
   ShowCWRatio := False;
   Reset;
 end;

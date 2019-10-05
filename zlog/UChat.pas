@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ExtCtrls, zLogGlobal;
+  StdCtrls, ExtCtrls, zLogGlobal, UzLogGlobal;
 
 type
   TChatForm = class(TForm)
@@ -17,7 +17,6 @@ type
     Button2: TButton;
     cbStayOnTop: TCheckBox;
     procedure EditKeyPress(Sender: TObject; var Key: Char);
-    procedure CreateParams(var Params: TCreateParams); override;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
@@ -50,15 +49,9 @@ uses Main, UZLinkForm, UOptions;
 function TChatForm.IDString : string;
 begin
   if PCNameSet then
-    Result := FillRight(Options.Settings._pcname + '>', 9)
+    Result := FillRight(dmZlogGlobal.Settings._pcname + '>', 9)
   else
     Result := FillRight(Main.CurrentQSO.BandStr+'MHz>', 9);
-end;
-
-procedure TChatForm.CreateParams(var Params: TCreateParams);
-begin
-  inherited CreateParams(Params);
-  Params.ExStyle := Params.ExStyle or WS_EX_APPWINDOW;
 end;
 
 procedure TChatForm.Add(S: string);

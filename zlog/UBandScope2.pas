@@ -3,9 +3,9 @@ unit UBandScope2;
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ExtCtrls, StdCtrls, Grids, Cologrid, uSpotClass, zLogGlobal,
-  Menus;
+  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms,
+  Dialogs, ExtCtrls, StdCtrls, Grids, Menus, Cologrid,
+  USpotClass, zLogGlobal, UzLogGlobal;
 
 type
   TBandScope2 = class(TForm)
@@ -154,7 +154,7 @@ begin
           goto endofloop;
         end;
       Diff := Now - BS.Time;
-      if Diff*24*60 > 1.00*Options.Settings._bsexpire then
+      if Diff*24*60 > 1.00 * dmZlogGlobal.Settings._bsexpire then
         begin
           BS.Free;
           BSList2[i] := nil;
@@ -197,8 +197,8 @@ procedure TBandScope2.SetMinMaxFreq(min, max : LongInt);
 begin
   MinFreq := min;
   MaxFreq := max;
-  Options.Settings._bsMinFreqArray[currBand, currMode] := min div 1000;
-  Options.Settings._bsMaxFreqArray[currBand, currMode] := max div 1000;
+  dmZlogGlobal.Settings._bsMinFreqArray[currBand, currMode] := min div 1000;
+  dmZlogGlobal.Settings._bsMaxFreqArray[currBand, currMode] := max div 1000;
 end;
 
 function GetBand(Hz : LongInt) : integer;  //Returns -1 if Hz is outside ham bands

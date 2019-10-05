@@ -4,8 +4,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  UACAGMulti, Grids, Cologrid, StdCtrls, JLLabel, ExtCtrls, zLogGlobal, {UWWMulti}UMultipliers,
-  UzLogCW;
+  UACAGMulti, Grids, Cologrid, StdCtrls, JLLabel, ExtCtrls, zLogGlobal, UzLogGlobal,
+  UMultipliers, UzLogCW;
 
 type
   TIsland = class
@@ -330,7 +330,7 @@ begin
   if CountryList.List.Count = 0 then exit;
 
   Q := TQSO.Create;
-  Q.QSO.Callsign := UpperCase(Options.MyCall);
+  Q.QSO.Callsign := UpperCase(dmZLogGlobal.MyCall);
   P := GetPrefixX(Q, PrefixList);
   MyDXCC := TCountry(CountryList.List[P.Index]).Country;
   Q.Free;

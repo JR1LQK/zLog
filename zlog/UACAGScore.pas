@@ -21,8 +21,8 @@ type
     { Public declarations }
   end;
 
-var
-  ACAGScore: TACAGScore;
+//var
+//  ACAGScore: TACAGScore;
 
 implementation
 
@@ -129,8 +129,7 @@ begin
   Grid.Cells[1, row] := '';
   Grid.Cells[2, row] := IntToStr(TotPoints*TotMulti);
   Grid.Height := 16*(row+1);
-  ACAGScore.Height := Grid.Height + (325-256);
-
+  Height := Grid.Height + (325-256);
 end;
 
 procedure TACAGScore.Reset;

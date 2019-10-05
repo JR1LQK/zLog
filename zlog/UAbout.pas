@@ -27,31 +27,33 @@ type
     { Public declarations }
   end;
 
-var
-  AboutBox: TAboutBox;
-
 implementation
 
 {$R *.DFM}
 
 procedure TAboutBox.OKButtonClick(Sender: TObject);
 begin
-  Close;
+   Close;
 end;
 
 procedure TAboutBox.FormShow(Sender: TObject);
-var temp : string;
+var
+   temp : string;
 begin
-  Label2.Caption := TQSO(Log.List[0]).QSO.memo;
-  Str(BGK32LIB.GetVersion : 3:2, temp);
-  //BGK32DLL.Caption := 'BGK32.DLL version '+temp;
+   Label2.Caption := TQSO(Log.List[0]).QSO.memo;
+   Str(BGK32LIB.GetVersion : 3:2, temp);
+   //BGK32DLL.Caption := 'BGK32.DLL version '+temp;
 end;
 
 procedure TAboutBox.FormCreate(Sender: TObject);
 begin
-{$ifdef w95}
-  Version.Caption := Version.Caption + ' /w95';
-{$endif}
+   if USB_Detected then begin
+      Label4.Caption := 'USBIF4CW detected';
+   end
+   else begin
+      Label4.Caption := '';
+   end;
+
 end;
 
 end.

@@ -4512,9 +4512,9 @@ object MainForm: TMainForm
         ShortCut = 32843
         OnClick = CWKeyboard1Click
       end
-      object Options1: TMenuItem
+      object menuOptions: TMenuItem
         Caption = '&Options'
-        OnClick = Options1Click
+        OnClick = menuOptionsClick
       end
       object N5: TMenuItem
         Caption = '-'
@@ -4635,14 +4635,14 @@ object MainForm: TMainForm
         Caption = '-'
         Visible = False
       end
-      object About1: TMenuItem
+      object menuAbout: TMenuItem
         Caption = '&About...'
         Hint = 'Show program information'
-        OnClick = About1Click
+        OnClick = menuAboutClick
       end
-      object QuickReference1: TMenuItem
+      object menuQuickReference: TMenuItem
         Caption = '&Quick Reference'
-        OnClick = QuickReference1Click
+        OnClick = menuQuickReferenceClick
       end
     end
   end

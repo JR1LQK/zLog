@@ -2,6 +2,7 @@ program zLog;
 
 uses
   Forms,
+  ActiveX,
   main in 'main.pas' {MainForm},
   zLogGlobal in 'zLogGlobal.pas',
   UBasicScore in 'UBasicScore.pas' {BasicScore},
@@ -12,7 +13,7 @@ uses
   UALLJAEditDialog in 'UALLJAEditDialog.pas' {ALLJAEditDialog},
   UAbout in 'UAbout.pas' {AboutBox},
   URateDialog in 'URateDialog.pas' {RateDialog},
-  UOptions in 'UOptions.pas' {Options},
+  UOptions in 'UOptions.pas' {formOptions},
   UMenu in 'UMenu.pas' {MenuForm},
   UACAGMulti in 'UACAGMulti.pas' {ACAGMulti},
   USuperCheck in 'USuperCheck.pas' {SuperCheck},
@@ -97,20 +98,21 @@ uses
   HidUsage in 'HID\HidUsage.pas',
   SetupApi in 'HID\SetupApi.pas',
   ToneGen in 'LIB\ToneGen.pas',
-  OmniRig_TLB in 'OmniRig\OmniRig_TLB.pas';
+  OmniRig_TLB in 'OmniRig\OmniRig_TLB.pas',
+  UzLogGlobal in 'UzLogGlobal.pas' {dmZLogGlobal: TDataModule};
 
 {$R *.RES}
 
 
 begin
+  CoInitialize(nil); // <-- manually call CoInitialize()
+  Application.Initialize;
   Application.Title := 'zLog for Windows';
+  Application.CreateForm(TdmZLogGlobal, dmZLogGlobal);
   Application.CreateForm(TMenuForm, MenuForm);
   Application.CreateForm(TRigControl, RigControl);
-  Application.CreateForm(TOptions, Options);
   Application.CreateForm(TMainForm, MainForm);
   Application.CreateForm(TPartialCheck, PartialCheck);
-  Application.CreateForm(TEditDialog, EditDialog);
-  Application.CreateForm(TAboutBox, AboutBox);
   Application.CreateForm(TRateDialog, RateDialog);
   Application.CreateForm(TSuperCheck, SuperCheck);
   Application.CreateForm(TCommForm, CommForm);
@@ -134,16 +136,20 @@ begin
   Application.CreateForm(TNewPrefix, NewPrefix);
   Application.CreateForm(TScratchSheet, ScratchSheet);
   Application.CreateForm(TQTCForm, QTCForm);
-  Application.CreateForm(TQuickRef, QuickRef);
   Application.CreateForm(TBandScope2, BandScope2);
-
-  Options.ImplementSettings(False);
+//  Options.ImplementSettings(False);
 
    try
+      MenuForm.Show();
       Application.Run;
+
+      if MyContest <> nil then begin
+         MyContest.Free;
+      end;
    except
       CloseBGK;
    end;
 
-   Application.ShowHint := True;
+   CoUnInitialize; // <-- free memory
+   dmZlogGlobal.Free();
 end.

@@ -55,8 +55,8 @@ type
     { Public declarations }
   end;
 
-var
-  ACAGMulti: TACAGMulti;
+//var
+//  ACAGMulti: TACAGMulti;
 
 implementation
 

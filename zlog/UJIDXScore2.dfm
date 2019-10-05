@@ -32,34 +32,34 @@ inherited JIDXScore2: TJIDXScore2
     Cells = (
       0
       0
-      #18509'zp'
+      #31295'p'#29556
       0
       1
-      #11825'9z'
+      #14655'z'#0
       0
       2
-      #11827'59'
+      #13631'9p'
       0
       3
       '7'
       0
       4
-      #13361#0
+      '?'#0
       0
       5
-      #12594#0
+      '?'#0
       0
       6
-      #14386#0
+      '?'#0
       0
       7
-      #28500#24948'l'#0#28960
+      #35212#53404'l?'#47616#10501#28412
       0
       8
-      #25427#29295'e'#0#28960
+      #16191'e?'#0#53073
       1
       0
-      #21329'O'#0
+      #65533'O'#0#0
       1
       1
       '0'
@@ -83,7 +83,7 @@ inherited JIDXScore2: TJIDXScore2
       '0'
       2
       0
-      #28496#28265#29556#0#28960#10751
+      #16191'?'#16191#0#47616#10501
       2
       1
       '0'
@@ -107,7 +107,7 @@ inherited JIDXScore2: TJIDXScore2
       '0'
       3
       0
-      #28506#25966's'#0#28960
+      #16191's?Z'#47616
       3
       1
       '0'
@@ -134,7 +134,7 @@ inherited JIDXScore2: TJIDXScore2
       ' '
       4
       0
-      #29763'y'#0
+      #31039#0't'
       4
       1
       '0'
@@ -167,7 +167,7 @@ inherited JIDXScore2: TJIDXScore2
       -12
       'Arial'
       0
-      955489280
+      955081728
       0
       0
       7
@@ -176,7 +176,7 @@ inherited JIDXScore2: TJIDXScore2
       -12
       'Arial'
       0
-      955489280
+      955081728
       0
       0
       8
@@ -185,7 +185,7 @@ inherited JIDXScore2: TJIDXScore2
       -12
       'Arial'
       0
-      955489280
+      955081728
       0)
     PropCol = (
       0
@@ -194,7 +194,7 @@ inherited JIDXScore2: TJIDXScore2
       -12
       'Arial'
       0
-      955490304
+      955082752
       0)
     PropRow = (
       0
@@ -203,7 +203,7 @@ inherited JIDXScore2: TJIDXScore2
       -12
       'Arial'
       0
-      955490304
+      955082752
       0)
     PropFixedCol = ()
     PropFixedRow = ()

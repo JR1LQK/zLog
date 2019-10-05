@@ -4,7 +4,8 @@ interface
 
 uses
    SysUtils, Windows, Messages, Classes, Graphics, Controls, StdCtrls, ExtCtrls,
-   Forms, UITypes, BGK32Lib, UzLogCW, zLogGlobal, Dialogs, Buttons, UMMTTY;
+   Forms, UITypes, Dialogs, Buttons,
+   BGK32Lib, UzLogCW, zLogGlobal, UzLogGlobal, UMMTTY;
 
 var
    SaveInBackGround: boolean = False;
@@ -113,19 +114,19 @@ begin
    CurrentQSO.QSO.Serial := 1;
    MainForm.mPXListWPX.Visible := False;
 
-   Options.MultiOp := OpGroup.ItemIndex;
+   dmZlogGlobal.MultiOp := OpGroup.ItemIndex;
    zLogGlobal.OperatorCategory := OpGroup.ItemIndex;
 
    case BandGroup.ItemIndex of
-      0 .. 3: Options.Band := BandGroup.ItemIndex;
-      4: Options.Band := BandGroup.ItemIndex + 1;
-      5: Options.Band := BandGroup.ItemIndex + 2;
-      6 .. 13: Options.Band := BandGroup.ItemIndex + 3;
+      0 .. 3: dmZlogGlobal.Band := BandGroup.ItemIndex;
+      4: dmZlogGlobal.Band := BandGroup.ItemIndex + 1;
+      5: dmZlogGlobal.Band := BandGroup.ItemIndex + 2;
+      6 .. 13: dmZlogGlobal.Band := BandGroup.ItemIndex + 3;
    end;
 
-   Options.Mode := ModeGroup.ItemIndex;
+   dmZlogGlobal.Mode := ModeGroup.ItemIndex;
 
-   Options.MyCall := CallsignEdit.Text;
+   dmZlogGlobal.MyCall := CallsignEdit.Text;
 
    for i := 0 to ContestGroup.ControlCount - 1 do begin
       if ContestGroup.Controls[i] is TRadioButton then begin
@@ -135,27 +136,27 @@ begin
       end;
    end;
 
-   Options.ContestMenuNo := i;
+   dmZlogGlobal.ContestMenuNo := i;
 
    // TX#
    i := StrToIntDef(TXNrEdit.Text, 0);
 
    if OpGroup.ItemIndex > 0 then begin
-      Options.TXNr := i;
-      if Options.Settings._pcname = '' then begin
-         Options.Settings._pcname := 'PC' + IntToStr(i);
+      dmZlogGlobal.TXNr := i;
+      if dmZlogGlobal.Settings._pcname = '' then begin
+         dmZlogGlobal.Settings._pcname := 'PC' + IntToStr(i);
       end;
    end;
 
    if ScoreCoeffEdit.Enabled then begin
       E := StrToFloatDef(ScoreCoeffEdit.Text, 1);
-      Options.SetScoreCoeff(E);
+      dmZlogGlobal.SetScoreCoeff(E);
    end
    else begin
-      Options.SetScoreCoeff(0);
+      dmZlogGlobal.SetScoreCoeff(0);
    end;
 
-   Options.SaveCurrentSettings;
+   dmZlogGlobal.SaveCurrentSettings;
 
    { Open New Contest from main menu }
    if MyContest <> nil then begin
@@ -174,57 +175,59 @@ begin
       Application.CreateForm(TKCJMulti, KCJMulti);
       Application.CreateForm(TKCJScore, KCJScore);
       Application.CreateForm(TKCJZone, KCJZone);
-      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
+//      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
       MyContest := TKCJContest.Create('KCJ コンテスト');
-      QTHString := Options.Settings._prov;
-      Options.Settings._sentstr := 'TK';
+      QTHString := dmZlogGlobal.Settings._prov;
+      dmZlogGlobal.Settings._sentstr := 'TK';
    end;
 
    if rbALLJA.Checked then begin
       Application.CreateForm(TALLJAMulti, ALLJAMulti);
       Application.CreateForm(TALLJAScore, ALLJAScore);
-      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
+//      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
       MyContest := TALLJAContest.Create('ALL JA コンテスト');
-      QTHString := Options.Settings._prov;
-      Options.Settings._sentstr := '$V$P';
+      QTHString := dmZlogGlobal.Settings._prov;
+      dmZlogGlobal.Settings._sentstr := '$V$P';
    end;
 
    if rbACAG.Checked then begin
-      Application.CreateForm(TACAGMulti, ACAGMulti);
-      Application.CreateForm(TACAGScore, ACAGScore);
-      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
+      MainForm.BandMenu.Items[Ord(b19)].Visible := false;
+//      Application.CreateForm(TACAGMulti, ACAGMulti);
+//      Application.CreateForm(TACAGScore, ACAGScore);
+//      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
       MyContest := TACAGContest.Create('全市全郡コンテスト');
-      QTHString := Options.Settings._city;
-      Options.Settings._sentstr := '$Q$P';
+      QTHString := dmZlogGlobal.Settings._city;
+      dmZlogGlobal.Settings._sentstr := '$Q$P';
    end;
 
-   if rbFD.Checked then begin Application.CreateForm(TACAGMulti, ACAGMulti);
+   if rbFD.Checked then begin
+//      Application.CreateForm(TACAGMulti, ACAGMulti);
       Application.CreateForm(TFDMulti, FDMulti);
-      Application.CreateForm(TACAGScore, ACAGScore);
-      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
+//      Application.CreateForm(TACAGScore, ACAGScore);
+//      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
       MyContest := TFDContest.Create('フィールドデーコンテスト');
-      QTHString := Options.Settings._city;
-      Options.Settings._sentstr := '$Q$P';
+      QTHString := dmZlogGlobal.Settings._city;
+      dmZlogGlobal.Settings._sentstr := '$Q$P';
    end;
 
    if rb6D.Checked then begin
-      Application.CreateForm(TACAGMulti, ACAGMulti);
+//      Application.CreateForm(TACAGMulti, ACAGMulti);
       Application.CreateForm(TFDMulti, FDMulti);
       Application.CreateForm(TSixDownMulti, SixDownMulti);
       Application.CreateForm(TSixDownScore, SixDownScore);
-      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
+//      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
       MyContest := TSixDownContest.Create('6m and DOWNコンテスト');
-      QTHString := Options.Settings._city;
-      Options.Settings._sentstr := '$Q$P';
+      QTHString := dmZlogGlobal.Settings._city;
+      dmZlogGlobal.Settings._sentstr := '$Q$P';
    end;
 
    if rbGeneral.Checked then begin
-      Application.CreateForm(TACAGMulti, ACAGMulti);
+//      Application.CreateForm(TACAGMulti, ACAGMulti);
       Application.CreateForm(TGeneralMulti2, GeneralMulti2);
       Application.CreateForm(TGeneralScore, GeneralScore);
-      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
-      QTHString := Options.Settings._city;
-      Options.Settings._sentstr := '$Q';
+//      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
+      QTHString := dmZlogGlobal.Settings._city;
+      dmZlogGlobal.Settings._sentstr := '$Q';
       MyContest := TGeneralContest.Create(rbGeneral.Caption);
    end;
 
@@ -232,10 +235,10 @@ begin
       Application.CreateForm(TWWScore, WWScore);
       Application.CreateForm(TWWZone, WWZone);
       Application.CreateForm(TWWMulti, WWMulti);
-      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
+//      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
       MyContest := TCQWWContest.Create('CQWW DX Contest');
-      // QTHString := Options.Settings._city;
-      Options.Settings._sentstr := '$Z';
+      // QTHString := dmZlogGlobal.Settings._city;
+      dmZlogGlobal.Settings._sentstr := '$Z';
       QTHString := { WWMulti. } UMultipliers.MyZone;
    end;
 
@@ -244,11 +247,11 @@ begin
       Application.CreateForm(TWWZone, WWZone);
       Application.CreateForm(TWWMulti, WWMulti);
       Application.CreateForm(TIARUMulti, IARUMulti);
-      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
+//      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
       MyContest := TIARUContest.Create('IARU HF World Championship');
-      // QTHString := Options.Settings._city;
+      // QTHString := dmZlogGlobal.Settings._city;
       // TQSO(Log.List[0]).QSO.memo := 'CQWW Contest';
-      Options.Settings._sentstr := '$I';
+      dmZlogGlobal.Settings._sentstr := '$I';
       QTHString := { IARUMulti. } MyZone;
    end;
 
@@ -258,10 +261,10 @@ begin
       if { WWMulti. } MyCountry = 'JA' then begin
          Application.CreateForm(TJIDXMulti, JIDXMulti);
          Application.CreateForm(TJIDXScore2, JIDXScore2);
-         Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
+//         Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
          MyContest := TJIDXContest.Create('JIDX Contest (JA)');
-         QTHString := Options.Settings._prov;
-         Options.Settings._sentstr := '$V';
+         QTHString := dmZlogGlobal.Settings._prov;
+         dmZlogGlobal.Settings._sentstr := '$V';
       end
       else begin
          WWMulti.Release;
@@ -269,23 +272,23 @@ begin
          Application.ProcessMessages;
          Application.CreateForm(TJIDX_DX_Multi, JIDX_DX_Multi);
          Application.CreateForm(TJIDX_DX_Score, JIDX_DX_Score);
-         Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
+//         Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
          MyContest := TJIDXContestDX.Create('JIDX Contest (DX)');
-         QTHString := Options.Settings._prov;
-         Options.Settings._sentstr := '$V';
+         QTHString := dmZlogGlobal.Settings._prov;
+         dmZlogGlobal.Settings._sentstr := '$V';
       end;
    end;
 
    if rbARRLDX.Checked then begin
       { Application.CreateForm(TWWScore, WWScore); }
-      Application.CreateForm(TACAGMulti, ACAGMulti);
+//      Application.CreateForm(TACAGMulti, ACAGMulti);
       Application.CreateForm(TARRLDXMulti, ARRLDXMulti);
       // Application.CreateForm(TJIDX_DX_Score, JIDX_DX_Score);
       Application.CreateForm(TARRLDXScore, ARRLDXScore);
-      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
+//      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
       MyContest := TARRLDXContestDX.Create('ARRL International DX Contest (DX)');
-      QTHString := Options.Settings._prov;
-      Options.Settings._sentstr := '$N';
+      QTHString := dmZlogGlobal.Settings._prov;
+      dmZlogGlobal.Settings._sentstr := '$N';
    end;
 
    if rbARRLW.Checked then begin
@@ -295,10 +298,10 @@ begin
       Application.CreateForm(TARRLWMulti, ARRLWMulti);
       // Application.CreateForm(TJIDX_DX_Score, JIDX_DX_Score);
       Application.CreateForm(TARRLDXScore, ARRLDXScore);
-      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
+//      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
       MyContest := TARRLDXContestW.Create('ARRL International DX Contest (W/VE)');
-      QTHString := Options.Settings._prov;
-      Options.Settings._sentstr := '$V';
+      QTHString := dmZlogGlobal.Settings._prov;
+      dmZlogGlobal.Settings._sentstr := '$V';
    end;
 
    if rbWAE.Checked then begin
@@ -309,10 +312,10 @@ begin
       Application.CreateForm(TWAEMulti, WAEMulti);
       // Application.CreateForm(TJIDX_DX_Score, JIDX_DX_Score);
       Application.CreateForm(TWAEScore, WAEScore);
-      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
+//      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
       MyContest := TWAEContest.Create('WAEDC Contest');
-      // QTHString := Options.Settings._prov;
-      Options.Settings._sentstr := '$S';
+      // QTHString := dmZlogGlobal.Settings._prov;
+      dmZlogGlobal.Settings._sentstr := '$S';
    end;
 
    if rbCQWPX.Checked then begin
@@ -321,14 +324,14 @@ begin
       Application.CreateForm(TWWMulti, WWMulti);
       Application.CreateForm(TWPXMulti, WPXMulti);
       Application.CreateForm(TWPXScore, WPXScore);
-      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
+//      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
       MyContest := TCQWPXContest.Create('CQ WPX Contest');
       if OpGroup.ItemIndex = 1 then
          SerialContestType := SER_BAND;
       if OpGroup.ItemIndex = 2 then
          SerialContestType := SER_MS;
-      QTHString := Options.Settings._city;
-      Options.Settings._sentstr := '$S';
+      QTHString := dmZlogGlobal.Settings._city;
+      dmZlogGlobal.Settings._sentstr := '$S';
       MainForm.mPXListWPX.Visible := True;
    end;
 
@@ -339,18 +342,18 @@ begin
       Application.CreateForm(TWPXMulti, WPXMulti);
       Application.CreateForm(TWPXScore, WPXScore);
       Application.CreateForm(TAPSprintScore, APSprintScore);
-      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
+//      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
       MyContest := TAPSprint.Create('Asia Pacific Sprint');
-      QTHString := Options.Settings._city;
+      QTHString := dmZlogGlobal.Settings._city;
       // TQSO(Log.List[0]).QSO.memo := 'WPX Contest';
-      Options.Settings._sentstr := '$S';
+      dmZlogGlobal.Settings._sentstr := '$S';
    end;
 
    if rbJA0in.Checked then begin
       { Application.CreateForm(TWWScore, WWScore); }
       Application.CreateForm(TJA0Multi, JA0Multi);
       Application.CreateForm(TJA0Score, JA0Score);
-      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
+//      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
       MyContest := TJA0ContestZero.Create('ALL JA0 コンテスト (JA0)');
       case BandGroup.ItemIndex of
          2:
@@ -359,19 +362,19 @@ begin
             MyContest.SetBand(b7);
          5, 6: begin
                MyContest.SetBand(b21);
-               Options.Settings._band := 0;
+               dmZlogGlobal.Settings._band := 0;
             end;
       end;
-      QTHString := Options.Settings._city;
+      QTHString := dmZlogGlobal.Settings._city;
       // TQSO(Log.List[0]).QSO.memo := 'WPX Contest';
-      Options.Settings._sentstr := '$S';
+      dmZlogGlobal.Settings._sentstr := '$S';
    end;
 
    if rbJA0out.Checked then begin
       { Application.CreateForm(TWWScore, WWScore); }
       Application.CreateForm(TJA0Multi, JA0Multi);
       Application.CreateForm(TJA0Score, JA0Score);
-      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
+//      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
       MyContest := TJA0Contest.Create('ALL JA0 コンテスト (Others)');
       case BandGroup.ItemIndex of
          2:
@@ -380,12 +383,12 @@ begin
             MyContest.SetBand(b7);
          5, 6: begin
                MyContest.SetBand(b21);
-               Options.Settings._band := 0;
+               dmZlogGlobal.Settings._band := 0;
             end;
       end;
-      QTHString := Options.Settings._city;
+      QTHString := dmZlogGlobal.Settings._city;
       // TQSO(Log.List[0]).QSO.memo := 'WPX Contest';
-      Options.Settings._sentstr := '$S';
+      dmZlogGlobal.Settings._sentstr := '$S';
    end;
 
    if rbAllAsian.Checked then begin
@@ -396,11 +399,11 @@ begin
       // Application.CreateForm(TJIDX_DX_Score, JIDX_DX_Score);
       Application.CreateForm(TIARUScore, IARUScore);
       Application.CreateForm(TAllAsianScore, AllAsianScore);
-      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
+//      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
       MyContest := TAllAsianContest.Create('All Asian DX Contest (Asia)');
-      QTHString := Options.Settings._prov;
+      QTHString := dmZlogGlobal.Settings._prov;
       // TQSO(Log.List[0]).QSO.memo := 'JIDX Contest';
-      Options.Settings._sentstr := '$A';
+      dmZlogGlobal.Settings._sentstr := '$A';
 
       Application.CreateForm(TAgeDialog, AgeDialog);
       AgeDialog.ShowModal;
@@ -411,7 +414,7 @@ begin
    if rbPedi.Checked then begin
       Application.CreateForm(TALLJAMulti, ALLJAMulti);
       Application.CreateForm(TPediScore, PediScore);
-      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
+//      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
 
       Application.CreateForm(TUTCDialog, UTCDialog);
       UTCDialog.ShowModal;
@@ -419,21 +422,21 @@ begin
 
       MyContest := TPedi.Create('Pedition mode');
 
-      QTHString := Options.Settings._prov;
+      QTHString := dmZlogGlobal.Settings._prov;
       // TQSO(Log.List[0]).QSO.memo := 'Pedition mode';
-      Options.Settings._sentstr := '';
+      dmZlogGlobal.Settings._sentstr := '';
    end;
 
    if rbIOTA.Checked then begin
-      Application.CreateForm(TACAGMulti, ACAGMulti);
+//      Application.CreateForm(TACAGMulti, ACAGMulti);
       Application.CreateForm(TIOTAMulti, IOTAMulti);
       Application.CreateForm(TIARUScore, IARUScore);
-      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
+//      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
 
       MyContest := TIOTAContest.Create('IOTA Contest');
-      // QTHString := Options.Settings._city;
+      // QTHString := dmZlogGlobal.Settings._city;
       // TQSO(Log.List[0]).QSO.memo := 'ACAG Contest';
-      Options.Settings._sentstr := '$S$Q';
+      dmZlogGlobal.Settings._sentstr := '$S$Q';
    end;
 
    if rbARRL10.Checked then begin
@@ -441,11 +444,11 @@ begin
       Application.CreateForm(TWWMulti, WWMulti);
       Application.CreateForm(TARRL10Multi, ARRL10Multi);
       Application.CreateForm(TARRL10Score, ARRL10Score);
-      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
+//      Application.CreateForm(TALLJAEditDialog, ALLJAEditDialog);
 
-      Options.Settings._sentstr := '$S';
+      dmZlogGlobal.Settings._sentstr := '$S';
       MyContest := TARRL10Contest.Create('ARRL 10m Contest');
-      // QTHString := Options.Settings._city;
+      // QTHString := dmZlogGlobal.Settings._city;
       // TQSO(Log.List[0]).QSO.memo := 'ACAG Contest';
    end;
 
@@ -461,7 +464,7 @@ begin
    end;
 
    if CurrentFileName = '' then begin
-      OpenDialog.InitialDir := Options.Settings._logspath;
+      OpenDialog.InitialDir := dmZlogGlobal.Settings._logspath;
       if OpenDialog.Execute then begin
          CurrentFileName := OpenDialog.FileName;
          if FileExists(CurrentFileName) then begin
@@ -475,7 +478,7 @@ begin
       end;
    end;
 
-   { Options.Settings.CW.CWStrBank[1, 2] := Options.Settings._sentstr; }
+   { dmZlogGlobal.Settings.CW.CWStrBank[1, 2] := dmZlogGlobal.Settings._sentstr; }
 
    MyContest.Renew;
 
@@ -540,16 +543,16 @@ end;
 
 procedure TMenuForm.FormShow(Sender: TObject);
 begin
-   if Options.Band = 0 then begin
+   if dmZlogGlobal.Band = 0 then begin
       BandGroup.ItemIndex := 0;
    end
    else begin
-      BandGroup.ItemIndex := OldBandOrd(TBand(Options.Band - 1)) + 1;
+      BandGroup.ItemIndex := OldBandOrd(TBand(dmZlogGlobal.Band - 1)) + 1;
    end;
-   ModeGroup.ItemIndex := Options.Mode;
+   ModeGroup.ItemIndex := dmZlogGlobal.Mode;
 
-   if Options.MultiOp > 0 then begin
-      OpGroup.ItemIndex := Options.MultiOp;
+   if dmZlogGlobal.MultiOp > 0 then begin
+      OpGroup.ItemIndex := dmZlogGlobal.MultiOp;
       TXNrEdit.Enabled := True;
    end
    else begin
@@ -557,15 +560,15 @@ begin
       TXNrEdit.Enabled := False;
    end;
 
-   TXNrEdit.Text := IntToStr(Options.TXNr);
+   TXNrEdit.Text := IntToStr(dmZlogGlobal.TXNr);
 
-   CallsignEdit.Text := Options.MyCall;
+   CallsignEdit.Text := dmZlogGlobal.MyCall;
 
    EnableEveryThing;
 
-   if Options.ContestMenuNo < ContestGroup.ControlCount then begin
-      if ContestGroup.Controls[Options.ContestMenuNo] is TRadioButton then begin
-         TRadioButton(ContestGroup.Controls[Options.ContestMenuNo]).Checked := True;
+   if dmZlogGlobal.ContestMenuNo < ContestGroup.ControlCount then begin
+      if ContestGroup.Controls[dmZlogGlobal.ContestMenuNo] is TRadioButton then begin
+         TRadioButton(ContestGroup.Controls[dmZlogGlobal.ContestMenuNo]).Checked := True;
       end;
    end;
 
@@ -582,10 +585,10 @@ var
 begin
    // PaddleProcess;
    {
-     if Options.Speed <> BGK32LIB.GetWPM then
+     if dmZlogGlobal.Speed <> BGK32LIB.GetWPM then
      begin
-     Options.Setting.CW._speed := BGK32LIB.GetWPM;
-     SpeedBar.Position := Options.Settings.CW._speed;
+     dmZlogGlobal.Setting.CW._speed := BGK32LIB.GetWPM;
+     SpeedBar.Position := dmZlogGlobal.Settings.CW._speed;
      SpeedLabel.Caption := IntToStr(SpeedBar.Position)+' wpm';
      end;
    }
@@ -667,7 +670,7 @@ end;
 
 procedure TMenuForm.SelectButtonClick(Sender: TObject);
 begin
-   CFGOpenDialog.InitialDir := Options.Settings._cfgdatpath;
+   CFGOpenDialog.InitialDir := dmZlogGlobal.Settings._cfgdatpath;
    if CFGOpenDialog.Execute then begin
       CFGFileName := CFGOpenDialog.FileName;
 

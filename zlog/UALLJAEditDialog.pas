@@ -15,8 +15,8 @@ type
     { Public declarations }
   end;
 
-var
-  ALLJAEditDialog: TALLJAEditDialog;
+//var
+//  ALLJAEditDialog: TALLJAEditDialog;
 
 implementation
 

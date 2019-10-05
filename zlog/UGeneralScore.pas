@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  UBasicScore, Aligrid, StdCtrls, ExtCtrls, zLogGlobal, Menus, Grids,
+  UBasicScore, Aligrid, StdCtrls, ExtCtrls, zLogGlobal, UzLogGlobal, Menus, Grids,
   UMultipliers, Buttons;
 
 
@@ -485,7 +485,7 @@ begin
 
                if com='SENDNR' then
                  begin
-                   Options.Settings._sentstr := opr;
+                   dmZLogGlobal.Settings._sentstr := opr;
                  end;
 
                if com='DAT' then
@@ -606,25 +606,25 @@ begin
                    for i:=1 to length(opr) do
                      begin
                        case opr[i] of
-                         'A' : Options.CurrentPower[_bnd]:=p010;
-                         'B' : Options.CurrentPower[_bnd]:=p025;
-                         'C' : Options.CurrentPower[_bnd]:=p050;
-                         'D' : Options.CurrentPower[_bnd]:=p100;
-                         'E' : Options.CurrentPower[_bnd]:=p500;
-                         'O' : Options.CurrentPower[_bnd]:=p001;
-                         'F' : Options.CurrentPower[_bnd]:=p005;
-                         'N' : Options.CurrentPower[_bnd]:=p002;
-                         'T' : Options.CurrentPower[_bnd]:=p020;
-                         'W' : Options.CurrentPower[_bnd]:=p200;
-                         'K' : Options.CurrentPower[_bnd]:=p1000;
-                         'X' : Options.CurrentPower[_bnd]:=p1000;
-                         'P' : Options.CurrentPower[_bnd]:=pwrP;
-                         'L' : Options.CurrentPower[_bnd]:=pwrL;
-                         'M' : Options.CurrentPower[_bnd]:=pwrM;
-                         'H' : Options.CurrentPower[_bnd]:=pwrH;
+                         'A' : dmZlogGlobal.CurrentPower[_bnd]:=p010;
+                         'B' : dmZlogGlobal.CurrentPower[_bnd]:=p025;
+                         'C' : dmZlogGlobal.CurrentPower[_bnd]:=p050;
+                         'D' : dmZlogGlobal.CurrentPower[_bnd]:=p100;
+                         'E' : dmZlogGlobal.CurrentPower[_bnd]:=p500;
+                         'O' : dmZlogGlobal.CurrentPower[_bnd]:=p001;
+                         'F' : dmZlogGlobal.CurrentPower[_bnd]:=p005;
+                         'N' : dmZlogGlobal.CurrentPower[_bnd]:=p002;
+                         'T' : dmZlogGlobal.CurrentPower[_bnd]:=p020;
+                         'W' : dmZlogGlobal.CurrentPower[_bnd]:=p200;
+                         'K' : dmZlogGlobal.CurrentPower[_bnd]:=p1000;
+                         'X' : dmZlogGlobal.CurrentPower[_bnd]:=p1000;
+                         'P' : dmZlogGlobal.CurrentPower[_bnd]:=pwrP;
+                         'L' : dmZlogGlobal.CurrentPower[_bnd]:=pwrL;
+                         'M' : dmZlogGlobal.CurrentPower[_bnd]:=pwrM;
+                         'H' : dmZlogGlobal.CurrentPower[_bnd]:=pwrH;
                          '-' : begin
-                                  Options.CurrentPower[_bnd]:=pwrP;
-                                  //Options.CurrentPower2[_bnd]:=p010;
+                                  dmZlogGlobal.CurrentPower[_bnd]:=pwrP;
+                                  //dmZlogGlobal.CurrentPower2[_bnd]:=p010;
                                  MainForm.BandMenu.Items[ord(_bnd)].Visible := False;
                                 end;
                        end;

@@ -3,7 +3,7 @@ unit UQTHDialog;
 interface
 
 uses Windows, SysUtils, Classes, Graphics, Forms, Controls, StdCtrls, 
-  Buttons, ExtCtrls;
+  Buttons, ExtCtrls, UzLogGlobal;
 
 type
   TQTHDialog = class(TForm)
@@ -35,29 +35,23 @@ var
 
 implementation
 
-uses UOptions;
-
 {$R *.DFM}
-
-
 
 procedure TQTHDialog.OKBtnClick(Sender: TObject);
 begin
-  Options.Settings._prov := ProvEdit.Text;
-  Options.Settings._city := CityEdit.Text;
-  Options.Settings._cqzone := CQZoneEdit.Text;
-  Options.Settings._iaruzone := IARUZoneEdit.Text;
-
-  Options.ImplementSettings(False);
-  Options.SaveCurrentSettings; {Writes Settings to Inifile}
+  dmZLogGlobal.Settings._prov := ProvEdit.Text;
+  dmZLogGlobal.Settings._city := CityEdit.Text;
+  dmZLogGlobal.Settings._cqzone := CQZoneEdit.Text;
+  dmZLogGlobal.Settings._iaruzone := IARUZoneEdit.Text;
+  dmZLogGlobal.SaveCurrentSettings; {Writes Settings to Inifile}
 end;
 
 procedure TQTHDialog.FormShow(Sender: TObject);
 begin
-  ProvEdit.Text := Options.Settings._prov;
-  CityEdit.Text := Options.Settings._city;
-  CQZoneEdit.Text := Options.Settings._cqzone;
-  IARUZoneEdit.Text := Options.Settings._iaruzone;
+  ProvEdit.Text := dmZLogGlobal.Settings._prov;
+  CityEdit.Text := dmZLogGlobal.Settings._city;
+  CQZoneEdit.Text := dmZLogGlobal.Settings._cqzone;
+  IARUZoneEdit.Text := dmZLogGlobal.Settings._iaruzone;
 end;
 
 end.

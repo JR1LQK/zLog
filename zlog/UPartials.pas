@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, zLogGlobal, ExtCtrls, Buttons, Spin;
+  StdCtrls, zLogGlobal, UzLogGlobal, ExtCtrls, Buttons, Spin;
 
 const sortTime = 1;
       sortBand = 2;
@@ -291,7 +291,7 @@ begin
     exit;
   for i := 0 to QSOList.Count-1 do
     begin
-      S := TQSO(QSOList[i]).PartialSummary(Options.Settings._displaydatepartialcheck);
+      S := TQSO(QSOList[i]).PartialSummary(dmZlogGlobal.Settings._displaydatepartialcheck);
       if TQSO(QSOList[i]).QSO.Band = Main.CurrentQSO.QSO.Band then
         S := '*' + S;
       ListBox.Items.Add(S);
@@ -313,7 +313,7 @@ begin
   TempQSO := aQSO;
   //ListBox.Items.Clear;
   PartialStr := aQSO.QSO.Callsign;
-  if Options.Settings._searchafter >= length(PartialStr) then
+  if dmZlogGlobal.Settings._searchafter >= length(PartialStr) then
     begin
       ListBox.Items.Clear;
       exit;

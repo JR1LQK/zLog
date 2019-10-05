@@ -2,7 +2,9 @@ unit UMultipliers;
 
 interface
 
-uses SysUtils, Windows, Classes, zLogGlobal, UOptions, Dialogs;
+uses
+  SysUtils, Windows, Classes, Dialogs,
+  zLogGlobal, UzLogGlobal;
 
 const testCQWW = $03;
       MAXCQZONE = 40;
@@ -950,10 +952,10 @@ begin
   MyCountry := 'JA';
   MyZone := '25';
 
-  if (Options.Settings._mycall <> '') and (Options.Settings._mycall <> 'Your call sign') then
+  if (dmZlogGlobal.Settings._mycall <> '') and (dmZlogGlobal.Settings._mycall <> 'Your call sign') then
     begin
       aQSO := TQSO.Create;
-      aQSO.QSO.callsign := Uppercase(Options.Settings._mycall);
+      aQSO.QSO.callsign := Uppercase(dmZlogGlobal.Settings._mycall);
 
       P := GetPrefix(aQSO);
       //i := GetCountryIndex(aQSO);
@@ -966,9 +968,9 @@ begin
           MyCountry := TCountry(CountryList.List[i]).Country;
           //MyZone := IntToStr(TCountry(CountryList.List[i]).Zone);
 
-          if Options.Settings._cqzone = '' then
-            Options.Settings._cqzone := GuessCQZone(aQSO);
-          MyZone := Options.Settings._cqzone;
+          if dmZlogGlobal.Settings._cqzone = '' then
+            dmZlogGlobal.Settings._cqzone := GuessCQZone(aQSO);
+          MyZone := dmZlogGlobal.Settings._cqzone;
 
           //MyContinent := TCountry(CountryList.List[i]).Continent;
           if P.OvrContinent = '' then
