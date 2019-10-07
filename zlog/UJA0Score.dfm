@@ -2,100 +2,57 @@ inherited JA0Score: TJA0Score
   Left = 714
   Top = 91
   Caption = 'Score'
+  ExplicitWidth = 294
+  ExplicitHeight = 268
   PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 12
   inherited Panel1: TPanel
     inherited StayOnTop: TCheckBox
       Left = 104
       ExplicitLeft = 104
     end
   end
-  object Grid: TStringAlignGrid
-    Left = 8
-    Top = 8
-    Width = 177
-    Height = 57
-    TabStop = False
-    BorderStyle = bsNone
-    Color = clBtnFace
-    ColCount = 4
-    DefaultColWidth = 43
-    DefaultRowHeight = 16
+  object Grid: TStringGrid
+    Left = 0
+    Top = 0
+    Width = 278
+    Height = 196
+    Align = alClient
+    DefaultDrawing = False
     FixedCols = 0
-    RowCount = 3
+    RowCount = 15
     FixedRows = 0
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'MS Sans Serif'
+    Font.Height = -15
+    Font.Name = #65325#65331' '#12468#12471#12483#12463
     Font.Style = []
-    GridLineWidth = 0
+    Options = [goHorzLine]
     ParentFont = False
     ScrollBars = ssNone
     TabOrder = 1
-    Alignment = alRight
-    SelectedCellColor = clBtnFace
-    SelectedFontColor = clBtnText
-    Cells = (
-      0
-      0
-      #31295'p'#29556
-      0
-      1
-      '7'
-      0
-      2
-      #16191'e?'#0#53312
-      1
-      0
-      #65533'O'#0#0
-      1
-      1
-      '0'
-      2
-      0
-      #16191'?'#16191#0#53312#12701
-      2
-      1
-      '0'
-      3
-      0
-      #22497#26943#16128#0#53312#12701
-      3
-      1
-      '0'
-      3
-      2
-      '0')
-    PropCell = (
-      0
-      0
-      6
-      32768
-      -12
-      'Arial'
-      0
-      2549286912
-      0)
-    PropCol = (
-      0
-      6
-      16711680
-      -12
-      'Arial'
-      0
-      2549287936
-      0)
-    PropRow = (
-      0
-      6
-      32768
-      -12
-      'Arial'
-      0
-      2549287936
-      0)
-    PropFixedCol = ()
-    PropFixedRow = ()
+    OnDrawCell = GridDrawCell
+    ColWidths = (
+      64
+      64
+      64
+      64
+      64)
+    RowHeights = (
+      24
+      24
+      24
+      24
+      24
+      24
+      24
+      24
+      24
+      24
+      24
+      24
+      24
+      24
+      24)
   end
 end

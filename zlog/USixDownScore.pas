@@ -3,19 +3,18 @@ unit USixDownScore;
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  UBasicScore, Grids, Aligrid, StdCtrls, ExtCtrls, UzLogGlobal, Buttons;
+  Windows, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+  UBasicScore, Grids, StdCtrls, ExtCtrls, UzLogGlobal, Buttons;
 
 type
   TSixDownScore = class(TBasicScore)
-    Grid: TStringAlignGrid;
+    Grid: TStringGrid;
     procedure FormShow(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
+    procedure GridDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect; State: TGridDrawState);
   private
     { Private declarations }
   public
     { Public declarations }
-
     procedure AddNoUpdate(var aQSO : TQSO);  override;
     procedure Update; override;
     procedure Reset; override;
@@ -26,125 +25,153 @@ implementation
 
 {$R *.DFM}
 
-procedure TSixDownScore.AddNoUpdate(var aQSO : TQSO);
-var band : TBand;
+procedure TSixDownScore.AddNoUpdate(var aQSO: TQSO);
+var
+   band: TBand;
 begin
-  inherited;
+   inherited;
 
-  if aQSO.QSO.Dupe then
-    exit;
+   if aQSO.QSO.Dupe then begin
+      Exit;
+   end;
 
-  band := aQSO.QSO.band;
-  if band in [b2400..HiBand] then
-    aQSO.QSO.points := 2
-  else
-    aQSO.QSO.points := 1;
-  inc(Points[band], aQSO.QSO.Points);
+   band := aQSO.QSO.band;
+   if band in [b2400 .. HiBand] then begin
+      aQSO.QSO.points := 2;
+   end
+   else begin
+      aQSO.QSO.points := 1;
+   end;
+
+   inc(points[band], aQSO.QSO.points);
 end;
 
 procedure TSixDownScore.Update;
-var band : TBand;
-    TotMulti, TotPoints : LongInt;
-    row : integer;
+var
+   band: TBand;
+   TotMulti, TotPoints: Integer;
+   row: integer;
 begin
-  TotPoints := 0; TotMulti := 0;
-  row := 1;
+   TotPoints := 0;
+   TotMulti := 0;
+   row := 1;
 
-  if ShowCWRatio then
-    begin
-      Grid.ColCount := 5;
-      Grid.Width :=  Grid.DefaultColWidth * 5;
-    end
-  else
-    begin
-      Grid.ColCount := 3;
-      Grid.Width := Grid.DefaultColWidth * 3;
-    end;
+   // 見出し行
+   Grid.Cells[0,0] := 'MHz';
+   Grid.Cells[1,0] := 'Points';
+   Grid.Cells[2,0] := 'Multi';
 
-  if ShowCWRatio then
-    begin
-      Grid.Cells[3,0] := 'CW Q''s';
-      Grid.Cells[4,0] := 'CW %';
-    end;
+   if ShowCWRatio then begin
+      Grid.Cells[3, 0] := 'CW Q''s';
+      Grid.Cells[4, 0] := 'CW %';
+   end
+   else begin
+      Grid.Cells[3,0] := '';
+      Grid.Cells[4,0] := '';
+   end;
 
-  for band := b50 to b10G do
-    begin
-      if NotWARC(band) then
-        begin
-          Grid.Cells[1,row] := IntToStr(Points[band]);
-          TotPoints := TotPoints + Points[band];
-          Grid.Cells[2,row] := IntToStr(Multi[band]);
-          TotMulti := TotMulti + Multi[band];
-          if ShowCWRatio then
-            begin
-              Grid.Cells[3,row] := IntToStr(CWQSO[band]);
-              if QSO[band] > 0 then
-                Grid.Cells[4,row] := FloatToStrF(100*(CWQSO[band] / QSO[band]), ffFixed, 1000, 1)
-              else
-                Grid.Cells[4,row] := '-';
+   // バンド別スコア行
+   for band := b50 to b10G do begin
+      if NotWARC(band) then begin
+         Grid.Cells[0, row] := '*' + MHzString[band];
+         Grid.Cells[1, row] := IntToStr(points[band]);
+         TotPoints := TotPoints + points[band];
+         Grid.Cells[2, row] := IntToStr(Multi[band]);
+         TotMulti := TotMulti + Multi[band];
+         if ShowCWRatio then begin
+            Grid.Cells[3, row] := IntToStr3(CWQSO[band]);
+            if QSO[band] > 0 then begin
+               Grid.Cells[4, row] := FloatToStrF(100 * (CWQSO[band] / QSO[band]), ffFixed, 1000, 1);
+            end
+            else begin
+               Grid.Cells[4, row] := '-';
             end;
+         end
+         else begin
+            Grid.Cells[3, row] := '';
+            Grid.Cells[4, row] := '';
+         end;
 
+         Inc(row);
+      end;
+   end;
 
-          inc(row);
-        end;
-    end;
-  Grid.Cells[1, 8] := IntToStr(TotPoints);
-  Grid.Cells[2, 8] := IntToStr(TotMulti);
-  Grid.Cells[2, 9] := IntToStr(TotPoints*TotMulti);
+   // 合計行
+   Grid.Cells[0, row] := 'Total';
+   Grid.Cells[1, row] := IntToStr3(TotPoints);
+   Grid.Cells[2, row] := IntToStr3(TotMulti);
 
-  if ShowCWRatio then
-    begin
-      Grid.Cells[3, row] := IntToStr(TotalCWQSOs);
-      if TotPoints > 0 then
-        Grid.Cells[4, row] := FloatToStrF(100*(TotalCWQSOs/TotalQSOs), ffFixed, 1000, 1)
-      else
-        Grid.Cells[4, row] := '-';
-    end;
+   if ShowCWRatio then begin
+      Grid.Cells[3, row] := IntToStr3(TotalCWQSOs);
+      if TotPoints > 0 then begin
+         Grid.Cells[4, row] := FloatToStrF(100 * (TotalCWQSOs / TotalQSOs), ffFixed, 1000, 1);
+      end
+      else begin
+         Grid.Cells[4, row] := '-';
+      end;
+   end
+   else begin
+      Grid.Cells[3, row] := '';
+      Grid.Cells[4, row] := '';
+   end;
+   Inc(row);
 
-(*
-  TotQSO := 0; TotMulti := 0; TotPoints := 0;
-  row := 1;
-  for band := b50 to HiBand do
-    begin
-      if NotWARC(band) then
-        begin
-          Grid.Cells[1,row] := IntToStr(Points[band]);
-          TotPoints := TotPoints + Points[band];
-          TotQSO := TotQSO + QSO[band];
-          Grid.Cells[2,row] := IntToStr(Multi[band]);
-          TotMulti := TotMulti + Multi[band];
-          inc(row);
-        end;
-    end;
-  Grid.Cells[1, 8] := IntToStr(TotPoints);
-  Grid.Cells[2, 8] := IntToStr(TotMulti);
-  Grid.Cells[2, 9] := IntToStr(TotPoints*TotMulti);
-*)
+   // スコア行
+   Grid.Cells[0, row] := 'Score';
+   Grid.Cells[1, row] := '';
+   Grid.Cells[2, row] := IntToStr3(TotPoints * TotMulti);
+   Grid.Cells[3, row] := '';
+   Grid.Cells[4, row] := '';
+   Inc(row);
+
+   Grid.RowCount := row;
+   ClientWidth := (Grid.DefaultColWidth * Grid.ColCount) + (Grid.ColCount * Grid.GridLineWidth);
+   ClientHeight := (Grid.DefaultRowHeight * Grid.RowCount) + (Grid.RowCount * Grid.GridLineWidth) + Panel1.Height + 4;
 end;
 
 procedure TSixDownScore.Reset;
 begin
-  inherited;
+   inherited;
 end;
 
-procedure TSixDownScore.Add(var aQSO : TQSO);
+procedure TSixDownScore.Add(var aQSO: TQSO);
 begin
-  inherited;
+   inherited;
 end;
-
 
 procedure TSixDownScore.FormShow(Sender: TObject);
 begin
-  inherited;
-  Button1.SetFocus;
-  Grid.Col := 1;
-  Grid.Row := 1;
+   inherited;
+   Button1.SetFocus;
+   Grid.Col := 1;
+   Grid.row := 1;
 end;
 
-procedure TSixDownScore.FormCreate(Sender: TObject);
+procedure TSixDownScore.GridDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect; State: TGridDrawState);
+var
+   strText: string;
 begin
-  inherited;
-  //ShowCWRatio := True;
+   inherited;
+   strText := TStringGrid(Sender).Cells[ACol, ARow];
+
+   with TStringGrid(Sender).Canvas do begin
+      Brush.Color := TStringGrid(Sender).Color;
+      Brush.Style := bsSolid;
+      FillRect(Rect);
+
+      Font.Name := 'ＭＳ ゴシック';
+      Font.Size := 11;
+
+      if Copy(strText, 1, 1) = '*' then begin
+         strText := Copy(strText, 2);
+         Font.Color := clBlue;
+      end
+      else begin
+         Font.Color := clBlack;
+      end;
+
+      TextRect(Rect, strText, [tfRight,tfVerticalCenter,tfSingleLine]);
+   end;
 end;
 
 end.

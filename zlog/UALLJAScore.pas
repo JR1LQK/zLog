@@ -3,118 +3,169 @@ unit UALLJAScore;
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  UBasicScore, Grids, Aligrid, StdCtrls, ExtCtrls, UzLogGlobal, Buttons;
+  Windows, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+  UBasicScore, Grids, StdCtrls, ExtCtrls, UzLogGlobal, Buttons;
 
 type
   TALLJAScore = class(TBasicScore)
-    Grid: TStringAlignGrid;
-    procedure CWButtonClick(Sender: TObject);
+    Grid: TStringGrid;
+    procedure FormShow(Sender: TObject);
+    procedure GridDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect; State: TGridDrawState);
   private
     { Private declarations }
   public
+    { Public declarations }
     procedure AddNoUpdate(var aQSO : TQSO);  override;
     procedure Update; override;
     procedure Reset; override;
     procedure Add(var aQSO : TQSO); override;
-    { Public declarations }
   end;
 
 implementation
 
 {$R *.DFM}
 
-procedure TALLJAScore.AddNoUpdate(var aQSO : TQSO);
-var band : TBand;
+procedure TALLJAScore.AddNoUpdate(var aQSO: TQSO);
+var
+   band: TBand;
 begin
-  inherited;
+   inherited;
 
-  if aQSO.QSO.Dupe then
-    exit;
+   if aQSO.QSO.Dupe then begin
+      Exit;
+   end;
 
-  band := aQSO.QSO.band;
-  aQSO.QSO.points := 1;
-  inc(Points[band]);
+   band := aQSO.QSO.band;
+   aQSO.QSO.points := 1;
+   Inc(points[band]);
 end;
 
 procedure TALLJAScore.Update;
-var band : TBand;
-    TotPoints, TotMulti : LongInt;
-    row : integer;
+var
+   band: TBand;
+   TotPoints, TotMulti: Integer;
+   row: Integer;
 begin
-  TotPoints := 0; TotMulti := 0;
-  row := 1;
+   TotPoints := 0;
+   TotMulti := 0;
+   row := 1;
 
-  if ShowCWRatio then
-    begin
-      Grid.ColCount := 5;
-      Grid.Width :=  Grid.DefaultColWidth * 5;
-    end
-  else
-    begin
-      Grid.ColCount := 3;
-      Grid.Width := Grid.DefaultColWidth * 3;
-    end;
+   // 見出し行
+   Grid.Cells[0,0] := 'MHz';
+   Grid.Cells[1,0] := 'Points';
+   Grid.Cells[2,0] := 'Multi';
 
-  if ShowCWRatio then
-    begin
-      Grid.Cells[3,0] := 'CW Q''s';
-      Grid.Cells[4,0] := 'CW %';
-    end;
+   if ShowCWRatio then begin
+      Grid.Cells[3, 0] := 'CW Q''s';
+      Grid.Cells[4, 0] := 'CW %';
+   end
+   else begin
+      Grid.Cells[3,0] := '';
+      Grid.Cells[4,0] := '';
+   end;
 
-  for band := b35 to b50 do
-    begin
-      if NotWARC(band) then
-        begin
-          Grid.Cells[1,row] := IntToStr(Points[band]);
-          TotPoints := TotPoints + Points[band];
-          Grid.Cells[2,row] := IntToStr(Multi[band]);
-          TotMulti := TotMulti + Multi[band];
-          if ShowCWRatio then
-            begin
-              Grid.Cells[3,row] := IntToStr(CWQSO[band]);
-              if QSO[band] > 0 then
-                Grid.Cells[4,row] := FloatToStrF(100*(CWQSO[band] / QSO[band]), ffFixed, 1000, 1)
-              else
-                Grid.Cells[4,row] := '-';
+   // バンド別スコア行
+   for band := b35 to b50 do begin
+      if NotWARC(band) then begin
+         Grid.Cells[0, row] := '*' + MHzString[band];
+         Grid.Cells[1, row] := IntToStr(points[band]);
+         TotPoints := TotPoints + points[band];
+         Grid.Cells[2, row] := IntToStr(Multi[band]);
+         TotMulti := TotMulti + Multi[band];
+         if ShowCWRatio then begin
+            Grid.Cells[3, row] := IntToStr(CWQSO[band]);
+            if QSO[band] > 0 then begin
+               Grid.Cells[4, row] := FloatToStrF(100 * (CWQSO[band] / QSO[band]), ffFixed, 1000, 1);
+            end
+            else begin
+               Grid.Cells[4, row] := '-';
             end;
+         end
+         else begin
+            Grid.Cells[3, row] := '';
+            Grid.Cells[4, row] := '';
+         end;
 
+         Inc(row);
+      end;
+   end;
 
-          inc(row);
-        end;
-    end;
-  Grid.Cells[1, 7] := IntToStr(TotPoints);
-  Grid.Cells[2, 7] := IntToStr(TotMulti);
-  Grid.Cells[2, 8] := IntToStr(TotPoints*TotMulti);
+   // 合計行
+   Grid.Cells[0, row] := 'Total';
+   Grid.Cells[1, row] := IntToStr3(TotPoints);
+   Grid.Cells[2, row] := IntToStr3(TotMulti);
 
-  if ShowCWRatio then
-    begin
-      Grid.Cells[3, row] := IntToStr(TotalCWQSOs);
-      if TotPoints > 0 then
-        Grid.Cells[4, row] := FloatToStrF(100*(TotalCWQSOs/TotPoints), ffFixed, 1000, 1)
-      else
-        Grid.Cells[4, row] := '-';
-    end;
+   if ShowCWRatio then begin
+      Grid.Cells[3, row] := IntToStr3(TotalCWQSOs);
+      if TotPoints > 0 then begin
+         Grid.Cells[4, row] := FloatToStrF(100 * (TotalCWQSOs / TotPoints), ffFixed, 1000, 1);
+      end
+      else begin
+         Grid.Cells[4, row] := '-';
+      end;
+   end
+   else begin
+      Grid.Cells[3, row] := '';
+      Grid.Cells[4, row] := '';
+   end;
+   Inc(row);
 
+   // スコア行
+   Grid.Cells[0, row] := 'Score';
+   Grid.Cells[1, row] := '';
+   Grid.Cells[2, row] := IntToStr3(TotPoints * TotMulti);
+   Grid.Cells[3, row] := '';
+   Grid.Cells[4, row] := '';
+   Inc(row);
 
+   Grid.RowCount := row;
+   ClientWidth := (Grid.DefaultColWidth * Grid.ColCount) + (Grid.ColCount * Grid.GridLineWidth);
+   ClientHeight := (Grid.DefaultRowHeight * Grid.RowCount) + (Grid.RowCount * Grid.GridLineWidth) + Panel1.Height + 4;
 end;
 
 procedure TALLJAScore.Reset;
 begin
-  inherited;
+   inherited;
 end;
 
-procedure TALLJAScore.Add(var aQSO : TQSO);
+procedure TALLJAScore.Add(var aQSO: TQSO);
 begin
-  inherited;
+   inherited;
 end;
 
-
-
-procedure TALLJAScore.CWButtonClick(Sender: TObject);
+procedure TALLJAScore.FormShow(Sender: TObject);
 begin
-  inherited;
-  Width := Grid.Width + 15;
+   inherited;
+   Button1.SetFocus;
+   Grid.Col := 1;
+   Grid.Row := 1;
+end;
+
+procedure TALLJAScore.GridDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect; State: TGridDrawState);
+var
+   strText: string;
+begin
+   inherited;
+   strText := TStringGrid(Sender).Cells[ACol, ARow];
+
+   with TStringGrid(Sender).Canvas do begin
+      Brush.Color := TStringGrid(Sender).Color;
+      Brush.Style := bsSolid;
+      FillRect(Rect);
+
+      Font.Name := 'ＭＳ ゴシック';
+      Font.Size := 11;
+
+      if Copy(strText, 1, 1) = '*' then begin
+         strText := Copy(strText, 2);
+         Font.Color := clBlue;
+      end
+      else begin
+         Font.Color := clBlack;
+      end;
+
+      TextRect(Rect, strText, [tfRight,tfVerticalCenter,tfSingleLine]);
+   end;
 end;
 
 end.
