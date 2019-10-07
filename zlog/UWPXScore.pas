@@ -4,12 +4,13 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  UBasicScore, Grids, Aligrid, StdCtrls, ExtCtrls, UzLogGlobal, Buttons;
+  UBasicScore, Grids, StdCtrls, ExtCtrls, UzLogGlobal, Buttons;
 
 type
   TWPXScore = class(TBasicScore)
-    Grid: TStringAlignGrid;
+    Grid: TStringGrid;
     procedure FormCreate(Sender: TObject);
+    procedure GridDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect; State: TGridDrawState);
   private
     { Private declarations }
   public
@@ -30,95 +31,140 @@ uses UWPXMulti;
 
 {$R *.DFM}
 
-
 procedure TWPXScore.Reset;
-var band : TBand;
+var
+   band : TBand;
 begin
-  for band := b19 to HiBand do
-    begin
+   for band := b19 to HiBand do begin
       QSO[band] := 0;
       Points[band] := 0;
-    end;
+   end;
 end;
 
 procedure TWPXScore.AddNoUpdate(var aQSO : TQSO);
-var P : integer;
-    band : TBand;
 begin
-  inherited; {points are calculated in WPXMulti}
-  if aQSO.QSO.Dupe then
-    exit;
+   inherited; {points are calculated in WPXMulti}
 
-  if AllAsianDXMode then
-    begin
+   if aQSO.QSO.Dupe then begin
+      Exit;
+   end;
+
+   if AllAsianDXMode then begin
       case aQSO.QSO.Band of
-        b19: aQSO.QSO.Points := 3;
-        b35, b28 : aQSO.QSO.Points := 2;
-        b7..b21 : aQSO.QSO.Points := 1;
+         b19: aQSO.QSO.Points := 3;
+         b35, b28 : aQSO.QSO.Points := 2;
+         b7..b21 : aQSO.QSO.Points := 1;
       end;
-      if aQSO.QSO.Power2 = 777 then // asia. see uwpxmulti.addnoupdate
-        aQSO.QSO.Points := 0;
-    end;
 
-  inc(Points[aQSO.QSO.Band], aQSO.QSO.Points);
+      if aQSO.QSO.Power2 = 777 then begin // asia. see uwpxmulti.addnoupdate
+         aQSO.QSO.Points := 0;
+      end;
+   end;
+
+   Inc(Points[aQSO.QSO.Band], aQSO.QSO.Points);
 end;
 
 procedure TWPXScore.Update;
-var band : TBand;
-    TotQSO, TotPts : LongInt;
-    row : integer;
+var
+   band : TBand;
+   TotQSO, TotPts : Integer;
+   row : Integer;
 begin
-  TotQSO := 0; TotPts := 0;
-  row := 1;
-  for band := b19 to b28 do
-    begin
-      if NotWARC(band) then
-        begin
-          Grid.Cells[1,row] := IntToStr(QSO[band]);
-          TotQSO := TotQSO + QSO[band];
-          Grid.Cells[2,row] := IntToStr(Points[band]);
-          TotPts := TotPts + Points[band];
-          inc(row);
-        end;
-    end;
-  Grid.Cells[1, 7] := IntToStr(TotQSO);
-  Grid.Cells[2, 7] := IntToStr(TotPts);
-  Grid.Cells[2, 8] := IntToStr(WPXMulti.TotalPrefix);
-  Grid.Cells[2, 9] := IntToStr(TotPts*WPXMulti.TotalPrefix);
+   TotQSO := 0;
+   TotPts := 0;
+   row := 1;
+
+   Grid.Cells[0, 0] := 'MHz';
+   Grid.Cells[1, 0] := 'QSOs';
+   Grid.Cells[2, 0] := 'Points';
+
+   for band := b19 to b28 do begin
+      if NotWARC(band) then begin
+         TotQSO := TotQSO + QSO[band];
+         TotPts := TotPts + Points[band];
+
+         Grid.Cells[0, row] := '*' + MHzString[band];
+         Grid.Cells[1, row] := IntToStr3(QSO[band]);
+         Grid.Cells[2, row] := IntToStr3(Points[band]);
+
+         Inc(row);
+      end;
+   end;
+
+   Grid.Cells[0, 7] := 'Total';
+   Grid.Cells[1, 7] := IntToStr3(TotQSO);
+   Grid.Cells[2, 7] := IntToStr3(TotPts);
+
+   Grid.Cells[0, 8] := 'Prefixes';
+   Grid.Cells[1, 8] := '';
+   Grid.Cells[2, 8] := IntToStr3(WPXMulti.TotalPrefix);
+
+   Grid.Cells[0, 9] := 'Score';
+   Grid.Cells[1, 9] := '';
+   Grid.Cells[2, 9] := IntToStr3(TotPts * WPXMulti.TotalPrefix);
+
+   Grid.ColCount := 3;
+   Grid.RowCount := 10;
+   ClientWidth := (Grid.DefaultColWidth * Grid.ColCount) + (Grid.ColCount * Grid.GridLineWidth);
+   ClientHeight := (Grid.DefaultRowHeight * Grid.RowCount) + (Grid.RowCount * Grid.GridLineWidth) + Panel1.Height + 4;
 end;
 
 procedure TWPXScore.SummaryWriteScore(FileName : string);
-var f : textfile;
-    tqso, tpts : LongInt;
-    b : TBand;
+var
+   f : textfile;
+   tqso, tpts : LongInt;
+   b : TBand;
 begin
-  tqso := 0; tpts := 0; {tmulti := 0; }
-  AssignFile(f, FileName);
-  Append(f);
-  writeln(f, 'MHz           QSOs    Points');
-  for b := b19 to b28 do
-    begin
-      if NotWARC(b) then
-        begin
-          writeln(f, FillRight(MHzString[b],8)+FillLeft(IntToStr(QSO[b]),10)+
-                     FillLeft(IntToStr(Points[b]),10) );
-          tqso := tqso + QSO[b];
-          tpts := tpts + Points[b];
-        end;
-    end;
-  writeln(f, FillRight('Total :',8)+FillLeft(IntToStr(tqso),10)+
-             FillLeft(IntToStr(tpts),10) );
-  writeln(f, 'Total prefixes: ' + IntToStr(WPXMulti.TotalPrefix));
-  writeln(f,'Total score : ' + IntToStr(tpts*WPXMulti.TotalPrefix));
-  CloseFile(f);
+   tqso := 0;
+   tpts := 0; {tmulti := 0; }
+   AssignFile(f, FileName);
+   Append(f);
+   writeln(f, 'MHz           QSOs    Points');
+   for b := b19 to b28 do begin
+      if NotWARC(b) then begin
+         writeln(f, FillRight(MHzString[b],8) + FillLeft(IntToStr(QSO[b]),10) + FillLeft(IntToStr(Points[b]),10) );
+         tqso := tqso + QSO[b];
+         tpts := tpts + Points[b];
+      end;
+   end;
+
+   writeln(f, FillRight('Total :',8) + FillLeft(IntToStr(tqso),10) + FillLeft(IntToStr(tpts),10) );
+   writeln(f, 'Total prefixes: ' + IntToStr(WPXMulti.TotalPrefix));
+   writeln(f, 'Total score : ' + IntToStr(tpts*WPXMulti.TotalPrefix));
+   CloseFile(f);
 end;
-
-
 
 procedure TWPXScore.FormCreate(Sender: TObject);
 begin
-  inherited;
-  AllAsianDXMode := false;
+   inherited;
+   AllAsianDXMode := false;
+end;
+
+procedure TWPXScore.GridDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect; State: TGridDrawState);
+var
+   strText: string;
+begin
+   inherited;
+   strText := TStringGrid(Sender).Cells[ACol, ARow];
+
+   with TStringGrid(Sender).Canvas do begin
+      Brush.Color := TStringGrid(Sender).Color;
+      Brush.Style := bsSolid;
+      FillRect(Rect);
+
+      Font.Name := 'ÇlÇr ÉSÉVÉbÉN';
+      Font.Size := 11;
+
+      if Copy(strText, 1, 1) = '*' then begin
+         strText := Copy(strText, 2);
+         Font.Color := clBlue;
+      end
+      else begin
+         Font.Color := clBlack;
+      end;
+
+      TextRect(Rect, strText, [tfRight,tfVerticalCenter,tfSingleLine]);
+   end;
 end;
 
 end.
