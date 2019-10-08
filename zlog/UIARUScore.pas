@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  UBasicScore, Grids, StdCtrls, ExtCtrls, UzLogGlobal, Aligrid, Cologrid,
+  UBasicScore, Grids, StdCtrls, ExtCtrls, UzLogGlobal, Cologrid,
   Buttons;
 
 type

@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  UBasicMulti, Grids, Aligrid, StdCtrls, ExtCtrls, UzLogGlobal, UKCJZone;
+  UBasicMulti, Grids, StdCtrls, ExtCtrls, UzLogGlobal, UKCJZone;
 
 const maxindex = 70;
 
@@ -24,26 +24,30 @@ const KenNames : array[0..maxindex] of string[15] =
 
 type
   TKCJMulti = class(TBasicMulti)
-    Grid: TStringAlignGrid;
     Panel1: TPanel;
     Button1: TButton;
     cbStayOnTop: TCheckBox;
     combBand: TComboBox;
     Button2: TButton;
+    Grid: TStringGrid;
     procedure FormCreate(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure combBandChange(Sender: TObject);
     procedure cbStayOnTopClick(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure GridDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect; State: TGridDrawState);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
     MultiMap: TKCJZone;
-    function GetCurrentBand : TBand;
+    function KCJCode(S : string) : integer;
+    function WorkedColor(Worked: boolean): TColor;
+    function GetBandNumber(Index: Integer): TBand;
+    function GetBandIndex(b: TBand): Integer;
   public
     { Public declarations }
     MultiArray : array[b19..b50, 0..maxindex] of boolean;
-    procedure UpdateBand(B : TBand);
     procedure Update; override;
     procedure AddNoUpdate(var aQSO : TQSO); override;
     procedure Reset; override;
@@ -53,172 +57,136 @@ type
 
 implementation
 
-uses Main;
+uses
+  Main;
 
 {$R *.DFM}
 
-function TKCJMulti.GetCurrentBand : TBand;
+function TKCJMulti.KCJCode(S : string) : integer;
+var
+   i: Integer;
 begin
-  Result := b19;
-  case combBand.ItemIndex of
-    0 : Result := b19;
-    1 : Result := b35;
-    2 : Result := b7;
-    3 : Result := b14;
-    4 : Result := b21;
-    5 : Result := b28;
-    6 : Result := b50;
-  end;
-end;
-
-function KCJCode(S : string) : integer;
-var i : integer;
-begin
-  Result := -1;
-  if length(S) = 2 then
-    begin
-      for i := 0 to maxindex do
-        if pos(S, KenNames[i]) = 1 then
-          begin
+   if length(S) = 2 then begin
+      for i := 0 to maxindex do begin
+         if pos(S, KenNames[i]) = 1 then begin
             Result := i;
-            exit;
-          end;
-    end;
-end;
-
-function WorkedColor(Worked : boolean) : TColor;
-begin
-  if Worked then
-    Result := clRed
-  else
-    Result := clBlack;
-end;
-
-procedure TKCJMulti.UpdateBand(B : TBand);
-var i : integer;
-begin
-  for i := 0 to maxindex do
-    begin
-      case i of
-        0..6   : Grid.CellFont[0, i+1].Color := WorkedColor(MultiArray[B,i]);
-        7..13  : Grid.CellFont[1, i-6].Color := WorkedColor(MultiArray[B,i]);
-        14..19 : Grid.CellFont[2, i-13].Color := WorkedColor(MultiArray[B,i]);
-        20..21 : Grid.CellFont[3, i-19].Color := WorkedColor(MultiArray[B,i]);
-        22..32 : Grid.CellFont[4, i-21].Color := WorkedColor(MultiArray[B,i]);
-        33..36 : Grid.CellFont[5, i-32].Color := WorkedColor(MultiArray[B,i]);
-        37..42 : Grid.CellFont[6, i-36].Color := WorkedColor(MultiArray[B,i]);
-        43..45 : Grid.CellFont[7, i-42].Color := WorkedColor(MultiArray[B,i]);
-        46..50 : Grid.CellFont[8, i-45].Color := WorkedColor(MultiArray[B,i]);
-        51..54 : Grid.CellFont[9, i-50].Color := WorkedColor(MultiArray[B,i]);
-        55..63 : Grid.CellFont[10, i-54].Color := WorkedColor(MultiArray[B,i]);
-        64..70 : Grid.CellFont[11, i-63].Color := WorkedColor(MultiArray[B,i]);
+            Exit;
+         end;
       end;
-    end;
-  Grid.ClearSelection;
+   end;
+
+   Result := -1;
+end;
+
+function TKCJMulti.WorkedColor(Worked: boolean): TColor;
+begin
+   if Worked then begin
+      Result := clRed;
+   end
+   else begin
+      Result := clBlack;
+   end;
 end;
 
 procedure TKCJMulti.Update;
-var B : TBand;
+var
+   B: TBand;
 begin
-  B := Main.CurrentQSO.QSO.Band;
-  case B of
-    b19 : combBand.ItemIndex := 0;
-    b35 : combBand.ItemIndex := 1;
-    b7  : combBand.ItemIndex := 2;
-    b14 : combBand.ItemIndex := 3;
-    b21 : combBand.ItemIndex := 4;
-    b28 : combBand.ItemIndex := 5;
-    b50 : combBand.ItemIndex := 6;
-  else
-    begin
-      B := b19;
-      combBand.ItemIndex := 0;
-    end;
-  end;
-  UpdateBand(B);
+   B := Main.CurrentQSO.QSO.Band;
 
-  if MultiMap.Visible then
-    MultiMap.Update;
+   combBand.ItemIndex := GetBandIndex(B);
+
+   if MultiMap.Visible then begin
+      MultiMap.Update;
+   end;
 end;
 
-procedure TKCJMulti.AddNoUpdate(var aQSO : TQSO);
-var str : string;
-    K : integer;
-    B : TBand;
-    i : integer;
+procedure TKCJMulti.AddNoUpdate(var aQSO: TQSO);
+var
+   str: string;
+   K: Integer;
 begin
-  aQSO.QSO.NewMulti1 := False;
-  str := aQSO.QSO.NrRcvd;
-  //Delete(str,length(str),1);
-  aQSO.QSO.Multi1 := str;
+   aQSO.QSO.NewMulti1 := False;
+   str := aQSO.QSO.NrRcvd;
+   aQSO.QSO.Multi1 := str;
 
-  if aQSO.QSO.Dupe then
-    exit;
+   if aQSO.QSO.Dupe then begin
+      Exit;
+   end;
 
-  if not(NotWARC(aQSO.QSO.Band)) then
-    exit;
+   if not(NotWARC(aQSO.QSO.Band)) then begin
+      Exit;
+   end;
 
-  K := KCJCode(str);
-  if K = -1 then
-    exit;
+   K := KCJCode(str);
+   if K = -1 then begin
+      Exit;
+   end;
 
-  if MultiArray[aQSO.QSO.band, K] = False then
-    begin
-      MultiArray[aQSO.QSO.band, K] := True;
+   if MultiArray[aQSO.QSO.Band, K] = False then begin
+      MultiArray[aQSO.QSO.Band, K] := True;
       aQSO.QSO.NewMulti1 := True;
-    end;
+   end;
 end;
 
-function TKCJMulti.ValidMulti(aQSO : TQSO) : boolean;
-var str : string;
+function TKCJMulti.ValidMulti(aQSO: TQSO): boolean;
+var
+   str: string;
 begin
-  str := aQSO.QSO.NrRcvd;
-  Result := (KCJCode(str) >= 0)
+   str := aQSO.QSO.NrRcvd;
+   Result := (KCJCode(str) >= 0)
 end;
-
 
 procedure TKCJMulti.Reset;
-var i : integer;
-    B : TBand;
+var
+   i: Integer;
+   B: TBand;
 begin
-  for i := 0 to maxindex do
-    for B := b19 to b50 do
-      MultiArray[B, i] := false;
+   for i := 0 to maxindex do begin
+      for B := b19 to b50 do begin
+         MultiArray[B, i] := False;
+      end;
+   end;
 end;
 
-procedure TKCJMulti.CheckMulti(aQSO : TQSO);
-var str : string;
-    M : integer;
-    B : TBand;
+procedure TKCJMulti.CheckMulti(aQSO: TQSO);
+var
+   str: string;
+   M: Integer;
+   B: TBand;
 begin
-  str := aQSO.QSO.NrRcvd;
+   str := aQSO.QSO.NrRcvd;
 
-  if str = '' then
-    exit;
+   if str = '' then begin
+      Exit;
+   end;
 
-  M := KCJCode(str);
+   M := KCJCode(str);
 
-  if M = -1 then
-    begin
-      MainForm.WriteStatusLine('Invalid number', false);
-      exit;
-    end;
+   if M = -1 then begin
+      MainForm.WriteStatusLine('Invalid number', False);
+      Exit;
+   end;
 
-  str := KenNames[M];
-  if MultiArray[aQSO.QSO.band,M] = True then
-    str := str + '   Worked on this band. Worked on : '
-  else
-    str := str + '   Needed on this band. Worked on : ';
+   str := KenNames[M];
+   if MultiArray[aQSO.QSO.Band, M] = True then begin
+      str := str + '   Worked on this band. Worked on : ';
+   end
+   else begin
+      str := str + '   Needed on this band. Worked on : ';
+   end;
 
-  for B := b19 to b50 do
-    if MultiArray[B, M] then
-      str := str + MHzString[B]+' '
-    else
-      str := str + '';
-  MainForm.WriteStatusLine(str, false);
+   for B := b19 to b50 do begin
+      if MultiArray[B, M] then begin
+         str := str + MHzString[B] + ' ';
+      end
+      else begin
+         str := str + '';
+      end;
+   end;
 
+   MainForm.WriteStatusLine(str, False);
 end;
-
 
 procedure TKCJMulti.FormCreate(Sender: TObject);
 begin
@@ -235,29 +203,107 @@ begin
    MultiMap.Release();
 end;
 
+procedure TKCJMulti.FormShow(Sender: TObject);
+var
+   i: Integer;
+   r: Integer;
+   c: Integer;
+begin
+   inherited;
+   Grid.RowCount := 7;
+   Grid.ColCount := 12;
+
+   for i := 0 to maxindex do begin
+      c := i div 7;
+      r := i mod 7;
+      Grid.Cells[c, r] := KenNames[i];
+   end;
+end;
+
 procedure TKCJMulti.Button1Click(Sender: TObject);
 begin
-  //inherited;
-  Close;
+   // inherited;
+   Close;
 end;
 
 procedure TKCJMulti.combBandChange(Sender: TObject);
 begin
-  UpdateBand(GetCurrentBand);
+   Grid.Invalidate();
 end;
 
 procedure TKCJMulti.cbStayOnTopClick(Sender: TObject);
 begin
-  if cbStayOnTop.Checked then
-    FormStyle := fsStayOnTop
-  else
-    FormStyle := fsNormal;
+   if cbStayOnTop.Checked then begin
+      FormStyle := fsStayOnTop;
+   end
+   else begin
+      FormStyle := fsNormal;
+   end;
 end;
-
 
 procedure TKCJMulti.Button2Click(Sender: TObject);
 begin
-  MultiMap.Show;
+   MultiMap.Show;
+end;
+
+procedure TKCJMulti.GridDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect; State: TGridDrawState);
+var
+   strText: string;
+   i: Integer;
+   b: TBand;
+   col: TColor;
+begin
+   inherited;
+   strText := TStringGrid(Sender).Cells[ACol, ARow];
+
+   i := (ACol * 7) + ARow - 7;
+   if (i >= 0) and (i <= maxindex) then begin
+      b := GetBandNumber(combBand.ItemIndex);
+      col := WorkedColor(MultiArray[b, i]);
+   end
+   else begin
+      col := clBlack;
+   end;
+
+   with TStringGrid(Sender).Canvas do begin
+      Brush.Color := TStringGrid(Sender).Color;
+      Brush.Style := bsSolid;
+      FillRect(Rect);
+
+      Font.Name := '‚l‚r ƒSƒVƒbƒN';
+      Font.Size := 11;
+      Font.Color := col;
+
+      TextRect(Rect, strText, [tfLeft,tfVerticalCenter,tfSingleLine]);
+   end;
+end;
+
+function TKCJMulti.GetBandNumber(Index: Integer): TBand;
+begin
+   case Index of
+      0: Result := b19;
+      1: Result := b35;
+      2: Result := b7;
+      3: Result := b14;
+      4: Result := b21;
+      5: Result := b28;
+      6: Result := b50;
+      else Result := b19;
+   end;
+end;
+
+function TKCJMulti.GetBandIndex(b: TBand): Integer;
+begin
+   case b of
+      b19: Result := 0;
+      b35: Result := 1;
+      b7:  Result := 2;
+      b14: Result := 3;
+      b21: Result := 4;
+      b28: Result := 5;
+      b50: Result := 6;
+      else Result := 0;
+   end;
 end;
 
 end.

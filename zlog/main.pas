@@ -7,7 +7,7 @@ uses
   Forms, Dialogs, StdCtrls, Buttons, ExtCtrls, Menus, ComCtrls, Grids,
   UzLogGlobal, UBasicMulti, UBasicScore, UALLJAMulti,
   UOptions, UEditDialog, UGeneralMulti2,
-  BGK32Lib, UzLogCW, Aligrid, Hemibtn, ShellAPI, UITypes,
+  BGK32Lib, UzLogCW, Hemibtn, ShellAPI, UITypes,
   OEdit, URigControl, UConsolePad, URenewThread, USpotClass,
   UMMTTY, UTTYConsole, UPaddleThread, UELogJapanese;
 

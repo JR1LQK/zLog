@@ -3,7 +3,7 @@ inherited IARUScore: TIARUScore
   Top = 83
   Caption = 'Score'
   PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 12
   object Grid: TMgrid
     Left = 8
     Top = 8
@@ -29,5 +29,16 @@ inherited IARUScore: TIARUScore
     OddRowColor = clBtnFace
     EvenRowColor = clBtnFace
     OnSetting = GridSetting
+    ColWidths = (
+      43
+      43
+      43
+      43)
+    RowHeights = (
+      16
+      16
+      16
+      16
+      16)
   end
 end
