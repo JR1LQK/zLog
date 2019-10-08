@@ -38,14 +38,11 @@ requires
 contains
   JLLabel,
   HemiBtn in 'hemi\HemiBtn.pas',
-  ALIGRID in 'aligrid21\ALIGRID.PAS',
-  AH_TOOL in 'aligrid21\AH_TOOL.PAS',
   CPDrv in 'cdd4\CPDrv.pas',
   CPDReg in 'cdd4\CPDReg.pas',
   CONSOLE in 'CONSOLE.PAS',
   Wsagraph in 'wsagraph\Wsagraph.pas',
   Cologrid in 'cologrid\Cologrid.pas',
-  ICONGRID in 'aligrid21\ICONGRID.PAS',
   OEDIT in 'OEDIT.PAS',
   CONSOLE2 in 'CONSOLE2.PAS';
 
