@@ -4,7 +4,7 @@ object MainForm: TMainForm
   VertScrollBar.Visible = False
   Caption = 'zLog for Windows'
   ClientHeight = 448
-  ClientWidth = 507
+  ClientWidth = 526
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -35,7 +35,7 @@ object MainForm: TMainForm
   object StatusLine: TStatusBar
     Left = 0
     Top = 428
-    Width = 507
+    Width = 526
     Height = 20
     Panels = <
       item
@@ -51,11 +51,12 @@ object MainForm: TMainForm
     SizeGrip = False
     OnDrawPanel = StatusLineDrawPanel
     OnResize = StatusLineResize
+    ExplicitWidth = 507
   end
   object Grid: TStringGrid
     Left = 0
     Top = 99
-    Width = 507
+    Width = 526
     Height = 302
     TabStop = False
     Align = alClient
@@ -82,6 +83,7 @@ object MainForm: TMainForm
     OnSelectCell = GridSelectCell
     OnSetEditText = GridSetEditText
     OnTopLeftChanged = GridTopLeftChanged
+    ExplicitWidth = 507
     ColWidths = (
       38
       65
@@ -298,10 +300,11 @@ object MainForm: TMainForm
   object MainToolBar: TPanel
     Left = 0
     Top = 66
-    Width = 507
+    Width = 526
     Height = 33
     Align = alTop
     TabOrder = 2
+    ExplicitWidth = 507
     object SpeedButton4: TSpeedButton
       Left = 8
       Top = 4
@@ -838,13 +841,14 @@ object MainForm: TMainForm
   object CWToolBar: TPanel
     Left = 0
     Top = 0
-    Width = 507
+    Width = 526
     Height = 33
     Align = alTop
     ParentShowHint = False
     ShowHint = True
     TabOrder = 3
     Visible = False
+    ExplicitWidth = 507
     object CWStopButton: TSpeedButton
       Left = 238
       Top = 4
@@ -2500,7 +2504,7 @@ object MainForm: TMainForm
   object EditPanel: TPanel
     Left = 0
     Top = 401
-    Width = 507
+    Width = 526
     Height = 27
     Align = alBottom
     Font.Charset = DEFAULT_CHARSET
@@ -2510,6 +2514,7 @@ object MainForm: TMainForm
     Font.Style = []
     ParentFont = False
     TabOrder = 4
+    ExplicitWidth = 507
     object RcvdRSTEdit: TEdit
       Left = 117
       Top = 4
@@ -2700,10 +2705,11 @@ object MainForm: TMainForm
   object SSBToolBar: TPanel
     Left = 0
     Top = 33
-    Width = 507
+    Width = 526
     Height = 33
     Align = alTop
     TabOrder = 5
+    ExplicitWidth = 507
     object VoiceStopButton: TSpeedButton
       Left = 238
       Top = 4

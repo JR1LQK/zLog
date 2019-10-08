@@ -18,9 +18,7 @@ var
   GLOBALSERIAL : integer = 0;
   ZLOCOUNT : integer = 0;
 
-
 type
-
   TBasicEdit = class
   private
     colSerial : integer;
@@ -3080,11 +3078,9 @@ var
 begin
    if MainForm.ShowCurrentBandOnly.Checked and (aQSO.QSO.Band <> CurrentQSO.QSO.Band) then
       exit;
+
    R := Log.TotalQSO;
    with MainForm.Grid do begin
-      { if R+1 > DisplayedQSOs then
-        RowCount := R+1; }
-      // _top := TopRow;
 
       inc(DispQSO);
 
@@ -3094,23 +3090,7 @@ begin
       WriteQSO(DispQSO, aQSO);
       // WriteQSO(R, aQSO);
       IndexArray[DispQSO] := Log.TotalQSO;
-      (*
-        if colSerial >= 0 then Cells[colSerial,R] := aQSO.SerialStr;
-        if colTime >= 0 then Cells[colTime,R]:= aQSO.TimeStr;
-        if colCall >= 0 then Cells[colCall,R]:= aQSO.QSO.Callsign;
-        if colrcvdRST >=0 then Cells[colrcvdRST,R]:= aQSO.RSTStr;
-        if colrcvdNumber >= 0 then Cells[colrcvdNumber,R]:= aQSO.QSO.NrRcvd;
-        if colBand >= 0 then Cells[colBand,R]:= aQSO.BandStr;
-        if colMode >= 0 then Cells[colMode,R]:= aQSO.ModeStr;
-        if colPower >= 0 then Cells[colPower,R]:= aQSO.PowerStr;
-        if colNewPower >= 0 then Cells[colNewPower,R] := aQSO.NewPowerStr;
-        if colPoint >= 0 then Cells[colPoint,R]:= aQSO.PointStr;
-        if colNewMulti1 >= 0 then Cells[colNewMulti1,R]:= GetNewMulti1(aQSO);
-        if colOp >= 0 then Cells[colOp,R]:= aQSO.QSO.Operator;
-        if colMemo >= 0 then Cells[colMemo,R]:= aQSO.QSO.memo;
-      *)
 
-      // i := Log.TotalQSO - DisplayedQSOs;
       i := DispQSO - DisplayedQSOs;
 
       if (MainForm.Grid.Focused = false) and (aQSO.QSO.Reserve2 <> $AA) { local } then begin
@@ -3213,6 +3193,7 @@ var
 begin
    for i := 1 to MaxGridQSO do
       IndexArray[i] := 0;
+
    DispQSO := 0;
    R := Log.TotalQSO;
 
@@ -3237,20 +3218,11 @@ begin
             IndexArray[i] := i;
          end;
       end;
-      // i := Log.TotalQSO - DisplayedQSOs;
 
       if DispQSO > DisplayedQSOs then
          RowCount := DispQSO + 1
       else
          RowCount := DisplayedQSOs + 1;
-
-      {
-        i := DispQSO - DisplayedQSOs;
-
-        if i > 0 then
-        TopRow := i+1
-        else
-        TopRow := 1; }
 
       Enabled := True;
       // DefaultDrawing := True;
@@ -3344,7 +3316,7 @@ begin
       MainForm.MemoEdit.Tag := colMemo;
 
    end;
-   MainForm.Width := 46 * CWid + 36;
+//   MainForm.Width := 46 * CWid + 36;
 end;
 
 function TBasicEdit.GetLeft(col: integer): integer;
@@ -6778,26 +6750,10 @@ end;
 procedure TMainForm.FormResize(Sender: TObject);
 var
    i: integer;
-   R: double;
 begin
-   R := (Grid.Height - 4 - Grid.DefaultRowHeight) / (1 + Grid.DefaultRowHeight);
-   if Frac(R) > 0.0001 then begin
-      i := Trunc(R) * (1 + Grid.DefaultRowHeight) + Grid.DefaultRowHeight + 4;
-      if Grid.Height > i + 1 then begin
-         MainForm.Height := MainForm.Height + 1;
-      end
-      else begin
-         DisplayedQSOs := Trunc(R);
-         if Grid.RowCount <= DisplayedQSOs then begin
-            Grid.RowCount := DisplayedQSOs + 1;
-         end;
-      end;
-   end
-   else begin
-      DisplayedQSOs := Trunc(R);
-      if Grid.RowCount <= DisplayedQSOs then begin
-         Grid.RowCount := DisplayedQSOs + 1;
-      end;
+   DisplayedQSOs := Grid.VisibleRowCount;
+   if Grid.RowCount <= DisplayedQSOs then begin
+      Grid.RowCount := DisplayedQSOs + 1;
    end;
 
    i := ClientWidth - Grid.GridWidth;
