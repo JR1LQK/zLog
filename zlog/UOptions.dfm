@@ -43,10 +43,6 @@ object formOptions: TformOptions
     TabOrder = 0
     object PrefTabSheet: TTabSheet
       Caption = 'Preferences'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Label40: TLabel
         Left = 184
         Top = 104
@@ -342,10 +338,6 @@ object formOptions: TformOptions
     end
     object TabSheet2: TTabSheet
       Caption = 'Categories'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Label14: TLabel
         Left = 248
         Top = 92
@@ -1358,10 +1350,6 @@ object formOptions: TformOptions
     end
     object TabSheet5: TTabSheet
       Caption = 'Hardware'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GroupBox6: TGroupBox
         Left = 3
         Top = 0
@@ -1605,15 +1593,15 @@ object formOptions: TformOptions
           Width = 73
           Height = 21
           Style = csDropDownList
-          ItemIndex = 1
           TabOrder = 13
-          Text = '1200'
           Items.Strings = (
             '300'
             '1200'
             '2400'
             '4800'
-            '9600')
+            '9600'
+            '19200'
+            '38400')
         end
         object editZLinkPcName: TEdit
           Left = 96

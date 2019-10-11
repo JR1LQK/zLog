@@ -71,13 +71,6 @@ object RigControl: TRigControl
     Font.Style = []
     ParentFont = False
   end
-  object DebugLabel: TLabel
-    Left = 8
-    Top = 120
-    Width = 57
-    Height = 12
-    Caption = 'DEBUG000'
-  end
   object Button1: TButton
     Left = 248
     Top = 136
