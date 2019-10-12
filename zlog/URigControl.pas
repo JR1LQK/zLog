@@ -804,7 +804,7 @@ begin
       end;
    end;
 
-   WriteData('MD' + Char(_currentvfo) + Char(m) + ';');
+   WriteData('MD' + Chr(Ord('0') + _currentvfo) + Chr(Ord('0') + m) + ';');
 end;
 
 // Ç±ÇøÇÁÇ≈RIGèÓïÒÇèàóùÇ∑ÇÈ
@@ -824,18 +824,12 @@ begin
 
       // ÉÇÅ[Éh
       case StrToIntDef(S[21], 99) of
-         0, 1:
-            M := mSSB;
-         2:
-            M := mCW;
-         3:
-            M := mAM;
-         4:
-            M := mFM;
-         5:
-            M := mRTTY;
-         else
-            M := mOther;
+         1, 2: M := mSSB;
+         3, 7: M := mCW;
+         4:    M := mFM;
+         5:    M := mAM;
+         6, 9: M := mRTTY;
+         else  M := mOther;
       end;
       _currentmode := M;
 
@@ -902,7 +896,7 @@ const
 var
    freq: string;
 begin
-   freq := DupeString('0', 8) + IntToStr(Hz);
+   freq := RightStr(DupeString('0', 8) + IntToStr(Hz), 8);
    WriteData(cmd[_currentvfo] + freq + ';');
 end;
 
@@ -924,7 +918,7 @@ begin
       Exit;
    end;
 
-   WriteData('VS' + Char(i) + ';');
+   WriteData('VS' + Chr(Ord('0') + i) + ';');
 end;
 
 procedure TFT2000.InquireStatus;
