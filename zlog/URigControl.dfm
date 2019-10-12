@@ -144,10 +144,10 @@ object RigControl: TRigControl
     Left = 240
     Top = 72
   end
-  object PallingTimer: TTimer
+  object PollingTimer: TTimer
     Enabled = False
     Interval = 100
-    OnTimer = PallingTimerTimer
+    OnTimer = PollingTimerTimer
     Left = 176
     Top = 72
   end
@@ -173,6 +173,7 @@ object RigControl: TRigControl
     Tag = 3
     Port = pnCustom
     PortName = '\\.\COM2'
+    InBufSize = 4096
     Left = 240
     Top = 8
   end

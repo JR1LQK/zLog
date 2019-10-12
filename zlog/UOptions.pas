@@ -343,7 +343,6 @@ begin
             end;
       end;
 
-      RigControl.ImplementOptions;
       BGK32Lib.SetPTTDelay(Settings._pttbefore, Settings._pttafter);
       BGK32Lib.SetPTT(Settings._pttenabled);
 

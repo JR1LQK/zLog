@@ -5,7 +5,7 @@ interface
 uses
    SysUtils, Windows, Messages, Classes, Graphics, Controls, StdCtrls, ExtCtrls,
    Forms, UITypes, Dialogs, Buttons,
-   BGK32Lib, UzLogCW, UzLogGlobal, UMMTTY;
+   BGK32Lib, UzLogCW, UzLogGlobal, UMMTTY, URigControl;
 
 type
    TMenuForm = class(TForm)
@@ -487,6 +487,9 @@ begin
    Hide;
 
    MainForm.CallsignEdit.SetFocus;
+
+   // リグコントロール開始
+   RigControl.ImplementOptions;
 end;
 
 procedure TMenuForm.CancelButtonClick(Sender: TObject);

@@ -25,7 +25,7 @@ const
   SER_MS = 3;    // separate serial for run/multi stns
 
 const
-  RIGNAMEMAX = 39;
+  RIGNAMEMAX = 40;
   RIGNAMES : array[0..RIGNAMEMAX] of string =
 ('None',
  'TS-690/450',
@@ -41,6 +41,8 @@ const
  'FT-1000MP',
  'MarkV/FT-1000MP',
  'FT-1000MP Mark-V Field',
+ 'FT-2000',
+
  'IC-706',
  'IC-706MkII',
  'IC-706MkII-G',

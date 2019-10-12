@@ -38,11 +38,15 @@ object formOptions: TformOptions
     Top = 0
     Width = 358
     Height = 344
-    ActivePage = PrefTabSheet
+    ActivePage = TabSheet5
     Align = alClient
     TabOrder = 0
     object PrefTabSheet: TTabSheet
       Caption = 'Preferences'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Label40: TLabel
         Left = 184
         Top = 104
@@ -338,6 +342,10 @@ object formOptions: TformOptions
     end
     object TabSheet2: TTabSheet
       Caption = 'Categories'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Label14: TLabel
         Left = 248
         Top = 92
