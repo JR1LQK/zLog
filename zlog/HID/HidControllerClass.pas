@@ -451,7 +451,10 @@ begin
   // free the data which needs special handling
   CloseFile;
   CloseFileEx;
-  HidD_FreePreparsedData(FPreparsedData);
+  try
+     HidD_FreePreparsedData(FPreparsedData);
+  except
+  end;
   FLanguageStrings.Free;
 
   // if controller exists
