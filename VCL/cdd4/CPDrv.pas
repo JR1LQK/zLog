@@ -230,21 +230,21 @@ type
     function SendData( DataPtr: pointer; DataSize: DWORD ): DWORD;
     // Sends binary data. Returns number of bytes sent. Timeout overrides
     // the value specifiend in the OutputTimeout property
-    function SendDataEx( DataPtr: pchar; DataSize, Timeout: DWORD ): DWORD;
+    function SendDataEx( DataPtr: PAnsiChar; DataSize, Timeout: DWORD ): DWORD;
     // Sends a byte. Returns true if the byte has been sent
     function SendByte( Value: byte ): boolean;
     // Sends a char. Returns true if the char has been sent
-    function SendChar( Value: char ): boolean;
+    function SendChar( Value: AnsiChar ): boolean;
     // Sends a pascal string (NULL terminated if $H+ (default))
-    function SendString( s: string ): boolean;
-    // Sends a C-style strings (NULL terminated) 
-    function SendZString( s: pchar ): boolean;
-    // Reads binary data. Returns number of bytes read 
-    function ReadData( DataPtr: pchar; MaxDataSize: DWORD ): DWORD;
-    // Reads a byte. Returns true if the byte has been read 
+    function SendString( s: AnsiString ): boolean;
+    // Sends a C-style strings (NULL terminated)
+    function SendZString( s: PAnsiChar ): boolean;
+    // Reads binary data. Returns number of bytes read
+    function ReadData( DataPtr: PAnsiChar; MaxDataSize: DWORD ): DWORD;
+    // Reads a byte. Returns true if the byte has been read
     function ReadByte( var Value: byte ): boolean;
-    // Reads a char. Returns true if char has been read 
-    function ReadChar( var Value: char ): boolean;
+    // Reads a char. Returns true if char has been read
+    function ReadChar( var Value: AnsiChar ): boolean;
     // Set DTR line high (onOff=TRUE) or low (onOff=FALSE).
     // You must not use HW handshaking.
     procedure ToggleDTR( onOff: boolean );
@@ -903,7 +903,7 @@ end;
 
 // Sends binary data. Returns number of bytes sent. Timeout overrides
 // the value specifiend in the OutputTimeout property
-function TCommPortDriver.SendDataEx( DataPtr: pchar; DataSize, Timeout: DWORD ): DWORD;
+function TCommPortDriver.SendDataEx( DataPtr: PAnsiChar; DataSize, Timeout: DWORD ): DWORD;
 var nToSend, nSent, t1: DWORD;
 begin
   // Do nothing if port has not been opened
@@ -964,33 +964,33 @@ begin
 end;
 
 // Sends a char. Returns true if the char has been sent
-function TCommPortDriver.SendChar( Value: char ): boolean;
+function TCommPortDriver.SendChar( Value: AnsiChar ): boolean;
 begin
   Result := SendData( @Value, 1 ) = 1;
 end;
 
 // Sends a pascal string (NULL terminated if $H+ (default))
-function TCommPortDriver.SendString( s: string ): boolean;
+function TCommPortDriver.SendString( s: AnsiString ): boolean;
 var len: DWORD;
 begin
   len := length( s );
   {$IFOPT H+}  // New syle pascal string (NULL terminated)
-  Result := SendData( pchar(s), len ) = len;
+  Result := SendData( PAnsiChar(s), len ) = len;
   {$ELSE} // Old style pascal string (s[0] = length)
   Result := SendData( pchar(@s[1]), len ) = len;
   {$ENDIF}
 end;
 
 // Sends a C-style string (NULL terminated) 
-function TCommPortDriver.SendZString( s: pchar ): boolean;
+function TCommPortDriver.SendZString( s: PAnsiChar ): boolean;
 var len: DWORD;
 begin
-  len := strlen( s );
+  len := Length( s );
   Result := SendData( s, len ) = len;
 end;
 
 // Reads binary data. Returns number of bytes read 
-function TCommPortDriver.ReadData( DataPtr: pchar; MaxDataSize: DWORD ): DWORD;
+function TCommPortDriver.ReadData( DataPtr: PAnsiChar; MaxDataSize: DWORD ): DWORD;
 var nToRead, nRead, t1: DWORD;
 begin
   // Do nothing if port has not been opened 
@@ -1041,7 +1041,7 @@ begin
 end;
 
 // Reads a char. Returns true if char has been read 
-function TCommPortDriver.ReadChar( var Value: char ): boolean;
+function TCommPortDriver.ReadChar( var Value: AnsiChar ): boolean;
 begin
   Result := ReadData( @Value, 1 ) = 1;
 end;
@@ -1071,7 +1071,7 @@ var nRead, nToRead, dummy: DWORD;
 begin
   if (msg.Msg = WM_TIMER) and Connected then
   begin
-    // Do nothing if RX polling has been paused 
+    // Do nothing if RX polling has been paused
     if FRXPollingPauses > 0 then
       exit;
     // If PacketSize is > 0 then raise the OnReceiveData event only if the RX
@@ -1109,26 +1109,26 @@ begin
           // If PacketMode is not pmDiscard then pass the packet to the app
           if (FPacketMode <> pmDiscard) and (nRead <> 0) and Assigned(FOnReceivePacket) then
             FOnReceivePacket( Self, FTempInBuffer, nRead );
-        // Restart waiting for a packet 
+        // Restart waiting for a packet
         FFirstByteOfPacketTime := DWORD(-1);
-        // Done 
+        // Done
         exit;
       end;
-      // Start time 
+      // Start time
       if (comStat.cbInQue > 0) and (FFirstByteOfPacketTime = DWORD(-1)) then
         FFirstByteOfPacketTime := GetTickCount;
-      // Done 
+      // Done
       exit;
     end;
 
-    // Standard data handling 
+    // Standard data handling
     nRead := 0;
     nToRead := comStat.cbInQue;
     if (nToRead > 0) and ReadFile( FHandle, FTempInBuffer^, nToRead, nRead, nil ) then
       if (nRead <> 0) and Assigned(FOnReceiveData) then
         FOnReceiveData( Self, FTempInBuffer, nRead );
   end
-  // Let Windows handle other messages 
+  // Let Windows handle other messages
   else
     Msg.Result := DefWindowProc( FNotifyWnd, Msg.Msg, Msg.wParam, Msg.lParam ) ;
 end;
