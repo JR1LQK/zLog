@@ -3,7 +3,8 @@ unit UzLogGlobal;
 interface
 
 uses
-  System.SysUtils, System.Classes, IniFiles, Forms, Windows, BGK32Lib;
+  System.SysUtils, System.Classes, StrUtils, IniFiles, Forms, Windows,
+  BGK32Lib;
 
 type
   TMode = (mCW, mSSB, mFM, mAM, mRTTY, mOther);
@@ -1984,22 +1985,22 @@ end;
 
 function FillRight(S: string; len: integer): string;
 var
-   str: string;
+   sjis: AnsiString;
 begin
-   str := S;
-   while length(str) < len do
-      str := str + ' ';
-   Result := str;
+   sjis := AnsiString(S);
+   sjis := sjis + DupeString(' ', len);
+   sjis := Copy(sjis, 1, len);
+   Result := String(sjis);
 end;
 
 function FillLeft(S: string; len: integer): string;
 var
-   str: string;
+   sjis: AnsiString;
 begin
-   str := S;
-   while length(str) < len do
-      str := ' ' + str;
-   Result := str;
+   sjis := AnsiString(S);
+   sjis := DupeString(' ', len) + sjis;
+   sjis := Copy(sjis, Length(sjis) - len + 1, len);
+   Result := String(sjis);
 end;
 
 function GetContestName(Filename: string): string;
