@@ -9,7 +9,7 @@ uses
 
 type
   TIcomInfo = record
-    name : string[10];
+    name : string;
     addr : byte;
     minband, maxband : TBand;
   end;
@@ -21,37 +21,46 @@ const
   _nil3  = chr(0)+chr(0)+chr(0);
   _nil4  = chr(0)+chr(0)+chr(0)+chr(0);
 
-  MAXICOM = 26;
+  MAXICOM = 36;
 
   ICOMLIST : array[1..MAXICOM] of TIcomInfo =
      (
-       (name: 'IC-706'; addr: $48; minband: b19; maxband: b144),
-       (name: 'IC-706MkII'; addr: $4E; minband: b19; maxband: b144),
+       (name: 'IC-706';       addr: $48; minband: b19; maxband: b144),
+       (name: 'IC-706MkII';   addr: $4E; minband: b19; maxband: b144),
        (name: 'IC-706MkII-G'; addr: $58; minband: b19; maxband: b430),
-       (name: 'IC-718'; addr: $5E; minband: b19; maxband: b28),
-       (name: 'IC-721'; addr: $28; minband: b19; maxband: b28),
-       (name: 'IC-726'; addr: $30; minband: b19; maxband: b50),
-       (name: 'IC-731'; addr: $04; minband: b19; maxband: b28),
-       (name: 'IC-736'; addr: $40; minband: b19; maxband: b50),
-       (name: 'IC-738'; addr: $44; minband: b19; maxband: b28),
-       (name: 'IC-746'; addr: $56; minband: b19; maxband: b144),
-       (name: 'IC-746PRO'; addr: $66; minband: b19; maxband: b144),
-       (name: 'IC-7400'; addr: $66; minband: b19; maxband: b144),
-
-       (name: 'IC-750'; addr: $1C; minband: b19; maxband: b28),
-       (name: 'IC-756'; addr: $50; minband: b19; maxband: b50),
-       (name: 'IC-756PRO'; addr: $5C; minband: b19; maxband: b50),
-       (name: 'IC-756PROII'; addr: $64; minband: b19; maxband: b50),
-       (name: 'IC-760'; addr: $1E; minband: b19; maxband: b28),
-       (name: 'IC-760PRO'; addr: $2C; minband: b19; maxband: b28),
-       (name: 'IC-775'; addr: $46; minband: b19; maxband: b28),
-       (name: 'IC-780'; addr: $26; minband: b19; maxband: b28),
-       (name: 'IC-820'; addr: $42; minband: b144; maxband: b430),
-       (name: 'IC-821'; addr: $4C; minband: b144; maxband: b430),
-       (name: 'IC-910'; addr: $60; minband: b144; maxband: b1200),
-       (name: 'IC-970'; addr: $2E; minband: b144; maxband: b1200),
-       (name: 'IC-275'; addr: $10; minband: b144; maxband: b144),
-       (name: 'IC-375'; addr: $14; minband: b430; maxband: b430)
+       (name: 'IC-718';       addr: $5E; minband: b19; maxband: b28),
+       (name: 'IC-721';       addr: $28; minband: b19; maxband: b28),
+       (name: 'IC-726';       addr: $30; minband: b19; maxband: b50),
+       (name: 'IC-731';       addr: $04; minband: b19; maxband: b28),
+       (name: 'IC-736';       addr: $40; minband: b19; maxband: b50),
+       (name: 'IC-738';       addr: $44; minband: b19; maxband: b28),
+       (name: 'IC-746';       addr: $56; minband: b19; maxband: b144),
+       (name: 'IC-746PRO';    addr: $66; minband: b19; maxband: b144),
+       (name: 'IC-7100';      addr: $88; minband: b19; maxband: b430),
+       (name: 'IC-7300';      addr: $94; minband: b19; maxband: b50),
+       (name: 'IC-7400';      addr: $66; minband: b19; maxband: b144),
+       (name: 'IC-7410';      addr: $80; minband: b19; maxband: b50),
+       (name: 'IC-750';       addr: $1C; minband: b19; maxband: b28),
+       (name: 'IC-756';       addr: $50; minband: b19; maxband: b50),
+       (name: 'IC-756PRO';    addr: $5C; minband: b19; maxband: b50),
+       (name: 'IC-756PROII';  addr: $64; minband: b19; maxband: b50),
+       (name: 'IC-756PRO3';   addr: $6E; minband: b19; maxband: b50),
+       (name: 'IC-7610';      addr: $98; minband: b19; maxband: b50),
+       (name: 'IC-7700';      addr: $74; minband: b19; maxband: b50),
+       (name: 'IC-7800';      addr: $6A; minband: b19; maxband: b50),
+       (name: 'IC-7851';      addr: $8E; minband: b19; maxband: b50),
+       (name: 'IC-760';       addr: $1E; minband: b19; maxband: b28),
+       (name: 'IC-760PRO';    addr: $2C; minband: b19; maxband: b28),
+       (name: 'IC-775';       addr: $46; minband: b19; maxband: b28),
+       (name: 'IC-780';       addr: $26; minband: b19; maxband: b28),
+       (name: 'IC-820';       addr: $42; minband: b144; maxband: b430),
+       (name: 'IC-821';       addr: $4C; minband: b144; maxband: b430),
+       (name: 'IC-910';       addr: $60; minband: b144; maxband: b1200),
+       (name: 'IC-970';       addr: $2E; minband: b144; maxband: b1200),
+       (name: 'IC-275';       addr: $10; minband: b144; maxband: b144),
+       (name: 'IC-375';       addr: $14; minband: b430; maxband: b430),
+       (name: 'IC-9100';      addr: $7C; minband: b19; maxband: b1200),
+       (name: 'IC-9700';      addr: $A2; minband: b430; maxband: b1200)
      );
 
   BaseMHz : array[b19..b10g] of LongInt =

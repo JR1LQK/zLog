@@ -38,15 +38,11 @@ object formOptions: TformOptions
     Top = 0
     Width = 358
     Height = 344
-    ActivePage = TabSheet5
+    ActivePage = PrefTabSheet
     Align = alClient
     TabOrder = 0
     object PrefTabSheet: TTabSheet
       Caption = 'Preferences'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Label40: TLabel
         Left = 184
         Top = 104
@@ -342,10 +338,6 @@ object formOptions: TformOptions
     end
     object TabSheet2: TTabSheet
       Caption = 'Categories'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Label14: TLabel
         Left = 248
         Top = 92
@@ -601,10 +593,6 @@ object formOptions: TformOptions
     end
     object CWTabSheet: TTabSheet
       Caption = 'CW/RTTY'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Label11: TLabel
         Left = 240
         Top = 0
@@ -1055,10 +1043,6 @@ object formOptions: TformOptions
     object VoiceTabSheet: TTabSheet
       Caption = 'Voice'
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GroupBox4: TGroupBox
         Left = 8
         Top = 8
@@ -1542,6 +1526,7 @@ object formOptions: TformOptions
           Width = 105
           Height = 21
           Style = csDropDownList
+          DropDownCount = 20
           ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
           TabOrder = 7
           OnChange = Rig1ComboChange
@@ -1569,6 +1554,7 @@ object formOptions: TformOptions
           Width = 105
           Height = 21
           Style = csDropDownList
+          DropDownCount = 20
           ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
           TabOrder = 10
           OnChange = Rig2ComboChange
@@ -1680,10 +1666,6 @@ object formOptions: TformOptions
     end
     object tbRigControl: TTabSheet
       Caption = 'Rig control'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Label45: TLabel
         Left = 8
         Top = 138
@@ -1768,10 +1750,6 @@ object formOptions: TformOptions
     end
     object TabSheet1: TTabSheet
       Caption = 'Path'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Label50: TLabel
         Left = 16
         Top = 18
@@ -1840,10 +1818,6 @@ object formOptions: TformOptions
     end
     object tbMisc: TTabSheet
       Caption = 'Misc'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Label47: TLabel
         Left = 16
         Top = 88
