@@ -450,7 +450,6 @@ type
     Backup1: TMenuItem;
     CWKeyboard1: TMenuItem;
     ZServer1: TMenuItem;
-    SpeedButton7: TSpeedButton;
     Network1: TMenuItem;
     mnDownload: TMenuItem;
     mnMerge: TMenuItem;
@@ -749,7 +748,7 @@ var
 var
   MyContest : TContest = nil;
 
-var DisplayedQSOs : integer = 15;
+var DisplayedQSOs : integer = 200;
 
 
 procedure StartDebugTimer;

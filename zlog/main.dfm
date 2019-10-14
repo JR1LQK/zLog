@@ -51,7 +51,6 @@ object MainForm: TMainForm
     SizeGrip = False
     OnDrawPanel = StatusLineDrawPanel
     OnResize = StatusLineResize
-    ExplicitWidth = 507
   end
   object Grid: TStringGrid
     Left = 0
@@ -83,7 +82,6 @@ object MainForm: TMainForm
     OnSelectCell = GridSelectCell
     OnSetEditText = GridSetEditText
     OnTopLeftChanged = GridTopLeftChanged
-    ExplicitWidth = 507
     ColWidths = (
       38
       65
@@ -304,7 +302,6 @@ object MainForm: TMainForm
     Height = 33
     Align = alTop
     TabOrder = 2
-    ExplicitWidth = 507
     object SpeedButton4: TSpeedButton
       Left = 8
       Top = 4
@@ -749,13 +746,6 @@ object MainForm: TMainForm
       ShowHint = True
       OnClick = ClusterClick
     end
-    object SpeedButton7: TSpeedButton
-      Left = 240
-      Top = 4
-      Width = 25
-      Height = 25
-      Visible = False
-    end
     object ZServerIcon: TImage
       Left = 384
       Top = 4
@@ -827,7 +817,7 @@ object MainForm: TMainForm
       Visible = False
     end
     object Button1: TButton
-      Left = 256
+      Left = 262
       Top = 4
       Width = 25
       Height = 25
@@ -848,7 +838,6 @@ object MainForm: TMainForm
     ShowHint = True
     TabOrder = 3
     Visible = False
-    ExplicitWidth = 507
     object CWStopButton: TSpeedButton
       Left = 238
       Top = 4
@@ -2514,7 +2503,6 @@ object MainForm: TMainForm
     Font.Style = []
     ParentFont = False
     TabOrder = 4
-    ExplicitWidth = 507
     object RcvdRSTEdit: TEdit
       Left = 117
       Top = 4
@@ -2709,7 +2697,6 @@ object MainForm: TMainForm
     Height = 33
     Align = alTop
     TabOrder = 5
-    ExplicitWidth = 507
     object VoiceStopButton: TSpeedButton
       Left = 238
       Top = 4
