@@ -60,7 +60,6 @@ type
     ToneSpinEdit: TSpinEdit;
     Label15: TLabel;
     Label16: TLabel;
-    SideToneCheck: TCheckBox;
     PaddleCheck: TCheckBox;
     CQRepEdit: TEdit;
     Label17: TLabel;
@@ -160,13 +159,13 @@ type
     gbCWPort: TGroupBox;
     cbJMode: TCheckBox;
     Label33: TLabel;
-    Rig1PortCombo: TComboBox;
+    comboRig1Port: TComboBox;
     Label42: TLabel;
-    Rig1Combo: TComboBox;
+    comboRig1Name: TComboBox;
     Label43: TLabel;
     Label31: TLabel;
-    Rig2PortCombo: TComboBox;
-    Rig2Combo: TComboBox;
+    comboRig2Port: TComboBox;
+    comboRig2Name: TComboBox;
     Label44: TLabel;
     tbMisc: TTabSheet;
     cbRITClear: TCheckBox;
@@ -195,11 +194,8 @@ type
     Label51: TLabel;
     edLogsPath: TEdit;
     btnBrowseLogsPath: TButton;
-    radioCwCom1: TRadioButton;
-    radioCwCom2: TRadioButton;
     rbRTTY: TRadioButton;
     cbCQSP: TCheckBox;
-    radioCwUsb: TRadioButton;
     cbAFSK: TCheckBox;
     cbAutoEnterSuper: TCheckBox;
     Label52: TLabel;
@@ -207,13 +203,13 @@ type
     spSpotExpire: TSpinEdit;
     cbDisplayDatePartialCheck: TCheckBox;
     cbAutoBandMap: TCheckBox;
-    cbIcomBaudRate: TComboBox;
-    Label54: TLabel;
-    radioCwNone: TRadioButton;
     checkUseMultiStationWarning: TCheckBox;
     Label55: TLabel;
     editZLinkPcName: TEdit;
     checkZLinkSyncSerial: TCheckBox;
+    comboRig1Speed: TComboBox;
+    comboRig2Speed: TComboBox;
+    comboCwPttPort: TComboBox;
     procedure MultiOpRadioBtnClick(Sender: TObject);
     procedure SingleOpRadioBtnClick(Sender: TObject);
     procedure buttonOKClick(Sender: TObject);
@@ -241,8 +237,8 @@ type
     procedure cbCountDownClick(Sender: TObject);
     procedure cbQSYCountClick(Sender: TObject);
     procedure cbTransverter1Click(Sender: TObject);
-    procedure Rig1ComboChange(Sender: TObject);
-    procedure Rig2ComboChange(Sender: TObject);
+    procedure comboRig1NameChange(Sender: TObject);
+    procedure comboRig2NameChange(Sender: TObject);
   private
     TempVoiceFiles : array[1..10] of string;
     TempCurrentBank : integer;
@@ -254,7 +250,6 @@ type
 
     procedure RenewCWStrBankDisp();
   public
-    procedure ImplementSettings(_OnCreate : boolean); {Sets various parameters according to Settings}
     procedure RenewSettings; {Reads controls and updates Settings}
   end;
 
@@ -273,131 +268,6 @@ end;
 procedure TformOptions.SingleOpRadioBtnClick(Sender: TObject);
 begin
    OpListBox.Enabled := False;
-end;
-
-
-
-procedure TformOptions.ImplementSettings(_OnCreate: boolean);
-var
-   m: TMenuItem;
-   i, j: integer;
-   b: TBand;
-begin
-   with dmZlogGlobal do begin
-      if _OnCreate = False then begin
-         for b := b19 to HiBand do begin
-            MainForm.BandMenu.Items[ord(b)].Enabled := Settings._activebands[b];
-         end;
-
-         if Settings._band > 0 then begin // single band
-            Band := Settings._band; // resets the bandmenu.items.enabled for the single band entry
-         end;
-      end;
-
-      if MyContest <> nil then begin
-         Main.MyContest.SameExchange := Settings._sameexchange;
-      end;
-
-      RigControl.SetBandMask;
-      // BGK32LIB.UpdateDataPort;
-
-      if Settings._zlinkport in [1 .. 6] then begin // zlinkport rs232c
-         // ZLinkForm.Transparent := True;
-         // no rs232c anymore
-      end;
-
-      CommForm.EnableConnectButton(Settings._clusterport = 7);
-
-      CommForm.ImplementOptions;
-      ZLinkForm.ImplementOptions;
-
-      Case Settings._lptnr of
-         0: begin
-               BGK32Lib.KeyingPort := tkpNone;
-            end;
-         11: begin
-               RigControl.SetSerialCWKeying(1);
-               BGK32Lib.KeyingPort := tkpSerial1;
-            end;
-
-         12: begin
-               RigControl.SetSerialCWKeying(2);
-               BGK32Lib.KeyingPort := tkpSerial2;
-            end;
-
-         21: begin // usb
-               BGK32Lib.KeyingPort := tkpUSB;
-
-               if Settings.CW._paddle then begin
-                  BGK32Lib.SetPaddlePortDirect($99);
-                  if PaddleThread = nil then begin
-                     PaddleThread := TPaddleThread.Create(True);
-                  end;
-               end
-               else begin
-                  BGK32Lib.SetPaddlePortDirect($00);
-                  if PaddleThread = nil then begin
-                     PaddleThread := TPaddleThread.Create(True);
-                  end;
-               end;
-            end;
-      end;
-
-      BGK32Lib.SetPTTDelay(Settings._pttbefore, Settings._pttafter);
-      BGK32Lib.SetPTT(Settings._pttenabled);
-
-      // SetBand(Settings._band);
-      Mode := Settings._mode;
-      SetPaddleReverse(Settings.CW._paddlereverse);
-      Speed := Settings.CW._speed;
-      SideTone := Settings.CW._sidetone;
-      SetWeight(Settings.CW._weight);
-      CQMax := Settings.CW._cqmax;
-      CQRepeat := Settings.CW._cqrepeat;
-      SendFreq := Settings._sendfreq;
-      SetTonePitch(Settings.CW._tonepitch);
-      BGK32Lib.SetRandCQStr(SetStr(Settings.CW.CQStrBank[1], CurrentQSO), SetStr(Settings.CW.CQStrBank[2], CurrentQSO));
-
-      BGK32Lib.SetSpaceFactor(Settings.CW._spacefactor);
-      BGK32Lib.SetEISpaceFactor(Settings.CW._eispacefactor);
-
-      if Settings._backuppath = '' then begin
-         MainForm.BackUp1.Enabled := False;
-      end
-      else begin
-         MainForm.BackUp1.Enabled := True;
-      end;
-
-      if Settings._multistation = True then begin
-         Settings._txnr := 2;
-      end;
-
-      if not(_OnCreate) then begin
-         j := MainForm.OpMenu.Items.Count;
-         if j > 0 then begin
-            for i := 1 to j do begin
-               MainForm.OpMenu.Items.Delete(0);
-            end;
-         end;
-
-         if OpList.Count > 0 then begin
-            m := TMenuItem.Create(Self);
-            m.Caption := 'Clear';
-            m.OnClick := MainForm.OpMenuClick;
-            MainForm.OpMenu.Items.Add(m);
-            for i := 0 to OpList.Count - 1 do begin
-               m := TMenuItem.Create(Self);
-               m.Caption := TrimRight(Copy(OpList.Strings[i], 1, 20));
-               m.OnClick := MainForm.OpMenuClick;
-               MainForm.OpMenu.Items.Add(m);
-            end;
-         end;
-      end;
-
-      FTempClusterTelnet := Settings._cluster_telnet;
-      FTempClusterCom := Settings._cluster_com;
-      FTempZLinkTelnet := Settings._zlink_telnet;
-   end;
 end;
 
 procedure TformOptions.RenewSettings;
@@ -484,8 +354,6 @@ begin
       Settings._bsexpire := spBSExpire.Value;
       Settings._spotexpire := spSpotExpire.Value;
 
-      Settings._icombaudrate := cbIcomBaudRate.ItemIndex;
-
       r := Settings.CW._cqrepeat;
       Settings.CW._cqrepeat := StrToFloatDef(CQRepEdit.Text, r);
 
@@ -495,7 +363,6 @@ begin
       Settings.CW._speed := SpeedBar.Position;
       Settings.CW._weight := WeightBar.Position;
       Settings.CW._paddlereverse := PaddleCheck.Checked;
-      Settings.CW._sidetone := SideToneCheck.Checked;
       Settings.CW._FIFO := FIFOCheck.Checked;
       Settings.CW._tonepitch := ToneSpinEdit.Value;
       Settings.CW._cqmax := CQmaxSpinEdit.Value;
@@ -511,12 +378,18 @@ begin
 
       Settings._clusterport := ClusterCombo.ItemIndex;
    //   Settings._clusterbaud := ClusterCOMSet.BaudCombo.ItemIndex;
-      Settings._rig1port := Rig1PortCombo.ItemIndex;
-      Settings._ritclear := cbRITClear.Checked;
-      Settings._rig1name := Rig1Combo.ItemIndex;
 
-      Settings._rig2port := Rig2PortCombo.ItemIndex;
-      Settings._rig2name := Rig2Combo.ItemIndex;
+      // RIG1
+      Settings._rigport[1] := comboRig1Port.ItemIndex;
+      Settings._rigname[1] := comboRig1Name.ItemIndex;
+      Settings._rigspeed[1] := comboRig1Speed.ItemIndex;
+
+      // RIG2
+      Settings._rigport[2] := comboRig2Port.ItemIndex;
+      Settings._rigname[2] := comboRig2Name.ItemIndex;
+      Settings._rigspeed[2] := comboRig2Speed.ItemIndex;
+
+      Settings._ritclear := cbRITClear.Checked;
 
       Settings._zlinkport := ZLinkCombo.ItemIndex;
       Settings._pcname := editZLinkPcName.Text;
@@ -533,17 +406,15 @@ begin
       i := Settings._pttafter;
       Settings._pttafter := StrToIntDef(AfterEdit.Text, i);
 
-      if radioCwNone.Checked = True then begin
-         Settings._lptnr := 0;
-      end;
-      if radioCwCom1.Checked then begin
-         Settings._lptnr := 11;
-      end;
-      if radioCwCom2.Checked then begin
-         Settings._lptnr := 12;
-      end;
-      if radioCwUsb.Checked then begin
+      // CW/PTT port
+      if (comboCwPttPort.ItemIndex >= 1) and (comboCwPttPort.ItemIndex <= 6) then begin
+         Settings._lptnr := 10 + comboCwPttPort.ItemIndex;
+      end
+      else if comboCwPttPort.ItemIndex = 7 then begin    // USB
          Settings._lptnr := 21;
+      end
+      else begin
+         Settings._lptnr := 0;
       end;
 
       Settings._sentstr := SentEdit.Text;
@@ -569,7 +440,10 @@ end;
 procedure TformOptions.buttonOKClick(Sender: TObject);
 begin
    RenewSettings;
-   ImplementSettings(False);
+   FTempClusterTelnet := dmZlogGlobal.Settings._cluster_telnet;
+   FTempClusterCom := dmZlogGlobal.Settings._cluster_com;
+   FTempZLinkTelnet := dmZlogGlobal.Settings._zlink_telnet;
+   dmZlogGlobal.ImplementSettings(False);
 
    dmZlogGlobal.SaveCurrentSettings();
    Close;
@@ -674,7 +548,6 @@ begin
       WeightLabel.Caption := IntToStr(Settings.CW._weight) + ' %';
       PaddleCheck.Checked := Settings.CW._paddlereverse;
       PaddleEnabledCheck.Checked := Settings.CW._paddle;
-      SideToneCheck.Checked := Settings.CW._sidetone;
       FIFOCheck.Checked := Settings.CW._FIFO;
       ToneSpinEdit.Value := Settings.CW._tonepitch;
       CQmaxSpinEdit.Value := Settings.CW._cqmax;
@@ -692,15 +565,17 @@ begin
       editZLinkPcName.Text := Settings._pcname;
       checkZLinkSyncSerial.Checked := Settings._syncserial;
 
-      Rig1PortCombo.ItemIndex := Settings._rig1port;
-      cbRITClear.Checked := Settings._ritclear;
-      Rig1Combo.ItemIndex := Settings._rig1name;
+      // RIG1
+      comboRig1Port.ItemIndex := Settings._rigport[1];
+      comboRig1Name.ItemIndex := Settings._rigname[1];
+      comboRig1Speed.ItemIndex := Settings._rigspeed[1];
 
-      Rig2PortCombo.ItemIndex := Settings._rig2port;
-      cbRITClear.Checked := Settings._ritclear;
-      Rig2Combo.ItemIndex := Settings._rig2name;
+      // RIG2
+      comboRig2Port.ItemIndex := Settings._rigport[2];
+      comboRig2Name.ItemIndex := Settings._rigname[2];
+      comboRig2Speed.ItemIndex := Settings._rigspeed[2];
 
-      cbIcomBaudRate.ItemIndex := Settings._icombaudrate;
+      cbRITClear.Checked := Settings._ritclear;
 
       // Packet Cluster’ÊMÝ’èƒ{ƒ^ƒ“
       buttonClusterSettings.Enabled := True;
@@ -712,17 +587,15 @@ begin
 
       SaveEvery.Value := Settings._saveevery;
 
-      if Settings._lptnr = 0 then begin
-         radioCwNone.Checked := True;
-      end;
-      if Settings._lptnr = 11 then begin
-         radioCwCom1.Checked := True;
-      end;
-      if Settings._lptnr = 12 then begin
-         radioCwCom2.Checked := True;
-      end;
-      if Settings._lptnr = 21 then begin
-         radioCwUsb.Checked := True;
+      // CW/PTT port
+      if (Settings._lptnr >= 11) and (Settings._lptnr <= 16) then begin
+         comboCwPttPort.ItemIndex := Settings._lptnr - 10;
+      end
+      else if (Settings._lptnr >= 21) then begin
+         comboCwPttPort.ItemIndex := 7;
+      end
+      else begin
+         comboCwPttPort.ItemIndex := 0;
       end;
 
       SentEdit.Text := Settings._sentstr;
@@ -781,7 +654,7 @@ procedure TformOptions.FormCreate(Sender: TObject);
 var
    i: integer;
 begin
-   ImplementSettings(False);
+//   ImplementSettings(False);
 
    TempCurrentBank := 1;
 
@@ -789,12 +662,12 @@ begin
 
    PageControl.ActivePage := PrefTabSheet;
 
-   Rig1Combo.Items.Clear;
-   Rig2Combo.Items.Clear;
+   comboRig1Name.Items.Clear;
+   comboRig2Name.Items.Clear;
 
    for i := 0 to RIGNAMEMAX do begin
-      Rig1Combo.Items.Add(RIGNAMES[i]);
-      Rig2Combo.Items.Add(RIGNAMES[i]);
+      comboRig1Name.Items.Add(RIGNAMES[i]);
+      comboRig2Name.Items.Add(RIGNAMES[i]);
    end;
 end;
 
@@ -1035,38 +908,38 @@ begin
 
 end;
 
-procedure TformOptions.Rig1ComboChange(Sender: TObject);
+procedure TformOptions.comboRig1NameChange(Sender: TObject);
 begin
-   if Rig1Combo.ItemIndex = RIGNAMEMAX then begin
-      Rig2Combo.ItemIndex := RIGNAMEMAX;
-      Rig1PortCombo.ItemIndex := 0;
-      Rig1PortCombo.Enabled := False;
-      Rig2PortCombo.Enabled := False;
+   if comboRig1Name.ItemIndex = RIGNAMEMAX then begin
+      comboRig2Name.ItemIndex := RIGNAMEMAX;
+      comboRig1Port.ItemIndex := 0;
+      comboRig1Port.Enabled := False;
+      comboRig2Port.Enabled := False;
    end
    else begin
-      Rig1PortCombo.Enabled := True;
-      if Rig2Combo.ItemIndex = RIGNAMEMAX then begin
-         Rig2PortCombo.ItemIndex := 0;
-         Rig2Combo.ItemIndex := 0;
-         Rig2PortCombo.Enabled := True;
+      comboRig1Port.Enabled := True;
+      if comboRig2Name.ItemIndex = RIGNAMEMAX then begin
+         comboRig2Name.ItemIndex := 0;
+         comboRig2Port.ItemIndex := 0;
+         comboRig2Port.Enabled := True;
       end;
    end;
 end;
 
-procedure TformOptions.Rig2ComboChange(Sender: TObject);
+procedure TformOptions.comboRig2NameChange(Sender: TObject);
 begin
-   if Rig2Combo.ItemIndex = RIGNAMEMAX then begin
-      Rig1Combo.ItemIndex := RIGNAMEMAX;
-      Rig2PortCombo.ItemIndex := 0;
-      Rig2PortCombo.Enabled := False;
-      Rig1PortCombo.Enabled := False;
+   if comboRig2Name.ItemIndex = RIGNAMEMAX then begin
+      comboRig1Name.ItemIndex := RIGNAMEMAX;
+      comboRig2Port.ItemIndex := 0;
+      comboRig2Port.Enabled := False;
+      comboRig1Port.Enabled := False;
    end
    else begin
-      Rig2PortCombo.Enabled := True;
-      if Rig1Combo.ItemIndex = RIGNAMEMAX then begin
-         Rig1PortCombo.ItemIndex := 0;
-         Rig1Combo.ItemIndex := 0;
-         Rig1PortCombo.Enabled := True;
+      comboRig2Port.Enabled := True;
+      if comboRig1Name.ItemIndex = RIGNAMEMAX then begin
+         comboRig1Name.ItemIndex := 0;
+         comboRig1Port.ItemIndex := 0;
+         comboRig1Port.Enabled := True;
       end;
    end;
 end;

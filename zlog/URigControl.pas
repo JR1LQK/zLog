@@ -4,8 +4,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ExtCtrls, StrUtils,
-  UzLogGlobal, BGK32Lib, CPDrv, OmniRig_TLB;
+  StdCtrls, ExtCtrls, AnsiStrings,
+  UzLogGlobal, BGK32Lib, CPDrv, OmniRig_TLB, Vcl.Grids;
 
 type
   TIcomInfo = record
@@ -16,10 +16,10 @@ type
 
 const
   MAXVIRTUALRIG = 10;
-  _nil : char = Chr($00);
-  _nil2 : string = Chr($0) + Chr($0);
-  _nil3  = chr(0)+chr(0)+chr(0);
-  _nil4  = chr(0)+chr(0)+chr(0)+chr(0);
+  _nil : AnsiChar = AnsiChar($00);
+  _nil2 : AnsiString = AnsiChar($0) + AnsiChar($0);
+  _nil3  = AnsiChar(0)+AnsiChar(0)+AnsiChar(0);
+  _nil4  = AnsiChar(0)+AnsiChar(0)+AnsiChar(0)+AnsiChar(0);
 
   MAXICOM = 36;
 
@@ -84,6 +84,10 @@ const
   VFOString : array[0..1] of string =
     ('VFO A', 'VFO B');
 
+  BaudRateToSpeed: array[0..6] of TBaudRate =
+    //  0       1       2       3       4       5        6
+    ( br300, br1200, br2400, br4800, br9600, br19200, br38400 );
+
 type
   TVirtualRig = record
     Callsign : string;
@@ -98,7 +102,9 @@ type
     _freqoffset : LongInt; // freq offset for transverters in Hz
     _minband, _maxband : TBand;
     _rignumber : Integer;
+
     FreqMem : array[b19..b10g, mCW..mOther] of LongInt;
+
     TerminatorCode : AnsiChar;
     BufferString : AnsiString;
     _currentfreq : array[0..1] of LongInt; // in Hz
@@ -175,7 +181,7 @@ type
     procedure Reset; override;
     procedure SetVFO(i : integer); override;
     procedure InquireStatus; override;
-    procedure ICOMWriteData(S : string);
+    procedure ICOMWriteData(S : AnsiString);
   end;
 
   TIC756 = class(TICOM)
@@ -259,7 +265,7 @@ type
   end;
 
   TJST145 = class(TRig) //  or JST245
-    CommOn, CommOff : string;
+    CommOn, CommOff : AnsiString;
     constructor Create(RigNum : integer); override;
     destructor Destroy; override;
     procedure SetMode(Q : TQSO); override;
@@ -321,7 +327,7 @@ type
     procedure StatusChangeEvent(Sender: TObject; RigNumber: Integer);
     procedure ParamsChangeEvent(Sender: TObject; RigNumber: Integer; Params: Integer);
     procedure CustomReplyEvent(Sender: TObject; RigNumber: Integer; Command, Reply: OleVariant);
-    procedure BuildRigObject(var rig: TRig);
+    function BuildRigObject(rignum: Integer): TRig;
   public
     { Public declarations }
 
@@ -715,9 +721,9 @@ begin
 
    _currentvfo := i;
    if i = 0 then
-      ICOMWriteData(Chr($07) + Chr($00))
+      ICOMWriteData(AnsiChar($07) + AnsiChar($00))
    else
-      ICOMWriteData(Chr($07) + Chr($01));
+      ICOMWriteData(AnsiChar($07) + AnsiChar($01));
 
    if Selected then begin
       UpdateStatus;
@@ -761,9 +767,8 @@ constructor TFT2000.Create(RigNum : integer);
 begin
    TerminatorCode := ';';
 
-   inherited;
+   Inherited;
 
-   Comm.BaudRate := br9600;
    Comm.StopBits := sb2BITS;
    Comm.DataBits := db8BITS;
 
@@ -813,7 +818,7 @@ begin
       end;
    end;
 
-   WriteData('MD' + Chr(Ord('0') + _currentvfo) + Chr(Ord('0') + m) + ';');
+   WriteData(AnsiString('MD') + AnsiChar(Ord('0') + _currentvfo) + AnsiChar(Ord('0') + m) + AnsiString(';'));
 end;
 
 // Ç±ÇøÇÁÇ≈RIGèÓïÒÇèàóùÇ∑ÇÈ
@@ -866,9 +871,6 @@ end;
 // TerminatorCodeÇéÛêMÇ∑ÇÈÇ‹Ç≈ë“Ç¡ÇƒÅA
 // ìûíÖÇ∑ÇÈÇ∆ExecuteCommandé¿çs
 procedure TFT2000.ParseBufferString;
-var
-   i: Integer;
-   temp: string;
 begin
    {$IFDEF DEBUG}
    OutputDebugString(PChar('***[' + string(BufferString) + ']'));
@@ -901,9 +903,9 @@ end;
 //
 procedure TFT2000.SetFreq(Hz : LongInt);
 const
-   cmd: array[0..1] of string = ( 'FA', 'FB' );
+   cmd: array[0..1] of AnsiString = ( 'FA', 'FB' );
 var
-   freq: string;
+   freq: AnsiString;
 begin
    freq := RightStr(DupeString('0', 8) + IntToStr(Hz), 8);
    WriteData(cmd[_currentvfo] + freq + ';');
@@ -927,7 +929,7 @@ begin
       Exit;
    end;
 
-   WriteData('VS' + Chr(Ord('0') + i) + ';');
+   WriteData(AnsiString('VS') + AnsiChar(Ord('0') + i) + AnsiString(';'));
 end;
 
 procedure TFT2000.InquireStatus;
@@ -1023,7 +1025,7 @@ end;
 
 procedure TFT1000.RitClear;
 begin
-   WriteData(_nil3 + Chr($FF) + Chr($09));
+   WriteData(_nil3 + AnsiChar($FF) + AnsiChar($09));
 end;
 
 procedure TFT1000.SetVFO(i: Integer); // A:0, B:1
@@ -1103,7 +1105,7 @@ end;
 
 procedure TMARKV.RitClear;
 begin
-   WriteData(_nil3 + Chr($FF) + Chr($09));
+   WriteData(_nil3 + AnsiChar($FF) + AnsiChar($09));
 end;
 
 procedure TMARKV.SetVFO(i: Integer); // A:0, B:1
@@ -1183,7 +1185,7 @@ end;
 
 procedure TMARKVF.RitClear;
 begin
-   WriteData(_nil3 + Chr($FF) + Chr($09));
+   WriteData(_nil3 + AnsiChar($FF) + AnsiChar($09));
 end;
 
 procedure TRig.ToggleVFO;
@@ -1206,150 +1208,157 @@ begin
    end;
 end;
 
-procedure TRigControl.BuildRigObject(var rig: TRig);
+function TRigControl.BuildRigObject(rignum: Integer): TRig;
 var
    rname: string;
    i: Integer;
+   rig: TRig;
 begin
-   FreeAndNil(rig);
-
-   if dmZlogGlobal.Rig1NameStr = 'Omni-Rig' then begin
-      rig := TOmni.Create(1);
-      rig._minband := b19;
-      rig._maxband := b1200;
-      btnOmniRig.Enabled := True;
-   end
-   else begin
-      btnOmniRig.Enabled := False;
-   end;
-
-   if dmZlogGlobal.Settings._rig1port in [1 .. 6] then begin
-      rname := dmZlogGlobal.Rig1NameStr;
-      if rname = 'None' then begin
-         Exit;
-      end;
-
-      if rname = 'TS-690/450' then begin
-         rig := TTS690.Create(1);
+   rig := nil;
+   try
+      if dmZlogGlobal.RigNameStr[rignum] = 'Omni-Rig' then begin
+         rig := TOmni.Create(1);
          rig._minband := b19;
-         rig._maxband := b50;
-      end;
-      if rname = 'TS-850' then begin
-         rig := TTS690.Create(1);
-         rig._minband := b19;
-         rig._maxband := b28;
-      end;
-      if rname = 'TS-790' then begin
-         rig := TTS690.Create(1);
-         rig._minband := b144;
          rig._maxband := b1200;
+         btnOmniRig.Enabled := True;
+      end
+      else begin
+         btnOmniRig.Enabled := False;
       end;
 
-      if rname = 'TS-2000' then begin
-         rig := TTS2000.Create(1);
-         rig._minband := b19;
-         rig._maxband := b2400;
-      end;
-
-      if rname = 'TS-2000/P' then begin
-         rig := TTS2000P.Create(1);
-         rig._minband := b19;
-         rig._maxband := b2400;
-      end;
-
-      if rname = 'FT-2000' then begin
-         rig:= TFT2000.Create(1);
-         rig._minband := b19;
-         rig._maxband := b50;
-      end;
-
-      if rname = 'FT-1000MP' then begin
-         rig:= TFT1000MP.Create(1);
-         rig._minband := b19;
-         rig._maxband := b28;
-      end;
-
-      if rname = 'MarkV/FT-1000MP' then begin
-         rig:= TMARKV.Create(1);
-         rig._minband := b19;
-         rig._maxband := b28;
-      end;
-
-      if rname = 'FT-1000MP Mark-V Field' then begin
-         rig := TMARKVF.Create(1);
-         rig._minband := b19;
-         rig._maxband := b28;
-      end;
-
-      if rname = 'FT-1000' then begin
-         rig := TFT1000.Create(1);
-         rig._minband := b19;
-         rig._maxband := b28;
-      end;
-
-      if rname = 'FT-920' then begin
-         rig := TFT920.Create(1);
-         rig._minband := b19;
-         rig._maxband := b50;
-      end;
-
-      if rname = 'FT-100' then begin
-         rig := TFT100.Create(1);
-         rig._minband := b19;
-         rig._maxband := b430;
-      end;
-
-      if rname = 'FT-847' then begin
-         rig := TFT847.Create(1);
-         rig._minband := b19;
-         rig._maxband := b430;
-      end;
-
-      if rname = 'FT-817' then begin
-         rig := TFT817.Create(1);
-         rig._minband := b19;
-         rig._maxband := b430;
-      end;
-
-      if rname = 'JST-145' then begin
-         rig := TJST145.Create(1);
-         rig._minband := b19;
-         rig._maxband := b28;
-      end;
-
-      if rname = 'JST-245' then begin
-         rig := TJST145.Create(1);
-         rig._minband := b19;
-         rig._maxband := b50;
-      end;
-
-      if pos('IC-', rname) = 1 then begin
-         if (pos('IC-775', rname) = 1) or (pos('IC-756', rname) = 1) then begin
-            rig := TIC756.Create(1);
-         end
-         else begin
-            rig := TICOM.Create(1);
+      if dmZlogGlobal.Settings._rigport[rignum] in [1 .. 6] then begin
+         rname := dmZlogGlobal.RigNameStr[rignum];
+         if rname = 'None' then begin
+            Exit;
          end;
 
-         for i := 1 to MAXICOM do begin
-            if rname = ICOMLIST[i].name then begin
-               break;
+         if rname = 'TS-690/450' then begin
+            rig := TTS690.Create(1);
+            rig._minband := b19;
+            rig._maxband := b50;
+         end;
+         if rname = 'TS-850' then begin
+            rig := TTS690.Create(1);
+            rig._minband := b19;
+            rig._maxband := b28;
+         end;
+         if rname = 'TS-790' then begin
+            rig := TTS690.Create(1);
+            rig._minband := b144;
+            rig._maxband := b1200;
+         end;
+
+         if rname = 'TS-2000' then begin
+            rig := TTS2000.Create(1);
+            rig._minband := b19;
+            rig._maxband := b2400;
+         end;
+
+         if rname = 'TS-2000/P' then begin
+            rig := TTS2000P.Create(1);
+            rig._minband := b19;
+            rig._maxband := b2400;
+         end;
+
+         if rname = 'FT-2000' then begin
+            rig:= TFT2000.Create(1);
+            rig._minband := b19;
+            rig._maxband := b50;
+         end;
+
+         if rname = 'FT-1000MP' then begin
+            rig:= TFT1000MP.Create(1);
+            rig._minband := b19;
+            rig._maxband := b28;
+         end;
+
+         if rname = 'MarkV/FT-1000MP' then begin
+            rig:= TMARKV.Create(1);
+            rig._minband := b19;
+            rig._maxband := b28;
+         end;
+
+         if rname = 'FT-1000MP Mark-V Field' then begin
+            rig := TMARKVF.Create(1);
+            rig._minband := b19;
+            rig._maxband := b28;
+         end;
+
+         if rname = 'FT-1000' then begin
+            rig := TFT1000.Create(1);
+            rig._minband := b19;
+            rig._maxband := b28;
+         end;
+
+         if rname = 'FT-920' then begin
+            rig := TFT920.Create(1);
+            rig._minband := b19;
+            rig._maxband := b50;
+         end;
+
+         if rname = 'FT-100' then begin
+            rig := TFT100.Create(1);
+            rig._minband := b19;
+            rig._maxband := b430;
+         end;
+
+         if rname = 'FT-847' then begin
+            rig := TFT847.Create(1);
+            rig._minband := b19;
+            rig._maxband := b430;
+         end;
+
+         if rname = 'FT-817' then begin
+            rig := TFT817.Create(1);
+            rig._minband := b19;
+            rig._maxband := b430;
+         end;
+
+         if rname = 'JST-145' then begin
+            rig := TJST145.Create(1);
+            rig._minband := b19;
+            rig._maxband := b28;
+         end;
+
+         if rname = 'JST-245' then begin
+            rig := TJST145.Create(1);
+            rig._minband := b19;
+            rig._maxband := b50;
+         end;
+
+         if pos('IC-', rname) = 1 then begin
+            if (pos('IC-775', rname) = 1) or (pos('IC-756', rname) = 1) then begin
+               rig := TIC756.Create(1);
+            end
+            else begin
+               rig := TICOM.Create(1);
             end;
+
+            for i := 1 to MAXICOM do begin
+               if rname = ICOMLIST[i].name then begin
+                  break;
+               end;
+            end;
+
+            rig._minband := ICOMLIST[i].minband;
+            rig._maxband := ICOMLIST[i].maxband;
+            rig.RigAddr := ICOMLIST[i].addr;
          end;
 
-         rig._minband := ICOMLIST[i].minband;
-         rig._maxband := ICOMLIST[i].maxband;
-         rig.RigAddr := ICOMLIST[i].addr;
+         rig.name := rname;
       end;
-
-      rig.name := rname;
+   finally
+      Result := rig;
    end;
 end;
 
 procedure TRigControl.ImplementOptions;
 begin
-   BuildRigObject(FRigs[1]);
-   BuildRigObject(FRigs[2]);
+   FreeAndNil(FRigs[1]);
+   FreeAndNil(FRigs[2]);
+
+   FRigs[1] := BuildRigObject(1);
+   FRigs[2] := BuildRigObject(2);
    FCurrentRig := FRigs[_currentrig];
 
    if FRigs[1] <> nil then begin
@@ -1387,17 +1396,20 @@ begin
    _minband := b19;
    _maxband := b10g;
    Name := '';
+
    _rignumber := RigNum;
    if _rignumber = 1 then begin
-      prtnr := dmZlogGlobal.Settings._rig1port;
+      prtnr := dmZlogGlobal.Settings._rigport[1];
       Comm := RigControl.ZCom1;
    end
    else begin
-      prtnr := dmZlogGlobal.Settings._rig2port;
+      prtnr := dmZlogGlobal.Settings._rigport[2];
       Comm := RigControl.ZCom2;
    end;
+
    Comm.Disconnect;
    Comm.Port := TPortNumber(prtnr);
+   Comm.BaudRate := BaudRateToSpeed[ dmZlogGlobal.Settings._rigspeed[RigNum] ];
    Comm.Connect;
 
    TerminatorCode := ';';
@@ -1479,7 +1491,7 @@ end;
 constructor TTS690.Create(RigNum: Integer);
 begin
    inherited;
-   Comm.BaudRate := br4800;
+
    Comm.StopBits := sb2BITS;
    TerminatorCode := ';';
    _CWR := False;
@@ -1489,7 +1501,7 @@ end;
 constructor TTS2000.Create(RigNum: Integer);
 begin
    inherited;
-   Comm.BaudRate := br9600;
+
    Comm.StopBits := sb1BITS;
    TerminatorCode := ';';
    WriteData('TC 1;');
@@ -1509,7 +1521,7 @@ begin
    inherited;
    CommOn := 'H1' + _CR;
    CommOff := 'H0' + _CR;
-   Comm.BaudRate := br4800;
+
    Comm.StopBits := sb1BITS;
    TerminatorCode := _CR;
    WriteData('I1' + _CR + 'L' + _CR);
@@ -1519,35 +1531,28 @@ constructor TICOM.Create(RigNum: Integer);
 begin
    inherited;
 
-   case dmZlogGlobal.Settings._icombaudrate of
-      0: Comm.BaudRate := br300;
-      1: Comm.BaudRate := br1200;
-      2: Comm.BaudRate := br2400;
-      3: Comm.BaudRate := br4800;
-      4: Comm.BaudRate := br9600;
-      5: Comm.BaudRate := br19200;
-      6: Comm.BaudRate := br38400;
-      else Comm.BaudRate := br9600;
-   end;
+   Comm.BaudRate := BaudRateToSpeed[ dmZlogGlobal.Settings._rigspeed[RigNum] ];
 
    Comm.StopBits := sb1BITS;
-   TerminatorCode := Chr($FD);
+   TerminatorCode := AnsiChar($FD);
+
+   Comm.ToggleDTR(True);
+   Comm.ToggleRTS(True);
 
    MyAddr := $E0;
    RigAddr := $01;
    SetVFO(0);
 end;
 
-procedure TICOM.ICOMWriteData(S: string);
+procedure TICOM.ICOMWriteData(S: AnsiString);
 begin
-   WriteData(Chr($FE) + Chr($FE) + Chr(RigAddr) + Chr(MyAddr) + S + Chr($FD));
+   WriteData(AnsiChar($FE) + AnsiChar($FE) + AnsiChar(RigAddr) + AnsiChar(MyAddr) + S + AnsiChar($FD));
 end;
 
 constructor TFT1000MP.Create(RigNum: Integer);
 begin
    inherited;
    WaitSize := 32;
-   Comm.BaudRate := br4800;
    Comm.StopBits := sb2BITS;
    RigControl.PollingTimer.Interval := 250;
    RigControl.PollingTimer.Enabled := True;
@@ -1557,7 +1562,6 @@ constructor TFT847.Create(RigNum: Integer);
 begin
    inherited;
    WaitSize := 5;
-   Comm.BaudRate := br4800;
    Comm.StopBits := sb2BITS;
    RigControl.PollingTimer.Interval := 250;
    RigControl.PollingTimer.Enabled := True;
@@ -1617,7 +1621,7 @@ end;
 procedure TTS690.ParseBufferString;
 var
    i: Integer;
-   temp: string;
+   temp: AnsiString;
 begin
    i := pos(TerminatorCode, BufferString);
    while i > 0 do begin
@@ -1631,7 +1635,7 @@ end;
 procedure TJST145.ParseBufferString; // cloned from TS690
 var
    i: Integer;
-   temp: string;
+   temp: AnsiString;
 begin
    i := pos(TerminatorCode, BufferString);
    while i > 0 do begin
@@ -1670,7 +1674,7 @@ end;
 procedure TICOM.ParseBufferString; // same as ts690
 var
    i: Integer;
-   temp: string;
+   temp: AnsiString;
 begin
    i := pos(TerminatorCode, BufferString);
 
@@ -1720,7 +1724,7 @@ end;
 
 procedure TFT1000MP.ParseBufferString;
 var
-   temp: string;
+   temp: AnsiString;
 begin
    if length(BufferString) > 2048 then begin
       BufferString := '';
@@ -1739,8 +1743,8 @@ end;
 
 procedure TTS690.SetMode(Q: TQSO);
 var
-   Command: string;
-   para: char;
+   Command: AnsiString;
+   para: AnsiChar;
 begin
    { 1=LSB, 2=USB, 3=CW, 4=FM, 5=AM, 6=FSK, 7=CW-R, 8=FSK=R }
    para := '3';
@@ -1763,13 +1767,13 @@ begin
          para := '6';
    end;
 
-   Command := 'MD' + para + TerminatorCode;
+   Command := AnsiString('MD') + para + TerminatorCode;
    WriteData(Command);
 end;
 
 procedure TJST145.SetMode(Q: TQSO);
 var
-   para: string;
+   para: AnsiString;
 begin
    para := '';
    case Q.QSO.Mode of
@@ -1791,13 +1795,13 @@ begin
          end;
    end;
 
-   WriteData(CommOn + para + _CR + CommOff);
-   WriteData('I1' + _CR);
+   WriteData(CommOn + para + AnsiChar(_CR) + CommOff);
+   WriteData('I1' + AnsiChar(_CR));
 end;
 
 procedure TICOM.SetMode(Q: TQSO);
 var
-   Command: string;
+   Command: AnsiString;
    para: byte;
 begin
    para := 3;
@@ -1816,20 +1820,21 @@ begin
       mRTTY:
          para := 4;
    end;
-   Command := Chr($06) + Chr(para);
+
+   Command := AnsiChar($06) + AnsiChar(para);
 
    if ModeWidth[Q.QSO.Mode] in [1 .. 3] then begin
-      Command := Command + Chr(ModeWidth[Q.QSO.Mode]);
+      Command := Command + AnsiChar(ModeWidth[Q.QSO.Mode]);
    end;
 
    ICOMWriteData(Command);
 
-   ICOMWriteData(Chr($04)); // request mode data
+   ICOMWriteData(AnsiChar($04)); // request mode data
 end;
 
 procedure TFT1000MP.SetMode(Q: TQSO);
 var
-   Command: string;
+   Command: AnsiString;
    para: byte;
 begin
    para := 0;
@@ -1852,7 +1857,7 @@ begin
          para := $0A;
    end;
 
-   Command := _nil3 + Chr(para) + Chr($0C);
+   Command := _nil3 + AnsiChar(para) + AnsiChar($0C);
    WriteData(Command);
 end;
 
@@ -1860,8 +1865,9 @@ procedure TRig.SetBand(Q: TQSO);
 var
    f, ff: LongInt;
 begin
-   if (Q.QSO.Band < _minband) or (Q.QSO.Band > _maxband) then
+   if (Q.QSO.Band < _minband) or (Q.QSO.Band > _maxband) then begin
       Exit;
+   end;
 
    _currentband := Q.QSO.Band; // ver 2.0e
 
@@ -1876,9 +1882,10 @@ begin
    end;
 
    SetFreq(f);
-   if Q.QSO.Mode = mSSB then begin
-      Self.SetMode(Q);
-   end;
+
+//   if Q.QSO.Mode = mSSB then begin
+//      Self.SetMode(Q);
+//   end;
 end;
 
 procedure TTS690.RitClear;
@@ -1933,7 +1940,7 @@ end;
 
 procedure TTS690.SetFreq(Hz: LongInt);
 var
-   fstr: string;
+   fstr: AnsiString;
 begin
    LastFreq := _currentfreq[_currentvfo];
    fstr := IntToStr(Hz);
@@ -1949,7 +1956,7 @@ end;
 
 procedure TJST145.SetFreq(Hz: LongInt);
 var
-   fstr: string;
+   fstr: AnsiString;
 begin
    LastFreq := _currentfreq[_currentvfo];
    fstr := IntToStr(Hz);
@@ -1958,15 +1965,15 @@ begin
    end;
 
    if _currentvfo = 0 then
-      WriteData(CommOn + 'F' + fstr + 'A' + _CR + CommOff)
+      WriteData(CommOn + 'F' + fstr + 'A' + AnsiChar(_CR) + CommOff)
    else
-      WriteData(CommOn + 'F' + fstr + 'B' + _CR + CommOff);
+      WriteData(CommOn + 'F' + fstr + 'B' + AnsiChar(_CR) + CommOff);
    WriteData('I1' + _CR);
 end;
 
 procedure TICOM.SetFreq(Hz: LongInt);
 var
-   fstr: string;
+   fstr: AnsiString;
    freq, i: LongInt;
 begin
    LastFreq := _currentfreq[_currentvfo];
@@ -1974,38 +1981,37 @@ begin
 
    if freq < 0 then // > 2.1GHz is divided by 100 and given a negative value. Not implemented yet
    begin
-      fstr := Chr(0);
+      fstr := AnsiChar(0);
       freq := -1 * freq;
    end
    else begin
       i := freq mod 100;
-      fstr := Chr((i div 10) * 16 + (i mod 10));
+      fstr := AnsiChar((i div 10) * 16 + (i mod 10));
       freq := freq div 100;
    end;
 
    i := freq mod 100;
-   fstr := fstr + Chr((i div 10) * 16 + (i mod 10));
+   fstr := fstr + AnsiChar((i div 10) * 16 + (i mod 10));
    freq := freq div 100;
 
    i := freq mod 100;
-   fstr := fstr + Chr((i div 10) * 16 + (i mod 10));
+   fstr := fstr + AnsiChar((i div 10) * 16 + (i mod 10));
    freq := freq div 100;
 
    i := freq mod 100;
-   fstr := fstr + Chr((i div 10) * 16 + (i mod 10));
+   fstr := fstr + AnsiChar((i div 10) * 16 + (i mod 10));
    freq := freq div 100;
 
    if freq > 0 then begin
       i := freq mod 100;
-      fstr := fstr + Chr((i div 10) * 16 + (i mod 10));
+      fstr := fstr + AnsiChar((i div 10) * 16 + (i mod 10));
       // freq := freq div 100;
    end;
 
-   fstr := Chr($05) + fstr;
-
+   fstr := AnsiChar($05) + fstr;
    ICOMWriteData(fstr);
 
-   fstr := Chr($03);
+   fstr := AnsiChar($03);
    ICOMWriteData(fstr); // request freq data
 end;
 
@@ -2268,7 +2274,7 @@ end;
 
 procedure TFT1000MP.SetFreq(Hz: LongInt);
 var
-   fstr: string;
+   fstr: AnsiString;
    i, j: LongInt;
 begin
    LastFreq := _currentfreq[_currentvfo];
@@ -2277,30 +2283,30 @@ begin
    i := i div 10;
 
    j := i mod 100;
-   fstr := Chr(dec2hex(j));
+   fstr := AnsiChar(dec2hex(j));
    i := i div 100;
 
    j := i mod 100;
-   fstr := fstr + Chr(dec2hex(j));
+   fstr := fstr + AnsiChar(dec2hex(j));
    i := i div 100;
 
    j := i mod 100;
-   fstr := fstr + Chr(dec2hex(j));
+   fstr := fstr + AnsiChar(dec2hex(j));
    i := i div 100;
 
    j := i mod 100;
-   fstr := fstr + Chr(dec2hex(j));
+   fstr := fstr + AnsiChar(dec2hex(j));
    // i := i div 100;
 
-   fstr := fstr + Chr($0A);
+   fstr := fstr + AnsiChar($0A);
 
    WriteData(fstr);
 end;
 
 procedure TTS690.ExecuteCommand(S: AnsiString);
 var
-   Command: string;
-   temp: string;
+   Command: AnsiString;
+   temp: AnsiString;
    i, j: LongInt;
    aa: Integer;
    M: TMode;
@@ -2433,13 +2439,13 @@ end;
 
 procedure TJST145.ExecuteCommand(S: AnsiString);
 var
-   Command: string;
-   temp: string;
+   Command: AnsiString;
+   temp: AnsiString;
    i, j: LongInt;
    aa: Integer;
    // B : TBand;
    M: TMode;
-   ss: string;
+   ss: AnsiString;
 begin
    // RigControl.label1.caption := S;
    if length(S) < 10 then
@@ -2494,14 +2500,12 @@ var
    Command: byte;
    temp: byte;
    i, j, i1, i2, i3, i4, i5: LongInt;
-   // aa : integer;
-   // B : TBand;
    M: TMode;
-   ss: string;
+   ss: AnsiString;
 begin
    // RigControl.label1.caption := S;
    ss := S;
-   i := pos(Chr($FE) + Chr($FE), ss);
+   i := pos(AnsiChar($FE) + AnsiChar($FE), ss);
 
    if i = 0 then begin
       Exit;
@@ -2519,7 +2523,7 @@ begin
       Exit;
    end;
 
-   if ss[4] <> Chr(RigAddr) then begin
+   if ss[4] <> AnsiChar(RigAddr) then begin
       Exit;
    end;
 
@@ -2834,7 +2838,7 @@ end;
 
 procedure TFT847.SetFreq(Hz: LongInt);
 var
-   fstr: string;
+   fstr: AnsiString;
    i, j: LongInt;
 begin
    LastFreq := _currentfreq[_currentvfo];
@@ -2843,29 +2847,29 @@ begin
    i := i div 10;
 
    j := i mod 100;
-   fstr := Chr(dec2hex(j));
+   fstr := AnsiChar(dec2hex(j));
    i := i div 100;
 
    j := i mod 100;
-   fstr := Chr(dec2hex(j)) + fstr;
+   fstr := AnsiChar(dec2hex(j)) + fstr;
    i := i div 100;
 
    j := i mod 100;
-   fstr := Chr(dec2hex(j)) + fstr;
+   fstr := AnsiChar(dec2hex(j)) + fstr;
    i := i div 100;
 
    j := i mod 100;
-   fstr := Chr(dec2hex(j)) + fstr;
+   fstr := AnsiChar(dec2hex(j)) + fstr;
    // i := i div 100;
 
-   fstr := fstr + Chr($01);
+   fstr := fstr + AnsiChar($01);
 
    WriteData(fstr);
 end;
 
 procedure TFT847.SetMode(Q: TQSO);
 var
-   Command: string;
+   Command: AnsiString;
    para: byte;
 begin
    case Q.QSO.Mode of
@@ -2884,7 +2888,7 @@ begin
          para := 0;
    end;
 
-   Command := Chr(para) + _nil3 + Chr($07);
+   Command := AnsiChar(para) + _nil3 + AnsiChar($07);
    WriteData(Command);
 end;
 
@@ -3035,7 +3039,7 @@ begin
    ptr := PAnsiChar(DataPtr);
 
    for i := 0 to DataSize - 1 do begin
-      str := str + ptr[i];
+      str := str + AnsiChar(ptr[i]);
    end;
 
    FRigs[TCommPortDriver(Sender).Tag].PassOnRxData(str)

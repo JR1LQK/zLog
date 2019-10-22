@@ -3,7 +3,7 @@ unit UzLogGlobal;
 interface
 
 uses
-  System.SysUtils, System.Classes, StrUtils, IniFiles, Forms, Windows,
+  System.SysUtils, System.Classes, StrUtils, IniFiles, Forms, Windows, Menus,
   BGK32Lib;
 
 type
@@ -231,7 +231,6 @@ type
     _weight : integer;
     _fixwpm : integer;
     _paddlereverse : boolean;
-    _sidetone : boolean;
     _tonepitch : integer;
     _cqmax : integer;
     _cqrepeat : double;
@@ -276,13 +275,13 @@ type
     _activebands : array[b19..HiBand] of boolean;
     CW : TCWSettingsParam;
     _clusterport : integer; {0 : none 1-4 : com# 5 : telnet}
-    _rig1port : integer; {0 : none 1-4 : com#}
-    _rig1name : integer;
-    _rig2port : integer; {0 : none 1-4 : com#}
-    _rig2name : integer;
+
+    _rigport:  array[1..2] of Integer; {0 : none 1-4 : com#}
+    _rigspeed: array[1..2] of Integer;
+    _rigname:  array[1..2] of Integer;
+
     _zlinkport : integer; {0 : none 1-4 : com# 5: telnet}
     _clusterbaud : integer; {}
-    _icombaudrate : integer;
 
     _cluster_telnet: TCommParam;
     _cluster_com: TCommParam;
@@ -382,13 +381,10 @@ type
     procedure SetSpeed(i: Integer);
     function GetFIFO(): Boolean;
     procedure SetFIFO(b: Boolean);
-    function GetSideTone(): Boolean;
-    procedure SetSideTone(b: Boolean);
     function GetTXNr(): Byte;
     procedure SetTXNr(i: Byte);
     function GetPTTEnabled(): Boolean;
-    function GetRig1NameStr() : string; // returns the selected rig name
-    function GetRig2NameStr() : string; // returns the selected rig name
+    function GetRigNameStr(Index: Integer) : string; // returns the selected rig name
     function GetSuperCheckColumns(): Integer;
     procedure SetSuperCheckColumns(v: Integer);
     function GetCQMax(): Integer;
@@ -409,6 +405,7 @@ public
     Settings : TSettingsParam;
 
     procedure SaveCurrentSettings; {saves Settings to zlog.ini}
+    procedure ImplementSettings(_OnCreate: boolean);
 
     property MyCall: string read GetMyCall write SetMyCall;
     property Band: Integer read GetBand write SetBand;
@@ -417,14 +414,12 @@ public
     property ContestMenuNo: Integer read GetContestMenuNo write SetContestMenuNo;
     property Speed: Integer read GetSpeed write SetSpeed;
     property FIFO: Boolean read GetFIFO write SetFIFO;
-    property SideTone: Boolean read GetSideTone write SetSideTone;
     property TXNr: Byte read GetTXNr write SetTXNr;
     property PTTEnabled: Boolean read GetPTTEnabled;
     property CQMax: Integer read GetCQMax write SetCQMax;
     property CQRepeat: Double read GetCQRepeat write SetCQRepeat;
     property SendFreq: Double read GetSendFreq write SetSendFreq;
-    property Rig1NameStr: string read GetRig1NameStr;
-    property Rig2NameStr: string read GetRig2NameStr;
+    property RigNameStr[Index: Integer]: string read GetRigNameStr;
     property SuperCheckColumns: Integer read GetSuperCheckColumns write SetSuperCheckColumns;
 
     function GetAge(aQSO : TQSO) : string;
@@ -495,7 +490,8 @@ var
 implementation
 
 uses
-  Main, URigControl;
+  Main, URigControl, UZLinkForm, UComm, UzLogCW, UClusterTelnetSet, UClusterCOMSet,
+  UZlinkTelnetSet, UPaddleThread;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -754,9 +750,6 @@ begin
       // Paddle reverse
       Settings.CW._paddlereverse := ini.ReadBool('CW', 'PaddleReverse', False);
 
-      // Side tone
-      Settings.CW._sidetone := ini.ReadBool('CW', 'SideTone', True);
-
       // Que messages
       Settings.CW._FIFO := ini.ReadBool('CW', 'FIFO', True);
 
@@ -818,22 +811,21 @@ begin
       Settings._zlink_telnet.FLocalEcho := ini.ReadBool('Z-Link', 'TELNETlocalecho', False);
 
       // RIG1
-      Settings._rig1port := ini.ReadInteger('Hardware', 'Rig', 0);
-      Settings._rig1name := ini.ReadInteger('Hardware', 'RigName', 0);
+      Settings._rigport[1] := ini.ReadInteger('Hardware', 'Rig', 0);
+      Settings._rigname[1] := ini.ReadInteger('Hardware', 'RigName', 0);
+      Settings._rigspeed[1] := ini.ReadInteger('Hardware', 'RigSpeed', 0);
       Settings._transverter1 := ini.ReadBool('Hardware', 'Transverter1', False);
       Settings._transverteroffset1 := ini.ReadInteger('Hardware', 'Transverter1Offset', 0);
 
       // RIG2
-      Settings._rig2port := ini.ReadInteger('Hardware', 'Rig2', 0);
-      Settings._rig2name := ini.ReadInteger('Hardware', 'RigName2', 0);
+      Settings._rigport[2] := ini.ReadInteger('Hardware', 'Rig2', 0);
+      Settings._rigname[2] := ini.ReadInteger('Hardware', 'RigName2', 0);
+      Settings._rigspeed[2] := ini.ReadInteger('Hardware', 'RigSpeed2', 0);
       Settings._transverter2 := ini.ReadBool('Hardware', 'Transverter2', False);
       Settings._transverteroffset2 := ini.ReadInteger('Hardware', 'Transverter2Offset', 0);
 
       // CW/PTT port
       Settings._lptnr := ini.ReadInteger('Hardware', 'CWLPTPort', 0);
-
-      // ICOM baud rate
-      Settings._icombaudrate := ini.ReadInteger('Hardware', 'IcomBaudRate', 1);
 
       // CW PTT control
 
@@ -1094,9 +1086,6 @@ begin
       // Paddle reverse
       ini.WriteBool('CW', 'PaddleReverse', Settings.CW._paddlereverse);
 
-      // Side tone
-      ini.WriteBool('CW', 'SideTone', Settings.CW._sidetone);
-
       // Que messages
       ini.WriteBool('CW', 'FIFO', Settings.CW._FIFO);
 
@@ -1153,22 +1142,21 @@ begin
       ini.WriteBool('Z-Link', 'TELNETlocalecho', Settings._zlink_telnet.FLocalEcho);
 
       // RIG1
-      ini.WriteInteger('Hardware', 'Rig', Settings._rig1port);
-      ini.WriteInteger('Hardware', 'RigName', Settings._rig1name);
+      ini.WriteInteger('Hardware', 'Rig', Settings._rigport[1]);
+      ini.WriteInteger('Hardware', 'RigName', Settings._rigname[1]);
+      ini.WriteInteger('Hardware', 'RigSpeed', Settings._rigspeed[1]);
       ini.WriteBool('Hardware', 'Transverter1', Settings._transverter1);
       ini.WriteInteger('Hardware', 'Transverter1Offset', Settings._transverteroffset1);
 
       // RIG2
-      ini.WriteInteger('Hardware', 'Rig2', Settings._rig2port);
-      ini.WriteInteger('Hardware', 'RigName2', Settings._rig2name);
+      ini.WriteInteger('Hardware', 'Rig2', Settings._rigport[2]);
+      ini.WriteInteger('Hardware', 'RigName2', Settings._rigname[2]);
+      ini.WriteInteger('Hardware', 'RigSpeed2', Settings._rigspeed[2]);
       ini.WriteBool('Hardware', 'Transverter2', Settings._transverter2);
       ini.WriteInteger('Hardware', 'Transverter2Offset', Settings._transverteroffset2);
 
       // CW/PTT port
       ini.WriteInteger('Hardware', 'CWLPTPort', Settings._lptnr);
-
-      // ICOM baud rate
-      ini.WriteInteger('Hardware', 'IcomBaudRate', Settings._icombaudrate);
 
       // CW PTT control
 
@@ -1260,6 +1248,147 @@ begin
 
    // オペレーターリスト保存
    SaveOpList();
+end;
+
+// 設定反映
+procedure TdmZLogGlobal.ImplementSettings(_OnCreate: boolean);
+var
+   m: TMenuItem;
+   i, j: integer;
+   b: TBand;
+begin
+   with dmZlogGlobal do begin
+      if _OnCreate = False then begin
+         for b := b19 to HiBand do begin
+            MainForm.BandMenu.Items[ord(b)].Enabled := Settings._activebands[b];
+         end;
+
+         if Settings._band > 0 then begin // single band
+            Band := Settings._band; // resets the bandmenu.items.enabled for the single band entry
+         end;
+      end;
+
+      if MyContest <> nil then begin
+         Main.MyContest.SameExchange := Settings._sameexchange;
+      end;
+
+      RigControl.SetBandMask;
+      // BGK32LIB.UpdateDataPort;
+
+      if Settings._zlinkport in [1 .. 6] then begin // zlinkport rs232c
+         // ZLinkForm.Transparent := True;
+         // no rs232c anymore
+      end;
+
+      CommForm.EnableConnectButton(Settings._clusterport = 7);
+
+      CommForm.ImplementOptions;
+      ZLinkForm.ImplementOptions;
+      BGK32Lib.SetSideTone(False);
+
+      Case Settings._lptnr of
+         0: begin
+            BGK32Lib.KeyingPort := tkpNone;
+         end;
+
+         11: begin
+            RigControl.SetSerialCWKeying(1);
+            BGK32Lib.KeyingPort := tkpSerial1;
+         end;
+
+         12: begin
+            RigControl.SetSerialCWKeying(2);
+            BGK32Lib.KeyingPort := tkpSerial2;
+         end;
+
+         13: begin
+            RigControl.SetSerialCWKeying(3);
+            BGK32Lib.KeyingPort := tkpSerial3;
+         end;
+
+         14: begin
+            RigControl.SetSerialCWKeying(4);
+            BGK32Lib.KeyingPort := tkpSerial4;
+         end;
+
+         15: begin
+            RigControl.SetSerialCWKeying(5);
+            BGK32Lib.KeyingPort := tkpSerial5;
+         end;
+
+         16: begin
+            RigControl.SetSerialCWKeying(6);
+            BGK32Lib.KeyingPort := tkpSerial6;
+         end;
+
+         21: begin // usb
+            BGK32Lib.KeyingPort := tkpUSB;
+
+            if Settings.CW._paddle then begin
+               BGK32Lib.SetPaddlePortDirect($99);
+               if PaddleThread = nil then begin
+                  PaddleThread := TPaddleThread.Create(True);
+               end;
+            end
+            else begin
+               BGK32Lib.SetPaddlePortDirect($00);
+               if PaddleThread = nil then begin
+                  PaddleThread := TPaddleThread.Create(True);
+               end;
+            end;
+         end;
+      end;
+
+      BGK32Lib.SetPTTDelay(Settings._pttbefore, Settings._pttafter);
+      BGK32Lib.SetPTT(Settings._pttenabled);
+
+      // SetBand(Settings._band);
+      Mode := Settings._mode;
+      SetPaddleReverse(Settings.CW._paddlereverse);
+      Speed := Settings.CW._speed;
+      SetWeight(Settings.CW._weight);
+      CQMax := Settings.CW._cqmax;
+      CQRepeat := Settings.CW._cqrepeat;
+      SendFreq := Settings._sendfreq;
+      SetTonePitch(Settings.CW._tonepitch);
+      BGK32Lib.SetRandCQStr(SetStr(Settings.CW.CQStrBank[1], CurrentQSO), SetStr(Settings.CW.CQStrBank[2], CurrentQSO));
+
+      BGK32Lib.SetSpaceFactor(Settings.CW._spacefactor);
+      BGK32Lib.SetEISpaceFactor(Settings.CW._eispacefactor);
+
+      if Settings._backuppath = '' then begin
+         MainForm.BackUp1.Enabled := False;
+      end
+      else begin
+         MainForm.BackUp1.Enabled := True;
+      end;
+
+      if Settings._multistation = True then begin
+         Settings._txnr := 2;
+      end;
+
+      if not(_OnCreate) then begin
+         j := MainForm.OpMenu.Items.Count;
+         if j > 0 then begin
+            for i := 1 to j do begin
+               MainForm.OpMenu.Items.Delete(0);
+            end;
+         end;
+
+         if OpList.Count > 0 then begin
+            m := TMenuItem.Create(Self);
+            m.Caption := 'Clear';
+            m.OnClick := MainForm.OpMenuClick;
+            MainForm.OpMenu.Items.Add(m);
+            for i := 0 to OpList.Count - 1 do begin
+               m := TMenuItem.Create(Self);
+               m.Caption := TrimRight(Copy(OpList.Strings[i], 1, 20));
+               m.OnClick := MainForm.OpMenuClick;
+               MainForm.OpMenu.Items.Add(m);
+            end;
+         end;
+      end;
+   end;
 end;
 
 function TdmZLogGlobal.GetAge(aQSO: TQSO): string;
@@ -1410,17 +1539,6 @@ begin
    Settings.CW._FIFO := b;
 end;
 
-function TdmZLogGlobal.GetSideTone: boolean;
-begin
-   Result := Settings.CW._sidetone;
-end;
-
-procedure TdmZLogGlobal.SetSideTone(b: boolean);
-begin
-   BGK32Lib.SetSideTone(b);
-   Settings.CW._sidetone := b;
-end;
-
 function TdmZLogGlobal.GetTXNr(): Byte;
 begin
    Result := Settings._txnr;
@@ -1456,16 +1574,9 @@ begin
    BGK32Lib.SetPitch(i);
 end;
 
-function TdmZLogGlobal.GetRig1NameStr: string; // returns the selected rig name
+function TdmZLogGlobal.GetRigNameStr(Index: Integer): string; // returns the selected rig name
 begin
-//   Result := Rig1Combo.Items[Settings._rig1name];
-   Result := RIGNAMES[Settings._rig1name];
-end;
-
-function TdmZLogGlobal.GetRig2NameStr: string; // returns the selected rig name
-begin
-//   Result := Rig2Combo.Items[Settings._rig2name];
-   Result := RIGNAMES[Settings._rig2name];
+   Result := RIGNAMES[Settings._rigname[Index]];
 end;
 
 function TdmZLogGlobal.GetSuperCheckColumns(): Integer;
@@ -1508,14 +1619,21 @@ end;
 procedure TdmZLogGlobal.SetSendFreq(r: double);
 begin
    Settings._sendfreq := r;
+
    RigControl.Timer1.Interval := Trunc(r * 60000);
    RigControl.Timer1.Enabled := False;
-   if r = 0 then
+
+   if r = 0 then begin
       exit;
-   if Settings._rig1port <> 0 then
-      if Settings._zlinkport <> 0 then
-         if Settings._rig1name <> 0 then
+   end;
+
+   if Settings._rigport[1] <> 0 then begin
+      if Settings._zlinkport <> 0 then begin
+         if Settings._rigname[1] <> 0 then begin
             RigControl.Timer1.Enabled := True;
+         end;
+      end;
+   end;
 end;
 
 procedure TdmZLogGlobal.SetPaddle(boo: boolean);

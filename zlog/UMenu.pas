@@ -482,6 +482,10 @@ begin
       SummaryInfo.DecEnglish;
    end;
 
+   // 設定反映
+   dmZlogGlobal.ImplementSettings(False);
+
+   // メインウインドウ表示
    MainForm.Show;
 
    Hide;

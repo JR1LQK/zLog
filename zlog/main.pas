@@ -386,7 +386,6 @@ type
     SuperCheckButtpn: TSpeedButton;
     CWStopButton: TSpeedButton;
     CWPauseButton: TSpeedButton;
-    SideToneButton: TSpeedButton;
     SpeedButton12: TSpeedButton;
     SpeedBar: TTrackBar;
     SpeedLabel: TLabel;
@@ -583,7 +582,6 @@ type
     procedure CWFButtonClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure SpeedBarChange(Sender: TObject);
-    procedure SideToneButtonClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure CWStopButtonClick(Sender: TObject);
     procedure VoiceStopButtonClick(Sender: TObject);
@@ -1064,10 +1062,6 @@ procedure TMainForm.RenewCWToolBar;
 var
    i: integer;
 begin
-   if dmZlogGlobal.SideTone then
-      SideToneButton.Down := True
-   else
-      SideToneButton.Down := false;
    SpeedBar.Position := dmZlogGlobal.Speed;
    SpeedLabel.Caption := IntToStr(dmZlogGlobal.Speed) + ' wpm';
    i := dmZlogGlobal.Settings.CW.CurrentBank;
@@ -1733,8 +1727,8 @@ begin
 
    if RigControl.Rig <> nil then begin
       RigControl.Rig.SetBand(CurrentQSO);
-      if CurrentQSO.QSO.mode = mSSB then
-         RigControl.Rig.SetMode(CurrentQSO);
+//      if CurrentQSO.QSO.mode = mSSB then
+//         RigControl.Rig.SetMode(CurrentQSO);
    end;
 
    LastFocus.SetFocus;
@@ -6229,11 +6223,6 @@ begin
    if LastFocus <> nil then begin
       LastFocus.SetFocus;
    end;
-end;
-
-procedure TMainForm.SideToneButtonClick(Sender: TObject);
-begin
-   dmZlogGlobal.SideTone := SideToneButton.Down;
 end;
 
 procedure TMainForm.Button1Click(Sender: TObject);

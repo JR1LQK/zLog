@@ -3,7 +3,7 @@ object formOptions: TformOptions
   Top = 236
   BorderStyle = bsDialog
   Caption = 'formOptions'
-  ClientHeight = 381
+  ClientHeight = 362
   ClientWidth = 358
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -37,8 +37,8 @@ object formOptions: TformOptions
     Left = 0
     Top = 0
     Width = 358
-    Height = 344
-    ActivePage = PrefTabSheet
+    Height = 325
+    ActivePage = CWTabSheet
     Align = alClient
     TabOrder = 0
     object PrefTabSheet: TTabSheet
@@ -251,7 +251,6 @@ object formOptions: TformOptions
           Font.Height = -12
           Font.Name = #65325#65331' '#65328#12468#12471#12483#12463
           Font.Style = []
-          ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
           ParentFont = False
           TabOrder = 1
           Text = 'BackUpPathEdit'
@@ -426,7 +425,6 @@ object formOptions: TformOptions
           Font.Height = -12
           Font.Name = #65325#65331' '#12468#12471#12483#12463
           Font.Style = []
-          ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
           ParentFont = False
           TabOrder = 2
           OnEnter = OpEditEnter
@@ -462,7 +460,6 @@ object formOptions: TformOptions
           Font.Height = -12
           Font.Name = #65325#65331' '#12468#12471#12483#12463
           Font.Style = []
-          ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
           ParentFont = False
           TabOrder = 3
           OnEnter = OpEditEnter
@@ -506,7 +503,6 @@ object formOptions: TformOptions
         Font.Height = -12
         Font.Name = #65325#65331' '#12468#12471#12483#12463
         Font.Style = []
-        ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
         ItemHeight = 12
         ParentFont = False
         TabOrder = 1
@@ -534,7 +530,6 @@ object formOptions: TformOptions
         Height = 20
         AutoSize = False
         CharCase = ecUpperCase
-        ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
         TabOrder = 4
       end
       object CItyEdit: TEdit
@@ -544,7 +539,6 @@ object formOptions: TformOptions
         Height = 20
         AutoSize = False
         CharCase = ecUpperCase
-        ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
         TabOrder = 5
       end
       object SentEdit: TEdit
@@ -554,7 +548,6 @@ object formOptions: TformOptions
         Height = 20
         AutoSize = False
         CharCase = ecUpperCase
-        ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
         TabOrder = 8
       end
       object CQZoneEdit: TEdit
@@ -564,7 +557,6 @@ object formOptions: TformOptions
         Height = 20
         AutoSize = False
         CharCase = ecUpperCase
-        ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
         MaxLength = 3
         TabOrder = 6
         Text = '25'
@@ -576,7 +568,6 @@ object formOptions: TformOptions
         Height = 20
         AutoSize = False
         CharCase = ecUpperCase
-        ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
         MaxLength = 3
         TabOrder = 7
         Text = '45'
@@ -738,7 +729,6 @@ object formOptions: TformOptions
           Font.Height = -11
           Font.Name = 'MS Sans Serif'
           Font.Style = []
-          ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
           ParentFont = False
           TabOrder = 1
           OnChange = Edit1Change
@@ -755,7 +745,6 @@ object formOptions: TformOptions
           Font.Height = -11
           Font.Name = 'MS Sans Serif'
           Font.Style = []
-          ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
           ParentFont = False
           TabOrder = 2
           OnChange = Edit1Change
@@ -772,7 +761,6 @@ object formOptions: TformOptions
           Font.Height = -11
           Font.Name = 'MS Sans Serif'
           Font.Style = []
-          ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
           ParentFont = False
           TabOrder = 3
           OnChange = Edit1Change
@@ -789,7 +777,6 @@ object formOptions: TformOptions
           Font.Height = -11
           Font.Name = 'MS Sans Serif'
           Font.Style = []
-          ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
           ParentFont = False
           TabOrder = 4
           OnChange = Edit1Change
@@ -806,7 +793,6 @@ object formOptions: TformOptions
           Font.Height = -11
           Font.Name = 'MS Sans Serif'
           Font.Style = []
-          ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
           ParentFont = False
           TabOrder = 5
           OnChange = Edit1Change
@@ -823,7 +809,6 @@ object formOptions: TformOptions
           Font.Height = -11
           Font.Name = 'MS Sans Serif'
           Font.Style = []
-          ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
           ParentFont = False
           TabOrder = 6
           OnChange = Edit1Change
@@ -839,7 +824,6 @@ object formOptions: TformOptions
           Font.Height = -11
           Font.Name = 'MS Sans Serif'
           Font.Style = []
-          ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
           ParentFont = False
           TabOrder = 8
         end
@@ -855,7 +839,6 @@ object formOptions: TformOptions
           Font.Height = -11
           Font.Name = 'MS Sans Serif'
           Font.Style = []
-          ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
           ParentFont = False
           TabOrder = 7
           OnChange = Edit1Change
@@ -871,7 +854,6 @@ object formOptions: TformOptions
           Font.Height = -11
           Font.Name = 'MS Sans Serif'
           Font.Style = []
-          ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
           ParentFont = False
           TabOrder = 9
         end
@@ -887,7 +869,6 @@ object formOptions: TformOptions
           Font.Height = -11
           Font.Name = 'MS Sans Serif'
           Font.Style = []
-          ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
           MaxLength = 255
           ParentFont = False
           TabOrder = 0
@@ -921,7 +902,7 @@ object formOptions: TformOptions
         Height = 22
         MaxValue = 999
         MinValue = 0
-        TabOrder = 10
+        TabOrder = 9
         Value = 15
       end
       object ToneSpinEdit: TSpinEdit
@@ -932,18 +913,8 @@ object formOptions: TformOptions
         Increment = 10
         MaxValue = 2500
         MinValue = 100
-        TabOrder = 9
+        TabOrder = 8
         Value = 100
-      end
-      object SideToneCheck: TCheckBox
-        Left = 208
-        Top = 117
-        Width = 97
-        Height = 17
-        Caption = 'Side tone'
-        Checked = True
-        State = cbChecked
-        TabOrder = 7
       end
       object PaddleCheck: TCheckBox
         Left = 208
@@ -958,8 +929,7 @@ object formOptions: TformOptions
         Top = 230
         Width = 41
         Height = 21
-        ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
-        TabOrder = 12
+        TabOrder = 11
         Text = '2.0'
         OnKeyPress = CQRepEditKeyPress
       end
@@ -971,7 +941,7 @@ object formOptions: TformOptions
         Caption = 'Que messages'
         Checked = True
         State = cbChecked
-        TabOrder = 8
+        TabOrder = 7
       end
       object PaddleEnabledCheck: TCheckBox
         Left = 208
@@ -989,9 +959,8 @@ object formOptions: TformOptions
         Width = 41
         Height = 21
         CharCase = ecUpperCase
-        ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
         MaxLength = 3
-        TabOrder = 11
+        TabOrder = 10
         Text = 'OAN'
       end
       object rbBankA: TRadioButton
@@ -1024,7 +993,7 @@ object formOptions: TformOptions
         Width = 49
         Height = 17
         Caption = 'RTTY'
-        TabOrder = 13
+        TabOrder = 12
         TabStop = True
         OnClick = CWBankClick
       end
@@ -1037,7 +1006,7 @@ object formOptions: TformOptions
           'This option will switch the CW message sent when TAB or ; key is' +
           ' pressed to that in the current message bank. '
         Caption = 'Switch TAB/; with CW bank'
-        TabOrder = 14
+        TabOrder = 13
       end
     end
     object VoiceTabSheet: TTabSheet
@@ -1134,7 +1103,6 @@ object formOptions: TformOptions
           Width = 70
           Height = 17
           AutoSize = False
-          ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
           TabOrder = 2
           Text = 'vEdit2'
         end
@@ -1145,7 +1113,6 @@ object formOptions: TformOptions
           Width = 70
           Height = 17
           AutoSize = False
-          ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
           TabOrder = 4
           Text = 'vEdit3'
         end
@@ -1156,7 +1123,6 @@ object formOptions: TformOptions
           Width = 70
           Height = 17
           AutoSize = False
-          ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
           TabOrder = 6
           Text = 'vEdit4'
         end
@@ -1167,7 +1133,6 @@ object formOptions: TformOptions
           Width = 70
           Height = 17
           AutoSize = False
-          ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
           TabOrder = 8
           Text = 'vEdit5'
         end
@@ -1178,7 +1143,6 @@ object formOptions: TformOptions
           Width = 70
           Height = 17
           AutoSize = False
-          ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
           TabOrder = 10
           Text = 'vEdit6'
         end
@@ -1189,7 +1153,6 @@ object formOptions: TformOptions
           Width = 70
           Height = 17
           AutoSize = False
-          ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
           TabOrder = 12
           Text = 'vEdit7'
         end
@@ -1200,7 +1163,6 @@ object formOptions: TformOptions
           Width = 70
           Height = 17
           AutoSize = False
-          ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
           TabOrder = 16
           Text = 'vEdit9'
         end
@@ -1211,7 +1173,6 @@ object formOptions: TformOptions
           Width = 70
           Height = 17
           AutoSize = False
-          ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
           TabOrder = 14
           Text = 'vEdit8'
         end
@@ -1222,7 +1183,6 @@ object formOptions: TformOptions
           Width = 70
           Height = 17
           AutoSize = False
-          ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
           TabOrder = 18
           Text = 'vEdit10'
         end
@@ -1233,7 +1193,6 @@ object formOptions: TformOptions
           Width = 70
           Height = 17
           AutoSize = False
-          ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
           MaxLength = 255
           TabOrder = 0
           Text = 'vEdit1'
@@ -1343,10 +1302,10 @@ object formOptions: TformOptions
     object TabSheet5: TTabSheet
       Caption = 'Hardware'
       object GroupBox6: TGroupBox
-        Left = 3
+        Left = 5
         Top = 0
         Width = 342
-        Height = 241
+        Height = 221
         Caption = 'Ports'
         TabOrder = 0
         object Label30: TLabel
@@ -1378,7 +1337,7 @@ object formOptions: TformOptions
           Caption = 'Rig 1'
         end
         object Label43: TLabel
-          Left = 156
+          Left = 164
           Top = 112
           Width = 16
           Height = 13
@@ -1392,18 +1351,11 @@ object formOptions: TformOptions
           Caption = 'Rig 2'
         end
         object Label44: TLabel
-          Left = 156
+          Left = 164
           Top = 136
           Width = 16
           Height = 13
           Caption = 'Rig'
-        end
-        object Label54: TLabel
-          Left = 174
-          Top = 212
-          Width = 75
-          Height = 13
-          Caption = 'ICOM baud rate'
         end
         object Label55: TLabel
           Left = 8
@@ -1418,7 +1370,6 @@ object formOptions: TformOptions
           Width = 73
           Height = 21
           Style = csDropDownList
-          ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
           TabOrder = 0
           OnChange = ClusterComboChange
           Items.Strings = (
@@ -1465,51 +1416,35 @@ object formOptions: TformOptions
         end
         object gbCWPort: TGroupBox
           Left = 8
-          Top = 161
-          Width = 129
-          Height = 72
+          Top = 159
+          Width = 117
+          Height = 51
           Caption = 'CW/PTT port'
-          TabOrder = 12
-          object radioCwCom1: TRadioButton
-            Left = 72
-            Top = 13
-            Width = 50
-            Height = 17
-            Caption = 'COM1'
-            TabOrder = 1
-          end
-          object radioCwCom2: TRadioButton
-            Left = 72
-            Top = 28
-            Width = 50
-            Height = 17
-            Caption = 'COM2'
-            TabOrder = 2
-          end
-          object radioCwUsb: TRadioButton
-            Left = 72
-            Top = 43
-            Width = 50
-            Height = 17
-            Caption = 'USB'
-            TabOrder = 3
-          end
-          object radioCwNone: TRadioButton
-            Left = 3
-            Top = 13
-            Width = 50
-            Height = 17
-            Caption = 'None'
+          TabOrder = 14
+          object comboCwPttPort: TComboBox
+            Left = 31
+            Top = 18
+            Width = 58
+            Height = 21
+            Style = csDropDownList
             TabOrder = 0
+            Items.Strings = (
+              'None'
+              'COM1'
+              'COM2'
+              'COM3'
+              'COM4'
+              'COM5'
+              'COM6'
+              'USB')
           end
         end
-        object Rig1PortCombo: TComboBox
-          Left = 80
-          Top = 108
-          Width = 73
+        object comboRig1Port: TComboBox
+          Left = 39
+          Top = 109
+          Width = 58
           Height = 21
           Style = csDropDownList
-          ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
           TabOrder = 6
           Items.Strings = (
             'None'
@@ -1520,25 +1455,23 @@ object formOptions: TformOptions
             'COM5'
             'COM6')
         end
-        object Rig1Combo: TComboBox
-          Left = 176
+        object comboRig1Name: TComboBox
+          Left = 184
           Top = 108
           Width = 105
           Height = 21
           Style = csDropDownList
           DropDownCount = 20
-          ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
-          TabOrder = 7
-          OnChange = Rig1ComboChange
+          TabOrder = 8
+          OnChange = comboRig1NameChange
         end
-        object Rig2PortCombo: TComboBox
-          Left = 80
-          Top = 132
-          Width = 73
+        object comboRig2Port: TComboBox
+          Left = 39
+          Top = 133
+          Width = 58
           Height = 21
           Style = csDropDownList
-          ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
-          TabOrder = 9
+          TabOrder = 10
           Items.Strings = (
             'None'
             'COM1'
@@ -1548,54 +1481,37 @@ object formOptions: TformOptions
             'COM5'
             'COM6')
         end
-        object Rig2Combo: TComboBox
-          Left = 176
+        object comboRig2Name: TComboBox
+          Left = 184
           Top = 132
           Width = 105
           Height = 21
           Style = csDropDownList
           DropDownCount = 20
-          ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
-          TabOrder = 10
-          OnChange = Rig2ComboChange
+          TabOrder = 12
+          OnChange = comboRig2NameChange
         end
         object cbTransverter1: TCheckBox
           Tag = 101
-          Left = 288
+          Left = 296
           Top = 110
           Width = 41
           Height = 17
           Hint = 'Check here if you are using a transverter'
           Caption = 'XVT'
-          TabOrder = 8
+          TabOrder = 9
           OnClick = cbTransverter1Click
         end
         object cbTransverter2: TCheckBox
           Tag = 102
-          Left = 288
+          Left = 296
           Top = 132
           Width = 41
           Height = 17
           Hint = 'Check here if you are using a transverter'
           Caption = 'XVT'
-          TabOrder = 11
-          OnClick = cbTransverter1Click
-        end
-        object cbIcomBaudRate: TComboBox
-          Left = 256
-          Top = 208
-          Width = 73
-          Height = 21
-          Style = csDropDownList
           TabOrder = 13
-          Items.Strings = (
-            '300'
-            '1200'
-            '2400'
-            '4800'
-            '9600'
-            '19200'
-            '38400')
+          OnClick = cbTransverter1Click
         end
         object editZLinkPcName: TEdit
           Left = 96
@@ -1613,10 +1529,42 @@ object formOptions: TformOptions
           TabOrder = 4
           OnClick = PTTEnabledCheckBoxClick
         end
+        object comboRig1Speed: TComboBox
+          Left = 104
+          Top = 109
+          Width = 54
+          Height = 21
+          Style = csDropDownList
+          TabOrder = 7
+          Items.Strings = (
+            '300'
+            '1200'
+            '2400'
+            '4800'
+            '9600'
+            '19200'
+            '38400')
+        end
+        object comboRig2Speed: TComboBox
+          Left = 104
+          Top = 133
+          Width = 54
+          Height = 21
+          Style = csDropDownList
+          TabOrder = 11
+          Items.Strings = (
+            '300'
+            '1200'
+            '2400'
+            '4800'
+            '9600'
+            '19200'
+            '38400')
+        end
       end
       object GroupBox7: TGroupBox
-        Left = 3
-        Top = 247
+        Left = 5
+        Top = 227
         Width = 342
         Height = 62
         Caption = 'CW PTT control'
@@ -1649,7 +1597,6 @@ object formOptions: TformOptions
           Top = 35
           Width = 40
           Height = 21
-          ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
           TabOrder = 1
           Text = 'CWPortEdit'
         end
@@ -1658,7 +1605,6 @@ object formOptions: TformOptions
           Top = 35
           Width = 40
           Height = 21
-          ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
           TabOrder = 2
           Text = 'CWPortEdit'
         end
@@ -1717,7 +1663,6 @@ object formOptions: TformOptions
         Width = 41
         Height = 21
         Hint = 'Only when using Z-Server network'
-        ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
         TabOrder = 4
         Text = '1.0'
         OnKeyPress = CQRepEditKeyPress
@@ -1774,7 +1719,6 @@ object formOptions: TformOptions
         Font.Height = -12
         Font.Name = #65325#65331' '#65328#12468#12471#12483#12463
         Font.Style = []
-        ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
         ParentFont = False
         TabOrder = 0
         Text = 'BackUpPathEdit'
@@ -1800,7 +1744,6 @@ object formOptions: TformOptions
         Font.Height = -12
         Font.Name = #65325#65331' '#65328#12468#12471#12483#12463
         Font.Style = []
-        ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
         ParentFont = False
         TabOrder = 2
         Text = 'BackUpPathEdit'
@@ -1919,7 +1862,7 @@ object formOptions: TformOptions
   end
   object Panel1: TPanel
     Left = 0
-    Top = 344
+    Top = 325
     Width = 358
     Height = 37
     Align = alBottom

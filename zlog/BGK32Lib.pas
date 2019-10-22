@@ -53,9 +53,9 @@ var
       UserFlag : Boolean = False; // can be set to true by user. set to false only when ClrBuffer is called or "  is reached in the sending buffer. // 1.9z2 used in QTCForm
       VoiceFlag : integer = 0;  //temporary
 
-type TKeyingPort = (tkpNone, tkpSerial1, tkpSerial2, tkpUSB);
+type TKeyingPort = (tkpNone, tkpSerial1, tkpSerial2, tkpSerial3, tkpSerial4, tkpSerial5, tkpSerial6, tkpUSB);
 var
-  KeyingPort : TKeyingPort = tkpNone;  {tkpParallel;}
+  KeyingPort: TKeyingPort = tkpNone;  {tkpParallel;}
 
 //function GetPRTPort : string;
 procedure UpdateDataPort; // sets data port acc to mask data
@@ -419,7 +419,7 @@ begin
       exit;
    end;
 
-   if KeyingPort in [tkpSerial1, tkpSerial2] then begin
+   if KeyingPort in [tkpSerial1, tkpSerial2, tkpSerial3, tkpSerial4, tkpSerial5, tkpSerial6] then begin
       if RigControl.ZCom3 = nil then begin
          exit;
       end;
@@ -673,7 +673,7 @@ procedure CW_ON;
 begin
    Case KeyingPort of
       // tkpParallel : SetPort(PRTport, _cwon);
-      tkpSerial1, tkpSerial2:
+      tkpSerial1, tkpSerial2, tkpSerial3, tkpSerial4, tkpSerial5, tkpSerial6:
          RigControl.ZCom3.ToggleDTR(True);
       tkpUSB:
          SetUSBPort(_usbportstatus and $FE);
@@ -684,7 +684,7 @@ procedure CW_OFF;
 begin
    Case KeyingPort of
       // tkpParallel : SetPort(PRTport, _cwoff);
-      tkpSerial1, tkpSerial2:
+      tkpSerial1, tkpSerial2, tkpSerial3, tkpSerial4, tkpSerial5, tkpSerial6:
          RigControl.ZCom3.ToggleDTR(false);
       tkpUSB:
          SetUSBPort(_usbportstatus or $01);
@@ -1690,7 +1690,7 @@ procedure CloseBGK();
 var
    R: UINT;
 begin
-   if not(KeyingPort in [tkpSerial1, tkpSerial2]) then begin
+   if not(KeyingPort in [tkpSerial1, tkpSerial2, tkpSerial3, tkpSerial4, tkpSerial5, tkpSerial6]) then begin
       ControlPTT(false);
    end;
 
@@ -1707,7 +1707,7 @@ begin
    { R:=timeKillEvent(PaddleTimerID); }
    R := 0;
    NoSound;
-   if not(KeyingPort in [tkpSerial1, tkpSerial2]) then begin
+   if not(KeyingPort in [tkpSerial1, tkpSerial2, tkpSerial3, tkpSerial4, tkpSerial5, tkpSerial6]) then begin
       CW_OFF;
    end;
 
