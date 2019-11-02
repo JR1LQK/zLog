@@ -19,9 +19,6 @@ type
     procedure Update; override;
   end;
 
-var
-  WAEMulti: TWAEMulti;
-
 implementation
 
 {$R *.DFM}

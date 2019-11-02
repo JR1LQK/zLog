@@ -31,9 +31,6 @@ type
 
 function GetWPXPrefix(aQSO : TQSO) : string;
 
-var
-  WPXMulti: TWPXMulti;
-
 implementation
 
 uses UOptions, {UComm,} Main;

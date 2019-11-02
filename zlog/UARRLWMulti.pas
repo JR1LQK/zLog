@@ -22,9 +22,6 @@ type
     function GetInfoAA(aQSO : TQSO) : string; // called from spacebarproc in TAllAsianContest
   end;
 
-var
-  ARRLWMulti: TARRLWMulti;
-
 implementation
 
 uses UOptions, Main;

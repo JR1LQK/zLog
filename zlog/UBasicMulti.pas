@@ -41,9 +41,6 @@ type
     // returns nothing when the multi is worked in that band.
   end;
 
-var
-  BasicMulti: TBasicMulti;
-
 implementation
 
 uses Main, uBandScope2;

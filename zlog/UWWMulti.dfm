@@ -193,5 +193,13 @@ inherited WWMulti: TWWMulti
     OddRowColor = clWindow
     EvenRowColor = clWindow
     OnSetting = GridSetting
+    ColWidths = (
+      500)
+    RowHeights = (
+      14
+      14
+      14
+      14
+      14)
   end
 end

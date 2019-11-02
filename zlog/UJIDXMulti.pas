@@ -67,7 +67,7 @@ begin
       aQSO.Free;
     end;
 
-  WWZone.Reset;
+  MyContest.ZoneForm.Reset;
 end;
 
 procedure TJIDXMulti.AddNoUpdate(var aQSO : TQSO);
@@ -96,7 +96,7 @@ begin
       begin
         Zone[B,i] := True;
         aQSO.QSO.NewMulti1 := True;
-        WWZone.Mark(B,i);
+        MyContest.ZoneForm.Mark(B,i);
       end;
 
   i := GetCountryIndex(aQSO);

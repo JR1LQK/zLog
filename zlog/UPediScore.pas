@@ -22,8 +22,8 @@ type
     procedure SummaryWriteScore(FileName : string); override;
   end;
 
-var
-  PediScore: TPediScore;
+//var
+//  PediScore: TPediScore;
 
 implementation
 

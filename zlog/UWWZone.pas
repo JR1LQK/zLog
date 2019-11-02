@@ -26,9 +26,6 @@ type
     procedure Mark(B : TBand; Zone : integer);
   end;
 
-var
-  WWZone: TWWZone;
-
 const
   MaxWidth = 592;
 
@@ -64,8 +61,8 @@ end;
 
 procedure TWWZone.FormResize(Sender: TObject);
 begin
-   if WWZone.Width > MaxWidth then begin
-      WWZone.Width := MaxWidth;
+   if Self.Width > MaxWidth then begin
+      Self.Width := MaxWidth;
    end;
 end;
 

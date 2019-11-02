@@ -32,7 +32,7 @@ type
     procedure FormShow(Sender: TObject);
     procedure ShowLastComboChange(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-
+    procedure CreateParams(var Params: TCreateParams);
   private
     _max10, _max100 : double;
     function CountQSOs(_start, _end : TDateTime) : integer;
@@ -172,8 +172,6 @@ begin
   end;
 end;
 
-
-
 procedure TRateDialog.StayOnTopClick(Sender: TObject);
 begin
   If StayOnTop.Checked then
@@ -253,6 +251,12 @@ end;
 procedure TRateDialog.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   Timer.Enabled := False;
+end;
+
+procedure TRateDialog.CreateParams(var Params: TCreateParams);
+begin
+  inherited CreateParams(Params);
+  Params.ExStyle := Params.ExStyle or WS_EX_APPWINDOW;
 end;
 
 end.

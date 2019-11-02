@@ -23,9 +23,6 @@ type
     { Public declarations }
   end;
 
-var
-  NewIOTARef: TNewIOTARef;
-
 implementation
 
 {$R *.DFM}

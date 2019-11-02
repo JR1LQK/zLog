@@ -90,8 +90,6 @@ object RigControl: TRigControl
     ParentFont = False
     TabOrder = 0
     OnClick = Button1Click
-    ExplicitLeft = 337
-    ExplicitTop = 109
   end
   object dispFreqA: TStaticText
     Left = 64
@@ -144,8 +142,6 @@ object RigControl: TRigControl
     ParentFont = False
     TabOrder = 4
     OnClick = btnOmniRigClick
-    ExplicitLeft = 258
-    ExplicitTop = 109
   end
   object Timer1: TTimer
     Enabled = False

@@ -1,9 +1,10 @@
 object NewPrefix: TNewPrefix
   Left = 130
   Top = 113
+  BorderStyle = bsDialog
   Caption = 'Enter new prefix'
-  ClientHeight = 96
-  ClientWidth = 325
+  ClientHeight = 106
+  ClientWidth = 335
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -11,6 +12,7 @@ object NewPrefix: TNewPrefix
   Font.Name = #65325#65331' '#65328#12468#12471#12483#12463
   Font.Style = []
   OldCreateOrder = True
+  Position = poOwnerFormCenter
   OnClose = FormClose
   PixelsPerInch = 96
   TextHeight = 12
@@ -40,7 +42,6 @@ object NewPrefix: TNewPrefix
     Font.Name = #65325#65331' '#12468#12471#12483#12463
     Font.Pitch = fpFixed
     Font.Style = []
-    ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
     ParentFont = False
     TabOrder = 0
     Text = 'Select a country'
@@ -51,7 +52,6 @@ object NewPrefix: TNewPrefix
     Width = 177
     Height = 20
     CharCase = ecUpperCase
-    ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
     TabOrder = 1
   end
   object OKButton: TButton

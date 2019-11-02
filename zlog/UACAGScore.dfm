@@ -4,16 +4,17 @@ inherited ACAGScore: TACAGScore
   Caption = 'Score'
   ClientHeight = 415
   OnShow = FormShow
-  ExplicitHeight = 454
+  ExplicitHeight = 453
   PixelsPerInch = 96
   TextHeight = 12
   inherited Panel1: TPanel
     Top = 382
+    ExplicitTop = 382
   end
   object Grid: TStringGrid
     Left = 0
     Top = 0
-    Width = 278
+    Width = 281
     Height = 382
     Align = alClient
     DefaultDrawing = False
@@ -30,6 +31,6 @@ inherited ACAGScore: TACAGScore
     ScrollBars = ssNone
     TabOrder = 1
     OnDrawCell = GridDrawCell
-    ExplicitHeight = 196
+    ExplicitWidth = 278
   end
 end

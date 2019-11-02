@@ -25,5 +25,27 @@ inherited WPXScore: TWPXScore
     OnDrawCell = GridDrawCell
     ExplicitTop = -153
     ExplicitHeight = 382
+    ColWidths = (
+      64
+      64
+      64
+      64
+      64)
+    RowHeights = (
+      24
+      24
+      24
+      24
+      24
+      24
+      24
+      24
+      24
+      24
+      24
+      24
+      24
+      24
+      24)
   end
 end

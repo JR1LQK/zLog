@@ -881,31 +881,40 @@ end;
 procedure TformOptions.cbTransverter1Click(Sender: TObject);
 var
    i, r: integer;
+   F: TIntegerDialog;
 begin
-   r := TCheckBox(Sender).Tag;
-   r := r - 100;
+   F := TIntegerDialog.Create(Self);
+   try
+      r := TCheckBox(Sender).Tag;
+      r := r - 100;
 
-   if TCheckBox(Sender).Checked then begin
-      i := 0;
-      if r = 1 then
-         i := dmZlogGlobal.Settings._transverteroffset1;
+      if TCheckBox(Sender).Checked then begin
+         i := 0;
+         if r = 1 then
+            i := dmZlogGlobal.Settings._transverteroffset1;
 
-      if r = 2 then
-         i := dmZlogGlobal.Settings._transverteroffset2;
+         if r = 2 then
+            i := dmZlogGlobal.Settings._transverteroffset2;
 
-      IntegerDialog.Init(i, 'Please input the offset frequency in kHz');
-      IntegerDialog.ShowModal;
+         F.Init(i, 'Please input the offset frequency in kHz');
+         if F.ShowModal() <> mrOK then begin
+            Exit;
+         end;
 
-      i := IntegerDialog.GetValue;
-      if i <> -1 then begin
+         i := F.GetValue;
+         if i = -1 then begin
+            Exit;
+         end;
+
          if r = 1 then
             dmZlogGlobal.Settings._transverteroffset1 := i;
 
          if r = 2 then
             dmZlogGlobal.Settings._transverteroffset2 := i;
       end;
+   finally
+      F.Release();
    end;
-
 end;
 
 procedure TformOptions.comboRig1NameChange(Sender: TObject);

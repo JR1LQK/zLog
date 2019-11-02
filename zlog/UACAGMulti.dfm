@@ -2,8 +2,8 @@ object ACAGMulti: TACAGMulti
   Left = 331
   Top = 79
   Caption = 'Multipliers Info'
-  ClientHeight = 276
-  ClientWidth = 353
+  ClientHeight = 282
+  ClientWidth = 344
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,32 +13,35 @@ object ACAGMulti: TACAGMulti
   OldCreateOrder = True
   Scaled = False
   OnCreate = FormCreate
-  OnResize = FormResize
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
-    Top = 235
-    Width = 353
+    Top = 241
+    Width = 344
     Height = 41
     Align = alBottom
     TabOrder = 0
+    DesignSize = (
+      344
+      41)
     object Button3: TButton
-      Left = 224
+      Left = 276
       Top = 11
       Width = 57
       Height = 21
+      Anchors = [akRight, akBottom]
       Caption = 'Go'
       TabOrder = 0
       OnClick = GoButtonClick2
     end
     object Edit1: TEdit
-      Left = 176
+      Left = 228
       Top = 11
       Width = 33
       Height = 21
-      ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
+      Anchors = [akRight, akBottom]
       TabOrder = 1
       OnKeyPress = Edit1KeyPress
     end
@@ -47,6 +50,7 @@ object ACAGMulti: TACAGMulti
       Top = 11
       Width = 65
       Height = 22
+      Anchors = [akLeft, akBottom]
       Caption = 'OK'
       TabOrder = 2
       OnClick = Button1Click
@@ -56,6 +60,7 @@ object ACAGMulti: TACAGMulti
       Top = 13
       Width = 81
       Height = 17
+      Anchors = [akLeft, akBottom]
       Caption = 'Stay on top'
       TabOrder = 3
       OnClick = StayOnTopClick
@@ -64,7 +69,7 @@ object ACAGMulti: TACAGMulti
   object Panel: TPanel
     Left = 0
     Top = 0
-    Width = 353
+    Width = 344
     Height = 41
     Align = alTop
     Font.Charset = DEFAULT_CHARSET
@@ -77,8 +82,8 @@ object ACAGMulti: TACAGMulti
     object Label1R9: TRotateLabel
       Left = 174
       Top = 20
-      Width = 15
-      Height = 14
+      Width = 14
+      Height = 15
       Escapement = 90
       TextStyle = tsNone
       Caption = '1.9'
@@ -93,8 +98,8 @@ object ACAGMulti: TACAGMulti
     object Label3R5: TRotateLabel
       Left = 186
       Top = 20
-      Width = 15
-      Height = 14
+      Width = 14
+      Height = 15
       Escapement = 90
       TextStyle = tsNone
       Caption = '3.5'
@@ -108,8 +113,8 @@ object ACAGMulti: TACAGMulti
     object Label7: TRotateLabel
       Left = 198
       Top = 29
-      Width = 6
-      Height = 14
+      Width = 14
+      Height = 6
       Escapement = 90
       TextStyle = tsNone
       Caption = '7'
@@ -123,8 +128,8 @@ object ACAGMulti: TACAGMulti
     object Label14: TRotateLabel
       Left = 210
       Top = 23
-      Width = 12
-      Height = 14
+      Width = 14
+      Height = 12
       Escapement = 90
       TextStyle = tsNone
       Caption = '14'
@@ -138,8 +143,8 @@ object ACAGMulti: TACAGMulti
     object Label21: TRotateLabel
       Left = 222
       Top = 23
-      Width = 12
-      Height = 14
+      Width = 14
+      Height = 12
       Escapement = 90
       TextStyle = tsNone
       Caption = '21'
@@ -153,8 +158,8 @@ object ACAGMulti: TACAGMulti
     object Label28: TRotateLabel
       Left = 234
       Top = 23
-      Width = 12
-      Height = 14
+      Width = 14
+      Height = 12
       Escapement = 90
       TextStyle = tsNone
       Caption = '28'
@@ -168,8 +173,8 @@ object ACAGMulti: TACAGMulti
     object Label50: TRotateLabel
       Left = 247
       Top = 23
-      Width = 12
-      Height = 14
+      Width = 14
+      Height = 12
       Escapement = 90
       TextStyle = tsNone
       Caption = '50'
@@ -183,8 +188,8 @@ object ACAGMulti: TACAGMulti
     object Label144: TRotateLabel
       Left = 259
       Top = 17
-      Width = 18
-      Height = 14
+      Width = 14
+      Height = 18
       Escapement = 90
       TextStyle = tsNone
       Caption = '144'
@@ -198,8 +203,8 @@ object ACAGMulti: TACAGMulti
     object Label430: TRotateLabel
       Left = 271
       Top = 17
-      Width = 18
-      Height = 14
+      Width = 14
+      Height = 18
       Escapement = 90
       TextStyle = tsNone
       Caption = '430'
@@ -213,8 +218,8 @@ object ACAGMulti: TACAGMulti
     object Label1200: TRotateLabel
       Left = 283
       Top = 11
-      Width = 24
-      Height = 14
+      Width = 14
+      Height = 24
       Escapement = 90
       TextStyle = tsNone
       Caption = '1200'
@@ -228,8 +233,8 @@ object ACAGMulti: TACAGMulti
     object Label2400: TRotateLabel
       Left = 295
       Top = 11
-      Width = 24
-      Height = 14
+      Width = 14
+      Height = 24
       Escapement = 90
       TextStyle = tsNone
       Caption = '2400'
@@ -243,8 +248,8 @@ object ACAGMulti: TACAGMulti
     object Label5600: TRotateLabel
       Left = 307
       Top = 11
-      Width = 24
-      Height = 14
+      Width = 14
+      Height = 24
       Escapement = 90
       TextStyle = tsNone
       Caption = '5600'
@@ -258,8 +263,8 @@ object ACAGMulti: TACAGMulti
     object Label10g: TRotateLabel
       Left = 319
       Top = 9
-      Width = 26
-      Height = 14
+      Width = 14
+      Height = 26
       Escapement = 90
       TextStyle = tsNone
       Caption = '10G+'
@@ -274,8 +279,8 @@ object ACAGMulti: TACAGMulti
   object Grid: TMgrid
     Left = 0
     Top = 41
-    Width = 353
-    Height = 194
+    Width = 344
+    Height = 200
     Align = alClient
     ColCount = 1
     DefaultColWidth = 500

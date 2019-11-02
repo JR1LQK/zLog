@@ -3,15 +3,17 @@ inherited PediScore: TPediScore
   Top = 203
   Caption = 'Statistics'
   OnShow = FormShow
-  ExplicitWidth = 294
-  ExplicitHeight = 268
   PixelsPerInch = 96
   TextHeight = 12
+  inherited Panel1: TPanel
+    ExplicitTop = 196
+    ExplicitWidth = 278
+  end
   object Grid: TStringGrid
     Left = 0
     Top = 0
-    Width = 278
-    Height = 196
+    Width = 281
+    Height = 202
     Align = alClient
     DefaultDrawing = False
     FixedCols = 0
@@ -28,6 +30,7 @@ inherited PediScore: TPediScore
     TabOrder = 1
     OnDrawCell = GridDrawCell
     ExplicitTop = -153
+    ExplicitWidth = 278
     ExplicitHeight = 382
     ColWidths = (
       64

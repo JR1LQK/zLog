@@ -12,8 +12,7 @@ object AgeDialog: TAgeDialog
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = True
-  Position = poScreenCenter
-  OnShow = FormShow
+  Position = poOwnerFormCenter
   PixelsPerInch = 96
   TextHeight = 13
   object Bevel2: TBevel
@@ -44,8 +43,7 @@ object AgeDialog: TAgeDialog
     Font.Style = []
     ModalResult = 1
     ParentFont = False
-    TabOrder = 0
-    OnClick = OKBtnClick
+    TabOrder = 1
   end
   object Edit1: TEdit
     Left = 144
@@ -54,8 +52,7 @@ object AgeDialog: TAgeDialog
     Height = 20
     AutoSize = False
     CharCase = ecUpperCase
-    ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
     MaxLength = 3
-    TabOrder = 1
+    TabOrder = 0
   end
 end

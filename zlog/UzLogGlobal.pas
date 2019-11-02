@@ -348,15 +348,11 @@ var
 
 var
   UseUTC : boolean = False;
-  PostContest : boolean = False;
 
 var
   SerialContestType : integer;  // 0 if no serial # or SER_ALL, SER_BAND
   SerialArray : array [b19..HiBand] of integer;  // initialized in TContest.Create;
   SerialArrayTX : array[0..64] of integer;
-
-var
-   SaveInBackGround: Boolean;
 
 type
   TdmZLogGlobal = class(TDataModule)
@@ -516,8 +512,6 @@ begin
    // オペレーターリスト
    OpList := TStringList.Create();
    LoadOpList();
-
-   SaveInBackGround := False;
 end;
 
 procedure TdmZLogGlobal.DataModuleDestroy(Sender: TObject);

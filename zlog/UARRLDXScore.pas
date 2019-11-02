@@ -22,9 +22,6 @@ type
     procedure CalcPoints(var aQSO : TQSO); virtual;
   end;
 
-var
-  ARRLDXScore: TARRLDXScore;
-
 implementation
 
 {$R *.DFM}

@@ -26,9 +26,6 @@ type
     procedure SummaryWriteScore(FileName : string); override;
   end;
 
-var
-  WAEScore: TWAEScore;
-
 implementation
 
 {$R *.DFM}

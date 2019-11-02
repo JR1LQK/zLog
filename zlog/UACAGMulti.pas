@@ -38,7 +38,6 @@ type
     procedure GridSetting(ARow, Acol: Integer; var Fcolor: Integer;
       var Bold, Italic, underline: Boolean);
     procedure StayOnTopClick(Sender: TObject);
-    procedure FormResize(Sender: TObject);
   private
     { Private declarations }
   public
@@ -293,21 +292,6 @@ begin
     FormStyle := fsStayOnTop
   else
     FormStyle := fsNormal;
-end;
-
-procedure TACAGMulti.FormResize(Sender: TObject);
-var i, j : integer;
-begin
-  inherited;
-  i := Self.Width - 20 - Button3.Width;
-  j := i - Edit1.Width - 10;
-  if j < (StayOnTop.Left + StayOnTop.Width + 10) then
-    begin
-      j := 176;
-      i := 224;
-    end;
-  Edit1.Left := j;
-  Button3.Left := i;
 end;
 
 procedure TACAGMulti.SetNumberEditFocus;

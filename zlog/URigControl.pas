@@ -317,6 +317,7 @@ type
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure ZCom1ReceiveData(Sender: TObject; DataPtr: Pointer; DataSize: Cardinal);
     procedure btnOmniRigClick(Sender: TObject);
+    procedure CreateParams(var Params: TCreateParams); override;
   private
     { Private declarations }
     FRigs: array[1..2] of TRig;
@@ -3048,6 +3049,12 @@ end;
 procedure TRigControl.btnOmniRigClick(Sender: TObject);
 begin
    RigControl.OmniRig.DialogVisible := True;
+end;
+
+procedure TRigControl.CreateParams(var Params: TCreateParams);
+begin
+  inherited CreateParams(Params);
+  Params.ExStyle := Params.ExStyle or WS_EX_APPWINDOW;
 end;
 
 end.

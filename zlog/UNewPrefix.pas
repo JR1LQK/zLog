@@ -26,9 +26,6 @@ type
     procedure Init(CL : TCountryList; PX : string);
   end;
 
-var
-  NewPrefix: TNewPrefix;
-
 implementation
 
 {$R *.DFM}

@@ -23,9 +23,6 @@ type
     { Public declarations }
   end;
 
-var
-  IARUScore: TIARUScore;
-
 implementation
 
 {$R *.DFM}

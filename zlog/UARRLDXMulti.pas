@@ -27,8 +27,6 @@ type
     destructor Destroy; override;
   end;
 
-
-
 type
   TARRLDXMulti = class(TACAGMulti)
     procedure FormCreate(Sender: TObject);
@@ -49,9 +47,6 @@ type
   end;
 
 function GetState(aQSO : TQSO; SL : TStateList) : TState;
-
-var
-  ARRLDXMulti: TARRLDXMulti;
 
 implementation
 

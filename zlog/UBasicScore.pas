@@ -14,10 +14,10 @@ type
     CWButton: TSpeedButton;
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure CreateParams(var Params: TCreateParams); override;
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure StayOnTopClick(Sender: TObject);
-    procedure FormResize(Sender: TObject);
     procedure CWButtonClick(Sender: TObject);
   private
     { Private declarations }
@@ -52,6 +52,12 @@ uses
   Main, USummaryInfo;
 
 {$R *.DFM}
+
+procedure TBasicScore.CreateParams(var Params: TCreateParams);
+begin
+  inherited CreateParams(Params);
+  Params.ExStyle := Params.ExStyle or WS_EX_APPWINDOW;
+end;
 
 procedure TBasicScore.SummaryWriteScore(FileName: string);
 var
@@ -234,11 +240,6 @@ begin
    for B := b19 to HiBand do
       i := i + QSO[B];
    Result := i;
-end;
-
-procedure TBasicScore.FormResize(Sender: TObject);
-begin
-   CWButton.Left := Panel1.Width - 46;
 end;
 
 procedure TBasicScore.CWButtonClick(Sender: TObject);

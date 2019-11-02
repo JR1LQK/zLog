@@ -68,5 +68,53 @@ object WWZone: TWWZone
     ExplicitTop = -224
     ExplicitWidth = 278
     ExplicitHeight = 382
+    ColWidths = (
+      64
+      64
+      64
+      64
+      64
+      64
+      64
+      64
+      64
+      64
+      64
+      64
+      64
+      64
+      64
+      64
+      64
+      64
+      64
+      64
+      64
+      64
+      64
+      64
+      64
+      64
+      64
+      64
+      64
+      64
+      64
+      64
+      64
+      64
+      64
+      64
+      64
+      64
+      64
+      64)
+    RowHeights = (
+      24
+      24
+      24
+      24
+      24
+      24)
   end
 end

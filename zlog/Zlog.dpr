@@ -51,7 +51,6 @@ uses
   UKCJMulti in 'UKCJMulti.pas' {KCJMulti},
   USixDownMulti in 'USixDownMulti.pas' {SixDownMulti},
   USixDownScore in 'USixDownScore.pas' {SixDownScore},
-  UQTHDialog in 'UQTHDialog.pas' {QTHDialog},
   UIARUMulti in 'UIARUMulti.pas' {IARUMulti},
   UIARUScore in 'UIARUScore.pas' {IARUScore},
   UAllAsianScore in 'UAllAsianScore.pas' {AllAsianScore},
@@ -72,7 +71,6 @@ uses
   UCheckCall2 in 'UCheckCall2.pas' {CheckCall2},
   UCheckMulti in 'UCheckMulti.pas' {CheckMulti},
   UCheckCountry in 'UCheckCountry.pas' {CheckCountry},
-  UMinMaxFreqDlg in 'UMinMaxFreqDlg.pas' {MinMaxFreqDlg},
   USpotClass in 'USpotClass.pas',
   UIntegerDialog in 'UIntegerDialog.pas' {IntegerDialog},
   UBGKMonitorThread in 'UBGKMonitorThread.pas',
@@ -107,43 +105,31 @@ begin
   Application.Initialize;
   Application.Title := 'zLog for Windows';
   Application.CreateForm(TdmZLogGlobal, dmZLogGlobal);
-  Application.CreateForm(TMenuForm, MenuForm);
-  Application.CreateForm(TRigControl, RigControl);
   Application.CreateForm(TMainForm, MainForm);
+  Application.CreateForm(TRigControl, RigControl);
   Application.CreateForm(TPartialCheck, PartialCheck);
   Application.CreateForm(TRateDialog, RateDialog);
   Application.CreateForm(TSuperCheck, SuperCheck);
   Application.CreateForm(TCommForm, CommForm);
-  Application.CreateForm(TPediScore, PediScore);
   Application.CreateForm(TCWKeyBoard, CWKeyBoard);
   Application.CreateForm(TChatForm, ChatForm);
   Application.CreateForm(TZServerInquiry, ZServerInquiry);
   Application.CreateForm(TZLinkForm, ZLinkForm);
   Application.CreateForm(TSpotForm, SpotForm);
-  Application.CreateForm(TQTHDialog, QTHDialog);
-  Application.CreateForm(TNewIOTARef, NewIOTARef);
   Application.CreateForm(TSummaryInfo, SummaryInfo);
   Application.CreateForm(TConsolePad, ConsolePad);
   Application.CreateForm(TFreqList, FreqList);
-  Application.CreateForm(TCheckWin, CheckWin);
   Application.CreateForm(TCheckCall2, CheckCall2);
   Application.CreateForm(TCheckMulti, CheckMulti);
   Application.CreateForm(TCheckCountry, CheckCountry);
-  Application.CreateForm(TMinMaxFreqDlg, MinMaxFreqDlg);
-  Application.CreateForm(TIntegerDialog, IntegerDialog);
-  Application.CreateForm(TNewPrefix, NewPrefix);
   Application.CreateForm(TScratchSheet, ScratchSheet);
-  Application.CreateForm(TQTCForm, QTCForm);
   Application.CreateForm(TBandScope2, BandScope2);
-  //  Options.ImplementSettings(False);
+  Application.ShowMainForm := False;
+  Application.MainFormOnTaskBar := True;
 
    try
-      MenuForm.Show();
+      MainForm.Show();
       Application.Run;
-
-      if MyContest <> nil then begin
-         MyContest.Free;
-      end;
    except
       CloseBGK;
    end;

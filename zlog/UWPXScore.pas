@@ -4,7 +4,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  UBasicScore, Grids, StdCtrls, ExtCtrls, UzLogGlobal, Buttons;
+  UBasicScore, Grids, StdCtrls, ExtCtrls, UzLogGlobal, Buttons,
+  UWPXMulti;
 
 type
   TWPXScore = class(TBasicScore)
@@ -13,6 +14,7 @@ type
     procedure GridDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect; State: TGridDrawState);
   private
     { Private declarations }
+    FMultiForm: TWPXMulti;
   public
     { Public declarations }
     AllAsianDXMode : Boolean;
@@ -20,14 +22,10 @@ type
     procedure AddNoUpdate(var aQSO : TQSO);  override;
     procedure Update; override;
     procedure SummaryWriteScore(FileName : string); override;
+    property MultiForm: TWPXMulti read FMultiForm write FMultiForm;
   end;
 
-var
-  WPXScore: TWPXScore;
-
 implementation
-
-uses UWPXMulti;
 
 {$R *.DFM}
 
@@ -97,11 +95,11 @@ begin
 
    Grid.Cells[0, 8] := 'Prefixes';
    Grid.Cells[1, 8] := '';
-   Grid.Cells[2, 8] := IntToStr3(WPXMulti.TotalPrefix);
+   Grid.Cells[2, 8] := IntToStr3(FMultiForm.TotalPrefix);
 
    Grid.Cells[0, 9] := 'Score';
    Grid.Cells[1, 9] := '';
-   Grid.Cells[2, 9] := IntToStr3(TotPts * WPXMulti.TotalPrefix);
+   Grid.Cells[2, 9] := IntToStr3(TotPts * FMultiForm.TotalPrefix);
 
    Grid.ColCount := 3;
    Grid.RowCount := 10;
@@ -129,8 +127,8 @@ begin
    end;
 
    writeln(f, FillRight('Total :',8) + FillLeft(IntToStr(tqso),10) + FillLeft(IntToStr(tpts),10) );
-   writeln(f, 'Total prefixes: ' + IntToStr(WPXMulti.TotalPrefix));
-   writeln(f, 'Total score : ' + IntToStr(tpts*WPXMulti.TotalPrefix));
+   writeln(f, 'Total prefixes: ' + IntToStr(FMultiForm.TotalPrefix));
+   writeln(f, 'Total score : ' + IntToStr(tpts * FMultiForm.TotalPrefix));
    CloseFile(f);
 end;
 

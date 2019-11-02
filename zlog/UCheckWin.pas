@@ -29,9 +29,6 @@ type
    procedure Renew(aQSO : TQSO); virtual;
   end;
 
-var
-  CheckWin: TCheckWin;
-
 implementation
 
 uses Main;
@@ -97,13 +94,14 @@ begin
       end
     else
       BandRow[B] := -1;
+
   if ListCWandPh then
     Height := 28*i + 59
   else
     Height := 14*i + 59;
+
   ResetListBox;
   Renew(Main.CurrentQSO);
-
 end;
 
 procedure TCheckWin.FormKeyDown(Sender: TObject; var Key: Word;

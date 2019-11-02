@@ -2,8 +2,8 @@ object BasicScore: TBasicScore
   Left = 271
   Top = 308
   Caption = 'BasicScore'
-  ClientHeight = 229
-  ClientWidth = 278
+  ClientHeight = 235
+  ClientWidth = 281
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -15,23 +15,28 @@ object BasicScore: TBasicScore
   Scaled = False
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
-  OnResize = FormResize
   PixelsPerInch = 96
   TextHeight = 12
   object Panel1: TPanel
     Left = 0
-    Top = 196
-    Width = 278
+    Top = 202
+    Width = 281
     Height = 33
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitTop = 196
+    ExplicitWidth = 278
+    DesignSize = (
+      281
+      33)
     object CWButton: TSpeedButton
-      Left = 240
+      Left = 241
       Top = 4
       Width = 33
       Height = 25
       AllowAllUp = True
+      Anchors = [akTop, akRight]
       GroupIndex = 33
       Caption = 'CW'
       Visible = False
@@ -41,7 +46,7 @@ object BasicScore: TBasicScore
       Left = 8
       Top = 6
       Width = 57
-      Height = 20
+      Height = 21
       Caption = 'OK'
       Default = True
       TabOrder = 0

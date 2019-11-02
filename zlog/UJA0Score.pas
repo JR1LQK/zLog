@@ -23,9 +23,6 @@ type
     procedure SetBand(B : TBand);
   end;
 
-var
-  JA0Score: TJA0Score;
-
 implementation
 
 uses Main;

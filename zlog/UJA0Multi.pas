@@ -30,9 +30,6 @@ type
     procedure Update; override;
   end;
 
-var
-  JA0Multi: TJA0Multi;
-
 implementation
 
 uses Main;

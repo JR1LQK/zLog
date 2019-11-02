@@ -4,7 +4,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  UBasicScore, Grids, StdCtrls, ExtCtrls, UzLogGlobal, Buttons;
+  UBasicScore, Grids, StdCtrls, ExtCtrls, UzLogGlobal, Buttons,
+  UWPXMulti;
 
 type
   TAPSprintScore = class(TBasicScore)
@@ -13,19 +14,16 @@ type
     procedure GridDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect; State: TGridDrawState);
   private
     { Private declarations }
+    FMultiForm: TWPXMulti;
   public
     { Public declarations }
     procedure Reset; override;
     procedure AddNoUpdate(var aQSO : TQSO);  override;
     procedure Update; override;
+    property MultiForm: TWPXMulti read FMultiForm write FMultiForm;
   end;
 
-var
-  APSprintScore: TAPSprintScore;
-
 implementation
-
-uses UWPXMulti;
 
 {$R *.DFM}
 
@@ -74,10 +72,10 @@ begin
    Grid.Cells[1, 4] := IntToStr3(TotPts);
 
    Grid.Cells[0, 5] := 'Multi';
-   Grid.Cells[1, 5] := IntToStr3(WPXMulti.TotalPrefix);
+   Grid.Cells[1, 5] := IntToStr3(FMultiForm.TotalPrefix);
 
    Grid.Cells[0, 6] := 'Score';
-   Grid.Cells[1, 6] := IntToStr3(TotPts * WPXMulti.TotalPrefix);
+   Grid.Cells[1, 6] := IntToStr3(TotPts * FMultiForm.TotalPrefix);
 
    Grid.ColCount := 2;
    Grid.RowCount := 7;

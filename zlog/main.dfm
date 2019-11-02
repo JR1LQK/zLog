@@ -3,7 +3,7 @@ object MainForm: TMainForm
   Top = 138
   VertScrollBar.Visible = False
   Caption = 'zLog for Windows'
-  ClientHeight = 448
+  ClientHeight = 368
   ClientWidth = 526
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,6 +18,7 @@ object MainForm: TMainForm
   Scaled = False
   OnActivate = FormActivate
   OnClose = FormClose
+  OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
@@ -34,7 +35,7 @@ object MainForm: TMainForm
   end
   object StatusLine: TStatusBar
     Left = 0
-    Top = 428
+    Top = 348
     Width = 526
     Height = 20
     Panels = <
@@ -56,7 +57,7 @@ object MainForm: TMainForm
     Left = 0
     Top = 99
     Width = 526
-    Height = 302
+    Height = 222
     TabStop = False
     Align = alClient
     ColCount = 10
@@ -2467,7 +2468,7 @@ object MainForm: TMainForm
   end
   object EditPanel: TPanel
     Left = 0
-    Top = 401
+    Top = 321
     Width = 526
     Height = 27
     Align = alBottom

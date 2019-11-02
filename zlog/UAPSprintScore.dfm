@@ -25,5 +25,27 @@ inherited APSprintScore: TAPSprintScore
     ScrollBars = ssNone
     TabOrder = 1
     OnDrawCell = GridDrawCell
+    ColWidths = (
+      64
+      64
+      64
+      64
+      64)
+    RowHeights = (
+      24
+      24
+      24
+      24
+      24
+      24
+      24
+      24
+      24
+      24
+      24
+      24
+      24
+      24
+      24)
   end
 end

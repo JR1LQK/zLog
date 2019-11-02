@@ -35,12 +35,9 @@ type
     function ExtractMulti(aQSO : TQSO) : string; override;
   end;
 
-var
-  ARRL10Multi: TARRL10Multi;
-
 implementation
 
-uses Main, UOptions;
+uses Main;
 
 {$R *.DFM}
 
