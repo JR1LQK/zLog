@@ -407,10 +407,10 @@ begin
       Settings._pttafter := StrToIntDef(AfterEdit.Text, i);
 
       // CW/PTT port
-      if (comboCwPttPort.ItemIndex >= 1) and (comboCwPttPort.ItemIndex <= 6) then begin
-         Settings._lptnr := 10 + comboCwPttPort.ItemIndex;
+      if (comboCwPttPort.ItemIndex >= 1) and (comboCwPttPort.ItemIndex <= 20) then begin
+         Settings._lptnr := comboCwPttPort.ItemIndex;
       end
-      else if comboCwPttPort.ItemIndex = 7 then begin    // USB
+      else if comboCwPttPort.ItemIndex = 21 then begin    // USB
          Settings._lptnr := 21;
       end
       else begin
@@ -588,11 +588,11 @@ begin
       SaveEvery.Value := Settings._saveevery;
 
       // CW/PTT port
-      if (Settings._lptnr >= 11) and (Settings._lptnr <= 16) then begin
-         comboCwPttPort.ItemIndex := Settings._lptnr - 10;
+      if (Settings._lptnr >= 1) and (Settings._lptnr <= 20) then begin
+         comboCwPttPort.ItemIndex := Settings._lptnr;
       end
       else if (Settings._lptnr >= 21) then begin
-         comboCwPttPort.ItemIndex := 7;
+         comboCwPttPort.ItemIndex := 21;
       end
       else begin
          comboCwPttPort.ItemIndex := 0;

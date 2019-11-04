@@ -1285,34 +1285,9 @@ begin
             BGK32Lib.KeyingPort := tkpNone;
          end;
 
-         11: begin
-            RigControl.SetSerialCWKeying(1);
-            BGK32Lib.KeyingPort := tkpSerial1;
-         end;
-
-         12: begin
-            RigControl.SetSerialCWKeying(2);
-            BGK32Lib.KeyingPort := tkpSerial2;
-         end;
-
-         13: begin
-            RigControl.SetSerialCWKeying(3);
-            BGK32Lib.KeyingPort := tkpSerial3;
-         end;
-
-         14: begin
-            RigControl.SetSerialCWKeying(4);
-            BGK32Lib.KeyingPort := tkpSerial4;
-         end;
-
-         15: begin
-            RigControl.SetSerialCWKeying(5);
-            BGK32Lib.KeyingPort := tkpSerial5;
-         end;
-
-         16: begin
-            RigControl.SetSerialCWKeying(6);
-            BGK32Lib.KeyingPort := tkpSerial6;
+         1 .. 20: begin
+            RigControl.SetSerialCWKeying(Settings._lptnr);
+            BGK32Lib.KeyingPort := TKeyingPort(Settings._lptnr);
          end;
 
          21: begin // usb

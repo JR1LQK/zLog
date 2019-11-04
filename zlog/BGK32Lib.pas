@@ -53,7 +53,12 @@ var
       UserFlag : Boolean = False; // can be set to true by user. set to false only when ClrBuffer is called or "  is reached in the sending buffer. // 1.9z2 used in QTCForm
       VoiceFlag : integer = 0;  //temporary
 
-type TKeyingPort = (tkpNone, tkpSerial1, tkpSerial2, tkpSerial3, tkpSerial4, tkpSerial5, tkpSerial6, tkpUSB);
+type TKeyingPort = (tkpNone,
+                    tkpSerial1, tkpSerial2, tkpSerial3, tkpSerial4, tkpSerial5,
+                    tkpSerial6, tkpSerial7, tkpSerial8, tkpSerial9, tkpSerial10,
+                    tkpSerial11, tkpSerial12, tkpSerial13, tkpSerial14, tkpSerial15,
+                    tkpSerial16, tkpSerial17, tkpSerial18, tkpSerial19, tkpSerial20,
+                    tkpUSB);
 var
   KeyingPort: TKeyingPort = tkpNone;  {tkpParallel;}
 

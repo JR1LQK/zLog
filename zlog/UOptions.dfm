@@ -38,15 +38,11 @@ object formOptions: TformOptions
     Top = 0
     Width = 358
     Height = 325
-    ActivePage = CWTabSheet
+    ActivePage = PrefTabSheet
     Align = alClient
     TabOrder = 0
     object PrefTabSheet: TTabSheet
       Caption = 'Preferences'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Label40: TLabel
         Left = 184
         Top = 104
@@ -588,10 +584,6 @@ object formOptions: TformOptions
     end
     object CWTabSheet: TTabSheet
       Caption = 'CW/RTTY'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Label11: TLabel
         Left = 240
         Top = 0
@@ -1020,10 +1012,6 @@ object formOptions: TformOptions
     object VoiceTabSheet: TTabSheet
       Caption = 'Voice'
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GroupBox4: TGroupBox
         Left = 8
         Top = 8
@@ -1313,10 +1301,6 @@ object formOptions: TformOptions
     end
     object TabSheet5: TTabSheet
       Caption = 'Hardware'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GroupBox6: TGroupBox
         Left = 5
         Top = 0
@@ -1440,7 +1424,7 @@ object formOptions: TformOptions
           object comboCwPttPort: TComboBox
             Left = 31
             Top = 18
-            Width = 58
+            Width = 64
             Height = 21
             Style = csDropDownList
             TabOrder = 0
@@ -1452,13 +1436,27 @@ object formOptions: TformOptions
               'COM4'
               'COM5'
               'COM6'
+              'COM7'
+              'COM8'
+              'COM9'
+              'COM10'
+              'COM11'
+              'COM12'
+              'COM13'
+              'COM14'
+              'COM15'
+              'COM16'
+              'COM17'
+              'COM18'
+              'COM19'
+              'COM20'
               'USB')
           end
         end
         object comboRig1Port: TComboBox
           Left = 39
           Top = 109
-          Width = 58
+          Width = 64
           Height = 21
           Style = csDropDownList
           TabOrder = 6
@@ -1469,7 +1467,21 @@ object formOptions: TformOptions
             'COM3'
             'COM4'
             'COM5'
-            'COM6')
+            'COM6'
+            'COM7'
+            'COM8'
+            'COM9'
+            'COM10'
+            'COM11'
+            'COM12'
+            'COM13'
+            'COM14'
+            'COM15'
+            'COM16'
+            'COM17'
+            'COM18'
+            'COM19'
+            'COM20')
         end
         object comboRig1Name: TComboBox
           Left = 184
@@ -1484,7 +1496,7 @@ object formOptions: TformOptions
         object comboRig2Port: TComboBox
           Left = 39
           Top = 133
-          Width = 58
+          Width = 64
           Height = 21
           Style = csDropDownList
           TabOrder = 10
@@ -1495,7 +1507,21 @@ object formOptions: TformOptions
             'COM3'
             'COM4'
             'COM5'
-            'COM6')
+            'COM6'
+            'COM7'
+            'COM8'
+            'COM9'
+            'COM10'
+            'COM11'
+            'COM12'
+            'COM13'
+            'COM14'
+            'COM15'
+            'COM16'
+            'COM17'
+            'COM18'
+            'COM19'
+            'COM20')
         end
         object comboRig2Name: TComboBox
           Left = 184
@@ -1546,7 +1572,7 @@ object formOptions: TformOptions
           OnClick = PTTEnabledCheckBoxClick
         end
         object comboRig1Speed: TComboBox
-          Left = 104
+          Left = 106
           Top = 109
           Width = 54
           Height = 21
@@ -1562,7 +1588,7 @@ object formOptions: TformOptions
             '38400')
         end
         object comboRig2Speed: TComboBox
-          Left = 104
+          Left = 106
           Top = 133
           Width = 54
           Height = 21
@@ -1628,10 +1654,6 @@ object formOptions: TformOptions
     end
     object tbRigControl: TTabSheet
       Caption = 'Rig control'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Label45: TLabel
         Left = 8
         Top = 138
@@ -1715,10 +1737,6 @@ object formOptions: TformOptions
     end
     object TabSheet1: TTabSheet
       Caption = 'Path'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Label50: TLabel
         Left = 16
         Top = 18
@@ -1785,10 +1803,6 @@ object formOptions: TformOptions
     end
     object tbMisc: TTabSheet
       Caption = 'Misc'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Label47: TLabel
         Left = 16
         Top = 88
