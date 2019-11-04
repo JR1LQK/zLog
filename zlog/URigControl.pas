@@ -2003,11 +2003,8 @@ begin
    fstr := fstr + AnsiChar((i div 10) * 16 + (i mod 10));
    freq := freq div 100;
 
-   if freq > 0 then begin
-      i := freq mod 100;
-      fstr := fstr + AnsiChar((i div 10) * 16 + (i mod 10));
-      // freq := freq div 100;
-   end;
+   i := freq mod 100;
+   fstr := fstr + AnsiChar((i div 10) * 16 + (i mod 10));
 
    fstr := AnsiChar($05) + fstr;
    ICOMWriteData(fstr);
@@ -2580,6 +2577,15 @@ begin
          end;
 
          Delete(ss, 1, 1);
+
+         OutputDEbugSTring(PChar(
+         IntToHex(Ord(ss[5])) + ' ' +
+         IntToHex(Ord(ss[4])) + ' ' +
+         IntToHex(Ord(ss[3])) + ' ' +
+         IntToHex(Ord(ss[2])) + ' ' +
+         IntToHex(Ord(ss[1]))
+         ));
+
          i1 := (Ord(ss[1]) mod 16) + (Ord(ss[1]) div 16) * 10;
          i2 := (Ord(ss[2]) mod 16) + (Ord(ss[2]) div 16) * 10;
          i3 := (Ord(ss[3]) mod 16) + (Ord(ss[3]) div 16) * 10;
