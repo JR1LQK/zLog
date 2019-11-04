@@ -2578,13 +2578,15 @@ begin
 
          Delete(ss, 1, 1);
 
-         OutputDEbugSTring(PChar(
+         {$IFDEF DEBUG}
+         OutputDebugString(PChar(
          IntToHex(Ord(ss[5])) + ' ' +
          IntToHex(Ord(ss[4])) + ' ' +
          IntToHex(Ord(ss[3])) + ' ' +
          IntToHex(Ord(ss[2])) + ' ' +
          IntToHex(Ord(ss[1]))
          ));
+         {$ENDIF}
 
          i1 := (Ord(ss[1]) mod 16) + (Ord(ss[1]) div 16) * 10;
          i2 := (Ord(ss[2]) mod 16) + (Ord(ss[2]) div 16) * 10;
