@@ -62,5 +62,20 @@ InstallフォルダのD103Install.groupprojを開き、ビルド→インスト�
 
 (4)Windows7/10で目立つ不具合修正
 
-(5)など
+(5)FT-2000,ICOMのカタログ機種を追加
 
+(6)RIGコントロールのCOMポートをCOM1～COM20まで拡張
+
+(7)RIGコントロールの通信速度を設定可能に
+
+(8)CWキーイングのサイドトーン機能廃止
+
+(9)など
+
+動作確認済み
+・ALL JAコンテスト
+・全市全郡コンテスト
+・Packet Cluster
+・BandScope
+・Z-Link
+・COMポートによるCWキーイング
