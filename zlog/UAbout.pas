@@ -2,8 +2,9 @@ unit UAbout;
 
 interface
 
-uses Windows, SysUtils, Classes, Graphics, Forms, Controls, StdCtrls,
-  Buttons, ExtCtrls, UzLogGlobal, BGK32LIB;
+uses
+  Windows, SysUtils, Classes, Graphics, Forms, Controls, StdCtrls,
+  Buttons, ExtCtrls, ShellApi, UzLogGlobal, BGK32LIB;
 
 type
   TAboutBox = class(TForm)
@@ -18,9 +19,16 @@ type
     Label2: TLabel;
     Label3: TLabel;
     Label4: TLabel;
+    Panel2: TPanel;
+    Label6: TLabel;
+    Label7: TLabel;
+    LinkLabel1: TLinkLabel;
+    Label5: TLabel;
     procedure OKButtonClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure LinkLabel1LinkClick(Sender: TObject; const Link: string;
+      LinkType: TSysLinkType);
   private
     { Private declarations }
   public
@@ -43,6 +51,12 @@ begin
    Label2.Caption := TQSO(Log.List[0]).QSO.memo;
    Str(BGK32LIB.GetVersion : 3:2, temp);
    //BGK32DLL.Caption := 'BGK32.DLL version '+temp;
+end;
+
+procedure TAboutBox.LinkLabel1LinkClick(Sender: TObject; const Link: string;
+  LinkType: TSysLinkType);
+begin
+   ShellExecute(Handle, 'open', PChar(Link), nil, nil, SW_SHOW);
 end;
 
 procedure TAboutBox.FormCreate(Sender: TObject);

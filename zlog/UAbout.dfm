@@ -3,7 +3,7 @@ object AboutBox: TAboutBox
   Top = 271
   BorderStyle = bsDialog
   Caption = 'About zLog for Windows'
-  ClientHeight = 210
+  ClientHeight = 302
   ClientWidth = 321
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -16,6 +16,9 @@ object AboutBox: TAboutBox
   Scaled = False
   OnCreate = FormCreate
   OnShow = FormShow
+  DesignSize = (
+    321
+    302)
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -134,14 +137,91 @@ object AboutBox: TAboutBox
     end
   end
   object OKButton: TButton
-    Left = 127
-    Top = 180
+    Left = 128
+    Top = 277
     Width = 65
     Height = 22
+    Anchors = [akLeft, akBottom]
     Caption = 'OK'
     Default = True
     ModalResult = 1
     TabOrder = 1
     OnClick = OKButtonClick
+    ExplicitTop = 283
+  end
+  object Panel2: TPanel
+    Left = 8
+    Top = 175
+    Width = 305
+    Height = 98
+    BevelInner = bvRaised
+    BevelOuter = bvLowered
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = #65325#65331' '#65328#12468#12471#12483#12463
+    Font.Style = []
+    ParentColor = True
+    ParentFont = False
+    TabOrder = 2
+    object Label6: TLabel
+      Left = 8
+      Top = 9
+      Width = 241
+      Height = 26
+      Caption = 'zLog for Windows Version 2.3 '#20196#21644' Edition based on 2.2h'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = #65325#65331' '#65328#12468#12471#12483#12463
+      Font.Style = []
+      ParentFont = False
+      WordWrap = True
+      IsControl = True
+    end
+    object Label7: TLabel
+      Left = 8
+      Top = 41
+      Width = 140
+      Height = 12
+      Caption = 'Copyright 2019 by JR8PPG'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -12
+      Font.Name = #65325#65331' '#65328#12468#12471#12483#12463
+      Font.Style = []
+      ParentFont = False
+      IsControl = True
+    end
+    object Label5: TLabel
+      Left = 8
+      Top = 76
+      Width = 159
+      Height = 12
+      Caption = #21332#21147':JH1KVQ,JE1BJP,JR8VSE'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -12
+      Font.Name = #65325#65331' '#65328#12468#12471#12483#12463
+      Font.Style = []
+      ParentFont = False
+    end
+    object LinkLabel1: TLinkLabel
+      Left = 8
+      Top = 55
+      Width = 164
+      Height = 16
+      Caption = 
+        '<A HREF="https://github.com/jr8ppg/zLog">https://github.com/jr8p' +
+        'pg/zLog</A>'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -12
+      Font.Name = #65325#65331' '#65328#12468#12471#12483#12463
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 0
+      OnLinkClick = LinkLabel1LinkClick
+    end
   end
 end
