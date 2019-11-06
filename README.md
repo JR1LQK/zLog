@@ -37,7 +37,7 @@ JARLコンテスト委員会は横林さんからzLog for Windowsのソースコ
 
 ------
 # 令和 Edition
-ビルド方法 de JR8PPG
+## ビルド方法 de JR8PPG
 
 (1)Delphi 10.3.2でビルドするにあたり、ICSは下記のサイトのICSV8.58を使用
 
@@ -53,37 +53,29 @@ InstallフォルダのD103Install.groupprojを開き、ビルド→インスト�
 
 (5)完成
 
-オリジナルからの変更点
+## オリジナルからの変更点
 
-(1)JARL ELOG 2.0に対応
+1. JARL ELOG 2.0に対応
+2. LPTポート対応廃止
+3. Voice対応廃止
+4. Windows7/10で目立つ不具合修正
+5. FT-2000,ICOMのカタログ機種を追加
+6. RIGコントロールのCOMポートをCOM1～COM20まで拡張
+7. RIGコントロールの通信速度を設定可能に
+8. CWキーイングのサイドトーン機能廃止
+9. など
 
-(2)LPTポート対応廃止
+## 動作確認済みコンテスト
 
-(3)Voice対応廃止
+* ALL JAコンテスト
+* 6m&DOWNコンテスト
+* 全市全郡コンテスト
+* ALL JA8コンテスト
+* 東京UHFコンテスト
 
-(4)Windows7/10で目立つ不具合修正
+## 動作確認済み機能
 
-(5)FT-2000,ICOMのカタログ機種を追加
-
-(6)RIGコントロールのCOMポートをCOM1～COM20まで拡張
-
-(7)RIGコントロールの通信速度を設定可能に
-
-(8)CWキーイングのサイドトーン機能廃止
-
-(9)など
-
-動作確認済みコンテスト
-
-・ALL JAコンテスト
-・6m&DOWNコンテスト
-・全市全郡コンテスト
-・ALL JA8コンテスト
-・東京UHFコンテスト
-
-動作確認済み機能
-
-・Packet Cluster
-・BandScope
-・Z-Link
-・COMポートによるCWキーイング
+* Packet Cluster
+* BandScope
+* Z-Link
+* COMポートによるCWキーイング
