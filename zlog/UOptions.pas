@@ -446,7 +446,6 @@ begin
    dmZlogGlobal.ImplementSettings(False);
 
    dmZlogGlobal.SaveCurrentSettings();
-   Close;
 end;
 
 procedure TformOptions.RenewCWStrBankDisp;
@@ -673,7 +672,7 @@ end;
 
 procedure TformOptions.buttonCancelClick(Sender: TObject);
 begin
-   Close;
+//   Close;
 end;
 
 procedure TformOptions.OpEditKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);

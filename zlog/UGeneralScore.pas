@@ -138,15 +138,15 @@ procedure TGeneralScore.LoadCFG(Filename: string);
 var
    zfile: textfile;
    check: boolean;
-   rstr, tstr, com, opr: string;
+   rstr, tstr, com, opr, str: string;
    p, q, work, i, k: Integer;
    _bnd: TBand;
 const
    TAB = #$09;
 begin
-   check := FileExists(Filename); // (IOresult=0);
-   if check = False then begin
-      MessageDlg('CFG file cannot be found. Place it in the same folder as ZLOG.EXE', mtError, [mbOK], 0);
+   // Filename‚Íƒtƒ‹ƒpƒX
+   if FileExists(Filename) = False then begin
+      MessageDlg('[' + Filename + '] file cannot be found. Place it in the same folder as ZLOG.EXE', mtError, [mbOK], 0);
       Exit;
    end;
 
@@ -566,16 +566,19 @@ begin
                   'H':
                      dmZlogGlobal.CurrentPower[_bnd] := pwrH;
                   '-': begin
-                        dmZlogGlobal.CurrentPower[_bnd] := pwrP;
-                        // dmZlogGlobal.CurrentPower2[_bnd]:=p010;
-                        MainForm.BandMenu.Items[ord(_bnd)].Visible := False;
-                     end;
+                     dmZlogGlobal.CurrentPower[_bnd] := pwrP;
+                     MainForm.HideBandMenu(_bnd);
+                  end;
                end;
-               if _bnd < HiBand then
+
+               if _bnd < HiBand then begin
                   repeat
                      inc(_bnd);
                   until NotWARC(_bnd);
+               end;
             end;
+
+            MainForm.HideBandMenuWarc();
          end;
 
          if com = 'UNLISTEDMULTI' then begin
@@ -624,10 +627,14 @@ begin
 
          if com = 'WARC' then begin
             if opr = 'ON' then begin
-               formMulti.WARC := true;
-               MainForm.BandMenu.Items[ord(b10)].Visible := true;
-               MainForm.BandMenu.Items[ord(b18)].Visible := true;
-               MainForm.BandMenu.Items[ord(b24)].Visible := true;
+               formMulti.WARC := True;
+               MainForm.BandMenu.Items[ord(b10)].Visible := True;
+               MainForm.BandMenu.Items[ord(b18)].Visible := True;
+               MainForm.BandMenu.Items[ord(b24)].Visible := True;
+            end
+            else begin
+               formMulti.WARC := False;
+               MainForm.HideBandMenuWarc();
             end;
          end;
       end;
@@ -661,13 +668,11 @@ begin
       Grid.Cells[5, row] := '';
    end;
 
-   formMulti.SetActiveBands;
-
    for band := b19 to HiBand do begin
       TotQSO := TotQSO + QSO[band];
       TotPoints := TotPoints + Points[band];
       TotMulti := TotMulti + Multi[band];
-      if ActiveBands[band] then begin
+      if dmZlogGlobal.Settings._activebands[band] then begin
          Grid.Cells[0, row] := '*' + MHzString[band];
          Grid.Cells[1, row] := IntToStr3(QSO[band]);
          Grid.Cells[2, row] := IntToStr3(Points[band]);

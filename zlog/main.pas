@@ -741,9 +741,6 @@ type
     procedure InitAllAsianDX();
     procedure InitIOTA();
     procedure InitWAE();
-    procedure HideBandMenuHF();
-    procedure HideBandMenuWARC();
-    procedure HideBandMenuVU();
   public
     EditScreen : TBasicEdit;
     LastFocus : TEdit;
@@ -784,6 +781,11 @@ type
     procedure IncFontSize;
     procedure AutoInput(D : TBSData);
     procedure ConsoleRigBandSet(B: TBand);
+
+    procedure HideBandMenu(b: TBand);
+    procedure HideBandMenuHF();
+    procedure HideBandMenuWARC();
+    procedure HideBandMenuVU();
   end;
 
 var
@@ -2758,13 +2760,12 @@ end;
 
 procedure TBasicEdit.Add(aQSO: TQSO);
 var
-   R: word;
    i: integer;
 begin
-   if MainForm.ShowCurrentBandOnly.Checked and (aQSO.QSO.Band <> CurrentQSO.QSO.Band) then
-      exit;
+   if MainForm.ShowCurrentBandOnly.Checked and (aQSO.QSO.Band <> CurrentQSO.QSO.Band) then begin
+      Exit;
+   end;
 
-   R := Log.TotalQSO;
    with MainForm.Grid do begin
 
       inc(DispQSO);
@@ -2772,7 +2773,7 @@ begin
       WriteQSO(DispQSO, aQSO);
       IndexArray[DispQSO] := Log.TotalQSO;
 
-      i := DispQSO - VisibleRowCount + 1;
+      i := DispQSO - VisibleRowCount;
 
       if (MainForm.Grid.Focused = False) and (aQSO.QSO.Reserve2 <> $AA) { local } then begin
          if i > 0 then
@@ -6236,6 +6237,10 @@ begin
 
       RenewCWToolBar;
       RenewVoiceToolBar;
+
+      MyContest.ScoreForm.Update();
+      MyContest.MultiForm.Update();
+
       LastFocus.SetFocus;
    finally
       f.Release();
@@ -7414,7 +7419,7 @@ begin
       dmZlogGlobal.ImplementSettings(False);
 
       RestoreWindowStates;
-      dmZlogGlobal.ReadWindowState(MyContest.MultiForm, 'MultiForm', True);
+      dmZlogGlobal.ReadWindowState(MyContest.MultiForm, 'MultiForm', False);
       dmZlogGlobal.ReadWindowState(MyContest.ScoreForm, 'ScoreForm', True);
 
       if Pos('WAEDC', MyContest.Name) > 0 then begin
@@ -7462,6 +7467,9 @@ begin
       UpdateBand(CurrentQSO.QSO.Band);
       UpdateMode(CurrentQSO.QSO.mode);
       BandScope2.SetBandMode(CurrentQSO.QSO.Band, CurrentQSO.QSO.mode);
+
+      MyContest.ScoreForm.Update();
+      MyContest.MultiForm.Update();
 
       if FPostContest then begin
          TimeEdit.SetFocus;
@@ -7800,6 +7808,11 @@ begin
    MyContest := TWAEContest.Create('WAEDC Contest');
    // QTHString := dmZlogGlobal.Settings._prov;
    dmZlogGlobal.Settings._sentstr := '$S';
+end;
+
+procedure TMainForm.HideBandMenu(b: TBand);
+begin
+   BandMenu.Items[Ord(b)].Visible := False;
 end;
 
 procedure TMainForm.HideBandMenuHF();

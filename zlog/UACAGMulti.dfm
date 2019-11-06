@@ -13,6 +13,7 @@ object ACAGMulti: TACAGMulti
   OldCreateOrder = True
   Scaled = False
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
@@ -302,5 +303,13 @@ object ACAGMulti: TACAGMulti
     OddRowColor = clWindow
     EvenRowColor = clWindow
     OnSetting = GridSetting
+    ColWidths = (
+      500)
+    RowHeights = (
+      14
+      14
+      14
+      14
+      14)
   end
 end

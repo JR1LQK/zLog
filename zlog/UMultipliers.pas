@@ -3,7 +3,7 @@ unit UMultipliers;
 interface
 
 uses
-  SysUtils, Windows, Classes, Dialogs, UzLogGlobal;
+  SysUtils, Windows, Classes, Dialogs, Forms, UzLogGlobal;
 
 const testCQWW = $03;
       MAXCQZONE = 40;
@@ -56,10 +56,10 @@ type
   end;
 
   TCity = class
-    CityNumber : string[30];
-    CityName : string[40];
-    PrefNumber : string[3];
-    PrefName : string[10];
+    CityNumber : string;
+    CityName : string;
+    PrefNumber : string;
+    PrefName : string;
     Worked : array[b19..HiBand] of boolean;
     Index : integer;
     constructor Create;
@@ -81,15 +81,10 @@ type
     function AddAndSort(C : TCity) : integer; // returns the index inserted
   end;
 
-
-
-
-  TActiveBands = array[b19..HiBand] of boolean;
-
-var CountryList : TCountryList;
-    PrefixList : TPrefixList;
-    MyCountry, MyContinent, MyZone : string[255];
-    ActiveBands : TActiveBands; // cf generalmulti2
+var
+  CountryList : TCountryList;
+  PrefixList : TPrefixList;
+  MyCountry, MyContinent, MyZone : string[255];
 
 procedure LoadCTY_DAT(TEST : byte; var L : TCountryList; var PL : TPrefixList);
 procedure LoadCountryDataFromFile(filename : string; var L : TCountryList; var PL : TPrefixList);
@@ -102,1098 +97,1121 @@ procedure AnalyzeMyCountry;
 
 implementation
 
-procedure TPrefixList.AddListX(PX : TPrefix);
-var j, k : integer;
-    p : string;
-    boo : boolean;
+procedure TPrefixList.AddListX(PX: TPrefix);
+var
+   j, k: integer;
+   p: string;
+   boo: boolean;
 begin
-  p := PX.Prefix;
-  if List.Count = 0 then
-    begin
+   p := PX.Prefix;
+   if List.Count = 0 then begin
       List.Add(PX);
       exit;
-    end
-  else
-    begin
+   end
+   else begin
       boo := false;
       if boo = false then
-        k := 0;
-      for j := k to List.Count-1 do
-        begin
-          if PXMoreX(p, TPrefix(List[j]).Prefix)=False then
-            begin
-              List.Insert(j, PX);
-              exit;
-            end;
-        end;
+         k := 0;
+      for j := k to List.Count - 1 do begin
+         if PXMoreX(p, TPrefix(List[j]).Prefix) = false then begin
+            List.Insert(j, PX);
+            exit;
+         end;
+      end;
       List.Add(PX);
-    end;
+   end;
 end;
 
 constructor TCountryList.Create;
 begin
-  List := TList.Create;
+   List := TList.Create;
 end;
 
 destructor TCountryList.Destroy;
-var i : integer;
+var
+   i: integer;
 begin
-  List.Pack;
-  for i := 0 to List.Count-1 do
-    TCountry(List[i]).Free;
-  List.Free;
+   List.Pack;
+
+   for i := 0 to List.Count - 1 do begin
+      TCountry(List[i]).Free;
+   end;
+
+   List.Free;
 end;
 
 procedure TCountryList.Reset;
-var i : integer;
-    B : TBand;
+var
+   i: integer;
+   B: TBand;
 begin
-  for i := 0 to List.Count - 1 do
-    for B := b19 to HiBand do
-      TCountry(List[i]).Worked[B] := False;
+   for i := 0 to List.Count - 1 do
+      for B := b19 to HiBand do
+         TCountry(List[i]).Worked[B] := false;
 end;
 
-function TCountry.Summary : string;
-var temp : string;
-    B : TBand;
+function TCountry.Summary: string;
+var
+   temp: string;
+   B: TBand;
 begin
-  if pos('WAEDC', CONTESTNAME) > 0 then
-    begin
+   if pos('WAEDC', CONTESTNAME) > 0 then begin
       Result := SummaryWAE;
       exit;
-    end;
-  if CountryName = 'Unknown' then
-    begin
+   end;
+
+   if CountryName = 'Unknown' then begin
       Result := 'Unknown Country';
       exit;
-    end;
-  temp := '';
-  temp := FillRight(Country,7)+FillRight(CountryName,28)+
-          FillRight(IntToStr(Zone),2)+' '+ //ver 0.23
-          Continent+ '  ';
-  for B := b19 to b28 do
-    if NotWARC(B) then
-      if Worked[B] then
-        temp := temp + '* '
-      else
-        temp := temp + '. ';
-  Result := temp;
+   end;
+
+   temp := '';
+   temp := FillRight(Country, 7) +
+           FillRight(CountryName, 28) +
+           FillRight(IntToStr(Zone), 2) + ' ' + // ver 0.23
+           Continent + '  ';
+
+   for B := b19 to b28 do begin
+      if NotWARC(B) then begin
+         if Worked[B] then
+            temp := temp + '* '
+         else
+            temp := temp + '. ';
+      end;
+   end;
+
+   Result := temp;
 end;
 
-function TCountry.SummaryWAE : string;
-var temp : string;
-    B : TBand;
+function TCountry.SummaryWAE: string;
+var
+   temp: string;
+   B: TBand;
 begin
-  if CountryName = 'Unknown' then
-    begin
+   if CountryName = 'Unknown' then begin
       Result := 'Unknown Country';
       exit;
-    end;
-  temp := '';
-  temp := FillRight(Country,7)+FillRight(CountryName,28)+
-          '   '+ Continent + '    ';
-  for B := b35 to b28 do
-    if NotWARC(B) then
-      if Worked[B] then
-        temp := temp + '* '
-      else
-        temp := temp + '. ';
-  Result := temp;
+   end;
+
+   temp := '';
+   temp := FillRight(Country, 7) +
+           FillRight(CountryName, 28) + '   ' + Continent + '    ';
+
+   for B := b35 to b28 do begin
+      if NotWARC(B) then begin
+         if Worked[B] then
+            temp := temp + '* '
+         else
+            temp := temp + '. ';
+      end;
+   end;
+
+   Result := temp;
 end;
 
-function TCountry.SummaryGeneral : string;
-var temp : string;
-    B : TBand;
-    temp2 : string[15];
+function TCountry.SummaryGeneral: string;
+var
+   temp: string;
+   B: TBand;
+   temp2: string[15];
 begin
-  if CountryName = 'Unknown' then
-    begin
+   if CountryName = 'Unknown' then begin
       Result := 'Unknown Country';
       exit;
-    end;
-  temp := '';
-  temp2 := CountryName;
-  temp := FillRight(Country,6)+FillRight(temp2, 16)+
-          FillRight(IntToStr(Zone),2)+' '+ //ver 0.23
-          Continent+ '  ';
-{
-  for B := b19 to HiBand do
-    if NotWARC(B) then
-      if Worked[B] then
-        temp := temp + '* '
-      else
-        temp := temp + '. ';
-}
-  for B := b19 to Hiband do
-    if ActiveBands[B] then
-      if Worked[B] then
-        temp := temp + '* '
-      else
-        temp := temp + '. ';
+   end;
 
-  Result := temp;
+   temp := '';
+   temp2 := CountryName;
+   temp := FillRight(Country, 6) +
+           FillRight(temp2, 16) +
+           FillRight(IntToStr(Zone), 2) + ' ' + // ver 0.23
+           Continent + '  ';
+
+   for B := b19 to HiBand do begin
+      if dmZlogGlobal.Settings._activebands[B] then begin
+         if Worked[B] then begin
+            temp := temp + '* ';
+         end
+         else begin
+            temp := temp + '. ';
+         end;
+      end;
+   end;
+
+   Result := temp;
 end;
 
-
-function TCountry.Summary2 : string;
-var temp : string;
-    B : TBand;
-    i : integer;
+function TCountry.Summary2: string;
+var
+   temp: string;
+   B: TBand;
+   i: integer;
 begin
-  if CountryName = 'Unknown' then
-    begin
+   if CountryName = 'Unknown' then begin
       Result := 'Unknown';
       exit;
-    end;
-  temp := '';
-  temp := FillRight(Country,7)+FillRight(CountryName,28)+ Continent+ '  ';
-  temp := temp + 'worked on : ';
-  for B := b19 to b28 do
-    if NotWARC(B) then
-      if Worked[B] then
-        temp := temp + MHzString[B] + ' '
-      else
-        for i := 1 to length(MHzString[B]) do
-          temp := temp + ' ';
-  Result := temp;
+   end;
+
+   temp := '';
+   temp := FillRight(Country, 7) + FillRight(CountryName, 28) + Continent + '  ';
+   temp := temp + 'worked on : ';
+
+   for B := b19 to b28 do begin
+      if NotWARC(B) then begin
+         if Worked[B] then
+            temp := temp + MHzString[B] + ' '
+         else
+            for i := 1 to Length(MHzString[B]) do begin
+               temp := temp + ' ';
+            end;
+      end;
+   end;
+
+   Result := temp;
 end;
 
-function TCountry.SummaryARRL10 : string;
-var temp : string;
-    B : TBand;
+function TCountry.SummaryARRL10: string;
+var
+   temp: string;
+   B: TBand;
 begin
-  if CountryName = 'Unknown' then
-    begin
+   if CountryName = 'Unknown' then begin
       Result := ' Unknown country';
       exit;
-    end;
-  temp := ' '+FillRight(Country,7)+FillRight(CountryName,28) + Continent+ '  ';
-  if IsWVE(Country) then
-    begin
+   end;
+
+   temp := ' ' + FillRight(Country, 7) +
+                 FillRight(CountryName, 28) + Continent + '  ';
+
+   if IsWVE(Country) then begin
       Result := temp + 'N/A';
       exit;
-    end;
-  for B := b19 to b35 do
-    if Worked[B] then
-      temp := temp + '*  '
-    else
-      temp := temp + '.  ';
-  Result := temp;
+   end;
+
+   for B := b19 to b35 do
+      if Worked[B] then
+         temp := temp + '*  '
+      else
+         temp := temp + '.  ';
+
+   Result := temp;
 end;
 
-function TCountry.JustInfo : string;
-var temp : string;
+function TCountry.JustInfo: string;
+var
+   temp: string;
 begin
-  if CountryName = 'Unknown' then
-    begin
+   if CountryName = 'Unknown' then begin
       Result := 'Unknown';
       exit;
-    end;
-  temp := '';
-  temp := FillRight(Country,7)+FillRight(CountryName,28)+ Continent+ '  ';
-  Result := temp;
+   end;
+
+   temp := '';
+   temp := FillRight(Country, 7) +
+           FillRight(CountryName, 28) + Continent + '  ';
+
+   Result := temp;
 end;
 
 constructor TCountry.Create;
-var B : TBand;
+var
+   B: TBand;
 begin
-  for B := b19 to HiBand do
-    Worked[B] := False;
-  Country := '';
-  CountryName := '';
-  Zone := 0;
-  Continent := '';
+   for B := b19 to HiBand do
+      Worked[B] := false;
+
+   Country := '';
+   CountryName := '';
+   Zone := 0;
+   Continent := '';
 end;
 
 constructor TPrefix.Create;
 begin
-  Prefix := '';
-  Index := 0;
-  Length := 0;
-  OvrZone := 0;
-  OvrContinent := '';
+   Prefix := '';
+   Index := 0;
+   Length := 0;
+   OvrZone := 0;
+   OvrContinent := '';
 end;
 
 constructor TPrefixList.Create;
-var i : integer;
+var
+   i: integer;
 begin
-  List := TList.Create;
-{  for i := 0 to 255 do
-    ListIndex[i] := -1;}
-  for i := 0 to MaxIndex do
-    ListIndexX[i] := -1;
+   List := TList.Create;
+   { for i := 0 to 255 do
+     ListIndex[i] := -1; }
+   for i := 0 to MaxIndex do
+      ListIndexX[i] := -1;
 end;
 
 destructor TPrefixList.Destroy;
-var i : integer;
+var
+   i: integer;
 begin
-  List.Pack;
-  for i := 0 to List.Count-1 do
-    TPrefix(List[i]).Free;
-  List.Free;
+   List.Pack;
+   for i := 0 to List.Count - 1 do
+      TPrefix(List[i]).Free;
+   List.Free;
 end;
 
 procedure TPrefixList.InitIndexX;
-var i, j : integer;
-    s : string;
+var
+   i, j: integer;
+   s: string;
 begin
-  for i := List.Count-1 downto 0 do
-    begin
+   for i := List.Count - 1 downto 0 do begin
       s := TPrefix(List[i]).Prefix;
       j := PXIndex(s);
       if j >= 0 then
-        ListIndexX[j] := i;
-    end;
+         ListIndexX[j] := i;
+   end;
 end;
 
-
-
-
-procedure LoadCTY_DAT(TEST : byte; var L : TCountryList; var PL : TPrefixList);
-var f : textfile;
-    str, temp, temp2 : string;
-    C : TCountry;
-    P : TPrefix;
-    i, mii, j, k, m : integer;
+procedure LoadCTY_DAT(TEST: byte; var L: TCountryList; var PL: TPrefixList);
+var
+   f: textfile;
+   str, temp, temp2: string;
+   C: TCountry;
+   p: TPrefix;
+   i, mii, j, k, m: integer;
 begin
-  _DATFileName := 'CTY.DAT';
-  System.assign(f, 'CTY.DAT');
-  try
-    System.reset(f);
-  except
-    on EFOpenError do
-      begin
-        exit;
+   _DATFileName := 'CTY.DAT';
+   System.assign(f, 'CTY.DAT');
+   try
+      System.Reset(f);
+   except
+      on EFOpenError do begin
+         exit;
       end;
-  end;
+   end;
 
-  //readln(f, str);
-  C := TCountry.Create;
-  C.CountryName := 'Unknown';
-  L.List.Add(C);
-  while not(eof(f)) do
-    begin
+   // readln(f, str);
+   C := TCountry.Create;
+   C.CountryName := 'Unknown';
+   L.List.Add(C);
+   while not(eof(f)) do begin
       readln(f, str);
 
-      if (Pos('*', str) > 0) and (TEST <> testCQWW) then //Cty only for CQWW
-        begin
-          repeat
+      if (pos('*', str) > 0) and (TEST <> testCQWW) then // Cty only for CQWW
+      begin
+         repeat
             readln(f, str);
-          until (eof(f)) or (pos(':',str) > 0);
-          if eof(f) then
+         until (eof(f)) or (pos(':', str) > 0);
+         if eof(f) then
             exit;
-        end;
+      end;
 
       C := TCountry.Create;
 
-      i := Pos(':',str);
-      if i > 0 then
-        begin
-          C.CountryName := copy(str,1,i-1);
-          Delete(str, 1, i);
-          str := TrimLeft(str);
-        end;
+      i := pos(':', str);
+      if i > 0 then begin
+         C.CountryName := copy(str, 1, i - 1);
+         Delete(str, 1, i);
+         str := TrimLeft(str);
+      end;
 
-      i := Pos(':',str);
-      if i > 0 then
-        begin
-          temp := copy(str,1,i-1);
-          try
-            j := StrToInt(temp);
-          except
-            on EConvertError do
-              j := 0;
-          end;
-          if (TEST in [testCQWW, testDXCCWWZone]) then
+      i := pos(':', str);
+      if i > 0 then begin
+         temp := copy(str, 1, i - 1);
+         j := StrToIntDef(temp, 0);
+
+         if (TEST in [testCQWW, testDXCCWWZone]) then
             C.Zone := j;
-          Delete(str, 1, i);
-          str := TrimLeft(str);
-        end;
 
-      i := Pos(':',str);
-      if i > 0 then
-        begin
-          temp := copy(str,1,i-1);
-          try
-            j := StrToInt(temp);
-          except
-            on EConvertError do
-              j := 0;
-          end;
-          if (TEST = testIARU) then
+         Delete(str, 1, i);
+         str := TrimLeft(str);
+      end;
+
+      i := pos(':', str);
+      if i > 0 then begin
+         temp := copy(str, 1, i - 1);
+         j := StrToIntDef(temp, 0);
+
+         if (TEST = testIARU) then
             C.Zone := j;
-          Delete(str, 1, i);
-          str := TrimLeft(str);
-        end;
 
-      i := Pos(':',str);
-      if i > 0 then
-        begin
-          temp := copy(str,1,i-1);
-          if Pos(temp+';', 'AS;AF;EU;NA;SA;OC;') > 0 then
+         Delete(str, 1, i);
+         str := TrimLeft(str);
+      end;
+
+      i := pos(':', str);
+      if i > 0 then begin
+         temp := copy(str, 1, i - 1);
+         if pos(temp + ';', 'AS;AF;EU;NA;SA;OC;') > 0 then
             C.Continent := temp;
-          Delete(str, 1, i);
-          str := TrimLeft(str);
-        end;
+         Delete(str, 1, i);
+         str := TrimLeft(str);
+      end;
 
-      i := Pos(':',str); // latitude
-      if i > 0 then
-        begin
-          Delete(str, 1, i);
-          str := TrimLeft(str);
-        end;
+      i := pos(':', str); // latitude
+      if i > 0 then begin
+         Delete(str, 1, i);
+         str := TrimLeft(str);
+      end;
 
-      i := Pos(':',str); // longitude
-      if i > 0 then
-        begin
-          Delete(str, 1, i);
-          str := TrimLeft(str);
-        end;
+      i := pos(':', str); // longitude
+      if i > 0 then begin
+         Delete(str, 1, i);
+         str := TrimLeft(str);
+      end;
 
-      i := Pos(':',str); // utc offset
-      if i > 0 then
-        begin
-          Delete(str, 1, i);
-          str := TrimLeft(str);
-        end;
+      i := pos(':', str); // utc offset
+      if i > 0 then begin
+         Delete(str, 1, i);
+         str := TrimLeft(str);
+      end;
 
-      i := Pos(':',str);
-      if i > 0 then
-        begin
-          temp := copy(str, 1, i-1);
-          if temp[1] = '*' then
-            Delete(temp,1,1);
-          C.Country := temp;
-          //Delete(str, 1, i);
-          //str := TrimLeft(str);
-        end;
+      i := pos(':', str);
+      if i > 0 then begin
+         temp := copy(str, 1, i - 1);
+         if temp[1] = '*' then
+            Delete(temp, 1, 1);
+
+         C.Country := temp;
+      end;
 
       L.List.Add(C);
-      i := L.List.Count -1;
+      i := L.List.Count - 1;
       C.GridIndex := i;
 
       repeat
-        mii:=1;
-        readln(f,str);
-        str := TrimLeft(str);
-          repeat
-            temp:='';
+         mii := 1;
+         readln(f, str);
+         str := TrimLeft(str);
+         repeat
+            temp := '';
             repeat
-	      temp:=temp+str[mii];
-	      inc(mii)
-	    until (str[mii]=',') or (str[mii]=';') or (mii>length(str));
+               temp := temp + str[mii];
+               inc(mii)
+            until (str[mii] = ',') or (str[mii] = ';') or (mii > Length(str));
 
-            P := TPrefix.Create;
+            p := TPrefix.Create;
 
-            if (pos('(', temp) > 0) then
-              begin
-                j := pos('(',temp);
-                k := pos(')',temp);
-                if k > j+1 then
-                  begin
-                    temp2 := copy(temp, j+1, k-j-1);
-                    try
-                      m := StrToInt(temp2);
-                    except
-                      on EConvertError do
-                        m := 0;
-                    end;
-                    if (m > 0) and (TEST in [testCQWW, testDXCCWWZone]) then
-                      P.OvrZone := m;
-                  end;
-                Delete(temp,j,k-j+1);
-              end;
+            if (pos('(', temp) > 0) then begin
+               j := pos('(', temp);
+               k := pos(')', temp);
+               if k > j + 1 then begin
+                  temp2 := copy(temp, j + 1, k - j - 1);
+                  m := StrToIntDef(temp2, 0);
 
-            if (pos('[', temp) > 0) then
-              begin
-                j := pos('[',temp);
-                k := pos(']',temp);
-                if k > j+1 then
-                  begin
-                    temp2 := copy(temp, j+1, k-j-1);
-                    try
-                      m := StrToInt(temp2);
-                    except
-                      on EConvertError do
-                        m := 0;
-                    end;
-                    if (m > 0) and (TEST=testIARU) then
-                      P.OvrZone := m;
-                  end;
-                Delete(temp,j,k-j+1);
-              end;
+                  if (m > 0) and (TEST in [testCQWW, testDXCCWWZone]) then
+                     p.OvrZone := m;
+               end;
+               Delete(temp, j, k - j + 1);
+            end;
 
-            if (pos('{', temp) > 0) then
-              begin
-                j := pos('{',temp);
-                k := pos('}',temp);
-                if k > j+1 then
-                  begin
-                    temp2 := copy(temp, j+1, k-j-1);
-                    if Pos(temp2+';', 'AS;AF;EU;NA;SA;OC;') > 0 then
-                      P.OvrContinent := temp2;
-                  end;
-                Delete(temp,j,k-j+1);
-              end;
+            if (pos('[', temp) > 0) then begin
+               j := pos('[', temp);
+               k := pos(']', temp);
+               if k > j + 1 then begin
+                  temp2 := copy(temp, j + 1, k - j - 1);
+                  m := StrToIntDef(temp2, 0);
+
+                  if (m > 0) and (TEST = testIARU) then
+                     p.OvrZone := m;
+               end;
+               Delete(temp, j, k - j + 1);
+            end;
+
+            if (pos('{', temp) > 0) then begin
+               j := pos('{', temp);
+               k := pos('}', temp);
+               if k > j + 1 then begin
+                  temp2 := copy(temp, j + 1, k - j - 1);
+                  if pos(temp2 + ';', 'AS;AF;EU;NA;SA;OC;') > 0 then
+                     p.OvrContinent := temp2;
+               end;
+               Delete(temp, j, k - j + 1);
+            end;
 
             if (pos('<', temp) > 0) then // lat, long override. ignore
-              begin
-                j := pos('<',temp);
-                k := pos('>',temp);
-                Delete(temp,j,k-j+1);
-              end;
+            begin
+               j := pos('<', temp);
+               k := pos('>', temp);
+               Delete(temp, j, k - j + 1);
+            end;
 
-            P.Prefix := temp;
-            P.Index := i;
-            P.Length := length(temp);
+            p.Prefix := temp;
+            p.Index := i;
+            p.Length := Length(temp);
 
-            {j := 0;
-            if PL.List.Count > 0 then
-              for j := 0 to PL.List.Count-1 do
-                begin
-                  if TPrefix(PL.List[j]).Length <= P.Length then
-                    break;
-                end;
-            PL.List.Insert(j, P); }
+            PL.AddListX(p); // 1.31
+            inc(mii);
+         until (mii >= Length(str) + 1);
+      until str[mii - 1] = ';';
+   end;
 
-            PL.AddListX(P); // 1.31
-	    inc(mii);
-	  until (mii >= Length(str)+1);
-       until str[mii-1]=';';
-
-    end;
-  PL.InitIndexX;
-  close(f);
+   PL.InitIndexX;
+   close(f);
 end;
 
-
-procedure LoadCountryDataFromFile(filename : string; var L : TCountryList; var PL : TPrefixList);
-var f : textfile;
-    str, temp : string;
-    C : TCountry;
-    P : TPrefix;
-    i, mii, j : integer;
+procedure LoadCountryDataFromFile(filename: string; var L: TCountryList; var PL: TPrefixList);
+var
+   f: textfile;
+   str, temp: string;
+   C: TCountry;
+   p: TPrefix;
+   i, mii, j: integer;
 begin
-  _DATFileName := filename;
-  System.assign(f, filename);
-  try
-    System.reset(f);
-  except
-    on EFOpenError do
-      begin
-        exit;
+   _DATFileName := filename;
+   System.assign(f, filename);
+   try
+      System.Reset(f);
+   except
+      on EFOpenError do begin
+         exit;
       end;
-  end;
-  readln(f, str);
-  C := TCountry.Create;
-  C.CountryName := 'Unknown';
-  L.List.Add(C);
-  while not(eof(f)) do
-    begin
+   end;
+   readln(f, str);
+   C := TCountry.Create;
+   C.CountryName := 'Unknown';
+   L.List.Add(C);
+   while not(eof(f)) do begin
       readln(f, str);
-      if Pos('end of file', LowerCase(str))>0 then break;
+      if pos('end of file', LowerCase(str)) > 0 then
+         break;
       C := TCountry.Create;
-      C.CountryName := TrimRight(copy(str,1,26));
-      temp := TrimLeft(TrimRight(copy(str,27,2)));
+      C.CountryName := TrimRight(copy(str, 1, 26));
+      temp := TrimLeft(TrimRight(copy(str, 27, 2)));
       try
-        i := StrToInt(temp)
+         i := StrToInt(temp)
       except
-        on EConvertError do
-          i := 0;
+         on EConvertError do
+            i := 0;
       end;
-      if (i < 0) or (i > 90{maxzone}) then
-        i := 0;
+      if (i < 0) or (i > 90 { maxzone } ) then
+         i := 0;
       C.Zone := i;
-      C.Country := TrimRight(copy(str,32,7));
+      C.Country := TrimRight(copy(str, 32, 7));
       case C.Zone of
-           1..8       :  C.Continent := 'NA';
-           9..13      :  C.Continent := 'SA';
-           14..16,40  :  C.Continent := 'EU';
-           17..26     :  C.Continent := 'AS';
-           27..32     :  C.Continent := 'OC';
-           33..39     :  C.Continent := 'AF';
-         end;
-      if str[39] in ['A','O','E'] then
-        begin
-          temp:=str[39]+str[40];
-             if temp='AS' then C.Continent := 'AS';
-             if temp='AN' then C.Continent := 'AN';
-             if temp='AF' then C.Continent := 'AF';
-             if temp='EU' then C.Continent := 'EU';
-             if temp='OC' then C.Continent := 'OC';
-             if temp='NA' then C.Continent := 'NA';
-             if temp='SA' then C.Continent := 'SA';
-           end;
+         1 .. 8:
+            C.Continent := 'NA';
+         9 .. 13:
+            C.Continent := 'SA';
+         14 .. 16, 40:
+            C.Continent := 'EU';
+         17 .. 26:
+            C.Continent := 'AS';
+         27 .. 32:
+            C.Continent := 'OC';
+         33 .. 39:
+            C.Continent := 'AF';
+      end;
+      if str[39] in ['A', 'O', 'E'] then begin
+         temp := str[39] + str[40];
+         if temp = 'AS' then
+            C.Continent := 'AS';
+         if temp = 'AN' then
+            C.Continent := 'AN';
+         if temp = 'AF' then
+            C.Continent := 'AF';
+         if temp = 'EU' then
+            C.Continent := 'EU';
+         if temp = 'OC' then
+            C.Continent := 'OC';
+         if temp = 'NA' then
+            C.Continent := 'NA';
+         if temp = 'SA' then
+            C.Continent := 'SA';
+      end;
       L.List.Add(C);
-      i := L.List.Count -1;
+      i := L.List.Count - 1;
       C.GridIndex := i;
 
       repeat
-        mii:=3;
-        readln(f,str);
-          repeat
-            temp:='';
+         mii := 3;
+         readln(f, str);
+         repeat
+            temp := '';
             repeat
-	      temp:=temp+str[mii];
-	      inc(mii)
-	    until (str[mii]=',') or (str[mii]=';');
-            P := TPrefix.Create;
-            P.Prefix := temp;
-            P.Index := i;
-            P.Length := length(temp);
-            {j := 0;
-            if PL.List.Count > 0 then
+               temp := temp + str[mii];
+               inc(mii)
+            until (str[mii] = ',') or (str[mii] = ';');
+            p := TPrefix.Create;
+            p.Prefix := temp;
+            p.Index := i;
+            p.Length := Length(temp);
+            { j := 0;
+              if PL.List.Count > 0 then
               for j := 0 to PL.List.Count-1 do
-                begin
-                  if TPrefix(PL.List[j]).Length <= P.Length then
-                    break;
-                end;
-            PL.List.Insert(j, P); }
-            PL.AddListX(P); // 1.31
-	    inc(mii);
-	  until mii=Length(str)+1;
-       until str[mii-1]=';';
-    end;
-  mii := 0;
-  close(f);
-  PL.InitIndexX;
+              begin
+              if TPrefix(PL.List[j]).Length <= P.Length then
+              break;
+              end;
+              PL.List.Insert(j, P); }
+            PL.AddListX(p); // 1.31
+            inc(mii);
+         until mii = Length(str) + 1;
+      until str[mii - 1] = ';';
+   end;
+   mii := 0;
+   close(f);
+   PL.InitIndexX;
 end;
 
-function GetPrefixX(aQSO : TQSO; PL : TPrefixList): TPrefix;
-var str, temp, firststr, px : string;
-    i, x, j, k, len, pind : integer;
-    boo : boolean;
+function GetPrefixX(aQSO: TQSO; PL: TPrefixList): TPrefix;
+var
+   str, temp, firststr, PX: string;
+   i, x, j, k, len, pind: integer;
+   boo: boolean;
 begin
-  Result := nil;
-  str := aQSO.QSO.CallSign;
-  if str = '' then
-    exit;
-  pind := PXIndex(str);
-  i := pos('/', str);
-  if i > 0 then
-    begin
+   Result := nil;
+   str := aQSO.QSO.CallSign;
+   if str = '' then
+      exit;
+   pind := PXIndex(str);
+   i := pos('/', str);
+   if i > 0 then begin
       // if there's a perfect match then go with it
-      len := length(str);
+      len := Length(str);
       x := PL.ListIndexX[pind];
-      if x >= 0 then
-        begin
-          for j := x to PL.List.Count - 1 do
-            begin
-              if TPrefix(PL.List[j]).Prefix = str then
-                begin
-                  Result := TPrefix(PL.List[j]);
-                  exit;
-                end;
-              if len > TPrefix(PL.List[j]).Length then
-                break;
+      if x >= 0 then begin
+         for j := x to PL.List.Count - 1 do begin
+            if TPrefix(PL.List[j]).Prefix = str then begin
+               Result := TPrefix(PL.List[j]);
+               exit;
             end;
-        end;
+            if len > TPrefix(PL.List[j]).Length then
+               break;
+         end;
+      end;
 
       temp := copy(str, i + 1, 255);
-      if temp = 'MM' then  {Marine Mobile}
-        begin
-          Result := nil;
-          exit;
-        end;
-      if (temp='AA') or (temp='AT') or (temp='AG') or (temp='AA') or
-         (temp='AE') or (temp='M') or (temp='P') or (temp='AM') or
-         (temp='QRP') or (temp='A') or (temp='KT') or (temp='N')or
-         (temp='T')  then
-        str := copy(str, 1, i - 1)  {cut /AA /M etc}
-      else
-        if (length(temp) = 1) and (temp[1] in ['0'..'9']) then
-          str := copy(str, 1, i - 1)  {cut /0 /1 etc}
-        else
-          if i > 4 then {JA1ZLO/JD1, KH0AM/W6 etc NOT KH0/AD6AJ}
-            begin
-              if i = 5 then // kh7k/ad6aj etc or w6aa/kh0
-                begin       // if the first part exactly matches with a prefix, it will return that prefix
-                  boo := false;
-                  firststr := copy(str, 1, 4);
-                  if x >= 0 then
-                    for k := x to PL.List.Count - 1 do
-                      begin
-                        if TPrefix(PL.List[k]).Prefix = firststr then
-                          begin
-                            boo := true;
-                            break;
-                          end;
-                        if PXIndex(TPrefix(PL.List[k]).Prefix) <> pind then
-                          break;
-                      end;
-                  if boo then
-                    begin
-                      Result := TPrefix(PL.List[k]);
-                      exit;
-                    end;
-                end;
-              str := temp;
+      if temp = 'MM' then { Marine Mobile }
+      begin
+         Result := nil;
+         exit;
+      end;
+      if (temp = 'AA') or (temp = 'AT') or (temp = 'AG') or (temp = 'AA') or (temp = 'AE') or (temp = 'M') or (temp = 'P') or (temp = 'AM') or
+        (temp = 'QRP') or (temp = 'A') or (temp = 'KT') or (temp = 'N') or (temp = 'T') then
+         str := copy(str, 1, i - 1) { cut /AA /M etc }
+      else if (Length(temp) = 1) and (temp[1] in ['0' .. '9']) then
+         str := copy(str, 1, i - 1) { cut /0 /1 etc }
+      else if i > 4 then { JA1ZLO/JD1, KH0AM/W6 etc NOT KH0/AD6AJ }
+      begin
+         if i = 5 then // kh7k/ad6aj etc or w6aa/kh0
+         begin // if the first part exactly matches with a prefix, it will return that prefix
+            boo := false;
+            firststr := copy(str, 1, 4);
+            if x >= 0 then
+               for k := x to PL.List.Count - 1 do begin
+                  if TPrefix(PL.List[k]).Prefix = firststr then begin
+                     boo := true;
+                     break;
+                  end;
+                  if PXIndex(TPrefix(PL.List[k]).Prefix) <> pind then
+                     break;
+               end;
+            if boo then begin
+               Result := TPrefix(PL.List[k]);
+               exit;
             end;
-    end;
+         end;
+         str := temp;
+      end;
+   end;
 
-  boo := false;
-  if str = '' then
-    exit;
+   boo := false;
+   if str = '' then
+      exit;
 
-  if pos('KG4', str) = 1 then
-    begin
-      if length(str) = 6 then
-        str := 'AD4AJ';
-    end;
+   if pos('KG4', str) = 1 then begin
+      if Length(str) = 6 then
+         str := 'AD4AJ';
+   end;
 
-  pind := PXIndex(str);
-  x := PL.ListIndexX[pind];
-  if x < 0 then
-    begin
-      pind := PXIndex(copy(str,1,1));
+   pind := PXIndex(str);
+   x := PL.ListIndexX[pind];
+   if x < 0 then begin
+      pind := PXIndex(copy(str, 1, 1));
       x := PL.ListIndexX[pind];
-    end;
+   end;
 
-  if x < 0 then
-    exit;
+   if x < 0 then
+      exit;
 
-  for j := pind+1 to MaxIndex do
-    if PL.ListIndexX[j] >= 0 then
-      break;
+   for j := pind + 1 to MaxIndex do
+      if PL.ListIndexX[j] >= 0 then
+         break;
 
-  for i := x to PL.ListIndexX[j] - 1 do
-    begin
-      if Pos(TPrefix(PL.List[i]).Prefix, str)=1 then
-        begin
-          boo := true;
-          break;
-        end;
-    end;
+   for i := x to PL.ListIndexX[j] - 1 do begin
+      if pos(TPrefix(PL.List[i]).Prefix, str) = 1 then begin
+         boo := true;
+         break;
+      end;
+   end;
 
-  if boo then
-    Result := TPrefix(PL.List[i])
-  else
-    begin
-      x := PL.ListIndexX[PXIndex(copy(str,1,1))];
+   if boo then
+      Result := TPrefix(PL.List[i])
+   else begin
+      x := PL.ListIndexX[PXIndex(copy(str, 1, 1))];
       if x >= 0 then
-        Result := TPrefix(PL.List[x])
+         Result := TPrefix(PL.List[x])
       else
-        Result := nil;
-    end;
+         Result := nil;
+   end;
 
 end;
 
-function GetPrefix(aQSO : TQSO): TPrefix;
+function GetPrefix(aQSO: TQSO): TPrefix;
 begin
-  Result := GetPrefixX(aQSO, PrefixList);
+   Result := GetPrefixX(aQSO, PrefixList);
 end;
 
-function GetCountryIndex(aQSO : TQSO): integer;
+function GetCountryIndex(aQSO: TQSO): integer;
 begin
-  if GetPrefix(aQSO) <> nil then
-    Result := TPrefix(GetPrefix(aQSO)).Index
-  else
-    Result := 0;
+   if GetPrefix(aQSO) <> nil then
+      Result := TPrefix(GetPrefix(aQSO)).Index
+   else
+      Result := 0;
 end;
 
-function GetArea(str : string) : integer;
-var j, k : integer;
+function GetArea(str: string): integer;
+var
+   j, k: integer;
 begin
-  j := Pos('/', str);
-  if j > 4 then
-    begin
-      for k := length(str) downto 1 do
-        if str[k] in ['0'..'9'] then
-          break;
-    end
-  else
-    begin
-      for k := 1 to length(str) do
-        if str[k] in ['0'..'9'] then
-          break;
-    end;
-  if str[k] in ['0'..'9'] then
-    k := ord(str[k])-ord('0')
-  else
-    k := 6;
-  Result := k;
+   j := pos('/', str);
+   if j > 4 then begin
+      for k := Length(str) downto 1 do
+         if str[k] in ['0' .. '9'] then
+            break;
+   end
+   else begin
+      for k := 1 to Length(str) do
+         if str[k] in ['0' .. '9'] then
+            break;
+   end;
+   if str[k] in ['0' .. '9'] then
+      k := ord(str[k]) - ord('0')
+   else
+      k := 6;
+   Result := k;
 end;
 
-function expos(substr, str : string) : integer;
-var i, j : integer;
-    bad : boolean;
+function expos(substr, str: string): integer;
+var
+   i, j: integer;
+   bad: boolean;
 begin
-  Result := 0;
-  if (length(substr) > length(str)) or (substr = '') then
-    exit;
-  for i := 1 to (length(str)-length(substr) + 1) do
-    begin
+   Result := 0;
+   if (Length(substr) > Length(str)) or (substr = '') then
+      exit;
+   for i := 1 to (Length(str) - Length(substr) + 1) do begin
       bad := false;
-      for j := 1 to length(substr) do
-        begin
-          if substr[j] <> '?' then
-            if substr[j] <> str[i + j -1] then
-              bad := true;
-        end;
-      if bad = false then
-        begin
-          result := i;
-          exit;
-        end;
-    end;
+      for j := 1 to Length(substr) do begin
+         if substr[j] <> '?' then
+            if substr[j] <> str[i + j - 1] then
+               bad := true;
+      end;
+      if bad = false then begin
+         Result := i;
+         exit;
+      end;
+   end;
 end;
 
-function GuessCQZone(aQSO : TQSO) : string;
-var i, k : integer;
-    C : TCountry;
-    P : TPrefix;
-    str, str2 : string;
+function GuessCQZone(aQSO: TQSO): string;
+var
+   i, k: integer;
+   C: TCountry;
+   p: TPrefix;
+   str, str2: string;
 begin
-  P := GetPrefix(aQSO);
-  if P = nil then
-    begin
+   p := GetPrefix(aQSO);
+   if p = nil then begin
       Result := '';
       exit;
-    end
-  else
-    C := TCountry(CountryList.List[P.Index]);
-  str := aQSO.QSO.CallSign;
-  i := C.Zone;
+   end
+   else
+      C := TCountry(CountryList.List[p.Index]);
+   str := aQSO.QSO.CallSign;
+   i := C.Zone;
 
-  if (C.Country = 'W') or (C.Country = 'K') then
-    begin
+   if (C.Country = 'W') or (C.Country = 'K') then begin
       k := GetArea(str);
       case k of
-        1..4    : i := 5;
-        5,8,9,0 : i := 4;
-        6,7     : i := 3;
+         1 .. 4:
+            i := 5;
+         5, 8, 9, 0:
+            i := 4;
+         6, 7:
+            i := 3;
       end;
-    end;
+   end;
 
-  if C.Country = 'VE' then
-    begin
+   if C.Country = 'VE' then begin
       k := GetArea(str);
       case k of
-        1,2, 9  : i := 5;
-        3..6    : i := 4;
-        7       : i := 3;
-        8       : i := 1;
-        0       : i := 2;
+         1, 2, 9:
+            i := 5;
+         3 .. 6:
+            i := 4;
+         7:
+            i := 3;
+         8:
+            i := 1;
+         0:
+            i := 2;
       end;
-    end;
+   end;
 
-  if C.Country = 'VK' then
-    begin
+   if C.Country = 'VK' then begin
       k := GetArea(str);
       case k of
-        1..5,7  : i := 30;
-        6,8     : i := 29;
-        9,0     : i := 30;{Should not happen}
+         1 .. 5, 7:
+            i := 30;
+         6, 8:
+            i := 29;
+         9, 0:
+            i := 30; { Should not happen }
       end;
-    end;
+   end;
 
-  if C.Country = 'BY' then
-    begin
+   if C.Country = 'BY' then begin
       k := GetArea(str);
       case k of
-        1..8    : i := 24;
-        9,0     : i := 23;
+         1 .. 8:
+            i := 24;
+         9, 0:
+            i := 23;
       end;
-    end;
+   end;
 
-  if (C.Country = 'UA') or (C.Country = 'UA0') or (C.Country = 'UA9') then
-    begin
-      if (expos('U?0',str) > 0) or (pos('R?0',str) > 0) or
-         (pos('R0', str) > 0) then
-        begin
-          k := pos('0',str);
-          if length(str) >= k + 1 then
-            case str[k+1] of
-              'A','B','H','O','P','S','T','U','V','W' :
-                i := 18;
-              'Y':
-                i := 23;
-            else
-              i := 19;
+   if (C.Country = 'UA') or (C.Country = 'UA0') or (C.Country = 'UA9') then begin
+      if (expos('U?0', str) > 0) or (pos('R?0', str) > 0) or (pos('R0', str) > 0) then begin
+         k := pos('0', str);
+         if Length(str) >= k + 1 then
+            case str[k + 1] of
+               'A', 'B', 'H', 'O', 'P', 'S', 'T', 'U', 'V', 'W':
+                  i := 18;
+               'Y':
+                  i := 23;
+               else
+                  i := 19;
             end;
-        end;
+      end;
 
-      if (expos('U?8',str) > 0) or (expos('R?8',str) > 0) then
-        begin
-          i := 18;
-        end;
-      if (expos('U?9',str) > 0) or (pos('R?9',str) > 0) then
-        begin
-          k := pos('9',str);
-          if length(str) >= k + 1 then
-            case str[k+1] of
-              'S','T','W' :
-                i := 16;
-              'H','I','O','P','U','V','Y','Z':
-                i := 18;
-            else
-              i := 17;
+      if (expos('U?8', str) > 0) or (expos('R?8', str) > 0) then begin
+         i := 18;
+      end;
+      if (expos('U?9', str) > 0) or (pos('R?9', str) > 0) then begin
+         k := pos('9', str);
+         if Length(str) >= k + 1 then
+            case str[k + 1] of
+               'S', 'T', 'W':
+                  i := 16;
+               'H', 'I', 'O', 'P', 'U', 'V', 'Y', 'Z':
+                  i := 18;
+               else
+                  i := 17;
             end;
-        end;
-    end;
+      end;
+   end;
 
-  if P.OvrZone > 0 then
-    i := P.OvrZone;
+   if p.OvrZone > 0 then
+      i := p.OvrZone;
 
-  if i = 0 then
-    Result := ''
-  else
-    Result := IntToStr(i);
+   if i = 0 then
+      Result := ''
+   else
+      Result := IntToStr(i);
 end;
 
-
 procedure AnalyzeMyCountry;
-var aQSO : TQSO;
-    i : integer;
-    P : TPrefix;
+var
+   aQSO: TQSO;
+   i: integer;
+   p: TPrefix;
 begin
-  MyContinent := 'AS';
-  MyCountry := 'JA';
-  MyZone := '25';
+   MyContinent := 'AS';
+   MyCountry := 'JA';
+   MyZone := '25';
 
-  if (dmZlogGlobal.Settings._mycall <> '') and (dmZlogGlobal.Settings._mycall <> 'Your call sign') then
-    begin
+   if (dmZlogGlobal.Settings._mycall <> '') and (dmZlogGlobal.Settings._mycall <> 'Your call sign') then begin
       aQSO := TQSO.Create;
-      aQSO.QSO.callsign := Uppercase(dmZlogGlobal.Settings._mycall);
+      aQSO.QSO.CallSign := Uppercase(dmZlogGlobal.Settings._mycall);
 
-      P := GetPrefix(aQSO);
-      //i := GetCountryIndex(aQSO);
-      if P = nil then
-        i := 0
+      p := GetPrefix(aQSO);
+      // i := GetCountryIndex(aQSO);
+      if p = nil then
+         i := 0
       else
-        i := P.Index;
-      if i > 0 then
-        begin
-          MyCountry := TCountry(CountryList.List[i]).Country;
-          //MyZone := IntToStr(TCountry(CountryList.List[i]).Zone);
+         i := p.Index;
 
-          if dmZlogGlobal.Settings._cqzone = '' then
+      if i > 0 then begin
+         MyCountry := TCountry(CountryList.List[i]).Country;
+         // MyZone := IntToStr(TCountry(CountryList.List[i]).Zone);
+
+         if dmZlogGlobal.Settings._cqzone = '' then
             dmZlogGlobal.Settings._cqzone := GuessCQZone(aQSO);
-          MyZone := dmZlogGlobal.Settings._cqzone;
+         MyZone := dmZlogGlobal.Settings._cqzone;
 
-          //MyContinent := TCountry(CountryList.List[i]).Continent;
-          if P.OvrContinent = '' then
+         // MyContinent := TCountry(CountryList.List[i]).Continent;
+         if p.OvrContinent = '' then
             MyContinent := TCountry(CountryList.List[i]).Continent
-          else
-            MyContinent := P.OvrContinent;
-        end;
+         else
+            MyContinent := p.OvrContinent;
+      end;
       aQSO.Free;
-    end;
+   end;
 end;
 
 constructor TCity.Create;
-var B : TBand;
+var
+   B: TBand;
 begin
-  for B := b19 to HiBand do
-    Worked[B] := False;
-  CityNumber := '';
-  CityName := '';
-  PrefNumber := '';
-  PrefName := '';
+   for B := b19 to HiBand do
+      Worked[B] := false;
+
+   CityNumber := '';
+   CityName := '';
+   PrefNumber := '';
+   PrefName := '';
 end;
 
-function TCity.Abbrev : string;
-var str : string;
+function TCity.Abbrev: string;
+var
+   str: string;
 begin
-  str := CityNumber;
-  if pos(',', str) > 0 then
-    str := copy(str, 1, pos(',', str) - 1);
-  Result := str;
+   str := CityNumber;
+   if pos(',', str) > 0 then
+      str := copy(str, 1, pos(',', str) - 1);
+   Result := str;
 end;
 
-function TCity.Summary : string;
-var temp, _cityname : string;
-    B : TBand;
+function TCity.Summary: string;
+var
+   temp, _cityname: string;
+   B: TBand;
 begin
-  temp := '';
-  if length(CityName) > 20 then
-    _cityname := copy(CityName, 1, 20)
-  else
-    _cityname := CityName;
-  temp := FillRight({CityNumber}Abbrev,7)+FillRight(_cityname,20)+' ';
-  for B := b19 to HiBand do
-    if NotWARC(B) then
-      if Worked[B] then
-        temp := temp + '* '
-      else
-        temp := temp + '. ';
-  Result := ' '+temp;
-end;
+   temp := '';
+   if Length(CityName) > 20 then begin
+      _cityname := copy(CityName, 1, 20);
+   end
+   else begin
+      _cityname := CityName;
+   end;
 
-function TCity.SummaryGeneral : string;
-var temp, _cityname : string;
-    B : TBand;
-begin
-  temp := '';
-  if length(CityName) > 20 then
-    _cityname := copy(CityName, 1, 20)
-  else
-    _cityname := CityName;
-  temp := FillRight({CityNumber}Abbrev,7)+FillRight(_cityname,20)+' ';
-  for B := b19 to HiBand do
-    if ActiveBands[B] then
-      if Worked[B] then
-        temp := temp + '* '
-      else
-        temp := temp + '. ';
-  Result := ' '+temp;
-end;
+   temp := FillRight( { CityNumber } Abbrev, 7) +
+           FillRight(_cityname, 20) + ' ';
 
-function TCity.FDSummary(LowBand : TBand) : string;
-var temp : string;
-    B : TBand;
-begin
-  temp := '';
-  temp := FillRight(CityNumber,7)+FillRight(CityName,20)+' '+'  ';
-  for B := LowBand to HiBand do
-    if NotWARC(B) then
-      if B in [b19..b1200] then
-        begin
-          if length(Self.CityNumber) <= 3 then
-            if Worked[B] then
-              temp := temp + '* '
-            else
-              temp := temp + '. '
-          else
+   for B := b19 to HiBand do begin
+      if NotWARC(B) then begin
+         if dmZlogGlobal.Settings._activebands[B] = True then begin
+            if Worked[B] then begin
+               temp := temp + '* ';
+            end
+            else begin
+               temp := temp + '. ';
+            end;
+         end
+         else begin
             temp := temp + '  ';
-        end
-      else
-        begin
-          if length(Self.CityNumber) > 3 then
-            if Worked[B] then
-              temp := temp + '* '
-            else
-              temp := temp + '. '
-          else
-            temp := temp + '  ';
-        end;
-  Result := ' '+temp;
+         end;
+      end;
+   end;
+
+   Result := ' ' + temp;
 end;
 
-function TCity.Summary2 : string;
-var temp : string;
-    B : TBand;
+function TCity.SummaryGeneral: string;
+var
+   temp, _cityname: string;
+   B: TBand;
 begin
-  temp := '';
-  temp := FillRight({CityNumber}Abbrev,7)+FillRight(CityName,20)+' Worked on : ';
-  for B := b35 to HiBand do
-    if Worked[B] then
-      temp := temp + ' '+MHzString[B]
-    else
-      temp := temp + '';
-  Result := temp;
+   temp := '';
+   if Length(CityName) > 20 then begin
+      _cityname := copy(CityName, 1, 20);
+   end
+   else begin
+      _cityname := CityName;
+   end;
+
+   temp := FillRight( { CityNumber } Abbrev, 7) +
+           FillRight(_cityname, 20) + ' ';
+
+   for B := b19 to HiBand do begin
+      if dmZlogGlobal.Settings._activebands[B] then begin
+         if Worked[B] then
+            temp := temp + '* '
+         else
+            temp := temp + '. ';
+      end;
+   end;
+
+   Result := ' ' + temp;
+end;
+
+function TCity.FDSummary(LowBand: TBand): string;
+var
+   temp: string;
+   B: TBand;
+begin
+   temp := '';
+   temp := FillRight(CityNumber, 7) +
+           FillRight(CityName, 20) + ' ' + '  ';
+
+   for B := LowBand to HiBand do begin
+      if NotWARC(B) then begin
+         if B in [b19 .. b1200] then begin
+            if Length(Self.CityNumber) <= 3 then
+               if Worked[B] then
+                  temp := temp + '* '
+               else
+                  temp := temp + '. '
+            else
+               temp := temp + '  ';
+         end
+         else begin // 2.4G and upper
+            if Length(Self.CityNumber) > 3 then
+               if Worked[B] then
+                  temp := temp + '* '
+               else
+                  temp := temp + '. '
+            else
+               temp := temp + '  ';
+         end;
+      end;
+   end;
+
+   Result := ' ' + temp;
+end;
+
+function TCity.Summary2: string;
+var
+   temp: string;
+   B: TBand;
+begin
+   temp := '';
+   temp := FillRight( { CityNumber } Abbrev, 7) +
+           FillRight(CityName, 20) + ' Worked on : ';
+
+   for B := b35 to HiBand do begin
+      if Worked[B] then
+         temp := temp + ' ' + MHzString[B]
+      else
+         temp := temp + '';
+   end;
+
+   Result := temp;
 end;
 
 constructor TCityList.Create;
 begin
-  List := TList.Create;
-  SortedMultiList := TStringList.Create;
-  SortedMultiList.Sorted := True;
+   List := TList.Create;
+   SortedMultiList := TStringList.Create;
+   SortedMultiList.Sorted := true;
 end;
 
 procedure TCityList.Reset;
-var i : integer;
-    B : TBand;
+var
+   i: integer;
+   B: TBand;
 begin
-  for i := 0 to List.Count - 1 do
-    for B := b19 to HiBand do
-      TCity(List[i]).Worked[B] := False;
+   for i := 0 to List.Count - 1 do
+      for B := b19 to HiBand do
+         TCity(List[i]).Worked[B] := false;
 end;
 
-function TCityList.GetCity(Name : string) : TCity;
-var i : integer;
+function TCityList.GetCity(Name: string): TCity;
+var
+   i: integer;
 begin
-  Result := nil;
-  i := SortedMultiList.IndexOf(Name);
-  if i >= 0 then
-    Result := TCity(SortedMultiList.Objects[i]);
+   Result := nil;
+   i := SortedMultiList.IndexOf(Name);
+   if i >= 0 then
+      Result := TCity(SortedMultiList.Objects[i]);
 end;
 
 destructor TCityList.Destroy;
-var i : integer;
+var
+   i: integer;
 begin
-  for i := 0 to List.Count - 1 do
-    begin
+   for i := 0 to List.Count - 1 do begin
       if List[i] <> nil then
-        TCity(List[i]).Free;
-    end;
-  List.Free;
-  SortedMultiList.Clear;
-  SortedMultiList.Free;
+         TCity(List[i]).Free;
+   end;
+   List.Free;
+   SortedMultiList.Clear;
+   SortedMultiList.Free;
 end;
 
-procedure TCityList.LoadFromFile(filename : string);
-var f : textfile;
-    str : string;
-    C : TCity;
-    i : integer;
+procedure TCityList.LoadFromFile(filename: string);
+var
+   f: textfile;
+   str: string;
+   C: TCity;
+   i: integer;
+   fullpath: string;
 begin
-  assign(f, filename);
-  try
-    System.Reset(f);
-  except
-    on EFOpenError do
-      begin
-        MessageDlg('DAT file '+filename+' cannot be opened', mtError,
-                   [mbOK], 0);
-        exit;    {Alert that the file cannot be opened \\}
+   fullpath := IncludeTrailingPathDelimiter(dmZLogGlobal.Settings._cfgdatpath) + fileName;
+   if FileExists(fullpath) = False then begin
+      fullpath := ExtractFilePath(Application.ExeName) + filename;
+      if FileExists(fullpath) = False then begin
+         MessageDlg('DAT file [' + fileName + '] cannot be opened', mtError, [mbOK], 0);
+         Exit;
       end;
-  end;
-  readln(f, str);
-  while not(eof(f)) do
-    begin
-      readln(f, str);
-      if Pos('end of file', LowerCase(str))>0 then break;
+   end;
+
+   Assign(f, fullpath);
+   System.Reset(f);
+   ReadLn(f, str);
+
+   while not(eof(f)) do begin
+      ReadLn(f, str);
+      if pos('end of file', LowerCase(str)) > 0 then begin
+         break;
+      end;
+
       C := TCity.Create;
 
-      {
-      C.CityName := Copy(str, 12, 40);
-      C.CityNumber := TrimRight(Copy(str, 1, 11));
-      }
-
       i := pos(' ', str);
-      if i > 1 then
-        C.CityNumber := copy(str, 1, i - 1);
-      delete(str, 1, i);
-      C.CityName := TrimRight(TrimLeft(str));
+      if i > 1 then begin
+         C.CityNumber := copy(str, 1, i - 1);
+      end;
 
+      Delete(str, 1, i);
+      C.CityName := TrimRight(TrimLeft(str));
 
       C.Index := List.Count;
 
       List.Add(C);
       SortedMultiList.AddObject(C.CityNumber, C);
-    end;
-  closefile(f);
+   end;
+
+   closefile(f);
 end;
 
-function TCityList.AddAndSort(C : TCity) : integer;
-var i : integer;
+function TCityList.AddAndSort(C: TCity): integer;
+var
+   i: integer;
 begin
-  if List.Count = 0 then
-    begin
+   if List.Count = 0 then begin
       List.Add(C);
       Result := 0;
       exit;
-    end;
-  for i := 0 to List.Count - 1 do
-    begin
-      if StrMore(TCity(List[i]).CityNumber, C.CityNumber) then
-        begin
-          List.Insert(i, C);
-          Result := i;
-          exit;
-        end;
-    end;
-  List.Add(C);
-  Result := List.Count - 1;
+   end;
+
+   for i := 0 to List.Count - 1 do begin
+      if StrMore(TCity(List[i]).CityNumber, C.CityNumber) then begin
+         List.Insert(i, C);
+         Result := i;
+         exit;
+      end;
+   end;
+
+   List.Add(C);
+
+   Result := List.Count - 1;
 end;
 
-
-
 initialization
-  CountryList := nil;
-  PrefixList := nil;
-  MyContinent := 'AS';
-  MyCountry := 'JA';
-  MyZone := '25';
+   CountryList := nil;
+   PrefixList := nil;
+   MyContinent := 'AS';
+   MyCountry := 'JA';
+   MyZone := '25';
+
 end.
