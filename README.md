@@ -36,6 +36,7 @@ JARLコンテスト委員会は横林さんからzLog for Windowsのソースコ
 ここにMITライセンスによるオープンソースとして公開します．有志による改良を期待します．
 
 ------
+# 令和 Edition
 ビルド方法 de JR8PPG
 
 (1)Delphi 10.3.2でビルドするにあたり、ICSは下記のサイトのICSV8.58を使用
@@ -72,9 +73,16 @@ InstallフォルダのD103Install.groupprojを開き、ビルド→インスト�
 
 (9)など
 
-動作確認済み
+動作確認済みコンテスト
+
 ・ALL JAコンテスト
+・6m&DOWNコンテスト
 ・全市全郡コンテスト
+・ALL JA8コンテスト
+・東京UHFコンテスト
+
+動作確認済み機能
+
 ・Packet Cluster
 ・BandScope
 ・Z-Link
