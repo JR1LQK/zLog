@@ -83,11 +83,13 @@ InstallフォルダのD103Install.groupprojを開き、ビルド→インスト�
 ## 第三者著作権情報
 
 * ICS - Internet Component Suite - V8 - Delphi 7 to RAD Studio 10.3 Rio
+```
 This product includes software developed by François PIETTE
 Copyright (C) 1997-2018 by François PIETTE
 Rue de Grady 24, 4053 Embourg, Belgium
 <francois.piette@overbyte.be>
 http://www.overbyte.eu/frame_index.html?redirTo=/products/ics.html
+```
 
 * HemisphereButton
 This product includes software developed by Christian Schnell
