@@ -92,30 +92,44 @@ http://www.overbyte.eu/frame_index.html?redirTo=/products/ics.html
 ```
 
 * HemisphereButton
+```
 This product includes software developed by Christian Schnell
 Copyright (c) 1997 Christian Schnell
+```
 
 * Text Console component
+```
 This product includes software developed by Danny Thorpe
 Copyright (c) 1995,96 by Danny Thorpe
+```
 
 * JL's RotateLabel with 3D-effects
+```
 This product includes software developed by Joerg Lingner
 Copyright (c) 1996 by Joerg Lingner, Munich, Germany
 https://torry.net/files/vcl/labels/rotatedlabels/jllabel.zip
+```
 
 * TOvrEdit
+```
 This product includes software developed by Wolfgang Chien
 Copyright (c) Wolfgang Chien
+```
 
 * TwsaGraph
+```
 This product includes software developed by P. Gertzen
 Copyright (c) P. Gertzen
+```
 
 * TMgrid
+```
 This product includes software developed by Michael Tran
 Copyright (c) 1998 by Michael Tran
+```
 
 * TCommPortDriver component
+```
 This product includes software developed by Marco Cocco
 Copyright (c) Marco Cocco
+```
