@@ -3,7 +3,7 @@ unit UMultipliers;
 interface
 
 uses
-  SysUtils, Windows, Classes, Dialogs, Forms, UzLogGlobal;
+  SysUtils, Windows, Classes, Dialogs, Forms, UITypes, UzLogGlobal;
 
 const testCQWW = $03;
       MAXCQZONE = 40;
@@ -96,6 +96,9 @@ function GuessCQZone(aQSO : TQSO) : string;
 procedure AnalyzeMyCountry;
 
 implementation
+
+uses
+  Main;
 
 procedure TPrefixList.AddListX(PX: TPrefix);
 var
@@ -228,7 +231,8 @@ begin
            Continent + '  ';
 
    for B := b19 to HiBand do begin
-      if dmZlogGlobal.Settings._activebands[B] then begin
+      if (MainForm.BandMenu.Items[Ord(B)].Visible = True) and
+         (dmZlogGlobal.Settings._activebands[B] = True) then begin
          if Worked[B] then begin
             temp := temp + '* ';
          end
@@ -572,19 +576,17 @@ begin
       readln(f, str);
       if pos('end of file', LowerCase(str)) > 0 then
          break;
+
       C := TCountry.Create;
       C.CountryName := TrimRight(copy(str, 1, 26));
       temp := TrimLeft(TrimRight(copy(str, 27, 2)));
-      try
-         i := StrToInt(temp)
-      except
-         on EConvertError do
-            i := 0;
-      end;
+      i := StrToIntDef(temp, 0);
       if (i < 0) or (i > 90 { maxzone } ) then
          i := 0;
+
       C.Zone := i;
       C.Country := TrimRight(copy(str, 32, 7));
+
       case C.Zone of
          1 .. 8:
             C.Continent := 'NA';
@@ -599,7 +601,8 @@ begin
          33 .. 39:
             C.Continent := 'AF';
       end;
-      if str[39] in ['A', 'O', 'E'] then begin
+
+      if CharInSet(str[39], ['A', 'O', 'E']) = True then begin
          temp := str[39] + str[40];
          if temp = 'AS' then
             C.Continent := 'AS';
@@ -616,6 +619,7 @@ begin
          if temp = 'SA' then
             C.Continent := 'SA';
       end;
+
       L.List.Add(C);
       i := L.List.Count - 1;
       C.GridIndex := i;
@@ -653,7 +657,7 @@ end;
 
 function GetPrefixX(aQSO: TQSO; PL: TPrefixList): TPrefix;
 var
-   str, temp, firststr, PX: string;
+   str, temp, firststr: string;
    i, x, j, k, len, pind: integer;
    boo: boolean;
 begin
@@ -687,7 +691,7 @@ begin
       if (temp = 'AA') or (temp = 'AT') or (temp = 'AG') or (temp = 'AA') or (temp = 'AE') or (temp = 'M') or (temp = 'P') or (temp = 'AM') or
         (temp = 'QRP') or (temp = 'A') or (temp = 'KT') or (temp = 'N') or (temp = 'T') then
          str := copy(str, 1, i - 1) { cut /AA /M etc }
-      else if (Length(temp) = 1) and (temp[1] in ['0' .. '9']) then
+      else if (Length(temp) = 1) and (CharInSet(temp[1], ['0' .. '9']) = True) then
          str := copy(str, 1, i - 1) { cut /0 /1 etc }
       else if i > 4 then { JA1ZLO/JD1, KH0AM/W6 etc NOT KH0/AD6AJ }
       begin
@@ -775,18 +779,20 @@ begin
    j := pos('/', str);
    if j > 4 then begin
       for k := Length(str) downto 1 do
-         if str[k] in ['0' .. '9'] then
+         if CharInSet(str[k], ['0' .. '9']) = True then
             break;
    end
    else begin
       for k := 1 to Length(str) do
-         if str[k] in ['0' .. '9'] then
+         if CharInSet(str[k], ['0' .. '9']) = True then
             break;
    end;
-   if str[k] in ['0' .. '9'] then
+
+   if CharInSet(str[k], ['0' .. '9']) = True then
       k := ord(str[k]) - ord('0')
    else
       k := 6;
+
    Result := k;
 end;
 
@@ -817,7 +823,7 @@ var
    i, k: integer;
    C: TCountry;
    p: TPrefix;
-   str, str2: string;
+   str: string;
 begin
    p := GetPrefix(aQSO);
    if p = nil then begin
@@ -999,7 +1005,8 @@ begin
 
    for B := b19 to HiBand do begin
       if NotWARC(B) then begin
-         if dmZlogGlobal.Settings._activebands[B] = True then begin
+         if (MainForm.BandMenu.Items[Ord(B)].Visible = True) and
+            (dmZlogGlobal.Settings._activebands[B] = True) then begin
             if Worked[B] then begin
                temp := temp + '* ';
             end
@@ -1033,11 +1040,14 @@ begin
            FillRight(_cityname, 20) + ' ';
 
    for B := b19 to HiBand do begin
-      if dmZlogGlobal.Settings._activebands[B] then begin
-         if Worked[B] then
-            temp := temp + '* '
-         else
+      if (MainForm.BandMenu.Items[Ord(B)].Visible = True) and
+         (dmZlogGlobal.Settings._activebands[B] = True) then begin
+         if Worked[B] then begin
+            temp := temp + '* ';
+         end
+         else begin
             temp := temp + '. ';
+         end;
       end;
    end;
 

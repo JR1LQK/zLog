@@ -672,10 +672,14 @@ begin
       TotQSO := TotQSO + QSO[band];
       TotPoints := TotPoints + Points[band];
       TotMulti := TotMulti + Multi[band];
-      if dmZlogGlobal.Settings._activebands[band] then begin
+
+      if (MainForm.BandMenu.Items[Ord(band)].Visible = True) and
+         (dmZlogGlobal.Settings._activebands[band] = True) then begin
+
          Grid.Cells[0, row] := '*' + MHzString[band];
          Grid.Cells[1, row] := IntToStr3(QSO[band]);
          Grid.Cells[2, row] := IntToStr3(Points[band]);
+
          if formMulti.NoMulti then begin
             Grid.Cells[3, row] := '-';
          end

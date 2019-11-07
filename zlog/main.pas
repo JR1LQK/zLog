@@ -743,6 +743,9 @@ type
     procedure InitAllAsianDX();
     procedure InitIOTA();
     procedure InitWAE();
+    function GetNumOfAvailableBands(): Integer;
+    procedure AdjustActiveBands();
+    function GetFirstAvailableBand(): TBand;
   public
     EditScreen : TBasicEdit;
     LastFocus : TEdit;
@@ -7446,15 +7449,18 @@ begin
       CurrentQSO.UpdateTime;
       TimeEdit.Text := CurrentQSO.TimeStr;
 
-      for B := b19 to HiBand do begin
-         if BandMenu.Items[Ord(B)].Visible and BandMenu.Items[Ord(B)].Enabled then begin
-            break;
-         end;
+      // この時点でコンテストが必要とするバンドはBandMenuで表示されているもの
+      // コンテストで必要なバンドかつActiveBandがONの数（＝使用可能）を数える
+      c := GetNumOfAvailableBands();
+
+      // 使用可能なバンドが無いときは必要バンドをONにする
+      if c = 0 then begin
+         AdjustActiveBands();
+         MessageDlg('Active Bands adjusted to the required bands', mtInformation, [mbOK], 0);
       end;
 
-      if Log.TotalQSO = 0 then begin
-         CurrentQSO.QSO.Band := B;
-      end;
+      // 低いバンドから使用可能なバンドを探して最初のバンドとする
+      CurrentQSO.QSO.Band := GetFirstAvailableBand();
 
       BandEdit.Text := MHzString[CurrentQSO.QSO.Band];
       CurrentQSO.QSO.TX := dmZlogGlobal.TXNr;
@@ -7855,6 +7861,55 @@ begin
    BandMenu.Items[Ord(b2400)].Visible := False;
    BandMenu.Items[Ord(b5600)].Visible := False;
    BandMenu.Items[Ord(b10G)].Visible := False;
+end;
+
+function TMainForm.GetNumOfAvailableBands(): Integer;
+var
+   c: Integer;
+   b: TBand;
+begin
+   c := 0;
+   for b := b19 to HiBand do begin
+      if (BandMenu.Items[Ord(b)].Visible = True) and
+         (dmZlogGlobal.Settings._activebands[b] = True) then begin
+         Inc(c);
+      end;
+   end;
+
+   Result := c;
+end;
+
+procedure TMainForm.AdjustActiveBands();
+var
+   b: TBand;
+begin
+   for b := b19 to HiBand do begin
+      if (BandMenu.Items[Ord(b)].Visible = True) then begin
+         dmZlogGlobal.Settings._activebands[b] := True;
+      end;
+   end;
+end;
+
+function TMainForm.GetFirstAvailableBand(): TBand;
+var
+   b: TBand;
+begin
+   for b := b19 to HiBand do begin
+      if (BandMenu.Items[Ord(b)].Visible = True) and
+         (dmZlogGlobal.Settings._activebands[b] = True) then begin
+         Result := b;
+         Exit;
+      end;
+   end;
+
+   for b := b19 to HiBand do begin
+      if (BandMenu.Items[Ord(b)].Visible = True) then begin
+         Result := b;
+         Exit;
+      end;
+   end;
+
+   Result := b19;
 end;
 
 end.

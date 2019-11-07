@@ -99,7 +99,8 @@ var
 begin
    i := 0;
    for B := b19 to Hiband do begin
-      if dmZlogGlobal.Settings._activebands[B] then begin
+      if (MainForm.BandMenu.Items[Ord(B)].Visible = True) and
+         (dmZlogGlobal.Settings._activebands[B] = True) then begin
           BandLabelArray[i].Caption := MHzString[B];
           j := BandLabelArray[i].Height;
           BandLabelArray[i].Top := 35 - j;
