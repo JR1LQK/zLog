@@ -10,7 +10,7 @@ uses
   UOptions, UEditDialog, UGeneralMulti2,
   BGK32Lib, UzLogCW, Hemibtn, ShellAPI, UITypes,
   OEdit, URigControl, UConsolePad, URenewThread, USpotClass,
-  UMMTTY, UTTYConsole, UPaddleThread, UELogJapanese,
+  UMMTTY, UTTYConsole, UPaddleThread, UELogJarl1, UELogJarl2,
   UWWMulti, UWWScore, UWWZone, UARRLWMulti, UQTCForm;
 
 
@@ -543,6 +543,7 @@ type
     mnNewBandScope: TMenuItem;
     menuQuickReference: TMenuItem;
     CreateELogJARL1: TMenuItem;
+    CreateELogJARL2: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure ShowHint(Sender: TObject);
@@ -700,6 +701,7 @@ type
     procedure menuQuickReferenceClick(Sender: TObject);
     procedure Timer2Timer(Sender: TObject);
     procedure CreateELogJARL1Click(Sender: TObject);
+    procedure CreateELogJARL2Click(Sender: TObject);
 
     procedure OnZLogInit( var Message: TMessage ); message WM_ZLOG_INIT;
   private
@@ -7130,9 +7132,21 @@ end;
 
 procedure TMainForm.CreateELogJARL1Click(Sender: TObject);
 var
-   f: TformELogJarl;
+   f: TformELogJarl1;
 begin
-   f := TformELogJarl.Create(Self);
+   f := TformELogJarl1.Create(Self);
+   try
+      f.ShowModal();
+   finally
+      f.Release();
+   end;
+end;
+
+procedure TMainForm.CreateELogJARL2Click(Sender: TObject);
+var
+   f: TformELogJarl2;
+begin
+   f := TformELogJarl2.Create(Self);
    try
       f.ShowModal();
    finally

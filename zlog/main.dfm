@@ -24106,8 +24106,12 @@ object MainForm: TMainForm
         OnClick = FilePrint
       end
       object CreateELogJARL1: TMenuItem
-        Caption = 'Create E-Log (&JARL)'
+        Caption = 'Create E-Log (JARL 1.0)'
         OnClick = CreateELogJARL1Click
+      end
+      object CreateELogJARL2: TMenuItem
+        Caption = 'Create E-Log (&JARL 2.0)'
+        OnClick = CreateELogJARL2Click
       end
       object CreateDupeCheckSheetZPRINT1: TMenuItem
         Caption = 'Create Dupe Check Sheet (ZLIST)'

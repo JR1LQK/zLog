@@ -87,7 +87,6 @@ uses
   UWAEMulti in 'UWAEMulti.pas' {WAEMulti},
   UQuickRef in 'UQuickRef.pas' {QuickRef},
   UBandScope2 in 'UBandScope2.pas' {BandScope2},
-  UELogJapanese in 'UELogJapanese.pas' {formELogJarl},
   DBT in 'HID\DBT.pas',
   Hid in 'HID\Hid.pas',
   HidControllerClass in 'HID\HidControllerClass.pas',
@@ -96,7 +95,9 @@ uses
   SetupApi in 'HID\SetupApi.pas',
   ToneGen in 'LIB\ToneGen.pas',
   OmniRig_TLB in 'OmniRig\OmniRig_TLB.pas',
-  UzLogGlobal in 'UzLogGlobal.pas' {dmZLogGlobal: TDataModule};
+  UzLogGlobal in 'UzLogGlobal.pas' {dmZLogGlobal: TDataModule},
+  UELogJarl1 in 'UELogJarl1.pas' {formELogJarl1},
+  UELogJarl2 in 'UELogJarl2.pas' {formELogJarl2};
 
 {$R *.RES}
 
