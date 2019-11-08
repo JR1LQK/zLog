@@ -133,3 +133,9 @@ Copyright (c) 1998 by Michael Tran
 This product includes software developed by Marco Cocco
 Copyright (c) Marco Cocco
 ```
+
+* JEDI Visual Component Library/JEDI Code Library
+```
+This product includes software developed by Project JEDI
+https://www.delphi-jedi.org/
+```
