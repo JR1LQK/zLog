@@ -184,6 +184,13 @@ begin
 
    fname := SaveDialog1.FileName;
 
+   // 既にファイルがある場合は上書き確認
+   if FileExists(fname) = True then begin
+      if MessageDlg('[' + fname + '] file already exists. overwrite?', mtConfirmation, [mbYes, mbNo], 0) = mrNo then begin
+         Exit;
+      end;
+   end;
+
    AssignFile(f, fname);
    Rewrite(f);
 
