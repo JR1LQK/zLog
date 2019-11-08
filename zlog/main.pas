@@ -4251,41 +4251,6 @@ begin
       BandScope2.MarkCurrentFreq(7060000);
    end;
 
-   if (S = 'SB1') then begin
-      if RigControl.Rig <> nil then
-         RigControl.Rig.SetStopBits(1);
-   end;
-
-   if (S = 'SB2') then begin
-      if RigControl.Rig <> nil then
-         RigControl.Rig.SetStopBits(2);
-   end;
-
-   if (S = 'B300') then begin
-      if RigControl.Rig <> nil then
-         RigControl.Rig.SetBaudRate(300);
-   end;
-
-   if (S = 'B1200') then begin
-      if RigControl.Rig <> nil then
-         RigControl.Rig.SetBaudRate(1200);
-   end;
-
-   if (S = 'B2400') then begin
-      if RigControl.Rig <> nil then
-         RigControl.Rig.SetBaudRate(2400);
-   end;
-
-   if (S = 'B4800') then begin
-      if RigControl.Rig <> nil then
-         RigControl.Rig.SetBaudRate(4800);
-   end;
-
-   if (S = 'B9600') then begin
-      if RigControl.Rig <> nil then
-         RigControl.Rig.SetBaudRate(9600);
-   end;
-
    if (S = 'MOVETOMEMO') then begin
       dmZlogGlobal.Settings._movetomemo := True;
    end;
