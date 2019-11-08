@@ -4,13 +4,13 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  UBasicScore, Grids, Aligrid, StdCtrls, ExtCtrls, zLogGlobal, Buttons;
+  UBasicScore, Grids, StdCtrls, ExtCtrls, UzLogGlobal, Buttons;
 
 type
   TJA0Score = class(TBasicScore)
-    Grid: TStringAlignGrid;
-    procedure FormCreate(Sender: TObject);
+    Grid: TStringGrid;
     procedure FormShow(Sender: TObject);
+    procedure GridDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect; State: TGridDrawState);
   private
     { Private declarations }
   public
@@ -23,9 +23,6 @@ type
     procedure SetBand(B : TBand);
   end;
 
-var
-  JA0Score: TJA0Score;
-
 implementation
 
 uses Main;
@@ -33,96 +30,126 @@ uses Main;
 {$R *.DFM}
 
 procedure TJA0Score.Reset;
-var band : TBand;
+var
+   band : TBand;
 begin
-  for band := b19 to HiBand do
-    begin
+   for band := b19 to HiBand do begin
       QSO[band] := 0;
       Points[band] := 0;
       Multi[band] := 0;
-    end;
+   end;
 end;
 
 function TJA0Score.IsJA0(aQSO : TQSO) : boolean;
 begin
-  if Pos('0',aQSO.QSO.CallSign) > 0 then
-    Result := True
-  else
-    Result := False;
+   if Pos('0',aQSO.QSO.CallSign) > 0 then begin
+      Result := True;
+   end
+   else begin
+      Result := False;
+   end;
 end;
 
 procedure TJA0Score.AddNoUpdate(var aQSO : TQSO);
-var P : integer;
-    band : TBand;
 begin
-  inherited;
+   inherited;
 
-  if aQSO.QSO.Dupe then
-    exit;
+   if aQSO.QSO.Dupe then begin
+      Exit;
+   end;
 
-  if IsJA0(aQSO) then
-    aQSO.QSO.Points := 3
-  else
-    aQSO.QSO.Points := 1;
-  inc(Points[aQSO.QSO.Band], aQSO.QSO.Points);
+   if IsJA0(aQSO) then begin
+      aQSO.QSO.Points := 3;
+   end
+   else begin
+      aQSO.QSO.Points := 1;
+   end;
+
+   Inc(Points[aQSO.QSO.band], aQSO.QSO.Points);
 end;
 
 procedure TJA0Score.Update;
 begin
-  if (JA0Band = b21) or (JA0Band = b28) then
-    begin
-      Grid.Cells[1, 1] := IntToStr(QSO[b21]);
-      Grid.Cells[2, 1] := IntToStr(Points[b21]);
-      Grid.Cells[3, 1] := IntToStr(Multi[b21]);
-      Grid.Cells[1, 2] := IntToStr(QSO[b28]);
-      Grid.Cells[2, 2] := IntToStr(Points[b28]);
-      Grid.Cells[3, 2] := IntToStr(Multi[b28]);
-      Grid.Cells[3, 3] := IntToStr((Points[b21]+Points[b28])*(Multi[b21]+Multi[b28]));
-    end
-  else
-    begin
-      Grid.Cells[1, 1] := IntToStr(QSO[JA0Band]);
-      Grid.Cells[2, 1] := IntToStr(Points[JA0Band]);
-      Grid.Cells[3, 1] := IntToStr(Multi[JA0Band]);
-      Grid.Cells[3, 2] := IntToStr(Points[JA0Band]*Multi[JA0Band]);
-    end;
-end;
+   // å©èoÇµçs
+   Grid.Cells[0,0] := 'MHz';
+   Grid.Cells[1,0] := 'QSO';
+   Grid.Cells[2,0] := 'Points';
+   Grid.Cells[3,0] := 'Multi';
 
-
-procedure TJA0Score.FormCreate(Sender: TObject);
-begin
-  inherited;
-  // JA0Band := Main.CurrentQSO.QSO.Band;
-  // Grid.Cells[0,1] := MHzString[JA0Band];
+   if (JA0Band = b21) or (JA0Band = b28) then begin
+      Grid.Cells[1, 1] := IntToStr3(QSO[b21]);
+      Grid.Cells[2, 1] := IntToStr3(Points[b21]);
+      Grid.Cells[3, 1] := IntToStr3(Multi[b21]);
+      Grid.Cells[1, 2] := IntToStr3(QSO[b28]);
+      Grid.Cells[2, 2] := IntToStr3(Points[b28]);
+      Grid.Cells[3, 2] := IntToStr3(Multi[b28]);
+      Grid.Cells[3, 3] := IntToStr3((Points[b21] + Points[b28]) * (Multi[b21] + Multi[b28]));
+   end
+   else begin
+      Grid.Cells[1, 1] := IntToStr3(QSO[JA0Band]);
+      Grid.Cells[2, 1] := IntToStr3(Points[JA0Band]);
+      Grid.Cells[3, 1] := IntToStr3(Multi[JA0Band]);
+      Grid.Cells[1, 2] := '';
+      Grid.Cells[2, 2] := '';
+      Grid.Cells[3, 2] := IntToStr3(Points[JA0Band] * Multi[JA0Band]);
+      Grid.Cells[3, 3] := '';
+   end;
 end;
 
 procedure TJA0Score.SetBand(B : TBand);
 begin
-  JA0Band := B;
-  if (B = b21) or (B = b28) then
-    begin
-      Grid.Height := Grid.DefaultRowHeight*4 + 2;
-      Height := 130 + 22;
+   JA0Band := B;
+   if (B = b21) or (B = b28) then begin
       Grid.RowCount := 4;
-      Grid.Cells[0,1] := MHzString[b21];
-      Grid.Cells[0,2] := MHzString[b28];
-      Grid.Cells[0,3] := 'Score';
-    end
-  else
-    begin
-      Height := 130;
-      Grid.Height := 57;
+      Grid.Cells[0, 1] := MHzString[b21];
+      Grid.Cells[0, 2] := MHzString[b28];
+      Grid.Cells[0, 3] := 'Score';
+   end
+   else begin
       Grid.RowCount := 3;
-      Grid.Cells[0,1] := MHzString[JA0Band];
-      Grid.Cells[0,2] := 'Score';
-    end;
+      Grid.Cells[0, 1] := MHzString[JA0Band];
+      Grid.Cells[0, 2] := 'Score';
+      Grid.Cells[0, 3] := '';
+   end;
+
+   ClientWidth := (Grid.DefaultColWidth * Grid.ColCount) + (Grid.ColCount * Grid.GridLineWidth);
+   ClientHeight := (Grid.DefaultRowHeight * Grid.RowCount) + (Grid.RowCount * Grid.GridLineWidth) + Panel1.Height + 4;
 end;
 
 procedure TJA0Score.FormShow(Sender: TObject);
 begin
-  inherited;
-  Grid.Col := 1;
-  Grid.Row := 1;
+   inherited;
+   Button1.SetFocus;
+   Grid.Col := 1;
+   Grid.Row := 1;
+   CWButton.Visible := False;
+end;
+
+procedure TJA0Score.GridDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect; State: TGridDrawState);
+var
+   strText: string;
+begin
+   inherited;
+   strText := TStringGrid(Sender).Cells[ACol, ARow];
+
+   with TStringGrid(Sender).Canvas do begin
+      Brush.Color := TStringGrid(Sender).Color;
+      Brush.Style := bsSolid;
+      FillRect(Rect);
+
+      Font.Name := 'ÇlÇr ÉSÉVÉbÉN';
+      Font.Size := 11;
+
+      if Copy(strText, 1, 1) = '*' then begin
+         strText := Copy(strText, 2);
+         Font.Color := clBlue;
+      end
+      else begin
+         Font.Color := clBlack;
+      end;
+
+      TextRect(Rect, strText, [tfRight,tfVerticalCenter,tfSingleLine]);
+   end;
 end;
 
 end.

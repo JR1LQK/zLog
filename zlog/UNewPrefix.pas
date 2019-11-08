@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, {UWWMulti}UMultipliers, zLogGlobal;
+  StdCtrls, {UWWMulti}UMultipliers, UzLogGlobal;
 
 type
   TNewPrefix = class(TForm)
@@ -25,9 +25,6 @@ type
     CtyIndex : integer;
     procedure Init(CL : TCountryList; PX : string);
   end;
-
-var
-  NewPrefix: TNewPrefix;
 
 implementation
 

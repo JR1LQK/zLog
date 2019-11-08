@@ -4,12 +4,10 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  Aligrid, StdCtrls, ExtCtrls, zLogGlobal, UBasicScore, UWWScore, Grids,
-  Vcl.Buttons;
+  StdCtrls, ExtCtrls, UzLogGlobal, UWWScore, Grids, Buttons;
 
 type
   TJIDXScore = class(TWWScore)
-    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
   public
@@ -17,42 +15,35 @@ type
     procedure AddNoUpdate(var aQSO : TQSO);  override;
   end;
 
-var
-  JIDXScore: TJIDXScore;
-
 implementation
-
-{uses UBasicScore; }
 
 {$R *.DFM}
 
-
 procedure TJIDXScore.AddNoUpdate(var aQSO : TQSO);
-var band : TBand;
+var
+   band : TBand;
 begin
-  if aQSO.QSO.Dupe then
-    exit;
+   if aQSO.QSO.Dupe then begin
+      Exit;
+   end;
 
-  BasicScore.AddNoUpdate(aQSO);
-  band := aQSO.QSO.band;
-  if aQSO.QSO.NewMulti2 then
-    inc(Multi2[band]);
-  case aQSO.QSO.Band of
-    b19 : aQSO.QSO.Points := 4;
-    b35 : aQSO.QSO.Points := 2;
-    b7..b21 : aQSO.QSO.Points := 1;
-    b28 : aQSO.QSO.Points := 2;
-  else
-    aQSO.QSO.Points := 0;
-  end;
+   Inherited AddNoUpdate(aQSO);
 
-  inc(Points[band], aQSO.QSO.Points);
-end;
+   band := aQSO.QSO.band;
+   if aQSO.QSO.NewMulti2 then begin
+      Inc(Multi2[band]);
+   end;
 
-procedure TJIDXScore.FormCreate(Sender: TObject);
-var i : integer;
-begin
-  inherited;
+   case aQSO.QSO.Band of
+      b19 : aQSO.QSO.Points := 4;
+      b35 : aQSO.QSO.Points := 2;
+      b7..b21 : aQSO.QSO.Points := 1;
+      b28 : aQSO.QSO.Points := 2;
+      else
+         aQSO.QSO.Points := 0;
+   end;
+
+   Inc(Points[band], aQSO.QSO.Points);
 end;
 
 end.

@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  ExtCtrls, Console2, StdCtrls, ComCtrls, zLogGlobal,
+  ExtCtrls, Console2, StdCtrls, ComCtrls, UzLogGlobal,
   UScratchSheet, OverbyteIcsWndControl, OverbyteIcsWSocket;
 
 type
@@ -563,137 +563,140 @@ begin
 end;
 
 procedure TZLinkForm.DeleteQSO(aQSO : TQSO);
-var str : string;
+var
+   str : string;
 begin
-  if Options.Settings._zlinkport in [1..7] then
-    begin
+   if dmZlogGlobal.Settings._zlinkport in [1..7] then begin
       str := ZLinkHeader + ' DELQSO '+aQSO.QSOinText;
       WriteData(str+LineBreakCode[ord(Console.LineBreak)]);
-    end;
+   end;
 end;
 
 procedure TZLinkForm.LockQSO(aQSO : TQSO);
-var str : string;
+var
+   str : string;
 begin
-  if Options.Settings._zlinkport in [1..7] then
-    begin
+   if dmZlogGlobal.Settings._zlinkport in [1..7] then begin
       // aQSO.QSO.Reserve := actLock;
       str := ZLinkHeader + ' LOCKQSO '+aQSO.QSOinText;
       WriteData(str+LineBreakCode[ord(Console.LineBreak)]);
-    end;
+   end;
 end;
 
 procedure TZLinkForm.UnLockQSO(aQSO : TQSO);
-var str : string;
+var
+   str : string;
 begin
-  if Options.Settings._zlinkport in [1..7] then
-    begin
+   if dmZlogGlobal.Settings._zlinkport in [1..7] then begin
       // aQSO.QSO.Reserve := actUnLock;
       str := ZLinkHeader + ' UNLOCKQSO '+aQSO.QSOinText;
       WriteData(str+LineBreakCode[ord(Console.LineBreak)]);
-    end;
+   end;
 end;
 
 procedure TZLinkForm.SendBand;
-var str : string;
+var
+   str : string;
 begin
-  if Options.Settings._zlinkport in [1..7] then
-    begin
+   if dmZlogGlobal.Settings._zlinkport in [1..7] then begin
       str := ZLinkHeader + ' BAND '+IntToStr(ord(Main.CurrentQSO.QSO.Band));
       WriteData(str+LineBreakCode[ord(Console.LineBreak)]);
-    end;
+   end;
 end;
 
 procedure TZLinkForm.SendOperator;
-var str : string;
+var
+   str : string;
 begin
-  if Options.Settings._zlinkport in [1..7] then
-    begin
+   if dmZlogGlobal.Settings._zlinkport in [1..7] then begin
       str := ZLinkHeader + ' OPERATOR '+Main.CurrentQSO.QSO.Operator;
       WriteData(str+LineBreakCode[ord(Console.LineBreak)]);
-    end;
+   end;
 end;
 
 procedure TZLinkForm.SendFreqInfo(Hz : Integer);
-var str : string;
+var
+   str : string;
 begin
-  if Hz = 0 then
-    exit;
-  if Options.Settings._zlinkport in [1..7] then
-    begin
+   if Hz = 0 then
+      exit;
+
+   if dmZlogGlobal.Settings._zlinkport in [1..7] then begin
       if Hz > 60000 then
         str := RigControl.StatusSummaryFreq(round(Hz / 1000))
       else
         str := RigControl.StatusSummaryFreqHz(Hz);
+
       if str = '' then
         exit;
+
       FreqList.ProcessFreqData(str);
       str := ZLinkHeader + ' FREQ '+ str;
       WriteData(str+LineBreakCode[ord(Console.LineBreak)]);
-    end;
+   end;
 end;
 
 procedure TZLinkForm.SendRigStatus;
-var str : string;
+var
+   str : string;
 begin
-  if Options.Settings._zlinkport in [1..7] then
-    begin
+   if dmZlogGlobal.Settings._zlinkport in [1..7] then begin
       str := RigControl.StatusSummary;
-      if str = '' then
-        begin
-          exit;
-        end;
+      if str = '' then begin
+         exit;
+      end;
+
       FreqList.ProcessFreqData(str);
       str := ZLinkHeader + ' FREQ '+ str;
       WriteData(str+LineBreakCode[ord(Console.LineBreak)]);
-    end;
+   end;
 end;
 
 procedure TZLinkForm.RelaySpot(S : string);
-var str : string;
+var
+   str : string;
 begin
-  if Options.Settings._zlinkport in [1..7] then
-    begin
+   if dmZlogGlobal.Settings._zlinkport in [1..7] then begin
       str := ZLinkHeader + ' SPOT '+S;
       WriteData(str+LineBreakCode[ord(Console.LineBreak)]);
-    end;
+   end;
 end;
 
 procedure TZLinkForm.SendSpotViaNetwork(S : string);
-var str : string;
+var
+   str : string;
 begin
-  if Options.Settings._zlinkport in [1..7] then
-    begin
+   if dmZlogGlobal.Settings._zlinkport in [1..7] then begin
       str := ZLinkHeader + ' SENDSPOT '+S;
       WriteData(str+LineBreakCode[ord(Console.LineBreak)]);
-    end;
+   end;
 end;
 
 procedure TZLinkForm.SendQSO(aQSO : TQSO);
-var str : string;
+var
+   str : string;
 begin
-  if Options.Settings._zlinkport in [1..7] then
-    begin
+   if dmZlogGlobal.Settings._zlinkport in [1..7] then begin
       str := ZLinkHeader + ' PUTQSO '+aQSO.QSOinText;
       WriteData(str+LineBreakCode[ord(Console.LineBreak)]);
-    end;
+   end;
 end;
 
 procedure TZLinkForm.SendQSO_PUTLOG(aQSO : TQSO);
-var str : string;
+var
+   str : string;
 begin
-  if Options.Settings._zlinkport in [1..7] then
-    begin
+   if dmZlogGlobal.Settings._zlinkport in [1..7] then begin
       str := ZLinkHeader + ' PUTLOG '+aQSO.QSOinText;
       WriteData(str+LineBreakCode[ord(Console.LineBreak)]);
-    end;
+   end;
 end;
 
 procedure TZLinkForm.EditQSObyID(aQSO : TQSO);
 var
    str : string;
 begin
-   if Options.Settings._zlinkport in [1..7] then begin
+   if dmZlogGlobal.Settings._zlinkport in [1..7] then begin
       str := ZLinkHeader + ' EDITQSOTO ' +aQSO.QSOinText;
       WriteData(str+LineBreakCode[ord(Console.LineBreak)]);
    end;
@@ -703,7 +706,7 @@ procedure TZLinkForm.InsertQSO(bQSO : TQSO);
 var
    str : string;
 begin
-   if Options.Settings._zlinkport in [1..7] then begin
+   if dmZlogGlobal.Settings._zlinkport in [1..7] then begin
       //repeat until AsyncComm.OutQueCount = 0;
       str := ZLinkHeader + ' INSQSO ' +bQSO.QSOinText;
       WriteData(str+LineBreakCode[ord(Console.LineBreak)]);
@@ -760,7 +763,7 @@ begin
    CommProcessing := False;
    MergeTempList := nil;
 
-   if Options.Settings._zlinkport in [1..6] then begin
+   if dmZlogGlobal.Settings._zlinkport in [1..6] then begin
       //Transparent := True; // rs-232c
       // no rs232c allowed!
    end;
@@ -775,13 +778,9 @@ end;
 
 procedure TZLinkForm.ImplementOptions;
 begin
-   case Options.Settings._zlinkport of
-      1..6 : Console.LineBreak := TConsole2LineBreak(Options.Settings._zlinklinebreakCOM);
-      7 :    Console.LineBreak := TConsole2LineBreak(Options.Settings._zlinklinebreakTELNET);
-   end;
-
    try
-      ZSocket.Addr := Options.Settings._zlinkhost;
+      Console.LineBreak := TConsole2LineBreak(dmZlogGlobal.Settings._zlink_telnet.FLineBreak);
+      ZSocket.Addr := dmZlogGlobal.Settings._zlink_telnet.FHostName;
    except
       on ESocketException do begin
          MainForm.WriteStatusLine('Cannnot resolve host name', true);
@@ -791,12 +790,10 @@ end;
 
 
 procedure TZLinkForm.EditKeyPress(Sender: TObject; var Key: Char);
-var boo : boolean;
+var
+   boo: Boolean;
 begin
-   case Options.Settings._zlinkport of
-      1..6 : boo := Options.Settings._zlinklocalechoCOM;
-      7 : boo := Options.Settings._zlinklocalechoTELNET;
-   end;
+   boo := dmZlogGlobal.Settings._zlink_telnet.FLocalEcho;
 
    if Key = Chr($0D) then begin
       WriteData(Edit.Text+LineBreakCode[ord(Console.LineBreak)]);
@@ -829,7 +826,7 @@ begin
    end
    else begin
       Button.Caption := 'Connecting...';
-      ZSocket.Addr := Options.Settings._zlinkhost;
+      ZSocket.Addr := dmZlogGlobal.Settings._zlink_telnet.FHostName;
       ZSocket.Port := 'telnet';
       ZSocket.Connect;
    end;

@@ -12,7 +12,7 @@ object UTCDialog: TUTCDialog
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = True
-  Position = poScreenCenter
+  Position = poMainFormCenter
   PixelsPerInch = 96
   TextHeight = 13
   object Bevel1: TBevel
@@ -31,7 +31,6 @@ object UTCDialog: TUTCDialog
     Default = True
     ModalResult = 1
     TabOrder = 0
-    OnClick = OKBtnClick
   end
   object CheckBox: TCheckBox
     Left = 24

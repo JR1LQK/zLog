@@ -1,9 +1,10 @@
 object RigControl: TRigControl
   Left = 666
   Top = 35
+  BorderStyle = bsDialog
   Caption = 'Rig control'
-  ClientHeight = 158
-  ClientWidth = 320
+  ClientHeight = 126
+  ClientWidth = 371
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,6 +18,9 @@ object RigControl: TRigControl
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
+  DesignSize = (
+    371
+    126)
   PixelsPerInch = 96
   TextHeight = 12
   object dispMode: TLabel
@@ -71,18 +75,12 @@ object RigControl: TRigControl
     Font.Style = []
     ParentFont = False
   end
-  object DebugLabel: TLabel
-    Left = 8
-    Top = 120
-    Width = 57
-    Height = 12
-    Caption = 'DEBUG000'
-  end
   object Button1: TButton
-    Left = 248
-    Top = 136
+    Left = 290
+    Top = 93
     Width = 73
     Height = 25
+    Anchors = [akRight, akBottom]
     Caption = 'Reset rig'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -130,10 +128,11 @@ object RigControl: TRigControl
     TabOrder = 3
   end
   object btnOmniRig: TButton
-    Left = 167
-    Top = 137
+    Left = 211
+    Top = 93
     Width = 73
     Height = 25
+    Anchors = [akRight, akBottom]
     Caption = 'Omni-Rig'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -148,15 +147,15 @@ object RigControl: TRigControl
     Enabled = False
     Interval = 60000
     OnTimer = Timer1Timer
-    Left = 240
-    Top = 72
+    Left = 228
+    Top = 8
   end
-  object PallingTimer: TTimer
+  object PollingTimer: TTimer
     Enabled = False
     Interval = 100
-    OnTimer = PallingTimerTimer
-    Left = 176
-    Top = 72
+    OnTimer = PollingTimerTimer
+    Left = 200
+    Top = 8
   end
   object ZCom1: TCommPortDriver
     Tag = 1
@@ -164,7 +163,7 @@ object RigControl: TRigControl
     PortName = '\\.\COM2'
     InBufSize = 4096
     OnReceiveData = ZCom1ReceiveData
-    Left = 176
+    Left = 260
     Top = 8
   end
   object ZCom2: TCommPortDriver
@@ -173,14 +172,15 @@ object RigControl: TRigControl
     PortName = '\\.\COM2'
     InBufSize = 4096
     OnReceiveData = ZCom1ReceiveData
-    Left = 208
+    Left = 288
     Top = 8
   end
   object ZCom3: TCommPortDriver
     Tag = 3
     Port = pnCustom
     PortName = '\\.\COM2'
-    Left = 240
+    InBufSize = 4096
+    Left = 316
     Top = 8
   end
 end

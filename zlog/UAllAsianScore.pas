@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  UIARUScore, Grids, Cologrid, StdCtrls, ExtCtrls, zLogGlobal, Buttons;
+  UIARUScore, Grids, Cologrid, StdCtrls, ExtCtrls, UzLogGlobal, Buttons;
 
 type
   TAllAsianScore = class(TIARUScore)

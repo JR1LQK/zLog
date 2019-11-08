@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ExtCtrls, UMMTTY, zLogGlobal, Console2, Menus, UzLogCW;
+  StdCtrls, ExtCtrls, UMMTTY, UzLogGlobal, Console2, Menus, UzLogCW;
 
 const ttyMMTTY = 0;
       ttyPSK31 = 1;
@@ -289,7 +289,7 @@ begin
     VK_F1..VK_F8, VK_F11, VK_F12 :
       begin
         i := Key - VK_F1 + 1;
-        S := Options.CWMessage(3,i);
+        S := dmZLogGlobal.CWMessage(3,i);
         S := SetStrNoAbbrev(S, Main.CurrentQSO);
         SendStrNow(S);
       end;

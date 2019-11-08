@@ -2,8 +2,8 @@ object ACAGMulti: TACAGMulti
   Left = 331
   Top = 79
   Caption = 'Multipliers Info'
-  ClientHeight = 276
-  ClientWidth = 353
+  ClientHeight = 282
+  ClientWidth = 344
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,32 +13,36 @@ object ACAGMulti: TACAGMulti
   OldCreateOrder = True
   Scaled = False
   OnCreate = FormCreate
-  OnResize = FormResize
+  OnDestroy = FormDestroy
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
-    Top = 235
-    Width = 353
+    Top = 241
+    Width = 344
     Height = 41
     Align = alBottom
     TabOrder = 0
+    DesignSize = (
+      344
+      41)
     object Button3: TButton
-      Left = 224
+      Left = 276
       Top = 11
       Width = 57
       Height = 21
+      Anchors = [akRight, akBottom]
       Caption = 'Go'
       TabOrder = 0
       OnClick = GoButtonClick2
     end
     object Edit1: TEdit
-      Left = 176
+      Left = 228
       Top = 11
       Width = 33
       Height = 21
-      ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
+      Anchors = [akRight, akBottom]
       TabOrder = 1
       OnKeyPress = Edit1KeyPress
     end
@@ -47,6 +51,7 @@ object ACAGMulti: TACAGMulti
       Top = 11
       Width = 65
       Height = 22
+      Anchors = [akLeft, akBottom]
       Caption = 'OK'
       TabOrder = 2
       OnClick = Button1Click
@@ -56,6 +61,7 @@ object ACAGMulti: TACAGMulti
       Top = 13
       Width = 81
       Height = 17
+      Anchors = [akLeft, akBottom]
       Caption = 'Stay on top'
       TabOrder = 3
       OnClick = StayOnTopClick
@@ -64,7 +70,7 @@ object ACAGMulti: TACAGMulti
   object Panel: TPanel
     Left = 0
     Top = 0
-    Width = 353
+    Width = 344
     Height = 41
     Align = alTop
     Font.Charset = DEFAULT_CHARSET
@@ -274,8 +280,8 @@ object ACAGMulti: TACAGMulti
   object Grid: TMgrid
     Left = 0
     Top = 41
-    Width = 353
-    Height = 194
+    Width = 344
+    Height = 200
     Align = alClient
     ColCount = 1
     DefaultColWidth = 500
@@ -297,5 +303,13 @@ object ACAGMulti: TACAGMulti
     OddRowColor = clWindow
     EvenRowColor = clWindow
     OnSetting = GridSetting
+    ColWidths = (
+      500)
+    RowHeights = (
+      14
+      14
+      14
+      14
+      14)
   end
 end

@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  zLogGlobal, Menus, UComm, USpotClass;
+  UzLogGlobal, Menus, UComm, USpotClass;
 
 type
   TBasicMulti = class(TForm)
@@ -40,9 +40,6 @@ type
     // called from CheckMultiWindow for each band without QSO to the current stn
     // returns nothing when the multi is worked in that band.
   end;
-
-var
-  BasicMulti: TBasicMulti;
 
 implementation
 

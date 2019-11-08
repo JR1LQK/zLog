@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ExtCtrls, zLogGlobal;
+  StdCtrls, ExtCtrls, UzLogGlobal;
 
 type
   TCheckWin = class(TForm)
@@ -28,9 +28,6 @@ type
    procedure ResetListBox;
    procedure Renew(aQSO : TQSO); virtual;
   end;
-
-var
-  CheckWin: TCheckWin;
 
 implementation
 
@@ -97,13 +94,14 @@ begin
       end
     else
       BandRow[B] := -1;
+
   if ListCWandPh then
     Height := 28*i + 59
   else
     Height := 14*i + 59;
+
   ResetListBox;
   Renew(Main.CurrentQSO);
-
 end;
 
 procedure TCheckWin.FormKeyDown(Sender: TObject; var Key: Word;

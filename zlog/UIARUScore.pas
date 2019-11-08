@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  UBasicScore, Grids, StdCtrls, ExtCtrls, zLogGlobal, Aligrid, Cologrid,
+  UBasicScore, Grids, StdCtrls, ExtCtrls, UzLogGlobal, Cologrid,
   Buttons;
 
 type
@@ -22,9 +22,6 @@ type
     procedure AddNoUpdate(var aQSO : TQSO);  override;
     { Public declarations }
   end;
-
-var
-  IARUScore: TIARUScore;
 
 implementation
 

@@ -2,214 +2,54 @@ inherited KCJScore: TKCJScore
   Left = 405
   Top = 260
   Caption = 'Score'
+  OnShow = FormShow
+  ExplicitWidth = 294
+  ExplicitHeight = 268
   PixelsPerInch = 96
-  TextHeight = 13
-  object Grid: TStringAlignGrid
+  TextHeight = 12
+  object Grid: TStringGrid
     Left = 0
-    Top = 8
-    Width = 193
-    Height = 169
-    TabStop = False
-    BorderStyle = bsNone
-    Color = clBtnFace
-    ColCount = 3
-    DefaultRowHeight = 16
+    Top = 0
+    Width = 278
+    Height = 196
+    Align = alClient
+    DefaultDrawing = False
     FixedCols = 0
-    RowCount = 10
+    RowCount = 15
     FixedRows = 0
     Font.Charset = DEFAULT_CHARSET
-    Font.Color = clBlack
-    Font.Height = -11
-    Font.Name = 'Arial'
+    Font.Color = clWindowText
+    Font.Height = -15
+    Font.Name = #65325#65331' '#12468#12471#12483#12463
     Font.Style = []
-    GridLineWidth = 0
+    Options = [goHorzLine]
     ParentFont = False
     ScrollBars = ssNone
     TabOrder = 1
-    Alignment = alRight
-    SelectedCellColor = clBtnFace
-    SelectedFontColor = clBtnText
+    OnDrawCell = GridDrawCell
+    ExplicitTop = -153
+    ExplicitHeight = 382
     ColWidths = (
-      49
+      64
+      64
+      64
       64
       64)
-    Cells = (
-      0
-      0
-      #18509'z'#0
-      0
-      1
-      #11825'9z'
-      0
-      2
-      #11827'59'
-      0
-      3
-      '7'
-      0
-      4
-      #13361#0
-      0
-      5
-      #12594#0
-      0
-      6
-      #14386#0
-      0
-      7
-      #12341#0
-      0
-      8
-      #28500#24948'l'#0#17488
-      0
-      9
-      #25427#29295'e'#0#17488
-      1
-      0
-      #28496#28265#29556#0#17488#10768
-      1
-      1
-      '0'
-      1
-      2
-      '0'
-      1
-      3
-      '0'
-      1
-      4
-      '0'
-      1
-      5
-      '0'
-      1
-      6
-      '0'
-      1
-      7
-      '0'
-      1
-      8
-      '0'
-      2
-      0
-      #30029#29804#0#0
-      2
-      1
-      '0'
-      2
-      2
-      '0'
-      2
-      3
-      '0'
-      2
-      4
-      '0'
-      2
-      5
-      '0'
-      2
-      6
-      '0'
-      2
-      7
-      '0'
-      2
-      8
-      '0'
-      2
-      9
-      '0')
-    PropCell = (
-      0
-      7
-      6
-      16711680
-      -12
-      'Arial'
-      0
-      955489280
-      0
-      0
-      8
-      6
-      0
-      -12
-      'Arial'
-      0
-      955489280
-      0
-      0
-      9
-      6
-      0
-      -11
-      'Arial'
-      0
-      955489280
-      0
-      1
-      0
-      6
-      32768
-      -12
-      'Arial'
-      0
-      955489280
-      0
-      2
-      0
-      6
-      32768
-      -12
-      'Arial'
-      0
-      955489280
-      0)
-    PropCol = (
-      0
-      6
-      16711680
-      -12
-      'Arial'
-      0
-      955490304
-      0
-      1
-      6
-      0
-      -12
-      'Arial'
-      0
-      955490304
-      0
-      2
-      6
-      0
-      -12
-      'Arial'
-      0
-      955490304
-      0)
-    PropRow = (
-      0
-      6
-      32768
-      -12
-      'Arial'
-      0
-      955490304
-      0)
-    PropFixedCol = ()
-    PropFixedRow = (
-      4
-      6
-      32768
-      -12
-      'Arial'
-      0
-      955490304
-      0)
+    RowHeights = (
+      24
+      24
+      24
+      24
+      24
+      24
+      24
+      24
+      24
+      24
+      24
+      24
+      24
+      24
+      24)
   end
 end

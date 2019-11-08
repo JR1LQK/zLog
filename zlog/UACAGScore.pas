@@ -3,152 +3,180 @@ unit UACAGScore;
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  UBasicScore, Grids, StdCtrls, ExtCtrls, Aligrid, zLogGlobal, menus,
-  Buttons;
+  Windows, SysUtils, Classes, Graphics, Controls, Forms,
+  UBasicScore, Grids, StdCtrls, ExtCtrls, UzLogGlobal, Menus, Buttons;
 
 type
   TACAGScore = class(TBasicScore)
-    Grid: TStringAlignGrid;
+    Grid: TStringGrid;
     procedure FormShow(Sender: TObject);
+    procedure GridDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect; State: TGridDrawState);
   private
     { Private declarations }
   public
+    { Public declarations }
     procedure AddNoUpdate(var aQSO : TQSO);  override;
     procedure Update; override;
     procedure Reset; override;
     procedure Add(var aQSO : TQSO); override;
-    { Public declarations }
   end;
-
-var
-  ACAGScore: TACAGScore;
 
 implementation
 
-uses Main;
+uses
+  Main;
 
 {$R *.DFM}
 
 procedure TACAGScore.AddNoUpdate(var aQSO : TQSO);
-var band : TBand;
+var
+   band : TBand;
 begin
-  inherited;
+   inherited;
 
-  if aQSO.QSO.Dupe then
-    exit;
+   if aQSO.QSO.Dupe then begin
+      Exit;
+   end;
 
-  band := aQSO.QSO.band;
-  aQSO.QSO.points := 1;
-  inc(Points[band]);
+   band := aQSO.QSO.band;
+   aQSO.QSO.points := 1;
+   Inc(Points[band]);
 end;
 
 procedure TACAGScore.Update;
-var band : TBand;
-    TotQSO, TotPoints, TotMulti : LongInt;
-    row : integer;
-    mb : TMenuItem;
+var
+   band: TBand;
+   TotQSO, TotPoints, TotMulti: Integer;
+   row: integer;
+   mb: TMenuItem;
 begin
-  TotQSO := 0; TotPoints := 0; TotMulti := 0;
-  row := 1;
+   TotQSO := 0;
+   TotPoints := 0;
+   TotMulti := 0;
+   row := 1;
 
-  if ShowCWRatio then
-    begin
-      Grid.ColCount := 5;
-      Grid.Width :=  Grid.DefaultColWidth * 5;
-    end
-  else
-    begin
-      Grid.ColCount := 3;
-      Grid.Width := Grid.DefaultColWidth * 3;
-    end;
+   // 見出し行
+   Grid.Cells[0,0] := 'MHz';
+   Grid.Cells[1,0] := 'Points';
+   Grid.Cells[2,0] := 'Multi';
 
-
-  Grid.Cells[0,0] := 'MHz';
-  Grid.Cells[1,0] := 'Points';
-  Grid.Cells[2,0] := 'Mult';
-
-  if ShowCWRatio then
-    begin
+   if ShowCWRatio then begin
       Grid.Cells[3,0] := 'CW Q''s';
       Grid.Cells[4,0] := 'CW %';
-    end;
+   end
+   else begin
+      Grid.Cells[3,0] := '';
+      Grid.Cells[4,0] := '';
+   end;
 
+   // バンド別スコア行
+   for band := b35 to HiBand do begin
+      if NotWARC(band) then begin
+         TotPoints := TotPoints + Points[band];
+         TotMulti := TotMulti + Multi[band];
+         TotQSO := TotQSO + QSO[band];
 
-  for band := b35 to HiBand do
-    begin
-      if NotWARC(band) then
-        begin
-          TotPoints := TotPoints + Points[band];
-          TotMulti := TotMulti + Multi[band];
-          TotQSO := TotQSO + QSO[band];
-          mb := MainForm.BandMenu.Items[ord(band)];
-          if mb.Visible and mb.Enabled then
-            begin
-              Grid.CellFont[0,row].Color := clBlue;
-              Grid.Cells[0,row] := MHzString[band];
-              Grid.Cells[1,row] := IntToStr(Points[band]);
-              Grid.Cells[2,row] := IntToStr(Multi[band]);
+         mb := MainForm.BandMenu.Items[ord(band)];
+         if mb.Visible and mb.Enabled then begin
+            Grid.Cells[0, row] := '*' + MHzString[band];
+            Grid.Cells[1, row] := IntToStr3(Points[band]);
+            Grid.Cells[2, row] := IntToStr3(Multi[band]);
 
-             if ShowCWRatio then
-               begin
-                 Grid.Cells[3,row] := IntToStr(CWQSO[band]);
-                 if QSO[band] > 0 then
-                   Grid.Cells[4,row] := FloatToStrF(100*(CWQSO[band] / QSO[band]), ffFixed, 1000, 1)
-                 else
-                   Grid.Cells[4,row] := '-';
+            if ShowCWRatio then begin
+               Grid.Cells[3, row] := IntToStr3(CWQSO[band]);
+               if QSO[band] > 0 then begin
+                  Grid.Cells[4, row] := FloatToStrF(100 * (CWQSO[band] / QSO[band]), ffFixed, 1000, 1);
+               end
+               else begin
+                  Grid.Cells[4, row] := '-';
                end;
-
-              inc(row);
+            end
+            else begin
+               Grid.Cells[3, row] := '';
+               Grid.Cells[4, row] := '';
             end;
-        end;
-    end;
-{
-  Grid.Cells[1, 13] := IntToStr(TotPoints);
-  Grid.Cells[2, 13] := IntToStr(TotMulti);
-  Grid.Cells[2, 14] := IntToStr(TotPoints*TotMulti);
-  }
-  Grid.CellFont[0, row].Color := clBlack;
-  Grid.Cells[0, row] := 'Total';
-  Grid.Cells[1, row] := IntToStr(TotPoints);
-  Grid.Cells[2, row] := IntToStr(TotMulti);
 
+            Inc(row);
+         end;
+      end;
+   end;
 
-  if ShowCWRatio then
-    begin
-      Grid.Cells[3, row] := IntToStr(TotalCWQSOs);
-      if TotQSO > 0 then
-        Grid.Cells[4, row] := FloatToStrF(100*(TotalCWQSOs/TotQSO), ffFixed, 1000, 1)
-      else
-        Grid.Cells[4, row] := '-';
-    end;
+   // 合計行
+   Grid.Cells[0, row] := 'Total';
+   Grid.Cells[1, row] := IntToStr3(TotPoints);
+   Grid.Cells[2, row] := IntToStr3(TotMulti);
 
-  inc(row);
-  Grid.CellFont[0, row].Color := clBlack;
-  Grid.Cells[0, row] := 'Score';
-  Grid.Cells[1, row] := '';
-  Grid.Cells[2, row] := IntToStr(TotPoints*TotMulti);
-  Grid.Height := 16*(row+1);
-  ACAGScore.Height := Grid.Height + (325-256);
+   if ShowCWRatio then begin
+      Grid.Cells[3, row] := IntToStr3(TotalCWQSOs);
+      if TotQSO > 0 then begin
+         Grid.Cells[4, row] := FloatToStrF(100 * (TotalCWQSOs / TotQSO), ffFixed, 1000, 1);
+      end
+      else begin
+         Grid.Cells[4, row] := '-';
+      end;
+   end
+   else begin
+      Grid.Cells[3, row] := '';
+      Grid.Cells[4, row] := '';
+   end;
+   Inc(row);
 
+   // スコア行
+   Grid.Cells[0, row] := 'Score';
+   Grid.Cells[1, row] := '';
+   Grid.Cells[2, row] := IntToStr3(TotPoints * TotMulti);
+   Grid.Cells[3, row] := '';
+   Grid.Cells[4, row] := '';
+   Inc(row);
+
+   Grid.RowCount := row;
+   ClientWidth := (Grid.DefaultColWidth * Grid.ColCount) + (Grid.ColCount * Grid.GridLineWidth);
+   ClientHeight := (Grid.DefaultRowHeight * Grid.RowCount) + (Grid.RowCount * Grid.GridLineWidth) + Panel1.Height + 4;
 end;
 
 procedure TACAGScore.Reset;
 begin
-  inherited;
+   inherited;
 end;
 
 procedure TACAGScore.Add(var aQSO : TQSO);
 begin
-  inherited;
+   inherited;
 end;
 
 procedure TACAGScore.FormShow(Sender: TObject);
 begin
-  inherited;
-  Button1.SetFocus;
-  Grid.Col := 1;
-  Grid.Row := 1;
+   inherited;
+   Button1.SetFocus;
+   Grid.Col := 1;
+   Grid.Row := 1;
+end;
+
+procedure TACAGScore.GridDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect; State: TGridDrawState);
+var
+   strText: string;
+begin
+   inherited;
+   strText := TStringGrid(Sender).Cells[ACol, ARow];
+
+   with TStringGrid(Sender).Canvas do begin
+      Brush.Color := TStringGrid(Sender).Color;
+      Brush.Style := bsSolid;
+      FillRect(Rect);
+
+      Font.Name := 'ＭＳ ゴシック';
+      Font.Size := 11;
+
+      if Copy(strText, 1, 1) = '*' then begin
+         strText := Copy(strText, 2);
+         Font.Color := clBlue;
+      end
+      else begin
+         Font.Color := clBlack;
+      end;
+
+      TextRect(Rect, strText, [tfRight,tfVerticalCenter,tfSingleLine]);
+   end;
 end;
 
 end.

@@ -3,7 +3,7 @@ unit URenewThread;
 interface
 
 uses
-  Classes, zLogGlobal;
+  Classes, UzLogGlobal;
 
 type
   TRenewThread = class(TThread)

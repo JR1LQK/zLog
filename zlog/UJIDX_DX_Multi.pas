@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  UBasicMulti, StdCtrls, checklst, ComCtrls, ExtCtrls, zLogGlobal, JLLabel;
+  UBasicMulti, StdCtrls, checklst, ComCtrls, ExtCtrls, UzLogGlobal, JLLabel;
 
 type
   TJIDX_DX_Multi = class(TBasicMulti)

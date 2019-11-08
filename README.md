@@ -36,7 +36,8 @@ JARLコンテスト委員会は横林さんからzLog for Windowsのソースコ
 ここにMITライセンスによるオープンソースとして公開します．有志による改良を期待します．
 
 ------
-ビルド方法 de JR8PPG
+# 令和 Edition
+## ビルド方法 de JR8PPG
 
 (1)Delphi 10.3.2でビルドするにあたり、ICSは下記のサイトのICSV8.58を使用
 
@@ -52,15 +53,89 @@ InstallフォルダのD103Install.groupprojを開き、ビルド→インスト�
 
 (5)完成
 
-オリジナルからの変更点
+## オリジナルからの変更点
 
-(1)JARL ELOG 2.0に対応
+1. JARL ELOG 2.0に対応
+2. LPTポート対応廃止
+3. Voice対応廃止
+4. Windows7/10で目立つ不具合修正
+5. FT-2000,ICOMのカタログ機種を追加
+6. RIGコントロールのCOMポートをCOM1～COM20まで拡張
+7. RIGコントロールの通信速度を設定可能に
+8. CWキーイングのサイドトーン機能廃止
+9. など
 
-(2)LPTポート対応廃止
+## 動作確認済みコンテスト
 
-(3)Voice対応廃止
+* ALL JAコンテスト
+* 6m&DOWNコンテスト
+* 全市全郡コンテスト
+* ALL JA8コンテスト
+* 東京UHFコンテスト
 
-(4)Windows7/10で目立つ不具合修正
+## 動作確認済み機能
 
-(5)など
+* Packet Cluster
+* BandScope
+* Z-Link
+* COMポートによるCWキーイング
 
+## 第三者著作権情報
+
+* ICS - Internet Component Suite - V8 - Delphi 7 to RAD Studio 10.3 Rio
+```
+This product includes software developed by François PIETTE
+Copyright (C) 1997-2018 by François PIETTE
+Rue de Grady 24, 4053 Embourg, Belgium
+<francois.piette@overbyte.be>
+http://www.overbyte.eu/frame_index.html?redirTo=/products/ics.html
+```
+
+* HemisphereButton
+```
+This product includes software developed by Christian Schnell
+Copyright (c) 1997 Christian Schnell
+```
+
+* Text Console component
+```
+This product includes software developed by Danny Thorpe
+Copyright (c) 1995,96 by Danny Thorpe
+```
+
+* JL's RotateLabel with 3D-effects
+```
+This product includes software developed by Joerg Lingner
+Copyright (c) 1996 by Joerg Lingner, Munich, Germany
+https://torry.net/files/vcl/labels/rotatedlabels/jllabel.zip
+```
+
+* TOvrEdit
+```
+This product includes software developed by Wolfgang Chien
+Copyright (c) Wolfgang Chien
+```
+
+* TwsaGraph
+```
+This product includes software developed by P. Gertzen
+Copyright (c) P. Gertzen
+```
+
+* TMgrid
+```
+This product includes software developed by Michael Tran
+Copyright (c) 1998 by Michael Tran
+```
+
+* TCommPortDriver component
+```
+This product includes software developed by Marco Cocco
+Copyright (c) Marco Cocco
+```
+
+* JEDI Visual Component Library/JEDI Code Library
+```
+This product includes software developed by Project JEDI
+https://www.delphi-jedi.org/
+```

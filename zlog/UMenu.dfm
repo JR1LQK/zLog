@@ -16,7 +16,6 @@ object MenuForm: TMenuForm
   Position = poScreenCenter
   Scaled = False
   OnCreate = FormCreate
-  OnDestroy = FormDestroy
   OnKeyPress = FormKeyPress
   OnShow = FormShow
   PixelsPerInch = 96
@@ -51,7 +50,6 @@ object MenuForm: TMenuForm
     Default = True
     ModalResult = 1
     TabOrder = 0
-    OnClick = OKButtonClick
   end
   object CancelButton: TButton
     Left = 92
@@ -62,7 +60,6 @@ object MenuForm: TMenuForm
     Caption = 'Cancel'
     ModalResult = 2
     TabOrder = 1
-    OnClick = CancelButtonClick
   end
   object Button3: TButton
     Left = 172
@@ -371,13 +368,12 @@ object MenuForm: TMenuForm
       'Other')
     TabOrder = 6
   end
-  object CallsignEdit: TEdit
+  object editCallsign: TEdit
     Left = 408
     Top = 263
     Width = 65
     Height = 18
     AutoSize = False
-    ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
     TabOrder = 7
   end
   object CheckBox1: TCheckBox
@@ -387,7 +383,6 @@ object MenuForm: TMenuForm
     Height = 17
     Caption = 'Post-contest'
     TabOrder = 8
-    OnClick = CheckBox1Click
   end
   object TXNrEdit: TEdit
     Left = 344
@@ -395,7 +390,6 @@ object MenuForm: TMenuForm
     Width = 25
     Height = 18
     AutoSize = False
-    ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
     MaxLength = 3
     TabOrder = 9
     OnKeyPress = TXNrEditKeyPress
@@ -406,7 +400,6 @@ object MenuForm: TMenuForm
     Width = 25
     Height = 18
     AutoSize = False
-    ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
     MaxLength = 3
     TabOrder = 10
     Text = '1'

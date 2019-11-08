@@ -4,7 +4,8 @@ interface
 
 uses
   Windows, SysUtils, Classes, Graphics, Forms, Controls, StdCtrls,
-  Buttons, ExtCtrls, zLogGlobal, Menus, UzLogCW, BGK32LIB;
+  Buttons, ExtCtrls, Menus,
+  UzLogGlobal, UzLogCW, BGK32LIB;
 
 
 const _ActInsert = 0;
@@ -83,8 +84,8 @@ type
     { Public declarations }
   end;
 
-var
-  EditDialog: TEditDialog;
+//var
+//  EditDialog: TEditDialog;
 
 implementation
 
@@ -109,8 +110,8 @@ begin
       ZLinkForm.LockQSO(aQSO);
     end;}
   case Action of
-    _ActChange : EditDialog.Caption := 'Edit QSO';
-    _ActInsert : EditDialog.Caption := 'Insert QSO';
+    _ActChange : Caption := 'Edit QSO';
+    _ActInsert : Caption := 'Insert QSO';
   end;
   index := index_;
 
@@ -249,8 +250,8 @@ begin
 end;
 
 procedure TEditDialog.EditKeyPress(Sender: TObject; var Key: Char);
-var dupeindex : integer;
-    j : integer;
+var
+   dupeindex : integer;
 begin
   MainForm.CommonEditKeyProcess(Sender, Key);
   case Key of
@@ -299,7 +300,7 @@ begin
       end;
     ^R :
       begin
-        Options.ReversePaddle;
+        dmZlogGlobal.ReversePaddle;
         Key := #0;
       end;
     ^K :
@@ -340,7 +341,7 @@ begin
       begin
         if TEdit(Sender).Name = 'MemoEdit' then
           begin
-            if Options.Settings._movetomemo then
+            if dmZlogGlobal.Settings._movetomemo then
               begin
                 Key := #0;
                 CallsignEdit.SetFocus;
@@ -350,7 +351,7 @@ begin
         if (TEdit(Sender).Name = 'NumberEdit') or (TEdit(Sender).Name = 'TimeEdit') then
           begin
             Key := #0;
-            if Options.Settings._movetomemo then
+            if dmZlogGlobal.Settings._movetomemo then
               MemoEdit.SetFocus
             else
               CallsignEdit.SetFocus;
@@ -555,7 +556,7 @@ begin
       NewPowerMenu.Items[i].Visible := MainForm.ModeMenu.Items[i].Visible;
     end;
 
-  OpEdit.Visible := (Options.MultiOp > 0);
+  OpEdit.Visible := (dmZlogGlobal.MultiOp > 0);
   OpLabel.Visible := OpEdit.Visible;
 
   if MainForm.OpMenu.Items.Count > 0 then    // update op menu 1.31
@@ -610,9 +611,6 @@ begin
   ModeLabel.Visible := ModeEdit.Visible;
   ModeLabel.Left := ModeEdit.Left+1;
 
-  PowerEdit.Left := MainForm.PowerEdit.Left + offset;
-  PowerEdit.Width := MainForm.PowerEdit.Width;
-  PowerEdit.Visible := MainForm.PowerEdit.Visible;
   PowerLabel.Visible := PowerEdit.Visible;
   PowerLabel.Left := PowerEdit.Left+1;
 
@@ -767,7 +765,7 @@ begin
          i := Key - VK_F1 + 1;
          if workQSO.QSO.Mode = mCW then begin
 
-            cb := Options.Settings.CW.CurrentBank;
+            cb := dmZlogGlobal.Settings.CW.CurrentBank;
 
             if GetAsyncKeyState(VK_SHIFT) < 0 then begin
                 if cb = 1 then
@@ -777,7 +775,7 @@ begin
             end;
 
 
-            S := Options.CWMessage(cb,i);
+            S := dmZlogGlobal.CWMessage(cb,i);
             S := SetStr(S, CurrentQSO);
             zLogSendStr(S);
          end

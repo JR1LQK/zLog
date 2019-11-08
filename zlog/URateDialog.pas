@@ -3,7 +3,7 @@ unit URateDialog;
 interface
 
 uses Windows, SysUtils, Classes, Graphics, Forms, Controls, StdCtrls,
-  Buttons, ExtCtrls, zLogGlobal, wsaGraph, UOptions;
+  Buttons, ExtCtrls, wsaGraph, UOptions, UzLogGlobal;
 
 type
   TRateDialog = class(TForm)
@@ -28,12 +28,11 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
-    procedure CreateParams(var Params: TCreateParams); override;
     procedure StayOnTopClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure ShowLastComboChange(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-
+    procedure CreateParams(var Params: TCreateParams);
   private
     _max10, _max100 : double;
     function CountQSOs(_start, _end : TDateTime) : integer;
@@ -54,12 +53,6 @@ uses Main;
 
 {$R *.DFM}
 
-procedure TRateDialog.CreateParams(var Params: TCreateParams);
-begin
-  inherited CreateParams(Params);
-  Params.ExStyle := Params.ExStyle or WS_EX_APPWINDOW;
-end;
-
 procedure TRateDialog.TimerTimer(Sender: TObject);
 var Last : TDateTime;
     Diff, Rate : double;
@@ -68,22 +61,23 @@ var Last : TDateTime;
     mytx, k : integer;
     aQSO : TQSO;
 begin
-  if not(Visible) then exit;
-  i := Log.TotalQSO;
-  if i < 10 then
-    exit;
+   if not(Visible) then exit;
+   i := Log.TotalQSO;
+   if i < 10 then begin
+      exit;
+   end;
 
-  mytx := Options.GetTXNr;
+   mytx := dmZlogGlobal.TXNr;
 
-  k := 0;
-  repeat
-    aQSO := TQSO(Log.List[i]);
-    if aQSO.QSO.TX = mytx then
-      begin
-        inc(k);
+   k := 0;
+   repeat
+      aQSO := TQSO(Log.List[i]);
+      if aQSO.QSO.TX = mytx then begin
+         inc(k);
       end;
-    dec(i)
-  until (i = 0) or (k = 10);
+
+      dec(i)
+   until (i = 0) or (k = 10);
 
   if (k = 10) then
     begin
@@ -178,8 +172,6 @@ begin
   end;
 end;
 
-
-
 procedure TRateDialog.StayOnTopClick(Sender: TObject);
 begin
   If StayOnTop.Checked then
@@ -259,6 +251,12 @@ end;
 procedure TRateDialog.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   Timer.Enabled := False;
+end;
+
+procedure TRateDialog.CreateParams(var Params: TCreateParams);
+begin
+  inherited CreateParams(Params);
+  Params.ExStyle := Params.ExStyle or WS_EX_APPWINDOW;
 end;
 
 end.

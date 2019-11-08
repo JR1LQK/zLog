@@ -4,8 +4,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  UACAGMulti, Grids, Cologrid, StdCtrls, JLLabel, ExtCtrls, zLogGlobal, {UWWMulti}UMultipliers,
-  UzLogCW;
+  UACAGMulti, Grids, Cologrid, StdCtrls, JLLabel, ExtCtrls, UzLogGlobal,
+  UMultipliers, UzLogCW;
 
 type
   TIsland = class
@@ -45,9 +45,6 @@ type
     procedure CheckMulti(aQSO : TQSO); override;
     { Public declarations }
   end;
-
-var
-  IOTAMulti: TIOTAMulti;
 
 implementation
 
@@ -212,64 +209,67 @@ var str, str2 : string;
     i, j : integer;
     C : TIsland;
     P : TPrefix;
+   F: TNewIOTARef;
 begin
-  aQSO.QSO.NewMulti1 := False;
-  str := ExtractMulti(aQSO);
+   F := TNewIOTARef.Create(Self);
+   try
+      aQSO.QSO.NewMulti1 := False;
+      str := ExtractMulti(aQSO);
 
-  if str = '' then
-    aQSO.QSO.Points := 3
-  else
-    if str = MyIOTA then
-      aQSO.QSO.Points := 3
-    else
-      aQSO.QSO.Points := 15;
-  aQSO.QSO.Multi1 := str;
-  if aQSO.QSO.Dupe then
-    exit;
-  if str = '' then
-    exit;
-  for i := 0 to IslandList.List.Count-1 do
-    begin
-      C := TIsland(IslandList.List[i]);
-      if str = C.RefNumber then
-        begin
-          if C.Worked[aQSO.QSO.band, aQSO.QSO.Mode] = False then
-            begin
-              C.Worked[aQSO.QSO.band, aQSO.QSO.Mode] := True;
-              aQSO.QSO.NewMulti1 := True;
+      if str = '' then
+         aQSO.QSO.Points := 3
+      else
+         if str = MyIOTA then
+            aQSO.QSO.Points := 3
+         else
+            aQSO.QSO.Points := 15;
+
+      aQSO.QSO.Multi1 := str;
+
+      if aQSO.QSO.Dupe then
+         exit;
+
+      if str = '' then
+         exit;
+
+      for i := 0 to IslandList.List.Count-1 do begin
+         C := TIsland(IslandList.List[i]);
+         if str = C.RefNumber then begin
+            if C.Worked[aQSO.QSO.band, aQSO.QSO.Mode] = False then begin
+               C.Worked[aQSO.QSO.band, aQSO.QSO.Mode] := True;
+               aQSO.QSO.NewMulti1 := True;
             end;
-          LatestMultiAddition := i;
-          exit;
-          //break;
-        end;
-    end;
-  NewIOTARef.SetNewRef(str);
-  if NewIOTARef.ShowModal = mrOK then
-    begin
+            LatestMultiAddition := i;
+            Exit;
+         end;
+      end;
+
+      F.SetNewRef(str);
+      if F.ShowModal <> mrOK then begin
+         Exit;
+      end;
+
       C := TIsland.Create;
-      C.Name := NewIOTARef.GetName;
+      C.Name := F.GetName;
       C.RefNumber := str;
       C.Worked[aQSO.QSO.band, aQSO.QSO.Mode] := True;
       aQSO.QSO.NewMulti1 := True;
-      for i := 0 to IslandList.List.Count-1 do
-        if StrMore(str, TIsland(IslandList.List[i]).RefNumber) = False then
-          begin
+
+      // Å´Ç«Ç§çlÇ¶ÇƒÇ‡ÉoÉOÇ¡ÇƒÇ¢ÇÈ
+      for i := 0 to IslandList.List.Count-1 do begin
+         if StrMore(str, TIsland(IslandList.List[i]).RefNumber) = False then begin
             IslandList.List.Insert(i,C);
-            //Grid.RowCount := Grid.RowCount + 1;
-            //Update;
             IslandList.SaveToFile('IOTA.DAT');
-            exit;
-          end;
-        IslandList.List.Add(C);
-        //Grid.RowCount := Grid.RowCount + 1;
-        //Update;
-        IslandList.SaveToFile('IOTA.DAT');
-        exit;
-    end
-  else
-    begin
-    end;
-  // Input New Multi
+            Exit;
+         end;
+
+         IslandList.List.Add(C);
+         IslandList.SaveToFile('IOTA.DAT');
+         Exit;
+      end;
+   finally
+      F.Release();
+   end;
 end;
 
 procedure TIOTAMulti.Reset;
@@ -330,7 +330,7 @@ begin
   if CountryList.List.Count = 0 then exit;
 
   Q := TQSO.Create;
-  Q.QSO.Callsign := UpperCase(Options.MyCall);
+  Q.QSO.Callsign := UpperCase(dmZLogGlobal.MyCall);
   P := GetPrefixX(Q, PrefixList);
   MyDXCC := TCountry(CountryList.List[P.Index]).Country;
   Q.Free;
@@ -339,11 +339,13 @@ begin
 
   Application.CreateForm(TIOTACategory, IOTACategory);
   IOTACategory.Label1.Caption := MyDXCC;
+
   if IOTACategory.ShowModal = mrOK then
-    IOTAMulti.MyIOTA := IOTACategory.GetIOTA;
+    MyIOTA := IOTACategory.GetIOTA;
+
   IOTACategory.Free;
 
-  UzLogCW.QTHString := IOTAMulti.MyIOTA;
+  UzLogCW.QTHString := MyIOTA;
 end;
 
 procedure TIOTAMulti.GridSetting(ARow, Acol: Integer; var Fcolor: Integer;

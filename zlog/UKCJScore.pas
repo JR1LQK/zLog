@@ -4,11 +4,13 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  UBasicScore, Grids, Aligrid, StdCtrls, ExtCtrls, zLogGlobal, Buttons;
+  UBasicScore, Grids, StdCtrls, ExtCtrls, UzLogGlobal, Buttons;
 
 type
   TKCJScore = class(TBasicScore)
-    Grid: TStringAlignGrid;
+    Grid: TStringGrid;
+    procedure GridDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect; State: TGridDrawState);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
   public
@@ -17,54 +19,109 @@ type
     procedure Update; override;
   end;
 
-var
-  KCJScore: TKCJScore;
-
 implementation
 
 {$R *.DFM}
 
-procedure TKCJScore.AddNoUpdate(var aQSO : TQSO);
-var band : TBand;
+procedure TKCJScore.AddNoUpdate(var aQSO: TQSO);
+var
+   band: TBand;
 begin
-  inherited;
+   inherited;
 
-  if aQSO.QSO.Dupe then
-    exit;
+   if aQSO.QSO.Dupe then begin
+      Exit;
+   end;
 
-  band := aQSO.QSO.band;
-  //aQSO.QSO.points := 1;
+   band := aQSO.QSO.band;
+   // aQSO.QSO.points := 1;
 
-  if pos(aQSO.QSO.NrRcvd+'$', 'AS$NA$SA$EU$AF$OC$') > 0 then
-    aQSO.QSO.Points := 5
-  else
-    aQSO.QSO.Points := 1;
+   if pos(aQSO.QSO.NrRcvd + '$', 'AS$NA$SA$EU$AF$OC$') > 0 then begin
+      aQSO.QSO.Points := 5;
+   end
+   else begin
+      aQSO.QSO.Points := 1;
+   end;
 
-  inc(Points[band], aQSO.QSO.Points);
+   Inc(Points[band], aQSO.QSO.Points);
 end;
 
 procedure TKCJScore.Update;
-var band : TBand;
-    TotPoints, TotMulti : LongInt;
-    row : integer;
+var
+   band: TBand;
+   TotPoints, TotMulti: LongInt;
+   row: Integer;
 begin
-  TotPoints := 0; TotMulti := 0;
-  row := 1;
-  for band := b19 to b50 do
-    begin
-      if NotWARC(band) then
-        begin
-          Grid.Cells[1,row] := IntToStr(Points[band]);
-          TotPoints := TotPoints + Points[band];
-          Grid.Cells[2,row] := IntToStr(Multi[band]);
-          TotMulti := TotMulti + Multi[band];
-          inc(row);
-        end;
-    end;
-  Grid.Cells[1, 8] := IntToStr(TotPoints);
-  Grid.Cells[2, 8] := IntToStr(TotMulti);
-  Grid.Cells[2, 9] := IntToStr(TotPoints*TotMulti);
+   TotPoints := 0;
+   TotMulti := 0;
+   row := 1;
+
+   // å©èoÇµçs
+   Grid.Cells[0, 0] := 'MHz';
+   Grid.Cells[1, 0] := 'Points';
+   Grid.Cells[2, 0] := 'Multi';
+
+   for band := b19 to b50 do begin
+      if NotWARC(band) then begin
+         TotPoints := TotPoints + Points[band];
+         TotMulti := TotMulti + Multi[band];
+
+         Grid.Cells[0, row] := '*' + MHzString[band];
+         Grid.Cells[1, row] := IntToStr3(Points[band]);
+         Grid.Cells[2, row] := IntToStr3(Multi[band]);
+
+         Inc(row);
+      end;
+   end;
+
+   Grid.Cells[0, 8] := 'Total';
+   Grid.Cells[1, 8] := IntToStr3(TotPoints);
+   Grid.Cells[2, 8] := IntToStr3(TotMulti);
+
+   Grid.Cells[0, 9] := 'Score';
+   Grid.Cells[1, 9] := '';
+   Grid.Cells[2, 9] := IntToStr3(TotPoints * TotMulti);
+
+   Grid.ColCount := 3;
+   Grid.RowCount := 10;
+   ClientWidth := (Grid.DefaultColWidth * Grid.ColCount) + (Grid.ColCount * Grid.GridLineWidth);
+   ClientHeight := (Grid.DefaultRowHeight * Grid.RowCount) + (Grid.RowCount * Grid.GridLineWidth) + Panel1.Height + 4;
 end;
 
+procedure TKCJScore.FormShow(Sender: TObject);
+begin
+   inherited;
+   Button1.SetFocus;
+   Grid.Col := 1;
+   Grid.Row := 1;
+   CWButton.Visible := False;
+end;
+
+procedure TKCJScore.GridDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect; State: TGridDrawState);
+var
+   strText: string;
+begin
+   inherited;
+   strText := TStringGrid(Sender).Cells[ACol, ARow];
+
+   with TStringGrid(Sender).Canvas do begin
+      Brush.Color := TStringGrid(Sender).Color;
+      Brush.Style := bsSolid;
+      FillRect(Rect);
+
+      Font.Name := 'ÇlÇr ÉSÉVÉbÉN';
+      Font.Size := 11;
+
+      if Copy(strText, 1, 1) = '*' then begin
+         strText := Copy(strText, 2);
+         Font.Color := clBlue;
+      end
+      else begin
+         Font.Color := clBlack;
+      end;
+
+      TextRect(Rect, strText, [tfRight,tfVerticalCenter,tfSingleLine]);
+   end;
+end;
 
 end.

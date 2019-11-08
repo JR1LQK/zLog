@@ -1,9 +1,10 @@
-object ClusterCOMSet: TClusterCOMSet
+object formClusterCOMSet: TformClusterCOMSet
   Left = 397
   Top = 294
+  BorderStyle = bsDialog
   Caption = 'PacketCluster COM port settings'
-  ClientHeight = 163
-  ClientWidth = 259
+  ClientHeight = 158
+  ClientWidth = 269
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -11,16 +12,18 @@ object ClusterCOMSet: TClusterCOMSet
   Font.Name = #65325#65331' '#65328#12468#12471#12483#12463
   Font.Style = []
   OldCreateOrder = True
-  Position = poScreenCenter
+  Position = poOwnerFormCenter
   Scaled = False
-  OnShow = FormShow
+  DesignSize = (
+    269
+    158)
   PixelsPerInch = 96
   TextHeight = 12
   object Bevel1: TBevel
     Left = 6
     Top = 6
     Width = 251
-    Height = 131
+    Height = 119
     Shape = bsFrame
   end
   object Label35: TLabel
@@ -37,7 +40,7 @@ object ClusterCOMSet: TClusterCOMSet
     Height = 12
     Caption = 'Line break'
   end
-  object LineBreak: TComboBox
+  object comboLineBreak: TComboBox
     Left = 80
     Top = 52
     Width = 65
@@ -50,7 +53,7 @@ object ClusterCOMSet: TClusterCOMSet
       'CR'
       'LF')
   end
-  object LocalEcho: TCheckBox
+  object checkLocalEcho: TCheckBox
     Left = 16
     Top = 88
     Width = 97
@@ -58,36 +61,38 @@ object ClusterCOMSet: TClusterCOMSet
     Caption = 'Local echo'
     TabOrder = 1
   end
-  object OKBtn: TButton
-    Left = 67
-    Top = 144
-    Width = 63
+  object buttonOK: TButton
+    Left = 55
+    Top = 134
+    Width = 73
     Height = 21
+    Anchors = [akLeft, akRight]
     Caption = 'OK'
     Default = True
     ModalResult = 1
     TabOrder = 2
-    OnClick = OKBtnClick
+    ExplicitTop = 153
   end
-  object CancelBtn: TButton
-    Left = 135
-    Top = 144
-    Width = 63
+  object buttonCancel: TButton
+    Left = 134
+    Top = 134
+    Width = 73
     Height = 21
+    Anchors = [akLeft, akRight]
     Cancel = True
     Caption = 'Cancel'
     ModalResult = 2
     TabOrder = 3
-    OnClick = CancelBtnClick
+    ExplicitTop = 153
   end
-  object BaudCombo: TComboBox
+  object comboBaudRate: TComboBox
     Left = 80
     Top = 18
     Width = 65
     Height = 20
     ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
     TabOrder = 4
-    Text = 'BaudCombo'
+    Text = 'comboBaudRate'
     Items.Strings = (
       '110'
       '300'

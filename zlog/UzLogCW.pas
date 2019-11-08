@@ -2,7 +2,8 @@ unit UzLogCW;
 
 interface
 
-uses zLogGlobal, BGK32LIB, UOptions, SysUtils;
+uses
+  SysUtils, UzLogGlobal, BGK32LIB, UOptions;
 
 var CtrlZCQLoop : boolean;
     QTHString : string[255];
@@ -35,7 +36,7 @@ function LastCallsign : string;
 var txnr, i : integer;
 begin
   Result := '';
-  txnr := Options.Settings._txnr;
+  txnr := dmZLogGlobal.Settings._txnr;
   for i := Log.TotalQSO downto 1 do
     begin
       if TQSO(Log.List[i]).QSO.TX = txnr then
@@ -45,42 +46,50 @@ begin
 end;
 
 procedure IncCWSpeed;
-var i : integer;
+var
+   i : integer;
 begin
-  i := Options.Settings.CW._speed;
-  if i < 60 then
-    Options.SetSpeed(i+1);
-  MainForm.SpeedBar.Position := i+1;
-  MainForm.SpeedLabel.Caption := IntToStr(i+1)+' wpm';
+   i := dmZLogGlobal.Settings.CW._speed;
+   if i < 60 then begin
+      dmZLogGlobal.Speed := i + 1;
+   end;
+
+   MainForm.SpeedBar.Position := i + 1;
+   MainForm.SpeedLabel.Caption := IntToStr(i+1)+' wpm';
 end;
 
 procedure DecCWSpeed;
-var i : integer;
+var
+   i : integer;
 begin
-  i := Options.Settings.CW._speed;
-  if i > 2 then
-    Options.SetSpeed(i-1);
-  MainForm.SpeedBar.Position := i-1;
-  MainForm.SpeedLabel.Caption := IntToStr(i-1)+' wpm';
+   i := dmZLogGlobal.Settings.CW._speed;
+   if i > 2 then begin
+      dmZLogGlobal.Speed := i - 1;
+   end;
+
+   MainForm.SpeedBar.Position := i - 1;
+   MainForm.SpeedLabel.Caption := IntToStr(i-1)+' wpm';
 end;
 
 procedure ToggleFixedSpeed;
-var i : integer;
+var
+   i : integer;
 begin
-  FixedSpeed := not(FixedSpeed);
-  if FixedSpeed then
-    begin
-      i := Options.Settings.CW._fixwpm;
-      SpeedBefore := Options.Settings.CW._speed;
-    end
-  else
-    begin
+   FixedSpeed := not(FixedSpeed);
+   if FixedSpeed then begin
+      i := dmZLogGlobal.Settings.CW._fixwpm;
+      SpeedBefore := dmZLogGlobal.Settings.CW._speed;
+   end
+   else begin
       i := SpeedBefore;
-    end;
-  if (i > 0) and (i < 61) then
-    Options.SetSpeed(i);
-  MainForm.SpeedBar.Position := i;
-  MainForm.SpeedLabel.Caption := IntToStr(i)+' wpm';
+   end;
+
+   if (i > 0) and (i < 61) then begin
+      dmZLogGlobal.Speed := i;
+   end;
+
+   MainForm.SpeedBar.Position := i;
+   MainForm.SpeedLabel.Caption := IntToStr(i)+' wpm';
 end;
 
 function Abbreviate(S : shortstring) : shortstring;
@@ -90,9 +99,9 @@ begin
   SS := S;
   for i := 1 to length(SS) do
     case SS[i] of
-      '0' : SS[i] := AnsiChar(Options.Settings.CW._zero);
-      '1' : SS[i] := AnsiChar(Options.Settings.CW._one);
-      '9' : SS[i] := AnsiChar(Options.Settings.CW._nine);
+      '0' : SS[i] := AnsiChar(dmZLogGlobal.Settings.CW._zero);
+      '1' : SS[i] := AnsiChar(dmZLogGlobal.Settings.CW._one);
+      '9' : SS[i] := AnsiChar(dmZLogGlobal.Settings.CW._nine);
     end;
   Result := SS;
 end;
@@ -142,7 +151,7 @@ begin
     begin
       i := Pos('$X',temp);
       Delete(temp, i, 2);
-      Insert(Options.Settings._sentstr, temp, i);
+      Insert(dmZLogGlobal.Settings._sentstr, temp, i);
     end;
   while Pos('$R',temp) > 0 do
     begin
@@ -161,14 +170,14 @@ begin
       i := Pos('$Z',temp);
       Delete(temp, i, 2);
       //Insert(Abbreviate(QTHString), temp, i);
-      Insert(Abbreviate(Options.Settings._cqzone), temp, i);
+      Insert(Abbreviate(dmZLogGlobal.Settings._cqzone), temp, i);
     end;
   while Pos('$I',temp) > 0 do
     begin
       i := Pos('$I',temp);
       Delete(temp, i, 2);
       //Insert(Abbreviate(QTHString), temp, i);
-      Insert(Abbreviate(Options.Settings._iaruzone), temp, i);
+      Insert(Abbreviate(dmZLogGlobal.Settings._iaruzone), temp, i);
     end;
   while Pos('$Q',temp) > 0 do
     begin
@@ -180,7 +189,7 @@ begin
     begin
       i := Pos('$V',temp);
       Delete(temp, i, 2);
-      Insert(Abbreviate(Options.Settings._prov), temp, i);
+      Insert(Abbreviate(dmZLogGlobal.Settings._prov), temp, i);
     end;
   while Pos('$O',temp) > 0 do
     begin
@@ -205,7 +214,7 @@ begin
     begin
       i := Pos('$A',temp);
       Delete(temp, i, 2);
-      Insert(Abbreviate(UpperCase(Options.GetAge(aQSO))), temp, i);
+      Insert(Abbreviate(UpperCase(dmZLogGlobal.GetAge(aQSO))), temp, i);
     end;
 
   while Pos('$N',temp) > 0 do
@@ -249,7 +258,7 @@ begin
     begin
       i := Pos('$M',temp);
       Delete(temp, i, 2);
-      Insert(UpperCase(Options.MyCall), temp, i);
+      Insert(UpperCase(dmZLogGlobal.MyCall), temp, i);
     end;
   Result := temp;
 end;
@@ -259,25 +268,25 @@ var temp : shortstring;
     i : integer;
 begin
   temp := UpperCase(S);
-  if pos('$X', Options.Settings._sentstr) = 0 then
+  if pos('$X', dmZLogGlobal.Settings._sentstr) = 0 then
     while Pos('$X',temp) > 0 do
       begin
         i := Pos('$X',temp);
         Delete(temp, i, 2);
-        Insert(Options.Settings._sentstr, temp, i);
+        Insert(dmZLogGlobal.Settings._sentstr, temp, i);
       end;
   while Pos('$Z',temp) > 0 do
     begin
       i := Pos('$Z',temp);
       Delete(temp, i, 2);
-      Insert(Options.Settings._cqzone, temp, i);
+      Insert(dmZLogGlobal.Settings._cqzone, temp, i);
       //Insert(QTHString, temp, i);
     end;
   while Pos('$I',temp) > 0 do
     begin
       i := Pos('$I',temp);
       Delete(temp, i, 2);
-      Insert(Options.Settings._iaruzone, temp, i);
+      Insert(dmZLogGlobal.Settings._iaruzone, temp, i);
       //Insert(QTHString, temp, i);
     end;
   while Pos('$R',temp) > 0 do
@@ -303,7 +312,7 @@ begin
     begin
       i := Pos('$A',temp);
       Delete(temp, i, 2);
-      Insert(UpperCase(Options.GetAge(aQSO)), temp, i);
+      Insert(UpperCase(dmZLogGlobal.GetAge(aQSO)), temp, i);
     end;
 
   while Pos('$P',temp) > 0 do
@@ -328,7 +337,7 @@ begin
     begin
       i := Pos('$V',temp);
       Delete(temp, i, 2);
-      Insert(Options.Settings._prov, temp, i);
+      Insert(dmZLogGlobal.Settings._prov, temp, i);
     end;
   while Pos('$S',temp) > 0 do
     begin
@@ -346,7 +355,7 @@ begin
     begin
       i := Pos('$M',temp);
       Delete(temp, i, 2);
-      Insert(UpperCase(Options.MyCall), temp, i);
+      Insert(UpperCase(dmZLogGlobal.MyCall), temp, i);
     end;
   Result := (temp);
 end;
@@ -354,7 +363,7 @@ end;
 procedure zLogSendStr(S : shortstring);
 begin
   PauseCW;
-  if Options.FIFO then
+  if dmZLogGlobal.FIFO then
     SendStrFIFO(S)
   else
     SendStr(S);

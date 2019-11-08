@@ -53,9 +53,14 @@ var
       UserFlag : Boolean = False; // can be set to true by user. set to false only when ClrBuffer is called or "  is reached in the sending buffer. // 1.9z2 used in QTCForm
       VoiceFlag : integer = 0;  //temporary
 
-type TKeyingPort = (tkpNone, tkpSerial1, tkpSerial2, tkpUSB);
+type TKeyingPort = (tkpNone,
+                    tkpSerial1, tkpSerial2, tkpSerial3, tkpSerial4, tkpSerial5,
+                    tkpSerial6, tkpSerial7, tkpSerial8, tkpSerial9, tkpSerial10,
+                    tkpSerial11, tkpSerial12, tkpSerial13, tkpSerial14, tkpSerial15,
+                    tkpSerial16, tkpSerial17, tkpSerial18, tkpSerial19, tkpSerial20,
+                    tkpUSB);
 var
-  KeyingPort : TKeyingPort = tkpNone;  {tkpParallel;}
+  KeyingPort: TKeyingPort = tkpNone;  {tkpParallel;}
 
 //function GetPRTPort : string;
 procedure UpdateDataPort; // sets data port acc to mask data
@@ -419,7 +424,7 @@ begin
       exit;
    end;
 
-   if KeyingPort in [tkpSerial1, tkpSerial2] then begin
+   if KeyingPort in [tkpSerial1, tkpSerial2, tkpSerial3, tkpSerial4, tkpSerial5, tkpSerial6] then begin
       if RigControl.ZCom3 = nil then begin
          exit;
       end;
@@ -470,15 +475,19 @@ var
 begin
    if IntrIntvl = 0 then
       exit;
+
    if before = 0 then
       i := 1
    else
       i := before;
+
    _pttbefore := Trunc(i * 1000 / IntrIntvl);
+
    if after = 0 then
       i := 1
    else
       i := after;
+
    _pttafter := Trunc(i * 1000 / IntrIntvl);
 end;
 
@@ -669,7 +678,7 @@ procedure CW_ON;
 begin
    Case KeyingPort of
       // tkpParallel : SetPort(PRTport, _cwon);
-      tkpSerial1, tkpSerial2:
+      tkpSerial1, tkpSerial2, tkpSerial3, tkpSerial4, tkpSerial5, tkpSerial6:
          RigControl.ZCom3.ToggleDTR(True);
       tkpUSB:
          SetUSBPort(_usbportstatus and $FE);
@@ -680,7 +689,7 @@ procedure CW_OFF;
 begin
    Case KeyingPort of
       // tkpParallel : SetPort(PRTport, _cwoff);
-      tkpSerial1, tkpSerial2:
+      tkpSerial1, tkpSerial2, tkpSerial3, tkpSerial4, tkpSerial5, tkpSerial6:
          RigControl.ZCom3.ToggleDTR(false);
       tkpUSB:
          SetUSBPort(_usbportstatus or $01);
@@ -1686,7 +1695,7 @@ procedure CloseBGK();
 var
    R: UINT;
 begin
-   if not(KeyingPort in [tkpSerial1, tkpSerial2]) then begin
+   if not(KeyingPort in [tkpSerial1, tkpSerial2, tkpSerial3, tkpSerial4, tkpSerial5, tkpSerial6]) then begin
       ControlPTT(false);
    end;
 
@@ -1703,7 +1712,7 @@ begin
    { R:=timeKillEvent(PaddleTimerID); }
    R := 0;
    NoSound;
-   if not(KeyingPort in [tkpSerial1, tkpSerial2]) then begin
+   if not(KeyingPort in [tkpSerial1, tkpSerial2, tkpSerial3, tkpSerial4, tkpSerial5, tkpSerial6]) then begin
       CW_OFF;
    end;
 

@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  UCheckWin, StdCtrls, ExtCtrls, zLogGlobal, Main;
+  UCheckWin, StdCtrls, ExtCtrls, UzLogGlobal, Main;
 
 type
   TCheckCall2 = class(TCheckWin)

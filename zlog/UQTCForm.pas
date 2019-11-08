@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, Spin, zLogGlobal, Main, uzLogCW, UZLinkForm, BGK32LIB;
+  StdCtrls, Spin, UzLogGlobal, uzLogCW, UZLinkForm, BGK32LIB;
 
 type
   TQTCForm = class(TForm)
@@ -34,12 +34,12 @@ type
     procedure OpenQTC(Q : TQSO);
   end;
 
-var
-  QTCForm: TQTCForm;
-
 implementation
 
 {$R *.DFM}
+
+uses
+  Main;
 
 procedure TQTCForm.OpenQTC(Q : TQSO);
 var i, j, k : integer;

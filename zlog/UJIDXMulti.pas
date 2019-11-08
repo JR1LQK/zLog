@@ -4,7 +4,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  UWWMulti, UMultipliers, StdCtrls, JLLabel, ExtCtrls, zLogGlobal, Grids, Cologrid;
+  UWWMulti, UMultipliers, StdCtrls, JLLabel, ExtCtrls, Grids, Cologrid,
+  UzLogGlobal;
 
 type
   TJIDXMulti = class(TWWMulti)
@@ -53,10 +54,10 @@ begin
   MyContinent := 'AS';
   MyCountry := 'JA';
 
-  if (Options.Settings._mycall <> '') and (Options.Settings._mycall <> 'Your callsign') then
+  if (dmZlogGlobal.Settings._mycall <> '') and (dmZlogGlobal.Settings._mycall <> 'Your callsign') then
     begin
       aQSO := TQSO.Create;
-      aQSO.QSO.callsign := UpperCase(Options.Settings._mycall);
+      aQSO.QSO.callsign := UpperCase(dmZlogGlobal.Settings._mycall);
       i := GetCountryIndex(aQSO);
       if i > 0 then
         begin
@@ -66,7 +67,7 @@ begin
       aQSO.Free;
     end;
 
-  WWZone.Reset;
+  MyContest.ZoneForm.Reset;
 end;
 
 procedure TJIDXMulti.AddNoUpdate(var aQSO : TQSO);
@@ -95,7 +96,7 @@ begin
       begin
         Zone[B,i] := True;
         aQSO.QSO.NewMulti1 := True;
-        WWZone.Mark(B,i);
+        MyContest.ZoneForm.Mark(B,i);
       end;
 
   i := GetCountryIndex(aQSO);

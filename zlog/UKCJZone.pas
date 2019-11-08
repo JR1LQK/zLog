@@ -4,17 +4,16 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  Grids, Aligrid, StdCtrls, ExtCtrls, zLogGlobal;
+  Grids, StdCtrls, ExtCtrls, UzLogGlobal;
 
 type
   TKCJZone = class(TForm)
     Panel1: TPanel;
     Button1: TButton;
-    Grid1: TStringAlignGrid;
-    Grid2: TStringAlignGrid;
-    Grid3: TStringAlignGrid;
     cbStayOnTop: TCheckBox;
-    procedure CreateParams(var Params: TCreateParams); override;
+    Grid1: TStringGrid;
+    Grid3: TStringGrid;
+    Grid2: TStringGrid;
     procedure cbStayOnTopClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -22,94 +21,101 @@ type
     { Private declarations }
   public
     { Public declarations }
+    formMulti: TForm;
     procedure Update;
   end;
 
-var
-  KCJZone: TKCJZone;
-
 implementation
 
-uses UKCJMulti;
+uses
+  UKCJMulti;
 
 {$R *.DFM}
 
-function BandCol(B : TBand) : integer;
+function BandCol(B: TBand): integer;
 begin
-  case B of
-    b19 : Result := 1;
-    b35 : Result := 2;
-    b7  : Result := 3;
-    b14 : Result := 4;
-    b21 : Result := 5;
-    b28 : Result := 6;
-    b50 : Result := 7;
-  else
-    Result := 1;
-  end;
+   case B of
+      b19:
+         Result := 1;
+      b35:
+         Result := 2;
+      b7:
+         Result := 3;
+      b14:
+         Result := 4;
+      b21:
+         Result := 5;
+      b28:
+         Result := 6;
+      b50:
+         Result := 7;
+      else
+         Result := 1;
+   end;
 end;
 
 procedure TKCJZone.Update;
-var i : integer;
-    B : TBand;
+var
+   i: integer;
+   B: TBand;
 begin
-  for i := 0 to 23 do
-    begin
-      for B := b19 to b50 do
-        if NotWARC(B) then
-          begin
-            if KCJMulti.MultiArray[B, i] then
-              Grid1.Cells[BandCol(B),i+1] := '*'
-            else
-              Grid1.Cells[BandCol(B),i+1] := '.';
-          end;
-    end;
-  for i := 24 to 47 do
-    begin
-      for B := b19 to b50 do
-        if NotWARC(B) then
-          begin
-            if KCJMulti.MultiArray[B, i] then
-              Grid2.Cells[BandCol(B),i-23] := '*'
-            else
-              Grid2.Cells[BandCol(B),i-23] := '.';
-          end;
-    end;
-  for i := 48 to maxindex do
-    begin
-      for B := b19 to b50 do
-        if NotWARC(B) then
-          begin
-            if KCJMulti.MultiArray[B, i] then
-              Grid3.Cells[BandCol(B),i-47] := '*'
-            else
-              Grid3.Cells[BandCol(B),i-47] := '.';
-          end;
-    end;
-end;
-
-procedure TKCJZone.CreateParams(var Params: TCreateParams);
-begin
-  inherited CreateParams(Params);
-  Params.ExStyle := Params.ExStyle or WS_EX_APPWINDOW;
+   for i := 0 to 23 do begin
+      for B := b19 to b50 do begin
+         if NotWARC(B) then begin
+            if TKCJMulti(formMulti).MultiArray[B, i] then begin
+               Grid1.Cells[BandCol(B), i + 1] := '*';
+            end
+            else begin
+               Grid1.Cells[BandCol(B), i + 1] := '.';
+            end;
+         end;
+      end;
+   end;
+   for i := 24 to 47 do begin
+      for B := b19 to b50 do begin
+         if NotWARC(B) then begin
+            if TKCJMulti(formMulti).MultiArray[B, i] then begin
+               Grid2.Cells[BandCol(B), i - 23] := '*';
+            end
+            else begin
+               Grid2.Cells[BandCol(B), i - 23] := '.';
+            end;
+         end;
+      end;
+   end;
+   for i := 48 to maxindex do begin
+      for B := b19 to b50 do begin
+         if NotWARC(B) then begin
+            if TKCJMulti(formMulti).MultiArray[B, i] then begin
+               Grid3.Cells[BandCol(B), i - 47] := '*';
+            end
+            else begin
+               Grid3.Cells[BandCol(B), i - 47] := '.';
+            end;
+         end;
+      end;
+   end;
 end;
 
 procedure TKCJZone.cbStayOnTopClick(Sender: TObject);
 begin
-  if cbStayOnTop.Checked then
-    FormStyle := fsStayOnTop
-  else
-    FormStyle := fsNormal;
+   if cbStayOnTop.Checked then begin
+      FormStyle := fsStayOnTop;
+   end
+   else begin
+      FormStyle := fsNormal;
+   end;
 end;
 
 procedure TKCJZone.Button1Click(Sender: TObject);
 begin
-  Close;
+   Close;
 end;
 
 procedure TKCJZone.FormShow(Sender: TObject);
 begin
-  Update;
+   Update;
 end;
 
 end.
+

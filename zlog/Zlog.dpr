@@ -2,8 +2,8 @@ program zLog;
 
 uses
   Forms,
+  ActiveX,
   main in 'main.pas' {MainForm},
-  zLogGlobal in 'zLogGlobal.pas',
   UBasicScore in 'UBasicScore.pas' {BasicScore},
   UBasicMulti in 'UBasicMulti.pas' {BasicMulti},
   UALLJAMulti in 'UALLJAMulti.pas' {ALLJAMulti},
@@ -12,7 +12,7 @@ uses
   UALLJAEditDialog in 'UALLJAEditDialog.pas' {ALLJAEditDialog},
   UAbout in 'UAbout.pas' {AboutBox},
   URateDialog in 'URateDialog.pas' {RateDialog},
-  UOptions in 'UOptions.pas' {Options},
+  UOptions in 'UOptions.pas' {formOptions},
   UMenu in 'UMenu.pas' {MenuForm},
   UACAGMulti in 'UACAGMulti.pas' {ACAGMulti},
   USuperCheck in 'USuperCheck.pas' {SuperCheck},
@@ -23,8 +23,8 @@ uses
   UWWMulti in 'UWWMulti.pas' {WWMulti},
   UWWZone in 'UWWZone.pas' {WWZone},
   UComm in 'UComm.pas' {CommForm},
-  UClusterTelnetSet in 'UClusterTelnetSet.pas' {ClusterTelnetSet},
-  UClusterCOMSet in 'UClusterCOMSet.pas' {ClusterCOMSet},
+  UClusterTelnetSet in 'UClusterTelnetSet.pas' {formClusterTelnetSet},
+  UClusterCOMSet in 'UClusterCOMSet.pas' {formClusterCOMSet},
   UJIDXMulti in 'UJIDXMulti.pas' {JIDXMulti},
   UJIDXScore in 'UJIDXScore.pas' {JIDXScore},
   UJIDXScore2 in 'UJIDXScore2.pas' {JIDXScore2},
@@ -51,7 +51,6 @@ uses
   UKCJMulti in 'UKCJMulti.pas' {KCJMulti},
   USixDownMulti in 'USixDownMulti.pas' {SixDownMulti},
   USixDownScore in 'USixDownScore.pas' {SixDownScore},
-  UQTHDialog in 'UQTHDialog.pas' {QTHDialog},
   UIARUMulti in 'UIARUMulti.pas' {IARUMulti},
   UIARUScore in 'UIARUScore.pas' {IARUScore},
   UAllAsianScore in 'UAllAsianScore.pas' {AllAsianScore},
@@ -72,7 +71,6 @@ uses
   UCheckCall2 in 'UCheckCall2.pas' {CheckCall2},
   UCheckMulti in 'UCheckMulti.pas' {CheckMulti},
   UCheckCountry in 'UCheckCountry.pas' {CheckCountry},
-  UMinMaxFreqDlg in 'UMinMaxFreqDlg.pas' {MinMaxFreqDlg},
   USpotClass in 'USpotClass.pas',
   UIntegerDialog in 'UIntegerDialog.pas' {IntegerDialog},
   UBGKMonitorThread in 'UBGKMonitorThread.pas',
@@ -89,7 +87,6 @@ uses
   UWAEMulti in 'UWAEMulti.pas' {WAEMulti},
   UQuickRef in 'UQuickRef.pas' {QuickRef},
   UBandScope2 in 'UBandScope2.pas' {BandScope2},
-  UELogJapanese in 'UELogJapanese.pas' {formELogJarl},
   DBT in 'HID\DBT.pas',
   Hid in 'HID\Hid.pas',
   HidControllerClass in 'HID\HidControllerClass.pas',
@@ -97,60 +94,47 @@ uses
   HidUsage in 'HID\HidUsage.pas',
   SetupApi in 'HID\SetupApi.pas',
   ToneGen in 'LIB\ToneGen.pas',
-  OmniRig_TLB in 'OmniRig\OmniRig_TLB.pas';
+  OmniRig_TLB in 'OmniRig\OmniRig_TLB.pas',
+  UzLogGlobal in 'UzLogGlobal.pas' {dmZLogGlobal: TDataModule},
+  UELogJarl1 in 'UELogJarl1.pas' {formELogJarl1},
+  UELogJarl2 in 'UELogJarl2.pas' {formELogJarl2};
 
 {$R *.RES}
 
-
 begin
+  CoInitialize(nil); // <-- manually call CoInitialize()
+  Application.Initialize;
   Application.Title := 'zLog for Windows';
-  Application.CreateForm(TMenuForm, MenuForm);
-  Application.CreateForm(TRigControl, RigControl);
-  Application.CreateForm(TOptions, Options);
+  Application.CreateForm(TdmZLogGlobal, dmZLogGlobal);
   Application.CreateForm(TMainForm, MainForm);
+  Application.CreateForm(TRigControl, RigControl);
   Application.CreateForm(TPartialCheck, PartialCheck);
-  //  Application.CreateForm(TBasicScore, BasicScore);
-//  Application.CreateForm(TBasicMulti, BasicMulti);
-  Application.CreateForm(TEditDialog, EditDialog);
-  Application.CreateForm(TAboutBox, AboutBox);
   Application.CreateForm(TRateDialog, RateDialog);
   Application.CreateForm(TSuperCheck, SuperCheck);
   Application.CreateForm(TCommForm, CommForm);
-  Application.CreateForm(TClusterTelnetSet, ClusterTelnetSet);
-  Application.CreateForm(TClusterCOMSet, ClusterCOMSet);
-//  Application.CreateForm(TZLinkCOMSet, ZLinkCOMSet);
-//  Application.CreateForm(TZLinkTelnetSet, ZLinkTelnetSet);
-  Application.CreateForm(TPediScore, PediScore);
   Application.CreateForm(TCWKeyBoard, CWKeyBoard);
   Application.CreateForm(TChatForm, ChatForm);
   Application.CreateForm(TZServerInquiry, ZServerInquiry);
   Application.CreateForm(TZLinkForm, ZLinkForm);
   Application.CreateForm(TSpotForm, SpotForm);
-  Application.CreateForm(TQTHDialog, QTHDialog);
-  Application.CreateForm(TNewIOTARef, NewIOTARef);
   Application.CreateForm(TSummaryInfo, SummaryInfo);
   Application.CreateForm(TConsolePad, ConsolePad);
   Application.CreateForm(TFreqList, FreqList);
-  Application.CreateForm(TCheckWin, CheckWin);
   Application.CreateForm(TCheckCall2, CheckCall2);
   Application.CreateForm(TCheckMulti, CheckMulti);
   Application.CreateForm(TCheckCountry, CheckCountry);
-  Application.CreateForm(TMinMaxFreqDlg, MinMaxFreqDlg);
-  Application.CreateForm(TIntegerDialog, IntegerDialog);
-  Application.CreateForm(TNewPrefix, NewPrefix);
   Application.CreateForm(TScratchSheet, ScratchSheet);
-  Application.CreateForm(TQTCForm, QTCForm);
-//  Application.CreateForm(TVoiceForm, VoiceForm);
-  Application.CreateForm(TQuickRef, QuickRef);
   Application.CreateForm(TBandScope2, BandScope2);
-//  Application.CreateForm(TELogJapanese, ELogJapanese);
-  Options.ImplementSettings(False);
+  Application.ShowMainForm := False;
+  Application.MainFormOnTaskBar := True;
 
    try
+      MainForm.Show();
       Application.Run;
    except
       CloseBGK;
    end;
 
-   Application.ShowHint := True;
+   CoUnInitialize; // <-- free memory
+   dmZlogGlobal.Free();
 end.

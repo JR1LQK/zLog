@@ -7,56 +7,62 @@ uses
   StdCtrls, ExtCtrls;
 
 type
-  TClusterCOMSet = class(TForm)
+  TformClusterCOMSet = class(TForm)
     Bevel1: TBevel;
-    LineBreak: TComboBox;
-    LocalEcho: TCheckBox;
-    OKBtn: TButton;
-    CancelBtn: TButton;
-    BaudCombo: TComboBox;
+    comboLineBreak: TComboBox;
+    checkLocalEcho: TCheckBox;
+    buttonOK: TButton;
+    buttonCancel: TButton;
+    comboBaudRate: TComboBox;
     Label35: TLabel;
     Label1: TLabel;
-    procedure OKBtnClick(Sender: TObject);
-    procedure CancelBtnClick(Sender: TObject);
-    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
+    function GetBaudRate(): Integer;
+    procedure SetBaudRate(v: Integer);
+    function GetLineBreak(): Integer;
+    procedure SetLineBreak(v: Integer);
+    function GetLocalEcho(): Boolean;
+    procedure SetLocalEcho(v: Boolean);
   public
-    procedure SetVisuals; virtual;
     { Public declarations }
+    property BaudRate: Integer read GetBaudRate write SetBaudRate;
+    property LineBreak: Integer read GetLineBreak write SetLineBreak;
+    property LocalEcho: Boolean read GetLocalEcho write SetLocalEcho;
   end;
-
-var
-  ClusterCOMSet: TClusterCOMSet;
 
 implementation
 
-uses UOptions;
-
 {$R *.DFM}
 
-procedure TClusterCOMSet.SetVisuals;
+function TformClusterCOMSet.GetBaudRate(): Integer;
 begin
-  BaudCombo.ItemIndex := Options.Settings._clusterbaud;
-  LineBreak.ItemIndex := Options.Settings._clusterlinebreakCOM;
-  LocalEcho.Checked := Options.Settings._clusterlocalechoCOM;
+   Result := comboBaudRate.ItemIndex;
 end;
 
-
-procedure TClusterCOMSet.OKBtnClick(Sender: TObject);
+procedure TformClusterCOMSet.SetBaudRate(v: Integer);
 begin
-  Close;
+   comboBaudRate.ItemIndex := v;
 end;
 
-procedure TClusterCOMSet.CancelBtnClick(Sender: TObject);
+function TformClusterCOMSet.GetLineBreak(): Integer;
 begin
-  SetVisuals;
-  Close;
+   Result := comboLineBreak.ItemIndex;
 end;
 
-procedure TClusterCOMSet.FormShow(Sender: TObject);
+procedure TformClusterCOMSet.SetLineBreak(v: Integer);
 begin
-  {SetVisuals;}
+   comboLineBreak.ItemIndex := v;
+end;
+
+function TformClusterCOMSet.GetLocalEcho(): Boolean;
+begin
+   Result := checkLocalEcho.Checked;
+end;
+
+procedure TformClusterCOMSet.SetLocalEcho(v: Boolean);
+begin
+   checkLocalEcho.Checked := v;
 end;
 
 end.

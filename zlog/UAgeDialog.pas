@@ -2,7 +2,8 @@ unit UAgeDialog;
 
 interface
 
-uses Windows, SysUtils, Classes, Graphics, Forms, Controls, StdCtrls,
+uses
+  Windows, SysUtils, Classes, Graphics, Forms, Controls, StdCtrls,
   Buttons, ExtCtrls;
 
 type
@@ -11,33 +12,21 @@ type
     Bevel2: TBevel;
     Edit1: TEdit;
     Label1: TLabel;
-    procedure OKBtnClick(Sender: TObject);
-    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
+    function GetAge(): string;
   public
     { Public declarations }
+    property Age: string read GetAge;
   end;
-
-var
-  AgeDialog: TAgeDialog;
 
 implementation
 
-uses UOptions;
-
 {$R *.DFM}
 
-
-procedure TAgeDialog.OKBtnClick(Sender: TObject);
+function TAgeDialog.GetAge(): string;
 begin
-  Options.Settings._age := Edit1.Text;
-  Close;
-end;
-
-procedure TAgeDialog.FormShow(Sender: TObject);
-begin
-  Edit1.SetFocus;
+   Result := Edit1.Text;
 end;
 
 end.

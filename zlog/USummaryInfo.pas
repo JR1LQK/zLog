@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, zLogGlobal, UOptions;
+  StdCtrls, UzLogGlobal;
 
 type
   TSummaryInfo = class(TForm)
@@ -29,7 +29,6 @@ type
     AddrMemo: TMemo;
     CallEdit: TEdit;
     procedure FormShow(Sender: TObject);
-    procedure CreateParams(var Params: TCreateParams); override;
   private
     { Private declarations }
   public
@@ -71,19 +70,24 @@ begin
     DecodeDate(TQSO(Log.List[1]).QSO.Time, Y, M, D)
   else
     DecodeDate(Date, Y, M, D);
+
   if ContestNameEdit.Text = '' then
     ContestNameEdit.Text := TQSO(Log.List[0]).QSO.memo + ' ' + IntToStr(Y);
+
   if CallEdit.Text = '' then
-    CallEdit.Text := Options.Settings._mycall;
-  if Options.Settings._multiop > 0 then
+    CallEdit.Text := dmZlogGlobal.Settings._mycall;
+
+  if dmZlogGlobal.Settings._multiop > 0 then
     str := 'Multi-op '
   else
     str := 'Single-op ';
-  if Options.Settings._band = 0 then
+
+  if dmZlogGlobal.Settings._band = 0 then
     str := str + 'All band '
   else
-    str := str + BandString[TBand(Options.Settings._band - 1)] + ' ';
-  case Options.Settings._mode of
+    str := str + BandString[TBand(dmZlogGlobal.Settings._band - 1)] + ' ';
+
+  case dmZlogGlobal.Settings._mode of
     0 : str := str + 'Mixed';
     1 : str := str + 'CW';
     2 : str := str + 'Ph';
@@ -91,13 +95,5 @@ begin
   if CategoryEdit.Text = '' then
     CategoryEdit.Text := str;
 end;
-
-
-procedure TSummaryInfo.CreateParams(var Params: TCreateParams);
-begin
-  inherited CreateParams(Params);
-  Params.ExStyle := Params.ExStyle or WS_EX_APPWINDOW;
-end;
-
 
 end.

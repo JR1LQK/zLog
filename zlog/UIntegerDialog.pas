@@ -27,78 +27,62 @@ type
     { Public declarations }
   end;
 
-var
-  IntegerDialog: TIntegerDialog;
-
 implementation
 
 {$R *.DFM}
 
-procedure TIntegerDialog.Init(i : integer; S : string);
+procedure TIntegerDialog.Init(i: integer; S: string);
 begin
-  Edit.Text := IntToStr(i);
-  SetLabel(S);
+   Edit.Text := IntToStr(i);
+   SetLabel(S);
 end;
 
-function TIntegerDialog.GetValue : integer;
-var v : integer;
+function TIntegerDialog.GetValue: integer;
+var
+   v: integer;
 begin
-  if Cancelled then
-    begin
+   if Cancelled then begin
       Result := 0;
       exit;
-    end;
-  v := -1;
-  try
-    v := StrToInt(Edit.Text);
-  except
-    on EConvertError do
-      v := -1;
-  end;
-  Result := v;
+   end;
+
+   Result := StrToIntDef(Edit.Text, -1);
 end;
 
-function TIntegerDialog.GetValueExtended : extended;
-var v : extended;
+function TIntegerDialog.GetValueExtended: extended;
 begin
-  v := -1;
-  try
-    v := StrToFloat(Edit.Text);
-  except
-    on EConvertError do
-      v := -1;
-  end;
-  Result := v;
+   Result := StrToFloatDef(Edit.Text, -1);
 end;
 
-procedure TIntegerDialog.SetLabel(S : string);
-var w : integer;
+procedure TIntegerDialog.SetLabel(S: string);
+var
+   w: integer;
 begin
-  Label1.Caption := S;
-  w := IntegerDialog.Width - Label1.Width;
-  if w > 0 then
-    Label1.Left := w div 2
-  else
-    w := 2;
+   Label1.Caption := S;
+   w := Width - Label1.Width;
+   if w > 0 then
+      Label1.Left := w div 2
+   else
+      w := 2;
 end;
 
 procedure TIntegerDialog.FormCreate(Sender: TObject);
 begin
-  Caption := ' ';
+   Caption := ' ';
 end;
 
 procedure TIntegerDialog.FormShow(Sender: TObject);
 begin
-  Edit.Left := (IntegerDialog.Width - Edit.Width) div 2;
-  Button1.Left := Edit.Left - 16;
-  Button2.Left := Edit.Left + Edit.Width + 16 - Button2.Width;
-  Cancelled := False;
+   Edit.Left := (Width - Edit.Width) div 2;
+   Button1.Left := Edit.Left - 16;
+   Button2.Left := Edit.Left + Edit.Width + 16 - Button2.Width;
+   Cancelled := False;
 end;
 
 procedure TIntegerDialog.Button2Click(Sender: TObject);
 begin
-  Cancelled := True;
-  Edit.Text := '';
+   Cancelled := True;
+   Edit.Text := '';
 end;
 
 end.

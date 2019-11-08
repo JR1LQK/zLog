@@ -12,7 +12,7 @@ object IntegerDialog: TIntegerDialog
   Font.Name = #65325#65331' '#65328#12468#12471#12483#12463
   Font.Style = []
   OldCreateOrder = True
-  Position = poScreenCenter
+  Position = poOwnerFormCenter
   Scaled = False
   OnCreate = FormCreate
   OnShow = FormShow
@@ -30,7 +30,6 @@ object IntegerDialog: TIntegerDialog
     Top = 32
     Width = 129
     Height = 20
-    ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
     TabOrder = 0
   end
   object Button1: TButton

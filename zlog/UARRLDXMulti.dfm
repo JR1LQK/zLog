@@ -2,7 +2,6 @@ inherited ARRLDXMulti: TARRLDXMulti
   Left = 163
   Top = 222
   Caption = 'Multipliers'
-  Font.Charset = DEFAULT_CHARSET
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel1: TPanel

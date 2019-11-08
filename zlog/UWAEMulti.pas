@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   UARRLWMulti, Grids, Cologrid, StdCtrls, ExtCtrls, JLLabel, UMultipliers,
-  zLogGlobal;
+  UzLogGlobal;
 
 type
   TWAEMulti = class(TARRLWMulti)
@@ -18,9 +18,6 @@ type
     function GetInfo(aQSO : TQSO) : string; override;
     procedure Update; override;
   end;
-
-var
-  WAEMulti: TWAEMulti;
 
 implementation
 

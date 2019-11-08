@@ -4,8 +4,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  UBasicMulti, StdCtrls, JLLabel, ExtCtrls, zLogGlobal, Grids, Cologrid,
-  USpotClass, UComm, UMultipliers;
+  UBasicMulti, StdCtrls, JLLabel, ExtCtrls, UzLogGlobal, Grids, Cologrid,
+  USpotClass, UComm, UMultipliers, UWWZone;
 
 
 type
@@ -38,6 +38,7 @@ type
     procedure FormResize(Sender: TObject);
   private
     { Private declarations }
+    FZoneForm: TWWZone;
   public
     { Public declarations }
     MostRecentCty : TCountry;
@@ -72,16 +73,13 @@ type
     procedure RefreshGrid; virtual;
     procedure RefreshZone;
     procedure ProcessSpotData(var S : TBaseSpot); override;
+    property ZoneForm: TWWZone read FZoneForm write FZoneForm;
   end;
-
-var
-  WWMulti: TWWMulti;
-  //PrefixList : TPrefixList;
-  //CountryList : TCountryList;
 
 implementation
 
-uses UWWZone, {UComm,} UOptions, Main, UNewPrefix;
+uses
+  UOptions, Main, UNewPrefix;
 
 {$R *.DFM}
 
@@ -170,16 +168,27 @@ begin
 end;
 
 procedure TWWMulti.SelectAndAddNewPrefix(Call : string);
-var PX : TPrefix;
+var
+   PX : TPrefix;
+   F: TNewPrefix;
 begin
-  if _DATFileName = '' then
-    exit;
-  NewPrefix.Init(CountryList, Call);
-  NewPrefix.ShowModal;
-  if (NewPrefix.Prefix <> '') and (NewPrefix.CtyIndex >= 0) then
-    begin
-      AddNewPrefix(NewPrefix.Prefix, NewPrefix.CtyIndex);
-    end;
+   F := TNewPrefix.Create(Self);
+   try
+      if _DATFileName = '' then begin
+         exit;
+      end;
+
+      F.Init(CountryList, Call);
+      if F.ShowModal() <> mrOK then begin
+         Exit;
+      end;
+
+      if (F.Prefix <> '') and (F.CtyIndex >= 0) then begin
+         AddNewPrefix(F.Prefix, F.CtyIndex);
+      end;
+   finally
+      F.Release();
+   end;
 end;
 
 procedure TWWMulti.Add(var aQSO : TQSO);
@@ -302,7 +311,7 @@ begin
         end;
     end;
 
-Grid.RowCount := x;
+   Grid.RowCount := x;
 
 end;
 
@@ -310,7 +319,8 @@ procedure TWWMulti.Reset;
 var B : TBand;
     i : integer;
 begin
-  WWZone.Reset;
+  FZoneForm.Reset;
+
   for B := b19 to HiBand do
     for i := 1 to MAXCQZONE do
       Zone[B, i] := false;
@@ -356,12 +366,13 @@ procedure TWWMulti.RefreshZone;
 var i : integer;
     B : TBand;
 begin
-  WWZone.Reset;
+  FZoneForm.Reset;
+
   for B := b19 to b28 do
     if NotWARC(B) then
       for i := 1 to 40 do
         if Zone[B, i] then
-          WWZone.Mark(B,i);
+          FZoneForm.Mark(B,i);
 end;
 
 
@@ -392,7 +403,7 @@ begin
 
   AnalyzeMyCountry;
 
-  WWZone.Reset;
+  FZoneForm.Reset;
 end;
 
 procedure TWWMulti.Button1Click(Sender: TObject);
@@ -497,7 +508,7 @@ end;
 procedure TWWMulti.FormShow(Sender: TObject);
 begin
   inherited;
-  WWZone.Show;
+  FZoneForm.Show;
 end;
 
 function TWWMulti.GuessZone(aQSO : TQSO) : string;
