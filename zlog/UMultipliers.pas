@@ -1156,7 +1156,7 @@ var
    i: integer;
    fullpath: string;
 begin
-   fullpath := IncludeTrailingPathDelimiter(dmZLogGlobal.Settings._cfgdatpath) + fileName;
+   fullpath := dmZLogGlobal.Settings._cfgdatpath + fileName;
    if FileExists(fullpath) = False then begin
       fullpath := ExtractFilePath(Application.ExeName) + filename;
       if FileExists(fullpath) = False then begin

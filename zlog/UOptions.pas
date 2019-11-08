@@ -419,9 +419,9 @@ begin
 
       Settings._sentstr := SentEdit.Text;
 
-      Settings._backuppath := BackUpPathEdit.Text;
-      Settings._cfgdatpath := edCFGDATPath.Text;
-      Settings._logspath := edLogsPath.Text;
+      Settings._backuppath := IncludeTrailingPathDelimiter(BackUpPathEdit.Text);
+      Settings._cfgdatpath := IncludeTrailingPathDelimiter(edCFGDATPath.Text);
+      Settings._logspath := IncludeTrailingPathDelimiter(edLogsPath.Text);
 
       Settings._allowdupe := AllowDupeCheckBox.Checked;
       Settings._sameexchange := cbDispExchange.Checked;

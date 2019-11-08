@@ -659,6 +659,9 @@ begin
 
       // Back up path
       Settings._backuppath := ini.ReadString('Preferences', 'BackUpPath', '');
+      if Settings._backuppath <> '' then begin
+         Settings._backuppath := IncludeTrailingPathDelimiter(Settings._backuppath);
+      end;
 
       //
       // Categories
@@ -880,9 +883,15 @@ begin
 
       // CFG/DAT
       Settings._cfgdatpath := ini.ReadString('Preferences', 'CFGDATPath', '');
+      if Settings._cfgdatpath <> '' then begin
+         Settings._cfgdatpath := IncludeTrailingPathDelimiter(Settings._cfgdatpath);
+      end;
 
       // Logs
       Settings._logspath := ini.ReadString('Preferences', 'LogsPath', '');
+      if Settings._logspath <> '' then begin
+         Settings._logspath := IncludeTrailingPathDelimiter(Settings._logspath);
+      end;
 
       //
       // Misc
