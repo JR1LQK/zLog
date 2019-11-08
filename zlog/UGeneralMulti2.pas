@@ -103,6 +103,7 @@ begin
          (dmZlogGlobal.Settings._activebands[B] = True) then begin
           BandLabelArray[i].Caption := MHzString[B];
           j := BandLabelArray[i].Height;
+          Application.ProcessMessages();
           BandLabelArray[i].Top := 35 - j;
           inc(i);
       end;
