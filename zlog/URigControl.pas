@@ -182,6 +182,7 @@ type
     procedure SetVFO(i : integer); override;
     procedure InquireStatus; override;
     procedure ICOMWriteData(S : AnsiString);
+    procedure PollingProcess; override;
   end;
 
   TIC756 = class(TICOM)
@@ -1543,6 +1544,9 @@ begin
    MyAddr := $E0;
    RigAddr := $01;
    SetVFO(0);
+
+   RigControl.PollingTimer.Interval := 250;
+   RigControl.PollingTimer.Enabled := True;
 end;
 
 procedure TICOM.ICOMWriteData(S: AnsiString);
@@ -1603,6 +1607,7 @@ end;
 
 destructor TICOM.Destroy;
 begin
+   RigControl.PollingTimer.Enabled := False;
    inherited;
 end;
 
@@ -1686,6 +1691,12 @@ begin
       ExecuteCommand(temp); // string formatted at excecutecommand
       i := pos(TerminatorCode, BufferString);
    end;
+end;
+
+procedure TICOM.PollingProcess;
+begin
+   RigControl.PollingTimer.Enabled := False;
+   ICOMWriteData(AnsiChar($03));
 end;
 
 function HexText(binstr: string): string;
