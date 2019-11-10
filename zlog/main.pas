@@ -3795,7 +3795,7 @@ begin
    dmZlogGlobal.ReadWindowState(SuperCheck);
    dmZlogGlobal.ReadWindowState(CheckMulti);
    dmZlogGlobal.ReadWindowState(CWKeyBoard);
-   dmZlogGlobal.ReadWindowState(RigControl);
+   dmZlogGlobal.ReadWindowState(RigControl, '', True);
    dmZlogGlobal.ReadWindowState(BandScope2);
    dmZlogGlobal.ReadWindowState(ChatForm);
    dmZlogGlobal.ReadWindowState(FreqList);
