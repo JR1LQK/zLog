@@ -1388,7 +1388,6 @@ begin
 
    FRigs[1] := BuildRigObject(1);
    FRigs[2] := BuildRigObject(2);
-   FCurrentRig := FRigs[_currentrig];
 
    if FRigs[1] <> nil then begin
       if dmZlogGlobal.Settings._transverter1 then begin
@@ -1407,6 +1406,8 @@ begin
          FRigs[2]._freqoffset := 0;
       end;
    end;
+
+   SetCurrentRig(1);
 end;
 
 constructor TRig.Create(RigNum: Integer);

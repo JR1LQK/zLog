@@ -6211,6 +6211,9 @@ begin
       MyContest.ScoreForm.Update();
       MyContest.MultiForm.Update();
 
+      // リグコントロール開始
+      RigControl.ImplementOptions;
+
       LastFocus.SetFocus;
    finally
       f.Release();
@@ -7467,7 +7470,6 @@ begin
 
       // リグコントロール開始
       RigControl.ImplementOptions;
-      RigControl.SetCurrentRig(1);
    finally
       menu.Release();
    end;
