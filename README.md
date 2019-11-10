@@ -65,6 +65,12 @@ InstallフォルダのD103Install.groupprojを開き、ビルド→インスト�
 8. CWキーイングのサイドトーン機能廃止
 9. など
 
+## 動作確認済みWindows
+
+* Windows XP SP3 (32bit)
+* Windows 7 Home (64bit)
+* Windows 10 Home (64bit)
+
 ## 動作確認済みコンテスト
 
 * ALL JAコンテスト
@@ -79,6 +85,15 @@ InstallフォルダのD103Install.groupprojを開き、ビルド→インスト�
 * BandScope
 * Z-Link
 * COMポートによるCWキーイング
+
+## 動作確認済み無線機
+
+### ICOM
+* IC-706mkII
+### KENWOOD
+* TS-570
+### YAESU
+* FT-2000
 
 ## 第三者著作権情報
 
