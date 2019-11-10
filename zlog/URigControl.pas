@@ -115,7 +115,6 @@ type
     FComm : TCommPortDriver; // points to the right CommPortDriver
     FPollingTimer: TTimer;
     LastFreq : LongInt;
-    RigAddr : byte; // for icom
 
     ModeWidth : array[mCW..mOther] of Integer; // used in icom
 
@@ -175,7 +174,11 @@ type
   end;
 
   TICOM = class(TRig) // Icom CI-V
-    MyAddr : Byte;
+  private
+    FMyAddr: Byte;
+    FRigAddr: Byte;
+    FUseTransceiveMode: Boolean;
+  public
     constructor Create(RigNum : integer); override;
     destructor Destroy; override;
     procedure Initialize(); override;
@@ -189,6 +192,9 @@ type
     procedure InquireStatus; override;
     procedure ICOMWriteData(S : AnsiString);
     procedure PollingProcess; override;
+    property UseTransceiveMode: Boolean read FUseTransceiveMode write FUseTransceiveMode;
+    property MyAddr: Byte read FMyAddr write FMyAddr;
+    property RigAddr: Byte read FRigAddr write FRigAddr;
   end;
 
   TIC756 = class(TICOM)
@@ -1352,6 +1358,7 @@ begin
             else begin
                rig := TICOM.Create(rignum);
             end;
+            TICOM(rig).UseTransceiveMode := dmZLogGlobal.Settings._use_transceive_mode;
 
             for i := 1 to MAXICOM do begin
                if rname = ICOMLIST[i].name then begin
@@ -1361,7 +1368,7 @@ begin
 
             rig._minband := ICOMLIST[i].minband;
             rig._maxband := ICOMLIST[i].maxband;
-            rig.RigAddr := ICOMLIST[i].addr;
+            TICOM(rig).RigAddr := ICOMLIST[i].addr;
          end;
 
          rig.name := rname;
@@ -1576,11 +1583,12 @@ end;
 constructor TICOM.Create(RigNum: Integer);
 begin
    Inherited;
+   FUseTransceiveMode := True;
    FComm.StopBits := sb1BITS;
    TerminatorCode := AnsiChar($FD);
 
-   MyAddr := $E0;
-   RigAddr := $01;
+   FMyAddr := $E0;
+   FRigAddr := $01;
 end;
 
 procedure TICOM.Initialize();
@@ -1593,7 +1601,7 @@ end;
 
 procedure TICOM.ICOMWriteData(S: AnsiString);
 begin
-   WriteData(AnsiChar($FE) + AnsiChar($FE) + AnsiChar(RigAddr) + AnsiChar(MyAddr) + S + AnsiChar($FD));
+   WriteData(AnsiChar($FE) + AnsiChar($FE) + AnsiChar(FRigAddr) + AnsiChar(FMyAddr) + S + AnsiChar($FD));
 end;
 
 constructor TFT1000MP.Create(RigNum: Integer);
@@ -2586,11 +2594,11 @@ begin
          Exit;
       end;
 
-      if not(Ord(ss[3]) in [0, MyAddr]) then begin
+      if not(Ord(ss[3]) in [0, FMyAddr]) then begin
          Exit;
       end;
 
-      if ss[4] <> AnsiChar(RigAddr) then begin
+      if ss[4] <> AnsiChar(FRigAddr) then begin
          Exit;
       end;
 
@@ -2685,7 +2693,10 @@ begin
          end;
       end;
    finally
-//      FPollingTimer.Enabled := True;
+      // トランシーブモード使わない時はポーリング再開
+      if FUseTransceiveMode = False then begin
+         FPollingTimer.Enabled := True;
+      end;
    end;
 end;
 

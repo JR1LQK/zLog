@@ -210,6 +210,7 @@ type
     comboRig1Speed: TComboBox;
     comboRig2Speed: TComboBox;
     comboCwPttPort: TComboBox;
+    checkUseTransceiveMode: TCheckBox;
     procedure MultiOpRadioBtnClick(Sender: TObject);
     procedure SingleOpRadioBtnClick(Sender: TObject);
     procedure buttonOKClick(Sender: TObject);
@@ -388,6 +389,8 @@ begin
       Settings._rigport[2] := comboRig2Port.ItemIndex;
       Settings._rigname[2] := comboRig2Name.ItemIndex;
       Settings._rigspeed[2] := comboRig2Speed.ItemIndex;
+
+      Settings._use_transceive_mode := checkUseTransceiveMode.Checked;
 
       Settings._ritclear := cbRITClear.Checked;
 
@@ -573,6 +576,8 @@ begin
       comboRig2Port.ItemIndex := Settings._rigport[2];
       comboRig2Name.ItemIndex := Settings._rigname[2];
       comboRig2Speed.ItemIndex := Settings._rigspeed[2];
+
+      checkUseTransceiveMode.Checked := Settings._use_transceive_mode;
 
       cbRITClear.Checked := Settings._ritclear;
 
