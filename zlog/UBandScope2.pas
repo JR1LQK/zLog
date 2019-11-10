@@ -97,7 +97,7 @@ begin
           2 : RR := RigControl.Rig2;
         end;
         if RR <> nil then
-          BandScopeArray[i].SetBandMode(RR._currentband, RR._currentmode)
+          BandScopeArray[i].SetBandMode(RR.CurrentBand, RR.CurrentMode)
         else
           BandScopeArray[i].RewriteBandScope;
       end;

@@ -97,7 +97,8 @@ type
   end;
 
   TRig = class
-    FILO : boolean; // FILO buffer flag used for YAESU
+  private
+    FFILO : Boolean; // FILO buffer flag used for YAESU
     Name : string;
     _freqoffset : LongInt; // freq offset for transverters in Hz
     _minband, _maxband : TBand;
@@ -114,10 +115,11 @@ type
     _lastcallsign : string;
     FComm : TCommPortDriver; // points to the right CommPortDriver
     FPollingTimer: TTimer;
+    FPollingInterval: Integer;
     LastFreq : LongInt;
 
     ModeWidth : array[mCW..mOther] of Integer; // used in icom
-
+  public
     constructor Create(RigNum : Integer); virtual;
     destructor Destroy; virtual;
     procedure Initialize(); virtual;
@@ -144,6 +146,14 @@ type
     procedure MoveToLastFreq; virtual;
     procedure SetStopBits(i : byte);
     procedure SetBaudRate(i : integer);
+    property CommPortDriver: TCommPortDriver read FComm write FComm;
+    property PollingTimer: TTimer read FPollingTimer write FPollingTimer;
+    property FILO: Boolean read FFILO write FFILO;
+    property MinBand: TBand read _minband write _minband;
+    property MaxBand: TBand read _maxband write _maxband;
+    property CurrentBand: TBand read _currentband;
+    property CurrentMode: TMode read _currentmode;
+    property PollingInterval: Integer read FPollingInterval write FPollingInterval;
   end;
 
   TTS690 = class(TRig) // TS-450 as well
@@ -807,7 +817,6 @@ end;
 procedure TFT2000.Initialize();
 begin
    Inherited;
-   FPollingTimer.Interval := 250;
    FPollingTimer.Enabled := True;
 end;
 //
@@ -1372,6 +1381,7 @@ begin
          end;
 
          rig.name := rname;
+         rig.PollingInterval := dmZLogGlobal.Settings._polling_interval;
 
          // Initialize & Start
          rig.Initialize();
@@ -1421,7 +1431,7 @@ begin
       ModeWidth[M] := -1;
    end;
 
-   FILO := False; // used for YAESU
+   FFILO := False; // used for YAESU
    _freqoffset := 0;
    _minband := b19;
    _maxband := b10g;
@@ -1438,6 +1448,8 @@ begin
       FComm := RigControl.ZCom2;
       FPollingTimer := RigControl.PollingTimer2;
    end;
+
+   FPollingInterval := 200;   // milisec
 
    FComm.Disconnect;
    FComm.Port := TPortNumber(prtnr);
@@ -1476,6 +1488,7 @@ end;
 
 procedure TRig.Initialize();
 begin
+   FPollingTimer.Interval := FPollingInterval;
    FComm.Connect();
 end;
 
@@ -1508,7 +1521,7 @@ procedure TFT1000MP.PassOnRxData(S: AnsiString);
 var
    i: Integer;
 begin
-   if FILO then begin
+   if FFILO then begin
       for i := length(S) downto 1 do begin
          BufferString := S[i] + BufferString;
       end;
@@ -1562,7 +1575,6 @@ end;
 procedure TTS2000P.Initialize();
 begin
    Inherited;
-   FPollingTimer.Interval := 250;
    FPollingTimer.Enabled := True;
 end;
 
@@ -1596,7 +1608,6 @@ procedure TICOM.Initialize();
 begin
    Inherited;
    SetVFO(0);
-   FPollingTimer.Interval := 250;
    FPollingTimer.Enabled := True;
 end;
 
@@ -1615,7 +1626,6 @@ end;
 procedure TFT1000MP.Initialize();
 begin
    Inherited;
-   FPollingTimer.Interval := 250;
    FPollingTimer.Enabled := True;
 end;
 
@@ -1630,7 +1640,6 @@ procedure TFT847.Initialize();
 begin
    Inherited;
    WriteData(Chr($00) + Chr($00) + Chr($00) + Chr($00) + Chr($00));
-   FPollingTimer.Interval := 250;
    FPollingTimer.Enabled := True;
 end;
 
@@ -2166,7 +2175,7 @@ begin
       ModeWidth[M] := -1;
    end;
 
-   FILO := False; // used for YAESU
+   FFILO := False; // used for YAESU
    _freqoffset := 0;
    _minband := b19;
    _maxband := b10g;

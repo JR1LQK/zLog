@@ -1585,7 +1585,7 @@ top:
 xxx:
 
    if RigControl.Rig <> nil then begin // keep band within Rig
-      if (B > RigControl.Rig._maxband) or (B < RigControl.Rig._minband) then begin
+      if (B > RigControl.Rig.MaxBand) or (B < RigControl.Rig.MinBand) then begin
          B0 := B;
          goto top;
       end;
