@@ -112,14 +112,16 @@ type
     _currentmode : TMode;
     _currentvfo : integer; // 0 : VFO A; 1 : VFO B
     _lastcallsign : string;
-    Comm : TCommPortDriver; // points to the right CommPortDriver
+    FComm : TCommPortDriver; // points to the right CommPortDriver
+    FPollingTimer: TTimer;
     LastFreq : LongInt;
     RigAddr : byte; // for icom
 
     ModeWidth : array[mCW..mOther] of Integer; // used in icom
 
-    constructor Create(RigNum : integer); virtual;
+    constructor Create(RigNum : Integer); virtual;
     destructor Destroy; virtual;
+    procedure Initialize(); virtual;
     function Selected : boolean;
     function CurrentFreqHz : LongInt; //in Hz
     function CurrentFreqKHz : LongInt;
@@ -149,6 +151,7 @@ type
     _CWR : boolean; // CW-R flag
     constructor Create(RigNum : integer); override;
     destructor Destroy; override;
+    procedure Initialize(); override;
     procedure SetMode(Q : TQSO); override;
     procedure ExecuteCommand(S: AnsiString); override;
     procedure ParseBufferString; override;
@@ -161,18 +164,21 @@ type
 
   TTS2000 = class(TTS690)
     constructor Create(RigNum : integer); override;
+    procedure Initialize(); override;
   end;
 
   TTS2000P = class(TTS2000)
     constructor Create(RigNum : integer); override;
     Procedure PollingProcess; override;
     destructor Destroy; override;
+    procedure Initialize(); override;
   end;
 
   TICOM = class(TRig) // Icom CI-V
     MyAddr : Byte;
     constructor Create(RigNum : integer); override;
     destructor Destroy; override;
+    procedure Initialize(); override;
     procedure SetMode(Q : TQSO); override;
     procedure ExecuteCommand(S : AnsiString); override;
     procedure ParseBufferString; override;
@@ -186,6 +192,7 @@ type
   end;
 
   TIC756 = class(TICOM)
+    procedure Initialize(); override;
     procedure SetVFO(i : integer); override;
   end;
 
@@ -193,6 +200,7 @@ type
     WaitSize : integer;
     constructor Create(RigNum : integer); override;
     destructor Destroy; override;
+    procedure Initialize(); override;
     procedure SetMode(Q : TQSO); override;
     procedure ExecuteCommand(S: AnsiString); override;
     procedure ParseBufferString; override;
@@ -208,6 +216,7 @@ type
   TFT2000 = class(TRig)
     constructor Create(RigNum : integer); override;
     destructor Destroy; override;
+    procedure Initialize(); override;
     procedure SetMode(Q : TQSO); override;
     procedure ExecuteCommand(S: AnsiString); override;
     procedure ParseBufferString; override;
@@ -240,6 +249,7 @@ type
   TFT847 = class(TFT1000MP)
     constructor Create(RigNum : integer); override;
     destructor Destroy; override;
+    procedure Initialize(); override;
     procedure ExecuteCommand(S: AnsiString); override;
     procedure RitClear; override;
     procedure SetVFO(i : integer); override;
@@ -260,6 +270,7 @@ type
 
   TFT100 = class(TFT1000MP)
     constructor Create(RigNum : integer); override;
+    procedure Initialize(); override;
     procedure ExecuteCommand(S: AnsiString); override;
     procedure SetVFO(i : integer); override;
     procedure RitClear; override;
@@ -269,6 +280,7 @@ type
     CommOn, CommOff : AnsiString;
     constructor Create(RigNum : integer); override;
     destructor Destroy; override;
+    procedure Initialize(); override;
     procedure SetMode(Q : TQSO); override;
     procedure ExecuteCommand(S: AnsiString); override;
     procedure ParseBufferString; override;
@@ -283,6 +295,7 @@ type
   TOmni = class(TRig)
     constructor Create(RigNum : integer); override;
     destructor Destroy; override;
+    procedure Initialize(); override;
     procedure PassOnRxData(S : AnsiString); override;
     procedure ExecuteCommand(S: AnsiString); override;
     procedure ParseBufferString; override;
@@ -302,7 +315,7 @@ type
     Timer1: TTimer;
     Label2: TLabel;
     Label3: TLabel;
-    PollingTimer: TTimer;
+    PollingTimer1: TTimer;
     ZCom1: TCommPortDriver;
     ZCom2: TCommPortDriver;
     ZCom3: TCommPortDriver;
@@ -310,6 +323,7 @@ type
     dispFreqB: TStaticText;
     dispVFO: TStaticText;
     btnOmniRig: TButton;
+    PollingTimer2: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -652,22 +666,22 @@ procedure TRig.SetStopBits(i: byte);
 begin
    case i of
       1:
-         Comm.StopBits := sb1BITS;
+         FComm.StopBits := sb1BITS;
       2:
-         Comm.StopBits := sb2BITS;
+         FComm.StopBits := sb2BITS;
    end;
 end;
 
 procedure TRig.SetBaudRate(i: Integer);
 begin
    case i of
-      300:     Comm.BaudRate := br300;
-      1200:    Comm.BaudRate := br1200;
-      2400:    Comm.BaudRate := br2400;
-      4800:    Comm.BaudRate := br4800;
-      9600:    Comm.BaudRate := br9600;
-      19200:   Comm.BaudRate := br19200;
-      38400:   Comm.BaudRate := br38400;
+      300:     FComm.BaudRate := br300;
+      1200:    FComm.BaudRate := br1200;
+      2400:    FComm.BaudRate := br2400;
+      4800:    FComm.BaudRate := br4800;
+      9600:    FComm.BaudRate := br9600;
+      19200:   FComm.BaudRate := br19200;
+      38400:   FComm.BaudRate := br38400;
    end;
 end;
 
@@ -732,6 +746,11 @@ begin
    end;
 end;
 
+procedure TIC756.Initialize();
+begin
+   Inherited;
+end;
+
 procedure TIC756.SetVFO(i: Integer); // A:0, B:1
 begin
    if (i > 1) or (i < 0) then begin
@@ -767,26 +786,24 @@ end;
 
 constructor TFT2000.Create(RigNum : integer);
 begin
-   TerminatorCode := ';';
-
    Inherited;
-
-   Comm.StopBits := sb2BITS;
-   Comm.DataBits := db8BITS;
-
-   Comm.ToggleDTR(True);
-   Comm.ToggleRTS(True);
-
-   RigControl.PollingTimer.Interval := 250;
-   RigControl.PollingTimer.Enabled := True;
+   TerminatorCode := ';';
+   FComm.StopBits := sb2BITS;
+   FComm.DataBits := db8BITS;
 end;
 
 destructor TFT2000.Destroy;
 begin
-   RigControl.PollingTimer.Enabled := False;
+   FPollingTimer.Enabled := False;
    Inherited;
 end;
 
+procedure TFT2000.Initialize();
+begin
+   Inherited;
+   FPollingTimer.Interval := 250;
+   FPollingTimer.Enabled := True;
+end;
 //
 // OPERATING MODE
 //        0 1  2  3  4  5  6  7  8  9 10 11
@@ -866,7 +883,7 @@ begin
          UpdateStatus;
       end;
    finally
-      RigControl.PollingTimer.Enabled := True;
+      FPollingTimer.Enabled := True;
    end;
 end;
 
@@ -875,7 +892,7 @@ end;
 procedure TFT2000.ParseBufferString;
 begin
    {$IFDEF DEBUG}
-   OutputDebugString(PChar('***[' + string(BufferString) + ']'));
+   OutputDebugString(PChar('***FT-2000 [' + string(BufferString) + ']'));
    {$ENDIF}
 
    if RightStr(BufferString, 1) <> TerminatorCode then begin
@@ -958,7 +975,7 @@ end;
 //
 procedure TFT2000.PollingProcess;
 begin
-   RigControl.PollingTimer.Enabled := False;
+   FPollingTimer.Enabled := False;
    WriteData('IF;');
 end;
 
@@ -1201,12 +1218,12 @@ end;
 procedure TRig.WriteData(str: AnsiString);
 begin
    // repeat until Comm.OutQueCount = 0;
-   if Comm = nil then begin
+   if FComm = nil then begin
       Exit;
    end;
 
-   if Comm.Connected then begin
-      Comm.SendString(str);
+   if FComm.Connected then begin
+      FComm.SendString(str);
    end;
 end;
 
@@ -1219,7 +1236,7 @@ begin
    rig := nil;
    try
       if dmZlogGlobal.RigNameStr[rignum] = 'Omni-Rig' then begin
-         rig := TOmni.Create(1);
+         rig := TOmni.Create(rignum);
          rig._minband := b19;
          rig._maxband := b1200;
          btnOmniRig.Enabled := True;
@@ -1235,105 +1252,105 @@ begin
          end;
 
          if rname = 'TS-690/450' then begin
-            rig := TTS690.Create(1);
+            rig := TTS690.Create(rignum);
             rig._minband := b19;
             rig._maxband := b50;
          end;
          if rname = 'TS-850' then begin
-            rig := TTS690.Create(1);
+            rig := TTS690.Create(rignum);
             rig._minband := b19;
             rig._maxband := b28;
          end;
          if rname = 'TS-790' then begin
-            rig := TTS690.Create(1);
+            rig := TTS690.Create(rignum);
             rig._minband := b144;
             rig._maxband := b1200;
          end;
 
          if rname = 'TS-2000' then begin
-            rig := TTS2000.Create(1);
+            rig := TTS2000.Create(rignum);
             rig._minband := b19;
             rig._maxband := b2400;
          end;
 
          if rname = 'TS-2000/P' then begin
-            rig := TTS2000P.Create(1);
+            rig := TTS2000P.Create(rignum);
             rig._minband := b19;
             rig._maxband := b2400;
          end;
 
          if rname = 'FT-2000' then begin
-            rig:= TFT2000.Create(1);
+            rig:= TFT2000.Create(rignum);
             rig._minband := b19;
             rig._maxband := b50;
          end;
 
          if rname = 'FT-1000MP' then begin
-            rig:= TFT1000MP.Create(1);
+            rig:= TFT1000MP.Create(rignum);
             rig._minband := b19;
             rig._maxband := b28;
          end;
 
          if rname = 'MarkV/FT-1000MP' then begin
-            rig:= TMARKV.Create(1);
+            rig:= TMARKV.Create(rignum);
             rig._minband := b19;
             rig._maxband := b28;
          end;
 
          if rname = 'FT-1000MP Mark-V Field' then begin
-            rig := TMARKVF.Create(1);
+            rig := TMARKVF.Create(rignum);
             rig._minband := b19;
             rig._maxband := b28;
          end;
 
          if rname = 'FT-1000' then begin
-            rig := TFT1000.Create(1);
+            rig := TFT1000.Create(rignum);
             rig._minband := b19;
             rig._maxband := b28;
          end;
 
          if rname = 'FT-920' then begin
-            rig := TFT920.Create(1);
+            rig := TFT920.Create(rignum);
             rig._minband := b19;
             rig._maxband := b50;
          end;
 
          if rname = 'FT-100' then begin
-            rig := TFT100.Create(1);
+            rig := TFT100.Create(rignum);
             rig._minband := b19;
             rig._maxband := b430;
          end;
 
          if rname = 'FT-847' then begin
-            rig := TFT847.Create(1);
+            rig := TFT847.Create(rignum);
             rig._minband := b19;
             rig._maxband := b430;
          end;
 
          if rname = 'FT-817' then begin
-            rig := TFT817.Create(1);
+            rig := TFT817.Create(rignum);
             rig._minband := b19;
             rig._maxband := b430;
          end;
 
          if rname = 'JST-145' then begin
-            rig := TJST145.Create(1);
+            rig := TJST145.Create(rignum);
             rig._minband := b19;
             rig._maxband := b28;
          end;
 
          if rname = 'JST-245' then begin
-            rig := TJST145.Create(1);
+            rig := TJST145.Create(rignum);
             rig._minband := b19;
             rig._maxband := b50;
          end;
 
          if pos('IC-', rname) = 1 then begin
             if (pos('IC-775', rname) = 1) or (pos('IC-756', rname) = 1) then begin
-               rig := TIC756.Create(1);
+               rig := TIC756.Create(rignum);
             end
             else begin
-               rig := TICOM.Create(1);
+               rig := TICOM.Create(rignum);
             end;
 
             for i := 1 to MAXICOM do begin
@@ -1348,6 +1365,9 @@ begin
          end;
 
          rig.name := rname;
+
+         // Initialize & Start
+         rig.Initialize();
       end;
    finally
       Result := rig;
@@ -1402,17 +1422,18 @@ begin
    _rignumber := RigNum;
    if _rignumber = 1 then begin
       prtnr := dmZlogGlobal.Settings._rigport[1];
-      Comm := RigControl.ZCom1;
+      FComm := RigControl.ZCom1;
+      FPollingTimer := RigControl.PollingTimer1;
    end
    else begin
       prtnr := dmZlogGlobal.Settings._rigport[2];
-      Comm := RigControl.ZCom2;
+      FComm := RigControl.ZCom2;
+      FPollingTimer := RigControl.PollingTimer2;
    end;
 
-   Comm.Disconnect;
-   Comm.Port := TPortNumber(prtnr);
-   Comm.BaudRate := BaudRateToSpeed[ dmZlogGlobal.Settings._rigspeed[RigNum] ];
-   Comm.Connect;
+   FComm.Disconnect;
+   FComm.Port := TPortNumber(prtnr);
+   FComm.BaudRate := BaudRateToSpeed[ dmZlogGlobal.Settings._rigspeed[RigNum] ];
 
    TerminatorCode := ';';
    BufferString := '';
@@ -1442,6 +1463,12 @@ end;
 destructor TRig.Destroy;
 begin
    inherited;
+   FPollingTimer.Enabled := False;
+end;
+
+procedure TRig.Initialize();
+begin
+   FComm.Connect();
 end;
 
 procedure TRig.VFOAEqualsB;
@@ -1492,20 +1519,28 @@ end;
 
 constructor TTS690.Create(RigNum: Integer);
 begin
-   inherited;
-
-   Comm.StopBits := sb2BITS;
+   Inherited;
    TerminatorCode := ';';
+   FComm.StopBits := sb2BITS;
    _CWR := False;
+end;
+
+procedure TTS690.Initialize();
+begin
+   Inherited;
    WriteData('AI1;');
 end;
 
 constructor TTS2000.Create(RigNum: Integer);
 begin
-   inherited;
-
-   Comm.StopBits := sb1BITS;
+   Inherited;
    TerminatorCode := ';';
+   FComm.StopBits := sb1BITS;
+end;
+
+procedure TTS2000.Initialize();
+begin
+   Inherited;
    WriteData('TC 1;');
    WriteData('AI2;');
    WriteData('IF;');
@@ -1514,8 +1549,13 @@ end;
 constructor TTS2000P.Create(RigNum: Integer);
 begin
    Inherited;
-   RigControl.PollingTimer.Interval := 250;
-   RigControl.PollingTimer.Enabled := True;
+end;
+
+procedure TTS2000P.Initialize();
+begin
+   Inherited;
+   FPollingTimer.Interval := 250;
+   FPollingTimer.Enabled := True;
 end;
 
 constructor TJST145.Create(RigNum: Integer);
@@ -1523,30 +1563,32 @@ begin
    inherited;
    CommOn := 'H1' + _CR;
    CommOff := 'H0' + _CR;
-
-   Comm.StopBits := sb1BITS;
+   FComm.StopBits := sb1BITS;
    TerminatorCode := _CR;
+end;
+
+procedure TJST145.Initialize();
+begin
+   Inherited;
    WriteData('I1' + _CR + 'L' + _CR);
 end;
 
 constructor TICOM.Create(RigNum: Integer);
 begin
-   inherited;
-
-   Comm.BaudRate := BaudRateToSpeed[ dmZlogGlobal.Settings._rigspeed[RigNum] ];
-
-   Comm.StopBits := sb1BITS;
+   Inherited;
+   FComm.StopBits := sb1BITS;
    TerminatorCode := AnsiChar($FD);
-
-   Comm.ToggleDTR(True);
-   Comm.ToggleRTS(True);
 
    MyAddr := $E0;
    RigAddr := $01;
-   SetVFO(0);
+end;
 
-   RigControl.PollingTimer.Interval := 250;
-   RigControl.PollingTimer.Enabled := True;
+procedure TICOM.Initialize();
+begin
+   Inherited;
+   SetVFO(0);
+   FPollingTimer.Interval := 250;
+   FPollingTimer.Enabled := True;
 end;
 
 procedure TICOM.ICOMWriteData(S: AnsiString);
@@ -1558,31 +1600,46 @@ constructor TFT1000MP.Create(RigNum: Integer);
 begin
    inherited;
    WaitSize := 32;
-   Comm.StopBits := sb2BITS;
-   RigControl.PollingTimer.Interval := 250;
-   RigControl.PollingTimer.Enabled := True;
+   FComm.StopBits := sb2BITS;
+end;
+
+procedure TFT1000MP.Initialize();
+begin
+   Inherited;
+   FPollingTimer.Interval := 250;
+   FPollingTimer.Enabled := True;
 end;
 
 constructor TFT847.Create(RigNum: Integer);
 begin
    inherited;
    WaitSize := 5;
-   Comm.StopBits := sb2BITS;
-   RigControl.PollingTimer.Interval := 250;
-   RigControl.PollingTimer.Enabled := True;
+   FComm.StopBits := sb2BITS;
+end;
+
+procedure TFT847.Initialize();
+begin
+   Inherited;
    WriteData(Chr($00) + Chr($00) + Chr($00) + Chr($00) + Chr($00));
+   FPollingTimer.Interval := 250;
+   FPollingTimer.Enabled := True;
 end;
 
 constructor TFT920.Create(RigNum: Integer);
 begin
-   inherited;
+   Inherited;
    WaitSize := 28;
 end;
 
 constructor TFT100.Create(RigNum: Integer);
 begin
-   inherited;
+   Inherited;
    WaitSize := 32;
+end;
+
+procedure TFT100.Initialize();
+begin
+   Inherited;
 end;
 
 destructor TTS690.Destroy;
@@ -1594,33 +1651,28 @@ end;
 destructor TJST145.Destroy;
 begin
    WriteData(CommOff);
-   RigControl.PollingTimer.Enabled := False;
    inherited;
 end;
 
 destructor TTS2000P.Destroy;
 begin
    WriteData('AI0;');
-   RigControl.PollingTimer.Enabled := False;
    inherited;
 end;
 
 destructor TICOM.Destroy;
 begin
-   RigControl.PollingTimer.Enabled := False;
    inherited;
 end;
 
 destructor TFT1000MP.Destroy;
 begin
-   RigControl.PollingTimer.Enabled := False;
    inherited;
 end;
 
 destructor TFT847.Destroy;
 begin
    WriteData(_nil4 + Chr($80));
-   RigControl.PollingTimer.Enabled := False;
    inherited;
 end;
 
@@ -1695,7 +1747,7 @@ end;
 
 procedure TICOM.PollingProcess;
 begin
-   RigControl.PollingTimer.Enabled := False;
+   FPollingTimer.Enabled := False;
    ICOMWriteData(AnsiChar($03));
 end;
 
@@ -2151,6 +2203,11 @@ begin
    end;
 end;
 
+procedure TOmni.Initialize();
+begin
+//
+end;
+
 procedure TOmni.ExecuteCommand(S: AnsiString);
 begin
 end;
@@ -2512,119 +2569,123 @@ var
    M: TMode;
    ss: AnsiString;
 begin
-   // RigControl.label1.caption := S;
-   ss := S;
-   i := pos(AnsiChar($FE) + AnsiChar($FE), ss);
+   try
+      // RigControl.label1.caption := S;
+      ss := S;
+      i := pos(AnsiChar($FE) + AnsiChar($FE), ss);
 
-   if i = 0 then begin
-      Exit;
-   end;
-
-   if i > 1 then begin
-      Delete(ss, 1, i - 1);
-   end;
-
-   if length(ss) < 6 then begin
-      Exit;
-   end;
-
-   if not(Ord(ss[3]) in [0, MyAddr]) then begin
-      Exit;
-   end;
-
-   if ss[4] <> AnsiChar(RigAddr) then begin
-      Exit;
-   end;
-
-   Delete(ss, 1, 4);
-   Delete(ss, length(ss), 1);
-
-   Command := Ord(ss[1]);
-
-   if length(ss) = 1 then begin
-      case Command of
-         $FA:
-            Exit; // ng message
-         $FB:
-            Exit; // ok message
+      if i = 0 then begin
+         Exit;
       end;
-      Exit;
-   end;
 
-   case Command of
-      $01, $04: begin
-         temp := Ord(ss[2]);
-         case temp of
-            0, 1:
-               M := mSSB;
-            3:
-               M := mCW;
-            5, 6:
-               M := mFM;
-            2:
-               M := mAM;
-            4:
-               M := mRTTY;
-            else
-               M := mOther;
+      if i > 1 then begin
+         Delete(ss, 1, i - 1);
+      end;
+
+      if length(ss) < 6 then begin
+         Exit;
+      end;
+
+      if not(Ord(ss[3]) in [0, MyAddr]) then begin
+         Exit;
+      end;
+
+      if ss[4] <> AnsiChar(RigAddr) then begin
+         Exit;
+      end;
+
+      Delete(ss, 1, 4);
+      Delete(ss, length(ss), 1);
+
+      Command := Ord(ss[1]);
+
+      if length(ss) = 1 then begin
+         case Command of
+            $FA:
+               Exit; // ng message
+            $FB:
+               Exit; // ok message
          end;
-         _currentmode := M;
+         Exit;
+      end;
 
-         if length(ss) >= 3 then begin
-            if Ord(ss[3]) in [1 .. 3] then begin
-               ModeWidth[M] := Ord(ss[3]); // IF width
+      case Command of
+         $01, $04: begin
+            temp := Ord(ss[2]);
+            case temp of
+               0, 1:
+                  M := mSSB;
+               3:
+                  M := mCW;
+               5, 6:
+                  M := mFM;
+               2:
+                  M := mAM;
+               4:
+                  M := mRTTY;
+               else
+                  M := mOther;
+            end;
+            _currentmode := M;
+
+            if length(ss) >= 3 then begin
+               if Ord(ss[3]) in [1 .. 3] then begin
+                  ModeWidth[M] := Ord(ss[3]); // IF width
+               end;
+            end;
+
+            FreqMem[_currentband, _currentmode] := _currentfreq[_currentvfo];
+            if Selected then begin
+               UpdateStatus;
             end;
          end;
 
-         FreqMem[_currentband, _currentmode] := _currentfreq[_currentvfo];
-         if Selected then begin
-            UpdateStatus;
+         $00, $03: begin
+            if length(ss) < 4 then begin
+               Exit;
+            end;
+
+            Delete(ss, 1, 1);
+
+            {$IFDEF DEBUG}
+            OutputDebugString(PChar(
+            IntToHex(Ord(ss[5])) + ' ' +
+            IntToHex(Ord(ss[4])) + ' ' +
+            IntToHex(Ord(ss[3])) + ' ' +
+            IntToHex(Ord(ss[2])) + ' ' +
+            IntToHex(Ord(ss[1]))
+            ));
+            {$ENDIF}
+
+            i1 := (Ord(ss[1]) mod 16) + (Ord(ss[1]) div 16) * 10;
+            i2 := (Ord(ss[2]) mod 16) + (Ord(ss[2]) div 16) * 10;
+            i3 := (Ord(ss[3]) mod 16) + (Ord(ss[3]) div 16) * 10;
+            i4 := (Ord(ss[4]) mod 16) + (Ord(ss[4]) div 16) * 10;
+
+            if length(ss) = 5 then begin
+               i5 := (Ord(ss[5]) mod 16) + (Ord(ss[5]) div 16) * 10;
+            end
+            else begin
+               i5 := 0;
+            end;
+
+            i := i1 + 100 * i2 + 10000 * i3 + 1000000 * i4 + 100000000 * i5;
+            _currentfreq[_currentvfo] := i;
+            i := i + _freqoffset;
+
+            j := GetBand(i);
+            if j >= 0 then begin
+               _currentband := TBand(j);
+            end;
+
+            FreqMem[_currentband, _currentmode] := _currentfreq[_currentvfo];
+            if Selected then begin
+               UpdateStatus;
+            end;
          end;
       end;
-
-      $00, $03: begin
-         if length(ss) < 4 then begin
-            Exit;
-         end;
-
-         Delete(ss, 1, 1);
-
-         {$IFDEF DEBUG}
-         OutputDebugString(PChar(
-         IntToHex(Ord(ss[5])) + ' ' +
-         IntToHex(Ord(ss[4])) + ' ' +
-         IntToHex(Ord(ss[3])) + ' ' +
-         IntToHex(Ord(ss[2])) + ' ' +
-         IntToHex(Ord(ss[1]))
-         ));
-         {$ENDIF}
-
-         i1 := (Ord(ss[1]) mod 16) + (Ord(ss[1]) div 16) * 10;
-         i2 := (Ord(ss[2]) mod 16) + (Ord(ss[2]) div 16) * 10;
-         i3 := (Ord(ss[3]) mod 16) + (Ord(ss[3]) div 16) * 10;
-         i4 := (Ord(ss[4]) mod 16) + (Ord(ss[4]) div 16) * 10;
-
-         if length(ss) = 5 then begin
-            i5 := (Ord(ss[5]) mod 16) + (Ord(ss[5]) div 16) * 10;
-         end
-         else begin
-            i5 := 0;
-         end;
-
-         i := i1 + 100 * i2 + 10000 * i3 + 1000000 * i4 + 100000000 * i5;
-         _currentfreq[_currentvfo] := i;
-         i := i + _freqoffset;
-
-         j := GetBand(i);
-         if j >= 0 then begin
-            _currentband := TBand(j);
-         end;
-
-         FreqMem[_currentband, _currentmode] := _currentfreq[_currentvfo];
-         if Selected then begin
-            UpdateStatus;
-         end;
-      end;
+   finally
+//      FPollingTimer.Enabled := True;
    end;
 end;
 
@@ -2916,30 +2977,34 @@ procedure TFT817.SetFreq(Hz: LongInt);
 var
    StartTime: TDateTime;
 begin
-   RigControl.PollingTimer.Enabled := False;
+   FPollingTimer.Enabled := False;
    BufferString := '';
    inherited;
    StartTime := Now;
+
    repeat
       SleepEx(10, False)
    until (BufferString <> '') or ((Now - StartTime) > (250 / (24 * 60 * 60 * 1000)));
+
    BufferString := '';
-   RigControl.PollingTimer.Enabled := True;
+   FPollingTimer.Enabled := True;
 end;
 
 procedure TFT817.SetMode(Q: TQSO);
 var
    StartTime: TDateTime;
 begin
-   RigControl.PollingTimer.Enabled := False;
+   FPollingTimer.Enabled := False;
    BufferString := '';
    inherited;
    StartTime := Now;
+
    repeat
       SleepEx(10, False)
    until (BufferString <> '') or ((Now - StartTime) > (250 / (24 * 60 * 60 * 1000)));
+
    BufferString := '';
-   RigControl.PollingTimer.Enabled := True;
+   FPollingTimer.Enabled := True;
 end;
 
 procedure TRig.UpdateStatus;
@@ -2991,6 +3056,7 @@ begin
    FCurrentRig := nil;
    FRigs[1] := nil;
    FRigs[2] := nil;
+
    _currentrig := 1;
    _maxrig := 2;
 
@@ -3035,10 +3101,11 @@ begin
 end;
 
 procedure TRigControl.PollingTimerTimer(Sender: TObject);
+var
+   nRigNo: Integer;
 begin
-   if FCurrentRig <> nil then begin
-      FCurrentRig.PollingProcess;
-   end;
+   nRigNo := TTimer(Sender).Tag;
+   FRigs[nRigNo].PollingProcess();
 end;
 
 procedure TRigControl.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

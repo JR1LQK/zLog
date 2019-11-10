@@ -7467,6 +7467,7 @@ begin
 
       // リグコントロール開始
       RigControl.ImplementOptions;
+      RigControl.SetCurrentRig(1);
    finally
       menu.Release();
    end;
