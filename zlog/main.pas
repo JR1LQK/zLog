@@ -2429,6 +2429,7 @@ begin
    ScoreForm := TWWScore.Create(MainForm);
    ZoneForm := TWWZone.Create(MainForm);
    TWWMulti(MultiForm).ZoneForm := ZoneForm;
+   MultiForm.Reset();
 
    CheckCountry.ParentMulti := TWWMulti(MultiForm);
 

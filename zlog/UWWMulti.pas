@@ -399,11 +399,7 @@ begin
 
   if CountryList.List.Count = 0 then exit;
 
-  Reset;
-
   AnalyzeMyCountry;
-
-  FZoneForm.Reset;
 end;
 
 procedure TWWMulti.Button1Click(Sender: TObject);
