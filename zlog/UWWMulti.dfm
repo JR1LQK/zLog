@@ -2,7 +2,6 @@ inherited WWMulti: TWWMulti
   Left = 153
   Top = 98
   Caption = 'CQ WW Country Multipliers'
-  OnDestroy = FormDestroy
   OnResize = FormResize
   OnShow = FormShow
   PixelsPerInch = 96
@@ -17,8 +16,8 @@ inherited WWMulti: TWWMulti
     object RotateLabel1: TRotateLabel
       Left = 252
       Top = 20
-      Width = 14
-      Height = 15
+      Width = 15
+      Height = 14
       Escapement = 90
       TextStyle = tsNone
       Caption = '1.9'
@@ -32,8 +31,8 @@ inherited WWMulti: TWWMulti
     object RotateLabel2: TRotateLabel
       Left = 264
       Top = 20
-      Width = 14
-      Height = 15
+      Width = 15
+      Height = 14
       Escapement = 90
       TextStyle = tsNone
       Caption = '3.5'
@@ -47,8 +46,8 @@ inherited WWMulti: TWWMulti
     object RotateLabel3: TRotateLabel
       Left = 276
       Top = 29
-      Width = 14
-      Height = 6
+      Width = 6
+      Height = 14
       Escapement = 90
       TextStyle = tsNone
       Caption = '7'
@@ -62,8 +61,8 @@ inherited WWMulti: TWWMulti
     object RotateLabel4: TRotateLabel
       Left = 287
       Top = 23
-      Width = 14
-      Height = 12
+      Width = 12
+      Height = 14
       Escapement = 90
       TextStyle = tsNone
       Caption = '14'
@@ -77,8 +76,8 @@ inherited WWMulti: TWWMulti
     object RotateLabel5: TRotateLabel
       Left = 299
       Top = 23
-      Width = 14
-      Height = 12
+      Width = 12
+      Height = 14
       Escapement = 90
       TextStyle = tsNone
       Caption = '21'
@@ -92,8 +91,8 @@ inherited WWMulti: TWWMulti
     object RotateLabel6: TRotateLabel
       Left = 311
       Top = 23
-      Width = 14
-      Height = 12
+      Width = 12
+      Height = 14
       Escapement = 90
       TextStyle = tsNone
       Caption = '28'

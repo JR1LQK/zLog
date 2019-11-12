@@ -2269,7 +2269,9 @@ begin
    inherited;
    MultiForm := TWPXMulti.Create(MainForm);
    ScoreForm := TWPXScore.Create(MainForm);
-   ZoneForm := TWWZone.Create(MainForm);
+   ZoneForm := nil;
+   MultiForm.Reset();
+
    PastEditForm := TALLJAEditDialog.Create(MainForm);
 
    TWPXScore(ScoreForm).MultiForm := TWPXMulti(MultiForm);
