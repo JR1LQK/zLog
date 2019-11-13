@@ -5573,10 +5573,6 @@ begin
       MessageDlg('To change the date, double click the time field.', mtInformation, [mbOK], 0); { HELP context 0 }
    end;
 
-   EditPanel.Font.Size := dmZlogGlobal.Settings._mainfontsize;
-   Grid.Font.Size := dmZlogGlobal.Settings._mainfontsize;
-   SetDispHeight(dmZlogGlobal.Settings._mainrowheight);
-
    PostMessage(Handle, WM_ZLOG_INIT, 0, 0);
 end;
 
@@ -7459,6 +7455,10 @@ begin
 
       // CurrentQSO.QSO.Serial := SerialArray[b19]; // in case SERIALSTART is defined. SERIALSTART applies to all bands.
       SerialEdit.Text := CurrentQSO.SerialStr;
+
+      EditPanel.Font.Size := dmZlogGlobal.Settings._mainfontsize;
+      Grid.Font.Size := dmZlogGlobal.Settings._mainfontsize;
+      SetDispHeight(dmZlogGlobal.Settings._mainrowheight);
 
       UpdateBand(CurrentQSO.QSO.Band);
       UpdateMode(CurrentQSO.QSO.mode);
