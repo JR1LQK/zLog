@@ -6276,8 +6276,13 @@ var
    P: string;
 begin
    P := dmZlogGlobal.Settings._backuppath;
-   if P <> '' then
-      Log.SaveToFile(P + ExtractFileName(CurrentFileName));
+   if (P = '') or (P = '\') then begin
+      P := ExtractFilePath(Application.ExeName);
+   end;
+
+   ForceDirectories(P);
+
+   Log.SaveToFile(P + ExtractFileName(CurrentFileName));
 end;
 
 procedure TMainForm.CWKeyboard1Click(Sender: TObject);
