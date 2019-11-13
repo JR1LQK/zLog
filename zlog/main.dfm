@@ -24403,7 +24403,7 @@ object MainForm: TMainForm
     end
   end
   object OpenDialog: TOpenDialog
-    DefaultExt = 'zlo'
+    DefaultExt = 'ZLO'
     Filter = 'zLog binary file|*.ZLO|any file|*.*'
     Left = 422
     Top = 247
