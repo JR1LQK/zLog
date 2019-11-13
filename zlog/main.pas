@@ -2646,7 +2646,7 @@ constructor TFDContest.Create(N: string);
 begin
    inherited;
    MultiForm := TFDMulti.Create(MainForm);
-   ScoreForm := TALLJAScore.Create(MainForm);
+   ScoreForm := TACAGScore.Create(MainForm);
    PastEditForm := TALLJAEditDialog.Create(MainForm);
 end;
 
