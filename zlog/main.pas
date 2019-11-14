@@ -2189,8 +2189,9 @@ begin
    inherited;
    MultiForm := TJIDXMulti.Create(MainForm);
    ScoreForm := TJIDXScore2.Create(MainForm);
-   ZoneFOrm := TWWZone.Create(MainForm);
-   CheckCountry.ParentMulti := JIDXMulti;
+   ZoneForm := TWWZone.Create(MainForm);
+   TJIDXMulti(MultiForm).ZoneForm := ZoneForm;
+   CheckCountry.ParentMulti := TWWMulti(MultiForm);
    UseUTC := True;
    TQSO(Log.List[0]).QSO.RSTsent := _USEUTC; // JST = 0; UTC = $FFFF
 end;

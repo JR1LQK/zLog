@@ -37,6 +37,7 @@ type
     procedure FormResize(Sender: TObject);
   private
     { Private declarations }
+  protected
     FZoneForm: TWWZone;
   public
     { Public declarations }

@@ -17,108 +17,93 @@ type
     procedure AddNoUpdate(var aQSO : TQSO); override;
   end;
 
-var
-  JIDXMulti: TJIDXMulti;
-
 implementation
 
-uses UWWZone, UOptions, Main;
+uses
+  Main;
 
 {$R *.DFM}
 
 procedure TJIDXMulti.FormCreate(Sender: TObject);
-var i : integer;
-    aQSO : TQSO;
+var
+   i : integer;
+   aQSO : TQSO;
 begin
-  {inherited; }
-  CountryList := TCountryList.Create;
-  PrefixList := TPrefixList.Create;
+   {inherited; }
+   CountryList := TCountryList.Create;
+   PrefixList := TPrefixList.Create;
 
-  if FileExists('CTY.DAT') then
-    begin
+   if FileExists('CTY.DAT') then begin
       LoadCTY_DAT(testDXCCWWZone, CountryList, PrefixList);
       MainForm.WriteStatusLine('Loaded CTY.DAT', true);
-    end
-  else
-    LoadCountryDataFromFile('DXCC.DAT', CountryList, PrefixList);
+   end
+   else begin
+      LoadCountryDataFromFile('DXCC.DAT', CountryList, PrefixList);
+   end;
 
-//  LoadCountryDataFromFile('DXCC.DAT');
-  if CountryList.List.Count = 0 then exit;
+   if CountryList.List.Count = 0 then begin
+      exit;
+   end;
 
-  {for i := 0 to CountryList.List.Count-1 do
-    begin
-      ListBox.Items.Add(TCountry(CountryList.List[i]).Summary);
-    end; }
+   Reset;
+   MyContinent := 'AS';
+   MyCountry := 'JA';
 
-  Reset;
-  MyContinent := 'AS';
-  MyCountry := 'JA';
-
-  if (dmZlogGlobal.Settings._mycall <> '') and (dmZlogGlobal.Settings._mycall <> 'Your callsign') then
-    begin
+   if (dmZlogGlobal.Settings._mycall <> '') and (dmZlogGlobal.Settings._mycall <> 'Your callsign') then begin
       aQSO := TQSO.Create;
       aQSO.QSO.callsign := UpperCase(dmZlogGlobal.Settings._mycall);
       i := GetCountryIndex(aQSO);
-      if i > 0 then
-        begin
-          MyCountry := TCountry(CountryList.List[i]).Country;
-          MyContinent := TCountry(CountryList.List[i]).Continent;
-        end;
+      if i > 0 then begin
+         MyCountry := TCountry(CountryList.List[i]).Country;
+         MyContinent := TCountry(CountryList.List[i]).Continent;
+      end;
       aQSO.Free;
-    end;
-
-  MyContest.ZoneForm.Reset;
+   end;
 end;
 
 procedure TJIDXMulti.AddNoUpdate(var aQSO : TQSO);
-var str : string;
-    B : TBand;
-    i, j : integer;
-    C : TCountry;
+var
+   str : string;
+   B: TBand;
+   i: integer;
+   C: TCountry;
 begin
-  aQSO.QSO.NewMulti1 := False;
-  aQSO.QSO.NewMulti2 := False;
-  str := aQSO.QSO.NrRcvd;
-  aQSO.QSO.Multi1 := str;
+   aQSO.QSO.NewMulti1 := False;
+   aQSO.QSO.NewMulti2 := False;
+   str := aQSO.QSO.NrRcvd;
+   aQSO.QSO.Multi1 := str;
 
-  if aQSO.QSO.Dupe then
-    exit;
+   if aQSO.QSO.Dupe then begin
+      exit;
+   end;
 
-  B := aQSO.QSO.band;
-  try
-    i := StrToInt(str);
-  except
-    on EConvertError do
-      i := 0;
-  end;
-  if i in [1..MAXCQZONE] then
-    if Zone[B,i] = False then
-      begin
-        Zone[B,i] := True;
-        aQSO.QSO.NewMulti1 := True;
-        MyContest.ZoneForm.Mark(B,i);
+   B := aQSO.QSO.band;
+   i := StrToIntDef(str, 0);
+
+   if i in [1..MAXCQZONE] then begin
+      if Zone[B,i] = False then begin
+         Zone[B,i] := True;
+         aQSO.QSO.NewMulti1 := True;
+         FZoneForm.Mark(B,i);
       end;
+   end;
 
-  i := GetCountryIndex(aQSO);
+   i := GetCountryIndex(aQSO);
 
-  C := TCountry(CountryList.List[i]);
-  MostRecentCty := C;
+   C := TCountry(CountryList.List[i]);
+   MostRecentCty := C;
 
-  aQSO.QSO.Multi2 := C.Country;
+   aQSO.QSO.Multi2 := C.Country;
 
-  if i = 0 then // unknown cty. e.g. MM
-    exit;
+   if i = 0 then begin // unknown cty. e.g. MM
+      exit;
+   end;
 
-  if C.Worked[B] = False then
-    begin
+   if C.Worked[B] = False then begin
       C.Worked[B] := True;
       aQSO.QSO.NewMulti2 := True;
-      //j := ListBox.TopIndex;
       Grid.Cells[0,C.GridIndex] := C.Summary;
-      //ListBox.Items.Delete(i);
-      //ListBox.Items.insert(i, C.Summary);
-      //ListBox.TopIndex := j;
-    end;
+   end;
 end;
 
 end.
