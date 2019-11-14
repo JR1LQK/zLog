@@ -75,9 +75,11 @@ InstallフォルダのD103Install.groupprojを開き、ビルド→インスト�
 
 * ALL JAコンテスト
 * 6m&DOWNコンテスト
+* フィールドデイコンテスト
 * 全市全郡コンテスト
-* ALL JA8コンテスト
-* 東京UHFコンテスト
+* ALL JA8コンテスト(allja8.cfg)
+* 東京UHFコンテスト(tokyo_uhf.cfg)
+* CQWW,CQWPX,AP Sprint,IARU HF
 
 ## 動作確認済み機能
 
