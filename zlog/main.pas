@@ -790,7 +790,7 @@ type
     procedure HideBandMenu(b: TBand);
     procedure HideBandMenuHF();
     procedure HideBandMenuWARC();
-    procedure HideBandMenuVU();
+    procedure HideBandMenuVU(fInclude50: Boolean = True);
   end;
 
 var
@@ -7586,7 +7586,7 @@ procedure TMainForm.InitKCJ();
 begin
    BandMenu.Items[Ord(b19)].Visible := True;
    HideBandMenuWARC();
-   HideBandMenuVU();
+   HideBandMenuVU(False);
 
    EditScreen := TKCJEdit.Create(Self);
 
@@ -7829,9 +7829,11 @@ begin
    BandMenu.Items[Ord(b24)].Visible := False;
 end;
 
-procedure TMainForm.HideBandMenuVU();
+procedure TMainForm.HideBandMenuVU(fInclude50: Boolean);
 begin
-   BandMenu.Items[Ord(b50)].Visible := False;
+   if fInclude50 = True then begin
+      BandMenu.Items[Ord(b50)].Visible := False;
+   end;
    BandMenu.Items[Ord(b144)].Visible := False;
    BandMenu.Items[Ord(b430)].Visible := False;
    BandMenu.Items[Ord(b1200)].Visible := False;

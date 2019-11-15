@@ -99,6 +99,8 @@ begin
    if MultiMap.Visible then begin
       MultiMap.Update;
    end;
+
+   Grid.Refresh();
 end;
 
 procedure TKCJMulti.AddNoUpdate(var aQSO: TQSO);
@@ -194,7 +196,7 @@ begin
    Reset;
    combBand.ItemIndex := 0;
    MultiMap := TKCJZone.Create(Owner);
-   MultiMap.formMulti := Self;
+   MultiMap.MultiForm := Self;
 end;
 
 procedure TKCJMulti.FormDestroy(Sender: TObject);
@@ -210,14 +212,17 @@ var
    c: Integer;
 begin
    inherited;
-   Grid.RowCount := 7;
-   Grid.ColCount := 12;
+   Grid.RowCount := 12;
+   Grid.ColCount := 7;
 
    for i := 0 to maxindex do begin
-      c := i div 7;
-      r := i mod 7;
+      c := i mod 7;
+      r := i div 7;
       Grid.Cells[c, r] := KenNames[i];
    end;
+
+   ClientWidth := (Grid.DefaultColWidth * Grid.ColCount) + (Grid.ColCount * Grid.GridLineWidth);
+   ClientHeight := (Grid.DefaultRowHeight * Grid.RowCount) + (Grid.RowCount * Grid.GridLineWidth) + Panel1.Height + 4;
 end;
 
 procedure TKCJMulti.Button1Click(Sender: TObject);
@@ -256,7 +261,7 @@ begin
    inherited;
    strText := TStringGrid(Sender).Cells[ACol, ARow];
 
-   i := (ACol * 7) + ARow - 7;
+   i := (ARow * 7) + ACol;
    if (i >= 0) and (i <= maxindex) then begin
       b := GetBandNumber(combBand.ItemIndex);
       col := WorkedColor(MultiArray[b, i]);
@@ -274,7 +279,7 @@ begin
       Font.Size := 11;
       Font.Color := col;
 
-      TextRect(Rect, strText, [tfLeft,tfVerticalCenter,tfSingleLine]);
+      TextRect(Rect, strText, [tfLeft, tfVerticalCenter, tfSingleLine]);
    end;
 end;
 
