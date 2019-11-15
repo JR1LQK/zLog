@@ -126,7 +126,7 @@ begin
   Application.CreateForm(TScratchSheet, ScratchSheet);
   Application.CreateForm(TBandScope2, BandScope2);
   Application.ShowMainForm := False;
-  Application.MainFormOnTaskBar := True;
+//  Application.MainFormOnTaskBar := True;
 
    try
       MainForm.Show();
