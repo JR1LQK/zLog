@@ -2656,6 +2656,7 @@ begin
    Q.QSO.Memo := Memo;
    Q.QSO.Time := 1.0000;
    Q.QSO.Time := -1;
+   Q.QSO.RSTSent := 0;
    List.Add(Q);
 
    Saved := True;

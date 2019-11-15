@@ -1791,7 +1791,7 @@ begin
 
    TQSO(Log.List[0]).QSO.Callsign := dmZlogGlobal.Settings._mycall; // Callsign
    TQSO(Log.List[0]).QSO.Memo := N; // Contest name
-   TQSO(Log.List[0]).QSO.RSTsent := UTCOffset; // UTC = $FFFF else UTC + x hrs;
+//   TQSO(Log.List[0]).QSO.RSTsent := UTCOffset; // UTC = $FFFF else UTC + x hrs;
    TQSO(Log.List[0]).QSO.RSTRcvd := 0; // or Field Day coefficient
 
    SerialContestType := 0;
@@ -5783,7 +5783,6 @@ begin
    ZServerInquiry.Release();
    ZLinkForm.Release();
    SpotForm.Release();
-   SummaryInfo.Release();
    ConsolePad.Release();
    CheckCountry.Release();
 
@@ -7396,13 +7395,6 @@ begin
       end
       else begin
          MyContest.ScoreForm.CWButton.Visible := False;
-      end;
-
-      if TQSO(Log.List[0]).QSO.RSTSent = 0 then begin // JST = 0; UTC = $FFFF
-         SummaryInfo.DecJapanese;
-      end
-      else begin
-         SummaryInfo.DecEnglish;
       end;
 
       // ê›íËîΩâf

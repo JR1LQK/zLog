@@ -117,7 +117,6 @@ begin
   Application.CreateForm(TZServerInquiry, ZServerInquiry);
   Application.CreateForm(TZLinkForm, ZLinkForm);
   Application.CreateForm(TSpotForm, SpotForm);
-  Application.CreateForm(TSummaryInfo, SummaryInfo);
   Application.CreateForm(TConsolePad, ConsolePad);
   Application.CreateForm(TFreqList, FreqList);
   Application.CreateForm(TCheckCall2, CheckCall2);
