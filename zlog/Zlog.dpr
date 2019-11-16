@@ -117,7 +117,6 @@ begin
   Application.CreateForm(TZServerInquiry, ZServerInquiry);
   Application.CreateForm(TZLinkForm, ZLinkForm);
   Application.CreateForm(TSpotForm, SpotForm);
-  Application.CreateForm(TSummaryInfo, SummaryInfo);
   Application.CreateForm(TConsolePad, ConsolePad);
   Application.CreateForm(TFreqList, FreqList);
   Application.CreateForm(TCheckCall2, CheckCall2);
@@ -126,7 +125,7 @@ begin
   Application.CreateForm(TScratchSheet, ScratchSheet);
   Application.CreateForm(TBandScope2, BandScope2);
   Application.ShowMainForm := False;
-  Application.MainFormOnTaskBar := True;
+//  Application.MainFormOnTaskBar := True;
 
    try
       MainForm.Show();

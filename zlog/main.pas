@@ -790,7 +790,7 @@ type
     procedure HideBandMenu(b: TBand);
     procedure HideBandMenuHF();
     procedure HideBandMenuWARC();
-    procedure HideBandMenuVU();
+    procedure HideBandMenuVU(fInclude50: Boolean = True);
   end;
 
 var
@@ -1585,7 +1585,7 @@ top:
 xxx:
 
    if RigControl.Rig <> nil then begin // keep band within Rig
-      if (B > RigControl.Rig._maxband) or (B < RigControl.Rig._minband) then begin
+      if (B > RigControl.Rig.MaxBand) or (B < RigControl.Rig.MinBand) then begin
          B0 := B;
          goto top;
       end;
@@ -1791,7 +1791,7 @@ begin
 
    TQSO(Log.List[0]).QSO.Callsign := dmZlogGlobal.Settings._mycall; // Callsign
    TQSO(Log.List[0]).QSO.Memo := N; // Contest name
-   TQSO(Log.List[0]).QSO.RSTsent := UTCOffset; // UTC = $FFFF else UTC + x hrs;
+//   TQSO(Log.List[0]).QSO.RSTsent := UTCOffset; // UTC = $FFFF else UTC + x hrs;
    TQSO(Log.List[0]).QSO.RSTRcvd := 0; // or Field Day coefficient
 
    SerialContestType := 0;
@@ -2189,8 +2189,9 @@ begin
    inherited;
    MultiForm := TJIDXMulti.Create(MainForm);
    ScoreForm := TJIDXScore2.Create(MainForm);
-   ZoneFOrm := TWWZone.Create(MainForm);
-   CheckCountry.ParentMulti := JIDXMulti;
+   ZoneForm := TWWZone.Create(MainForm);
+   TJIDXMulti(MultiForm).ZoneForm := ZoneForm;
+   CheckCountry.ParentMulti := TWWMulti(MultiForm);
    UseUTC := True;
    TQSO(Log.List[0]).QSO.RSTsent := _USEUTC; // JST = 0; UTC = $FFFF
 end;
@@ -2269,7 +2270,9 @@ begin
    inherited;
    MultiForm := TWPXMulti.Create(MainForm);
    ScoreForm := TWPXScore.Create(MainForm);
-   ZoneForm := TWWZone.Create(MainForm);
+   ZoneForm := nil;
+   MultiForm.Reset();
+
    PastEditForm := TALLJAEditDialog.Create(MainForm);
 
    TWPXScore(ScoreForm).MultiForm := TWPXMulti(MultiForm);
@@ -2429,6 +2432,7 @@ begin
    ScoreForm := TWWScore.Create(MainForm);
    ZoneForm := TWWZone.Create(MainForm);
    TWWMulti(MultiForm).ZoneForm := ZoneForm;
+   MultiForm.Reset();
 
    CheckCountry.ParentMulti := TWWMulti(MultiForm);
 
@@ -2643,7 +2647,7 @@ constructor TFDContest.Create(N: string);
 begin
    inherited;
    MultiForm := TFDMulti.Create(MainForm);
-   ScoreForm := TALLJAScore.Create(MainForm);
+   ScoreForm := TACAGScore.Create(MainForm);
    PastEditForm := TALLJAEditDialog.Create(MainForm);
 end;
 
@@ -3795,7 +3799,7 @@ begin
    dmZlogGlobal.ReadWindowState(SuperCheck);
    dmZlogGlobal.ReadWindowState(CheckMulti);
    dmZlogGlobal.ReadWindowState(CWKeyBoard);
-   dmZlogGlobal.ReadWindowState(RigControl);
+   dmZlogGlobal.ReadWindowState(RigControl, '', True);
    dmZlogGlobal.ReadWindowState(BandScope2);
    dmZlogGlobal.ReadWindowState(ChatForm);
    dmZlogGlobal.ReadWindowState(FreqList);
@@ -5570,10 +5574,6 @@ begin
       MessageDlg('To change the date, double click the time field.', mtInformation, [mbOK], 0); { HELP context 0 }
    end;
 
-   EditPanel.Font.Size := dmZlogGlobal.Settings._mainfontsize;
-   Grid.Font.Size := dmZlogGlobal.Settings._mainfontsize;
-   SetDispHeight(dmZlogGlobal.Settings._mainrowheight);
-
    PostMessage(Handle, WM_ZLOG_INIT, 0, 0);
 end;
 
@@ -5783,7 +5783,6 @@ begin
    ZServerInquiry.Release();
    ZLinkForm.Release();
    SpotForm.Release();
-   SummaryInfo.Release();
    ConsolePad.Release();
    CheckCountry.Release();
 
@@ -6211,6 +6210,9 @@ begin
       MyContest.ScoreForm.Update();
       MyContest.MultiForm.Update();
 
+      // リグコントロール開始
+      RigControl.ImplementOptions;
+
       LastFocus.SetFocus;
    finally
       f.Release();
@@ -6270,8 +6272,13 @@ var
    P: string;
 begin
    P := dmZlogGlobal.Settings._backuppath;
-   if P <> '' then
-      Log.SaveToFile(P + ExtractFileName(CurrentFileName));
+   if (P = '') or (P = '\') then begin
+      P := ExtractFilePath(Application.ExeName);
+   end;
+
+   ForceDirectories(P);
+
+   Log.SaveToFile(P + ExtractFileName(CurrentFileName));
 end;
 
 procedure TMainForm.CWKeyboard1Click(Sender: TObject);
@@ -7390,13 +7397,6 @@ begin
          MyContest.ScoreForm.CWButton.Visible := False;
       end;
 
-      if TQSO(Log.List[0]).QSO.RSTSent = 0 then begin // JST = 0; UTC = $FFFF
-         SummaryInfo.DecJapanese;
-      end
-      else begin
-         SummaryInfo.DecEnglish;
-      end;
-
       // 設定反映
       dmZlogGlobal.ImplementSettings(False);
 
@@ -7448,6 +7448,10 @@ begin
 
       // CurrentQSO.QSO.Serial := SerialArray[b19]; // in case SERIALSTART is defined. SERIALSTART applies to all bands.
       SerialEdit.Text := CurrentQSO.SerialStr;
+
+      EditPanel.Font.Size := dmZlogGlobal.Settings._mainfontsize;
+      Grid.Font.Size := dmZlogGlobal.Settings._mainfontsize;
+      SetDispHeight(dmZlogGlobal.Settings._mainrowheight);
 
       UpdateBand(CurrentQSO.QSO.Band);
       UpdateMode(CurrentQSO.QSO.mode);
@@ -7574,7 +7578,7 @@ procedure TMainForm.InitKCJ();
 begin
    BandMenu.Items[Ord(b19)].Visible := True;
    HideBandMenuWARC();
-   HideBandMenuVU();
+   HideBandMenuVU(False);
 
    EditScreen := TKCJEdit.Create(Self);
 
@@ -7817,9 +7821,11 @@ begin
    BandMenu.Items[Ord(b24)].Visible := False;
 end;
 
-procedure TMainForm.HideBandMenuVU();
+procedure TMainForm.HideBandMenuVU(fInclude50: Boolean);
 begin
-   BandMenu.Items[Ord(b50)].Visible := False;
+   if fInclude50 = True then begin
+      BandMenu.Items[Ord(b50)].Visible := False;
+   end;
    BandMenu.Items[Ord(b144)].Visible := False;
    BandMenu.Items[Ord(b430)].Visible := False;
    BandMenu.Items[Ord(b1200)].Visible := False;

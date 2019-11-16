@@ -10,7 +10,6 @@ uses
 type
   TWPXMulti = class(TWWMulti)
     procedure FormCreate(Sender: TObject);
-    procedure FormShow(Sender: TObject);
     procedure GoButtonClick(Sender: TObject);
     procedure GridSetting(ARow, Acol: Integer; var Fcolor: Integer;
       var Bold, Italic, underline: Boolean);
@@ -282,28 +281,16 @@ begin
 end;
 
 function TWPXMulti.ValidMulti(aQSO : TQSO) : boolean;
-var str : string;
-    B : TBand;
-    i : integer;
+var
+   str : string;
+   i : integer;
 begin
-  str := aQSO.QSO.NrRcvd;
-  try
-    i := StrToInt(str);
-  except
-    on EConvertError do
-      i := -1;
-  end;
-  if i >= 0 then
-    Result := True
-  else
-    Result := False;
-end;
-
-
-
-procedure TWPXMulti.FormShow(Sender: TObject);
-begin
-  {inherited;}
+   str := aQSO.QSO.NrRcvd;
+   i := StrToIntDef(str, -1);
+   if i >= 0 then
+      Result := True
+   else
+      Result := False;
 end;
 
 procedure TWPXMulti.ProcessCluster(var Sp : TBaseSpot);

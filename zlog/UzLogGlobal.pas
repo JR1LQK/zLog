@@ -280,6 +280,9 @@ type
     _rigspeed: array[1..2] of Integer;
     _rigname:  array[1..2] of Integer;
 
+    _use_transceive_mode: Boolean;
+    _polling_interval: Integer;
+
     _zlinkport : integer; {0 : none 1-4 : com# 5: telnet}
     _clusterbaud : integer; {}
 
@@ -821,6 +824,12 @@ begin
       Settings._transverter2 := ini.ReadBool('Hardware', 'Transverter2', False);
       Settings._transverteroffset2 := ini.ReadInteger('Hardware', 'Transverter2Offset', 0);
 
+      // USE TRANSCEIVE MODE(ICOM only)
+      Settings._use_transceive_mode := ini.ReadBool('Hardware', 'UseTransceiveMode', True);
+
+      // Polling Interval
+      Settings._polling_interval := ini.ReadInteger('Hardware', 'PollingInterval', 200);
+
       // CW/PTT port
       Settings._lptnr := ini.ReadInteger('Hardware', 'CWLPTPort', 0);
 
@@ -1157,6 +1166,12 @@ begin
       ini.WriteInteger('Hardware', 'RigSpeed2', Settings._rigspeed[2]);
       ini.WriteBool('Hardware', 'Transverter2', Settings._transverter2);
       ini.WriteInteger('Hardware', 'Transverter2Offset', Settings._transverteroffset2);
+
+      // USE TRANSCEIVE MODE(ICOM only)
+      ini.WriteBool('Hardware', 'UseTransceiveMode', Settings._use_transceive_mode);
+
+      // Polling Interval
+      ini.WriteInteger('Hardware', 'PollingInterval', Settings._polling_interval);
 
       // CW/PTT port
       ini.WriteInteger('Hardware', 'CWLPTPort', Settings._lptnr);
@@ -2641,6 +2656,7 @@ begin
    Q.QSO.Memo := Memo;
    Q.QSO.Time := 1.0000;
    Q.QSO.Time := -1;
+   Q.QSO.RSTSent := 0;
    List.Add(Q);
 
    Saved := True;

@@ -6,8 +6,6 @@ inherited KCJMulti: TKCJMulti
   Caption = 'Multipliers info'
   OnDestroy = FormDestroy
   OnShow = FormShow
-  ExplicitWidth = 330
-  ExplicitHeight = 301
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -19,9 +17,9 @@ inherited KCJMulti: TKCJMulti
     TabOrder = 0
     object Button1: TButton
       Left = 8
-      Top = 12
+      Top = 8
       Width = 57
-      Height = 17
+      Height = 23
       Caption = 'OK'
       TabOrder = 0
       OnClick = Button1Click
@@ -37,7 +35,7 @@ inherited KCJMulti: TKCJMulti
     end
     object combBand: TComboBox
       Left = 224
-      Top = 10
+      Top = 9
       Width = 73
       Height = 21
       ImeName = 'MS-IME97 '#26085#26412#35486#20837#21147#65404#65405#65411#65425
@@ -55,9 +53,9 @@ inherited KCJMulti: TKCJMulti
     end
     object Button2: TButton
       Left = 77
-      Top = 12
+      Top = 8
       Width = 57
-      Height = 17
+      Height = 23
       Caption = 'Multi map'
       TabOrder = 3
       OnClick = Button2Click
@@ -83,9 +81,6 @@ inherited KCJMulti: TKCJMulti
     ScrollBars = ssNone
     TabOrder = 1
     OnDrawCell = GridDrawCell
-    ExplicitTop = -120
-    ExplicitWidth = 278
-    ExplicitHeight = 382
     ColWidths = (
       64
       64

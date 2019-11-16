@@ -2,7 +2,7 @@ object formOptions: TformOptions
   Left = 532
   Top = 236
   BorderStyle = bsDialog
-  Caption = 'formOptions'
+  Caption = 'Options'
   ClientHeight = 362
   ClientWidth = 358
   Color = clBtnFace
@@ -43,10 +43,6 @@ object formOptions: TformOptions
     TabOrder = 0
     object PrefTabSheet: TTabSheet
       Caption = 'Preferences'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Label40: TLabel
         Left = 184
         Top = 104
@@ -1317,10 +1313,6 @@ object formOptions: TformOptions
     end
     object TabSheet5: TTabSheet
       Caption = 'Hardware'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GroupBox6: TGroupBox
         Left = 5
         Top = 0
@@ -1440,7 +1432,7 @@ object formOptions: TformOptions
           Width = 117
           Height = 51
           Caption = 'CW/PTT port'
-          TabOrder = 14
+          TabOrder = 15
           object comboCwPttPort: TComboBox
             Left = 31
             Top = 18
@@ -1622,6 +1614,14 @@ object formOptions: TformOptions
             '9600'
             '19200'
             '38400')
+        end
+        object checkUseTransceiveMode: TCheckBox
+          Left = 152
+          Top = 160
+          Width = 187
+          Height = 17
+          Caption = 'Use Transceive Mode (ICOM only)'
+          TabOrder = 14
         end
       end
       object GroupBox7: TGroupBox

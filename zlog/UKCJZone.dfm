@@ -62,6 +62,7 @@ object KCJZone: TKCJZone
     ParentFont = False
     ScrollBars = ssNone
     TabOrder = 1
+    OnDrawCell = GridDrawCell
     ColWidths = (
       18
       18
@@ -99,6 +100,7 @@ object KCJZone: TKCJZone
       16)
   end
   object Grid3: TStringGrid
+    Tag = 48
     Left = 302
     Top = 0
     Width = 151
@@ -120,8 +122,7 @@ object KCJZone: TKCJZone
     ParentFont = False
     ScrollBars = ssNone
     TabOrder = 2
-    ExplicitLeft = 4
-    ExplicitTop = 4
+    OnDrawCell = GridDrawCell
     ColWidths = (
       18
       18
@@ -159,6 +160,7 @@ object KCJZone: TKCJZone
       16)
   end
   object Grid2: TStringGrid
+    Tag = 24
     Left = 151
     Top = 0
     Width = 151
@@ -180,8 +182,7 @@ object KCJZone: TKCJZone
     ParentFont = False
     ScrollBars = ssNone
     TabOrder = 3
-    ExplicitLeft = 4
-    ExplicitTop = 4
+    OnDrawCell = GridDrawCell
     ColWidths = (
       18
       18

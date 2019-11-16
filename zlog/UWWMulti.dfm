@@ -2,7 +2,6 @@ inherited WWMulti: TWWMulti
   Left = 153
   Top = 98
   Caption = 'CQ WW Country Multipliers'
-  OnDestroy = FormDestroy
   OnResize = FormResize
   OnShow = FormShow
   PixelsPerInch = 96

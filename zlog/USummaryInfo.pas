@@ -37,63 +37,77 @@ type
     procedure DecJapanese;
   end;
 
-var
-  SummaryInfo: TSummaryInfo;
-
 implementation
 
 {$R *.DFM}
 
-
 procedure TSummaryInfo.DecEnglish;
 begin
-  DecMemo.Clear;
-  DecMemo.Lines.Add('This is to certify that in this contest I have operated my transmitter');
-  DecMemo.Lines.Add('within the limitations of my license and have fully observed the');
-  DecMemo.Lines.Add('rules and regulations of the contest.');
+   DecMemo.Clear;
+   DecMemo.Lines.Add('This is to certify that in this contest I have operated my transmitter');
+   DecMemo.Lines.Add('within the limitations of my license and have fully observed the');
+   DecMemo.Lines.Add('rules and regulations of the contest.');
 end;
 
 procedure TSummaryInfo.DecJapanese;
 begin
-  DecMemo.Clear;
-  DecMemo.Lines.Add('私は、コンテスト規約および電波法令にしたがい運用した結果');
-  DecMemo.Lines.Add('ここに提出するサマリーシートおよびログシートが事実と相違');
-  DecMemo.Lines.Add('ないものであることを、私の名誉において誓います。');
+   DecMemo.Clear;
+   DecMemo.Lines.Add('私は、コンテスト規約および電波法令にしたがい運用した結果');
+   DecMemo.Lines.Add('ここに提出するサマリーシートおよびログシートが事実と相違');
+   DecMemo.Lines.Add('ないものであることを、私の名誉において誓います。');
 end;
 
 procedure TSummaryInfo.FormShow(Sender: TObject);
-var str : string;
-    i : integer;
-    Y, M, D : word;
+var
+   str : string;
+   i : integer;
+   Y, M, D : word;
 begin
-  if Log.TotalQSO > 0 then
-    DecodeDate(TQSO(Log.List[1]).QSO.Time, Y, M, D)
-  else
-    DecodeDate(Date, Y, M, D);
+   if TQSO(Log.List[0]).QSO.RSTSent = 0 then begin // JST = 0; UTC = $FFFF
+      DecJapanese;
+   end
+   else begin
+      DecEnglish;
+   end;
 
-  if ContestNameEdit.Text = '' then
-    ContestNameEdit.Text := TQSO(Log.List[0]).QSO.memo + ' ' + IntToStr(Y);
+   if Log.TotalQSO > 0 then begin
+      DecodeDate(TQSO(Log.List[1]).QSO.Time, Y, M, D);
+   end
+   else begin
+      DecodeDate(Date, Y, M, D);
+   end;
 
-  if CallEdit.Text = '' then
-    CallEdit.Text := dmZlogGlobal.Settings._mycall;
+   if ContestNameEdit.Text = '' then begin
+      ContestNameEdit.Text := TQSO(Log.List[0]).QSO.memo + ' ' + IntToStr(Y);
+   end;
 
-  if dmZlogGlobal.Settings._multiop > 0 then
-    str := 'Multi-op '
-  else
-    str := 'Single-op ';
+   if CallEdit.Text = '' then begin
+      CallEdit.Text := dmZlogGlobal.Settings._mycall;
+   end;
 
-  if dmZlogGlobal.Settings._band = 0 then
-    str := str + 'All band '
-  else
-    str := str + BandString[TBand(dmZlogGlobal.Settings._band - 1)] + ' ';
+   if dmZlogGlobal.Settings._multiop > 0 then begin
+      str := 'Multi-op ';
+   end
+   else begin
+      str := 'Single-op ';
+   end;
 
-  case dmZlogGlobal.Settings._mode of
-    0 : str := str + 'Mixed';
-    1 : str := str + 'CW';
-    2 : str := str + 'Ph';
-  end;
-  if CategoryEdit.Text = '' then
-    CategoryEdit.Text := str;
+   if dmZlogGlobal.Settings._band = 0 then begin
+      str := str + 'All band ';
+   end
+   else begin
+      str := str + BandString[TBand(dmZlogGlobal.Settings._band - 1)] + ' ';
+   end;
+
+   case dmZlogGlobal.Settings._mode of
+      0 : str := str + 'Mixed';
+      1 : str := str + 'CW';
+      2 : str := str + 'Ph';
+   end;
+
+   if CategoryEdit.Text = '' then begin
+      CategoryEdit.Text := str;
+   end;
 end;
 
 end.

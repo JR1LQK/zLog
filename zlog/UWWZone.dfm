@@ -12,7 +12,6 @@ object WWZone: TWWZone
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = True
-  Scaled = False
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   OnResize = FormResize
@@ -50,66 +49,24 @@ object WWZone: TWWZone
     Width = 577
     Height = 118
     Align = alClient
-    ColCount = 40
+    ColCount = 41
+    DefaultColWidth = 18
     DefaultDrawing = False
     FixedCols = 0
-    RowCount = 6
+    RowCount = 7
     FixedRows = 0
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -15
     Font.Name = #65325#65331' '#12468#12471#12483#12463
     Font.Style = []
-    Options = [goHorzLine]
+    Options = [goVertLine, goHorzLine]
     ParentFont = False
     ScrollBars = ssNone
     TabOrder = 1
     OnDrawCell = GridDrawCell
-    ExplicitTop = -224
-    ExplicitWidth = 278
-    ExplicitHeight = 382
-    ColWidths = (
-      64
-      64
-      64
-      64
-      64
-      64
-      64
-      64
-      64
-      64
-      64
-      64
-      64
-      64
-      64
-      64
-      64
-      64
-      64
-      64
-      64
-      64
-      64
-      64
-      64
-      64
-      64
-      64
-      64
-      64
-      64
-      64
-      64
-      64
-      64
-      64
-      64
-      64
-      64
-      64)
     RowHeights = (
+      24
       24
       24
       24

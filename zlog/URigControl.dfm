@@ -150,12 +150,13 @@ object RigControl: TRigControl
     Left = 228
     Top = 8
   end
-  object PollingTimer: TTimer
+  object PollingTimer1: TTimer
+    Tag = 1
     Enabled = False
     Interval = 100
     OnTimer = PollingTimerTimer
-    Left = 200
-    Top = 8
+    Left = 260
+    Top = 56
   end
   object ZCom1: TCommPortDriver
     Tag = 1
@@ -182,5 +183,13 @@ object RigControl: TRigControl
     InBufSize = 4096
     Left = 316
     Top = 8
+  end
+  object PollingTimer2: TTimer
+    Tag = 2
+    Enabled = False
+    Interval = 100
+    OnTimer = PollingTimerTimer
+    Left = 288
+    Top = 56
   end
 end

@@ -65,13 +65,21 @@ InstallフォルダのD103Install.groupprojを開き、ビルド→インスト�
 8. CWキーイングのサイドトーン機能廃止
 9. など
 
+## 動作確認済みWindows
+
+* Windows XP SP3 (32bit)
+* Windows 7 Home (64bit)
+* Windows 10 Home (64bit)
+
 ## 動作確認済みコンテスト
 
 * ALL JAコンテスト
 * 6m&DOWNコンテスト
+* フィールドデイコンテスト
 * 全市全郡コンテスト
-* ALL JA8コンテスト
-* 東京UHFコンテスト
+* ALL JA8コンテスト(allja8.cfg)
+* 東京UHFコンテスト(tokyo_uhf.cfg)
+* CQWW,CQWPX,AP Sprint,IARU HF
 
 ## 動作確認済み機能
 
@@ -79,6 +87,15 @@ InstallフォルダのD103Install.groupprojを開き、ビルド→インスト�
 * BandScope
 * Z-Link
 * COMポートによるCWキーイング
+
+## 動作確認済み無線機
+
+### ICOM
+* IC-706mkII
+### KENWOOD
+* TS-570
+### YAESU
+* FT-2000
 
 ## 第三者著作権情報
 

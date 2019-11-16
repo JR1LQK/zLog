@@ -17,11 +17,14 @@ type
     procedure cbStayOnTopClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure GridDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect; State: TGridDrawState);
   private
     { Private declarations }
+    function BandToCol(B: TBand): Integer;
+    function ColToBand(col: Integer): TBand;
   public
     { Public declarations }
-    formMulti: TForm;
+    MultiForm: TForm;
     procedure Update;
   end;
 
@@ -32,7 +35,7 @@ uses
 
 {$R *.DFM}
 
-function BandCol(B: TBand): integer;
+function TKCJZone.BandToCol(B: TBand): integer;
 begin
    case B of
       b19:
@@ -54,6 +57,20 @@ begin
    end;
 end;
 
+function TKCJZone.ColToBand(col: Integer): TBand;
+begin
+   case col of
+      1: Result := b19;
+      2: Result := b35;
+      3: Result := b7;
+      4: Result := b14;
+      5: Result := b21;
+      6: Result := b28;
+      7: Result := b50;
+      else Result := b19;
+   end;
+end;
+
 procedure TKCJZone.Update;
 var
    i: integer;
@@ -62,11 +79,11 @@ begin
    for i := 0 to 23 do begin
       for B := b19 to b50 do begin
          if NotWARC(B) then begin
-            if TKCJMulti(formMulti).MultiArray[B, i] then begin
-               Grid1.Cells[BandCol(B), i + 1] := '*';
+            if TKCJMulti(MultiForm).MultiArray[B, i] then begin
+               Grid1.Cells[BandToCol(B), i] := '*';
             end
             else begin
-               Grid1.Cells[BandCol(B), i + 1] := '.';
+               Grid1.Cells[BandToCol(B), i] := '.';
             end;
          end;
       end;
@@ -74,11 +91,11 @@ begin
    for i := 24 to 47 do begin
       for B := b19 to b50 do begin
          if NotWARC(B) then begin
-            if TKCJMulti(formMulti).MultiArray[B, i] then begin
-               Grid2.Cells[BandCol(B), i - 23] := '*';
+            if TKCJMulti(MultiForm).MultiArray[B, i] then begin
+               Grid2.Cells[BandToCol(B), i - 24] := '*';
             end
             else begin
-               Grid2.Cells[BandCol(B), i - 23] := '.';
+               Grid2.Cells[BandToCol(B), i - 24] := '.';
             end;
          end;
       end;
@@ -86,11 +103,11 @@ begin
    for i := 48 to maxindex do begin
       for B := b19 to b50 do begin
          if NotWARC(B) then begin
-            if TKCJMulti(formMulti).MultiArray[B, i] then begin
-               Grid3.Cells[BandCol(B), i - 47] := '*';
+            if TKCJMulti(MultiForm).MultiArray[B, i] then begin
+               Grid3.Cells[BandToCol(B), i - 48] := '*';
             end
             else begin
-               Grid3.Cells[BandCol(B), i - 47] := '.';
+               Grid3.Cells[BandToCol(B), i - 48] := '.';
             end;
          end;
       end;
@@ -113,8 +130,75 @@ begin
 end;
 
 procedure TKCJZone.FormShow(Sender: TObject);
+var
+   R: Integer;
+   B: TBand;
 begin
+   for R := 0 to 23 do begin
+      for B := b19 to b50 do begin
+         Grid1.Cells[0, R] := Copy(KenNames[R], 1, 2)
+      end;
+   end;
+
+   for R := 24 to 47 do begin
+      for B := b19 to b50 do begin
+         Grid2.Cells[0, R - 24] := Copy(KenNames[R], 1, 2);
+      end;
+   end;
+
+   for R := 48 to maxindex do begin
+      for B := b19 to b50 do begin
+         Grid3.Cells[0, R - 48] := Copy(KenNames[R], 1, 2);
+      end;
+   end;
+
    Update;
+end;
+
+procedure TKCJZone.GridDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect; State: TGridDrawState);
+var
+   strText: string;
+   i: Integer;
+   CL: TColor;
+   tf: TTextFormat;
+begin
+   if ACol = 0 then begin  // KCJCODE
+      CL := clBlack;
+      strText := TStringGrid(Sender).Cells[ACol, ARow];
+      tf := [tfLeft, tfVerticalCenter, tfSingleLine];
+   end
+   else begin
+      i := ARow + TStringGrid(Sender).Tag;
+      if (i >= 0) and (i <= maxindex) then begin
+
+         if TKCJMulti(MultiForm).MultiArray[ColToBand(ACol), i] = True then begin
+            CL := clRed;
+            strText := '*';
+         end
+         else begin
+            CL := clBlack;
+            strText := '.';
+         end;
+      end
+      else begin
+         CL := clBlack;
+         strText := '';
+      end;
+
+      tf := [tfCenter, tfVerticalCenter, tfSingleLine];
+   end;
+
+   with TStringGrid(Sender).Canvas do begin
+      Brush.Color := TStringGrid(Sender).Color;
+      Brush.Style := bsSolid;
+      FillRect(Rect);
+
+      Font.Name := '‚l‚r ƒSƒVƒbƒN';
+      Font.Size := 11;
+      Font.Color := CL;
+
+      TextRect(Rect, strText, tf);
+   end;
 end;
 
 end.

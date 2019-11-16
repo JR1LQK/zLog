@@ -88,48 +88,58 @@ end;
 procedure TBasicScore.SaveSummary(FileName: string);
 var
    f: textfile;
+   DLG: TSummaryInfo;
 begin
-   if SummaryInfo.ShowModal <> mrOK then
-      exit;
-   AssignFile(f, FileName);
-   Rewrite(f);
-   with SummaryInfo do begin
-      writeln(f, ContestNameEdit.Text);
-      writeln(f);
-      writeln(f, 'Call sign: ' + CallEdit.Text);
-      writeln(f);
-      writeln(f, 'Category: ' + CategoryEdit.Text);
-      writeln(f);
-      if CountryEdit.Text <> '' then begin
-         writeln(f, 'Country: ' + CountryEdit.Text);
+   DLG := TSummaryInfo.Create(Self);
+   try
+      if DLG.ShowModal <> mrOK then begin
+         exit;
+      end;
+
+      AssignFile(f, FileName);
+      Rewrite(f);
+
+      with DLG do begin
+         writeln(f, ContestNameEdit.Text);
+         writeln(f);
+         writeln(f, 'Call sign: ' + CallEdit.Text);
+         writeln(f);
+         writeln(f, 'Category: ' + CategoryEdit.Text);
+         writeln(f);
+         if CountryEdit.Text <> '' then begin
+            writeln(f, 'Country: ' + CountryEdit.Text);
+            writeln(f);
+         end;
+
+         CloseFile(f);
+         SummaryWriteScore(FileName);
+         Append(f);
+
+         writeln(f);
+
+         if MiscMemo.Text <> '' then begin
+            write(f, MiscMemo.Text);
+            writeln(f);
+         end;
+         if RemMemo.Text <> '' then begin
+            writeln(f, 'Remarks:');
+            write(f, RemMemo.Text);
+            writeln(f);
+         end;
+         write(f, DecMemo.Text);
+         writeln(f);
+         writeln(f, 'Name: ' + NameEdit.Text);
+         writeln(f);
+         writeln(f, 'Address:');
+         writeln(f);
+         write(f, AddrMemo.Text);
          writeln(f);
       end;
 
       CloseFile(f);
-      SummaryWriteScore(FileName);
-      Append(f);
-
-      writeln(f);
-
-      if MiscMemo.Text <> '' then begin
-         write(f, MiscMemo.Text);
-         writeln(f);
-      end;
-      if RemMemo.Text <> '' then begin
-         writeln(f, 'Remarks:');
-         write(f, RemMemo.Text);
-         writeln(f);
-      end;
-      write(f, DecMemo.Text);
-      writeln(f);
-      writeln(f, 'Name: ' + NameEdit.Text);
-      writeln(f);
-      writeln(f, 'Address:');
-      writeln(f);
-      write(f, AddrMemo.Text);
-      writeln(f);
+   finally
+      DLG.Release();
    end;
-   CloseFile(f);
 end;
 
 constructor TBasicScore.Create(AOwner: TComponent);
