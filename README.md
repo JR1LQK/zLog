@@ -14,6 +14,7 @@ This software is released under the GNU General Public License.
 
 # Authors
 Yokobayashi Yohei (ex. JJ1MED), JARL Contest Committee
+Improved by JR8PPG
 
 # Document
 There is no documentation for the developer.
