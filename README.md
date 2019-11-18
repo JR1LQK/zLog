@@ -13,8 +13,7 @@ Windows専用ですが，Delphiで書かれているのでMacOSやLinuxへの移
 This software is released under the GNU General Public License.
 
 # Authors
-Yokobayashi Yohei (ex. JJ1MED), JARL Contest Committee
-Improved by JR8PPG
+Yokobayashi Yohei (ex. JJ1MED), JARL Contest Committee, JR8PPG
 
 # Document
 There is no documentation for the developer.
