@@ -91,7 +91,7 @@ InstallフォルダのD103Install.groupprojを開き、ビルド→インスト�
 ## 動作確認済み無線機
 
 ### ICOM
-* IC-706mkII
+* IC-706mkII,IC-756PRO2,IC-7100
 ### KENWOOD
 * TS-570
 ### YAESU
