@@ -13,7 +13,7 @@ Windows専用ですが，Delphiで書かれているのでMacOSやLinuxへの移
 This software is released under the GNU General Public License.
 
 # Authors
-Yokobayashi Yohei (ex. JJ1MED), JARL Contest Committee
+Yokobayashi Yohei (ex. JJ1MED), JARL Contest Committee, JR8PPG
 
 # Document
 There is no documentation for the developer.
@@ -91,7 +91,7 @@ InstallフォルダのD103Install.groupprojを開き、ビルド→インスト�
 ## 動作確認済み無線機
 
 ### ICOM
-* IC-706mkII
+* IC-706mkII,IC-756PRO2,IC-7100
 ### KENWOOD
 * TS-570
 ### YAESU
