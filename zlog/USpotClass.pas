@@ -50,6 +50,8 @@ type
 var
   BSList2 : TList;
 
+function IsWorkedSpot(Sp: TSpot): Boolean;
+
 implementation
 
 constructor TBaseSpot.Create;
@@ -341,6 +343,22 @@ begin
       Time := StrToFloat(wstr);
    except
    end;
+end;
+
+function IsWorkedSpot(Sp: TSpot): Boolean;
+var
+   i: Integer;
+   Q: TQSO;
+begin
+   for i := 1 to Log.TotalQSO do begin
+      Q := TQSO(Log.List[i]);
+
+      if (Sp.Call = Q.QSO.Callsign) and (Sp.Band = Q.QSO.Band) then begin
+         Result := True;
+         Exit;
+      end;
+   end;
+   Result := False;
 end;
 
 initialization
