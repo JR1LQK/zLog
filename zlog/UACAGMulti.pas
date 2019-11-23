@@ -102,10 +102,12 @@ begin
          Grid.TopRow := i;
          str := C.Summary2;
 
-         if C.Worked[aQSO.QSO.Band] then
-            Insert('Worked on this band. ', str, 27)
-         else
-            Insert('Needed on this band. ', str, 27);
+         if C.Worked[aQSO.QSO.Band] then begin
+            str := 'Worked on this band. ' + str;
+         end
+         else begin
+            str := 'Needed on this band. ' + str;
+         end;
 
          MainForm.WriteStatusLine(str, False);
          Exit;
