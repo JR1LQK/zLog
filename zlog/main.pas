@@ -11,7 +11,8 @@ uses
   BGK32Lib, UzLogCW, Hemibtn, ShellAPI, UITypes,
   OEdit, URigControl, UConsolePad, URenewThread, USpotClass,
   UMMTTY, UTTYConsole, UPaddleThread, UELogJarl1, UELogJarl2,
-  UWWMulti, UWWScore, UWWZone, UARRLWMulti, UQTCForm;
+  UWWMulti, UWWScore, UWWZone, UARRLWMulti, UQTCForm, System.Actions,
+  Vcl.ActnList;
 
 
 const
@@ -544,6 +545,37 @@ type
     menuQuickReference: TMenuItem;
     CreateELogJARL1: TMenuItem;
     CreateELogJARL2: TMenuItem;
+    ActionList1: TActionList;
+    actionQuickQSY01: TAction;
+    actionQuickQSY02: TAction;
+    actionQuickQSY03: TAction;
+    actionQuickQSY04: TAction;
+    actionQuickQSY05: TAction;
+    actionQuickQSY06: TAction;
+    actionQuickQSY07: TAction;
+    actionQuickQSY08: TAction;
+    actionPlayMessageA01: TAction;
+    actionPlayMessageA02: TAction;
+    actionPlayMessageA03: TAction;
+    actionPlayMessageA04: TAction;
+    actionPlayMessageA05: TAction;
+    actionPlayMessageA06: TAction;
+    actionPlayMessageA07: TAction;
+    actionPlayMessageA08: TAction;
+    actionPlayMessageB01: TAction;
+    actionPlayMessageB02: TAction;
+    actionPlayMessageB03: TAction;
+    actionPlayMessageB04: TAction;
+    actionPlayMessageB05: TAction;
+    actionPlayMessageB06: TAction;
+    actionPlayMessageB07: TAction;
+    actionPlayMessageB08: TAction;
+    actionPlayMessageA11: TAction;
+    actionPlayMessageA12: TAction;
+    actionPlayMessageB11: TAction;
+    actionPlayMessageB12: TAction;
+    actionCheckMulti: TAction;
+    actionCheckPartial: TAction;
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure ShowHint(Sender: TObject);
@@ -704,6 +736,11 @@ type
     procedure CreateELogJARL2Click(Sender: TObject);
 
     procedure OnZLogInit( var Message: TMessage ); message WM_ZLOG_INIT;
+    procedure actionQuickQSYExecute(Sender: TObject);
+    procedure actionPlayMessageAExecute(Sender: TObject);
+    procedure actionPlayMessageBExecute(Sender: TObject);
+    procedure actionCheckMultiExecute(Sender: TObject);
+    procedure actionCheckPartialExecute(Sender: TObject);
   private
     TempQSOList : TList;
     clStatusLine : TColor;
@@ -792,6 +829,9 @@ type
     procedure HideBandMenuHF();
     procedure HideBandMenuWARC();
     procedure HideBandMenuVU(fInclude50: Boolean = True);
+
+    procedure QSY(b: TBand; m: TMode);
+    procedure PlayMessage(bank: Integer; no: Integer);
   end;
 
 var
@@ -1597,14 +1637,7 @@ end;
 
 procedure TMainForm.BandMenuClick(Sender: TObject);
 begin
-   UpdateBand(TBand(TMenuItem(Sender).Tag));
-
-   if RigControl.Rig <> nil then begin
-      RigControl.Rig.SetBand(CurrentQSO);
-//      if CurrentQSO.QSO.mode = mSSB then
-//         RigControl.Rig.SetMode(CurrentQSO);
-   end;
-
+   QSY(TBand(TMenuItem(Sender).Tag), CurrentQSO.QSO.Mode);
    LastFocus.SetFocus;
 end;
 
@@ -3813,8 +3846,6 @@ begin
 end;
 
 procedure TMainForm.RecordWindowStates;
-var
-   f: TForm;
 begin
    dmZlogGlobal.WriteWindowState(CheckCall2);
    dmZlogGlobal.WriteWindowState(PartialCheck);
@@ -4812,12 +4843,7 @@ end;
 
 procedure TMainForm.ModeMenuClick(Sender: TObject);
 begin
-   UpdateMode(TMode(TMenuItem(Sender).Tag));
-
-   if RigControl.Rig <> nil then begin
-      RigControl.Rig.SetMode(CurrentQSO);
-   end;
-
+   QSY(CurrentQSO.QSO.Band, TMode(TMenuItem(Sender).Tag));
    LastFocus.SetFocus;
 end;
 
@@ -5017,9 +5043,6 @@ begin
 end;
 
 procedure TMainForm.GridKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
-var
-   i, cb: integer;
-   S: string;
 begin
    case Key of
       VK_DELETE: begin
@@ -5049,42 +5072,6 @@ begin
                Grid.LeftCol := 0;
                EditScreen.ResetTopRow;
                LastFocus.SetFocus;
-            end;
-         end;
-
-      VK_F1 .. VK_F8, VK_F11, VK_F12: begin
-            i := Key - VK_F1 + 1;
-
-            cb := dmZlogGlobal.Settings.CW.CurrentBank;
-
-            { if ssShift in Shift then   // doesn't work. why?
-              begin
-              if cb = 1 then
-              cb := 2
-              else
-              cb := 1;
-              end;
-            }
-            if GetAsyncKeyState(VK_SHIFT) < 0 then begin
-               if cb = 1 then
-                  cb := 2
-               else
-                  cb := 1;
-            end;
-
-            case CurrentQSO.QSO.mode of
-               mCW: begin
-                     S := dmZlogGlobal.CWMessage(cb, i);
-                     S := SetStr(S, CurrentQSO);
-                     zLogSendStr(S);
-                  end;
-               // mSSB, mFM, mAM :SendVoice(i);
-               mRTTY: begin
-                     S := dmZlogGlobal.CWMessage(3, i);
-                     S := SetStrNoAbbrev(S, CurrentQSO);
-                     if TTYConsole <> nil then
-                        TTYConsole.SendStrNow(S);
-                  end;
             end;
          end;
    end;
@@ -5250,18 +5237,11 @@ begin
 end;
 
 procedure TMainForm.EditKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
-var
-   i, cb: integer;
-   S: string[255];
 begin
    case Key of
       { MUHENKAN KEY }
       29: begin
             ControlPTT(not(PTTIsOn)); // toggle PTT;
-         end;
-
-      VK_F9: begin
-            MyContest.MultiForm.CheckMulti(CurrentQSO)
          end;
 
       VK_DOWN: begin
@@ -5276,51 +5256,6 @@ begin
               Key := 0;
               end;
             }
-         end;
-
-      VK_F1 .. VK_F8, VK_F11, VK_F12: begin
-            i := Key - VK_F1 + 1;
-
-            cb := dmZlogGlobal.Settings.CW.CurrentBank;
-            // if ssShift in Shift then   // doesn't work. why?
-            if GetAsyncKeyState(VK_SHIFT) < 0 then begin
-               if cb = 1 then
-                  cb := 2
-               else
-                  cb := 1;
-            end;
-
-            case CurrentQSO.QSO.mode of
-               mCW: begin
-                     S := dmZlogGlobal.CWMessage(cb, i);
-                     S := SetStr(S, CurrentQSO);
-                     zLogSendStr(S);
-                  end;
-
-               mSSB, mFM, mAM: begin
-                     // SendVoice(i);
-                  end;
-
-               mRTTY: begin
-                     S := dmZlogGlobal.CWMessage(3, i);
-                     S := SetStrNoAbbrev(S, CurrentQSO);
-                     if TTYConsole <> nil then begin
-                        TTYConsole.SendStrNow(S);
-                     end;
-                  end;
-            end;
-         end;
-
-      VK_F10: begin
-            PartialCheck.Show;
-            if TEdit(Sender).Name = 'NumberEdit' then begin
-               PartialCheck.CheckPartialNumber(CurrentQSO);
-            end
-            else begin
-               PartialCheck.CheckPartial(CurrentQSO);
-            end;
-
-            Key := 0;
          end;
 
       VK_UP: begin
@@ -7232,7 +7167,6 @@ procedure TMainForm.OnZLogInit( var Message: TMessage );
 var
    menu: TMenuForm;
    E: Extended;
-   B: TBand;
    c, r: Integer;
 begin
    menu := TMenuForm.Create(Self);
@@ -7916,6 +7850,139 @@ begin
    end;
 
    Result := b19;
+end;
+
+procedure TMainForm.QSY(b: TBand; m: TMode);
+begin
+   if CurrentQSO.QSO.band <> b then begin
+      UpdateBand(b);
+
+      if RigControl.Rig <> nil then begin
+         RigControl.Rig.SetBand(CurrentQSO);
+      end;
+   end;
+
+   if CurrentQSO.QSO.mode <> m then begin
+      UpdateMode(m);
+
+      if RigControl.Rig <> nil then begin
+         RigControl.Rig.SetMode(CurrentQSO);
+      end;
+   end;
+end;
+
+// F1Å`F8
+procedure TMainForm.actionPlayMessageAExecute(Sender: TObject);
+var
+   no: Integer;
+   cb: Integer;
+begin
+   no := TAction(Sender).Tag;
+   cb := dmZlogGlobal.Settings.CW.CurrentBank;
+
+   {$IFDEF DEBUG}
+   OutputDebugString(PChar('PlayMessageA(' + IntToStr(cb) + ',' + IntToStr(no) + ')'));
+   {$ENDIF}
+
+   PlayMessage(cb, no);
+end;
+
+// F9
+procedure TMainForm.actionCheckMultiExecute(Sender: TObject);
+begin
+   {$IFDEF DEBUG}
+   OutputDebugString(PChar('CheckMulti()'));
+   {$ENDIF}
+
+   MyContest.MultiForm.CheckMulti(CurrentQSO);
+
+   LastFocus.SetFocus;
+end;
+
+// F10
+procedure TMainForm.actionCheckPartialExecute(Sender: TObject);
+begin
+   PartialCheck.Show;
+
+   if ActiveControl = NumberEdit then begin
+      PartialCheck.CheckPartialNumber(CurrentQSO);
+   end
+   else begin
+      PartialCheck.CheckPartial(CurrentQSO);
+   end;
+
+   LastFocus.SetFocus;
+end;
+
+// SHIFT+F1Å`F8
+procedure TMainForm.actionPlayMessageBExecute(Sender: TObject);
+var
+   no: Integer;
+   cb: Integer;
+begin
+   no := TAction(Sender).Tag;
+   cb := dmZlogGlobal.Settings.CW.CurrentBank;
+
+   if cb = 1 then
+      cb := 2
+   else
+      cb := 1;
+
+   {$IFDEF DEBUG}
+   OutputDebugString(PChar('PlayMessageB(' + IntToStr(cb) + ',' + IntToStr(no) + ')'));
+   {$ENDIF}
+
+   PlayMessage(cb, no);
+end;
+
+// CTRL+F1Å`F8
+procedure TMainForm.actionQuickQSYExecute(Sender: TObject);
+var
+   no: Integer;
+   b: TBand;
+   m: TMode;
+begin
+   no := TAction(Sender).Tag;
+
+   if dmZLogGlobal.Settings.FQuickQSY[no].FUse = False then begin
+      Exit;
+   end;
+
+   b := dmZLogGlobal.Settings.FQuickQSY[no].FBand;
+   m := dmZLogGlobal.Settings.FQuickQSY[no].FMode;
+
+   QSY(b, m);
+
+   LastFocus.SetFocus;
+end;
+
+procedure TMainForm.PlayMessage(bank: Integer; no: Integer);
+var
+   S: string;
+begin
+   case CurrentQSO.QSO.mode of
+      mCW: begin
+         S := dmZlogGlobal.CWMessage(bank, no);
+         S := SetStr(S, CurrentQSO);
+         zLogSendStr(S);
+      end;
+
+      mSSB, mFM, mAM: begin
+//         SendVoice(i);
+      end;
+
+      mRTTY: begin
+         S := dmZlogGlobal.CWMessage(3, no);
+         S := SetStrNoAbbrev(S, CurrentQSO);
+         if TTYConsole <> nil then begin
+            TTYConsole.SendStrNow(S);
+         end;
+      end;
+
+      else begin
+         // NO OPERATION
+      end;
+   end;
 end;
 
 end.

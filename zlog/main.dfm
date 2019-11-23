@@ -24765,4 +24765,186 @@ object MainForm: TMainForm
     Left = 304
     Top = 136
   end
+  object ActionList1: TActionList
+    Left = 160
+    Top = 200
+    object actionQuickQSY01: TAction
+      Tag = 1
+      Caption = 'actionQuickQSY01'
+      ShortCut = 16496
+      OnExecute = actionQuickQSYExecute
+    end
+    object actionQuickQSY02: TAction
+      Tag = 2
+      Caption = 'actionQuickQSY02'
+      ShortCut = 16497
+      OnExecute = actionQuickQSYExecute
+    end
+    object actionQuickQSY03: TAction
+      Tag = 3
+      Caption = 'actionQuickQSY03'
+      ShortCut = 16498
+      OnExecute = actionQuickQSYExecute
+    end
+    object actionQuickQSY04: TAction
+      Tag = 4
+      Caption = 'actionQuickQSY04'
+      ShortCut = 16499
+      OnExecute = actionQuickQSYExecute
+    end
+    object actionQuickQSY05: TAction
+      Tag = 5
+      Caption = 'actionQuickQSY05'
+      ShortCut = 16500
+      OnExecute = actionQuickQSYExecute
+    end
+    object actionQuickQSY06: TAction
+      Tag = 6
+      Caption = 'actionQuickQSY06'
+      ShortCut = 16501
+      OnExecute = actionQuickQSYExecute
+    end
+    object actionQuickQSY07: TAction
+      Tag = 7
+      Caption = 'actionQuickQSY07'
+      ShortCut = 16502
+      OnExecute = actionQuickQSYExecute
+    end
+    object actionQuickQSY08: TAction
+      Tag = 8
+      Caption = 'actionQuickQSY08'
+      ShortCut = 16503
+      OnExecute = actionQuickQSYExecute
+    end
+    object actionPlayMessageA01: TAction
+      Tag = 1
+      Caption = 'actionPlayMessageA01'
+      ShortCut = 112
+      OnExecute = actionPlayMessageAExecute
+    end
+    object actionPlayMessageA02: TAction
+      Tag = 2
+      Caption = 'actionPlayMessageA02'
+      ShortCut = 113
+      OnExecute = actionPlayMessageAExecute
+    end
+    object actionPlayMessageA03: TAction
+      Tag = 3
+      Caption = 'actionPlayMessageA03'
+      ShortCut = 114
+      OnExecute = actionPlayMessageAExecute
+    end
+    object actionPlayMessageA04: TAction
+      Tag = 4
+      Caption = 'actionPlayMessageA04'
+      ShortCut = 115
+      OnExecute = actionPlayMessageAExecute
+    end
+    object actionPlayMessageA05: TAction
+      Tag = 5
+      Caption = 'actionPlayMessageA05'
+      ShortCut = 116
+      OnExecute = actionPlayMessageAExecute
+    end
+    object actionPlayMessageA06: TAction
+      Tag = 6
+      Caption = 'actionPlayMessageA06'
+      ShortCut = 117
+      OnExecute = actionPlayMessageAExecute
+    end
+    object actionPlayMessageA07: TAction
+      Tag = 7
+      Caption = 'actionPlayMessageA07'
+      ShortCut = 118
+      OnExecute = actionPlayMessageAExecute
+    end
+    object actionPlayMessageA08: TAction
+      Tag = 8
+      Caption = 'actionPlayMessageA08'
+      ShortCut = 119
+      OnExecute = actionPlayMessageAExecute
+    end
+    object actionCheckMulti: TAction
+      Caption = 'actionCheckMulti'
+      ShortCut = 120
+      OnExecute = actionCheckMultiExecute
+    end
+    object actionCheckPartial: TAction
+      Caption = 'actionCheckPartial'
+      ShortCut = 121
+      OnExecute = actionCheckPartialExecute
+    end
+    object actionPlayMessageA11: TAction
+      Tag = 11
+      Caption = 'actionPlayMessageA11'
+      ShortCut = 122
+      OnExecute = actionPlayMessageAExecute
+    end
+    object actionPlayMessageA12: TAction
+      Tag = 12
+      Caption = 'actionPlayMessageA12'
+      ShortCut = 123
+      OnExecute = actionPlayMessageAExecute
+    end
+    object actionPlayMessageB01: TAction
+      Tag = 1
+      Caption = 'actionPlayMessageB01'
+      ShortCut = 8304
+      OnExecute = actionPlayMessageBExecute
+    end
+    object actionPlayMessageB02: TAction
+      Tag = 2
+      Caption = 'actionPlayMessageB02'
+      ShortCut = 8305
+      OnExecute = actionPlayMessageBExecute
+    end
+    object actionPlayMessageB03: TAction
+      Tag = 3
+      Caption = 'actionPlayMessageB03'
+      ShortCut = 8306
+      OnExecute = actionPlayMessageBExecute
+    end
+    object actionPlayMessageB04: TAction
+      Tag = 4
+      Caption = 'actionPlayMessageB04'
+      ShortCut = 8307
+      OnExecute = actionPlayMessageBExecute
+    end
+    object actionPlayMessageB05: TAction
+      Tag = 5
+      Caption = 'actionPlayMessageB05'
+      ShortCut = 8308
+      OnExecute = actionPlayMessageBExecute
+    end
+    object actionPlayMessageB06: TAction
+      Tag = 6
+      Caption = 'actionPlayMessageB06'
+      ShortCut = 8309
+      OnExecute = actionPlayMessageBExecute
+    end
+    object actionPlayMessageB07: TAction
+      Tag = 7
+      Caption = 'actionPlayMessageB07'
+      ShortCut = 8310
+      OnExecute = actionPlayMessageBExecute
+    end
+    object actionPlayMessageB08: TAction
+      Tag = 8
+      Caption = 'actionPlayMessageB08'
+      ShortCut = 8311
+      OnExecute = actionPlayMessageBExecute
+    end
+    object actionPlayMessageB11: TAction
+      Tag = 11
+      Caption = 'actionPlayMessageB11'
+      ShortCut = 8314
+      OnExecute = actionPlayMessageBExecute
+    end
+    object actionPlayMessageB12: TAction
+      Tag = 12
+      Caption = 'actionPlayMessageB12'
+      ShortCut = 8315
+      OnExecute = actionPlayMessageBExecute
+    end
+  end
 end
