@@ -469,7 +469,7 @@ begin
       Settings._zlink_telnet := FTempZLinkTelnet;
 
       // Quick QSY
-      for i := 1 to 10 do begin
+      for i := Low(FQuickQSYCheck) to High(FQuickQSYCheck) do begin
          Settings.FQuickQSY[i].FUse := FQuickQSYCheck[i].Checked;
          if FQuickQSYBand[i].ItemIndex = -1 then begin
             Settings.FQuickQSY[i].FBand := b35;
@@ -678,7 +678,7 @@ begin
       cbTransverter2.Checked := Settings._transverter2;
 
       // Quick QSY
-      for i := 1 to 10 do begin
+      for i := Low(FQuickQSYCheck) to High(FQuickQSYCheck) do begin
          FQuickQSYCheck[i].Checked := dmZLogGlobal.Settings.FQuickQSY[i].FUse;
          if FQuickQSYCheck[i].Checked = True then begin
             FQuickQSYBand[i].ItemIndex := Integer(Settings.FQuickQSY[i].FBand);

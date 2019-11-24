@@ -29,10 +29,6 @@ object formOptions: TformOptions
     TabOrder = 0
     object PrefTabSheet: TTabSheet
       Caption = 'Preferences'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Label40: TLabel
         Left = 184
         Top = 104
