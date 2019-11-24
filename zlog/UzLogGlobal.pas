@@ -256,6 +256,12 @@ type
     FLocalEcho: Boolean;
   end;
 
+  TQuickQSY = record
+    FUse: Boolean;
+    FBand: TBand;
+    FMode: TMode;
+  end;
+
   TSettingsParam = record
     _AFSK : boolean; // Use AFSK instead of RTTY for rig control
     _dontallowsameband : boolean; // same band on two rigs?
@@ -339,6 +345,8 @@ type
     _displaydatepartialcheck : boolean;
 
     _super_check_columns: Integer;
+
+    FQuickQSY: array[1..8] of TQuickQSY;
   end;
 
 var
@@ -483,6 +491,9 @@ function SameMode2(aMode, bMode : TMode) : boolean;
 procedure CenterWindow(formParent, formChild: TForm);
 function Power(base, Power: integer): integer;
 
+function StrToBandDef(strMHz: string; defband: TBand): TBand;
+function StrToModeDef(strMode: string; defmode: TMode): TMode;
+
 var
   dmZLogGlobal: TdmZLogGlobal;
 
@@ -605,7 +616,9 @@ var
    b: TBand;
    s: string;
    ini: TIniFile;
+   slParam: TStringList;
 begin
+   slParam := TStringList.Create();
    ini := TIniFile.Create(ChangeFileExt(Application.ExeName, '.ini'));
    try
       // Band Scope
@@ -968,8 +981,17 @@ begin
       Settings.CW._eispacefactor := ini.ReadInteger('CW', 'EISpaceFactor', 100);
 
       Settings._super_check_columns := ini.ReadInteger('Windows', 'SuperCheckColumns', 0);
+
+      // QuickQSY
+      for i := Low(Settings.FQuickQSY) to High(Settings.FQuickQSY) do begin
+         slParam.CommaText := ini.ReadString('QuickQSY', '#' + IntToStr(i), '0,,') + ',,,';
+         Settings.FQuickQSY[i].FUse := StrToBoolDef(slParam[0], False);
+         Settings.FQuickQSY[i].FBand := StrToBandDef(slParam[1], b35);
+         Settings.FQuickQSY[i].FMode := StrToModeDef(slParam[2], mSSB);
+      end;
    finally
       ini.Free();
+      slParam.Free();
    end;
 end;
 
@@ -977,7 +999,9 @@ procedure TdmZLogGlobal.SaveCurrentSettings;
 var
    i: integer;
    ini: TIniFile;
+   slParam: TStringList;
 begin
+   slParam := TStringList.Create();
    ini := TIniFile.Create(ChangeFileExt(Application.ExeName, '.ini'));
    try
       //
@@ -1260,8 +1284,18 @@ begin
       ini.WriteInteger('Preferences', 'RowHeight', Settings._mainrowheight);
 
       ini.WriteInteger('Windows', 'SuperCheckColumns', Settings._super_check_columns);
+
+      // QuickQSY
+      for i := Low(Settings.FQuickQSY) to High(Settings.FQuickQSY) do begin
+         slParam.Clear();
+         slParam.Add( BoolToStr(Settings.FQuickQSY[i].FUse, False) );
+         slParam.Add( MHzString[ Settings.FQuickQSY[i].FBand ]);
+         slParam.Add( MODEString[ Settings.FQuickQSY[i].FMode ]);
+         ini.WriteString('QuickQSY', '#' + IntToStr(i), slParam.CommaText);
+      end;
    finally
       ini.Free();
+      slParam.Free();
    end;
 
    // オペレーターリスト保存
@@ -3248,6 +3282,32 @@ begin
       if TQSO(List.Items[i]).QSO.NewMulti2 then
          inc(Count);
    Result := Count;
+end;
+
+function StrToBandDef(strMHz: string; defband: TBand): TBand;
+var
+   i: TBand;
+begin
+   for i := Low(BandString) to High(BandString) do begin
+      if MHzString[i] = strMHz then begin
+         Result := TBand(i);
+         Exit;
+      end;
+   end;
+   Result := defband;
+end;
+
+function StrToModeDef(strMode: string; defmode: TMode): TMode;
+var
+   i: TMode;
+begin
+   for i := Low(ModeString) to High(ModeString) do begin
+      if ModeString[i] = strMode then begin
+         Result := TMode(i);
+         Exit;
+      end;
+   end;
+   Result := defmode;
 end;
 
 end.

@@ -11,7 +11,8 @@ uses
   BGK32Lib, UzLogCW, Hemibtn, ShellAPI, UITypes,
   OEdit, URigControl, UConsolePad, URenewThread, USpotClass,
   UMMTTY, UTTYConsole, UPaddleThread, UELogJarl1, UELogJarl2,
-  UWWMulti, UWWScore, UWWZone, UARRLWMulti, UQTCForm;
+  UWWMulti, UWWScore, UWWZone, UARRLWMulti, UQTCForm, System.Actions,
+  Vcl.ActnList;
 
 
 const
@@ -544,6 +545,37 @@ type
     menuQuickReference: TMenuItem;
     CreateELogJARL1: TMenuItem;
     CreateELogJARL2: TMenuItem;
+    ActionList1: TActionList;
+    actionQuickQSY01: TAction;
+    actionQuickQSY02: TAction;
+    actionQuickQSY03: TAction;
+    actionQuickQSY04: TAction;
+    actionQuickQSY05: TAction;
+    actionQuickQSY06: TAction;
+    actionQuickQSY07: TAction;
+    actionQuickQSY08: TAction;
+    actionPlayMessageA01: TAction;
+    actionPlayMessageA02: TAction;
+    actionPlayMessageA03: TAction;
+    actionPlayMessageA04: TAction;
+    actionPlayMessageA05: TAction;
+    actionPlayMessageA06: TAction;
+    actionPlayMessageA07: TAction;
+    actionPlayMessageA08: TAction;
+    actionPlayMessageB01: TAction;
+    actionPlayMessageB02: TAction;
+    actionPlayMessageB03: TAction;
+    actionPlayMessageB04: TAction;
+    actionPlayMessageB05: TAction;
+    actionPlayMessageB06: TAction;
+    actionPlayMessageB07: TAction;
+    actionPlayMessageB08: TAction;
+    actionPlayMessageA11: TAction;
+    actionPlayMessageA12: TAction;
+    actionPlayMessageB11: TAction;
+    actionPlayMessageB12: TAction;
+    actionCheckMulti: TAction;
+    actionCheckPartial: TAction;
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure ShowHint(Sender: TObject);
@@ -704,6 +736,11 @@ type
     procedure CreateELogJARL2Click(Sender: TObject);
 
     procedure OnZLogInit( var Message: TMessage ); message WM_ZLOG_INIT;
+    procedure actionQuickQSYExecute(Sender: TObject);
+    procedure actionPlayMessageAExecute(Sender: TObject);
+    procedure actionPlayMessageBExecute(Sender: TObject);
+    procedure actionCheckMultiExecute(Sender: TObject);
+    procedure actionCheckPartialExecute(Sender: TObject);
   private
     TempQSOList : TList;
     clStatusLine : TColor;
@@ -783,7 +820,8 @@ type
     procedure RestoreWindowStates;
     procedure RecordWindowStates;
     procedure SwitchLastQSOBandMode;
-    procedure IncFontSize;
+    procedure IncFontSize();
+    procedure DecFontSize();
     procedure AutoInput(D : TBSData);
     procedure ConsoleRigBandSet(B: TBand);
 
@@ -791,6 +829,9 @@ type
     procedure HideBandMenuHF();
     procedure HideBandMenuWARC();
     procedure HideBandMenuVU(fInclude50: Boolean = True);
+
+    procedure QSY(b: TBand; m: TMode);
+    procedure PlayMessage(bank: Integer; no: Integer);
   end;
 
 var
@@ -1596,14 +1637,7 @@ end;
 
 procedure TMainForm.BandMenuClick(Sender: TObject);
 begin
-   UpdateBand(TBand(TMenuItem(Sender).Tag));
-
-   if RigControl.Rig <> nil then begin
-      RigControl.Rig.SetBand(CurrentQSO);
-//      if CurrentQSO.QSO.mode = mSSB then
-//         RigControl.Rig.SetMode(CurrentQSO);
-   end;
-
+   QSY(TBand(TMenuItem(Sender).Tag), CurrentQSO.QSO.Mode);
    LastFocus.SetFocus;
 end;
 
@@ -3595,7 +3629,7 @@ var
    M: TMenuItem;
    S, ss: string;
 begin
-   if HiWord(GetKeyState(VK_SPACE)) <> 0 then begin
+   if GetAsyncKeyState(VK_SHIFT) < 0 then begin
       DEBUGMODE := True;
       BGK32Lib.DEBUGMODE := True;
    end;
@@ -3634,7 +3668,7 @@ begin
    BGK32Lib._WIN2KMODE := True;
 
    if (Pos('/NOBGK', UpperCase(S)) = 0) then begin
-      if HiWord(GetKeyState(VK_SHIFT)) = 0 then begin // ver 1.9x
+      if GetAsyncKeyState(VK_SHIFT) = 0 then begin
          InitializeBGK(mSec);
       end;
    end;
@@ -3812,8 +3846,6 @@ begin
 end;
 
 procedure TMainForm.RecordWindowStates;
-var
-   f: TForm;
 begin
    dmZlogGlobal.WriteWindowState(CheckCall2);
    dmZlogGlobal.WriteWindowState(PartialCheck);
@@ -4319,69 +4351,95 @@ var
    str: string;
 begin
    E := TEdit(Sender);
-   // WriteStatusLine(IntToStr(ord(Key)));
+
    case Key of
       ^A: begin
-            E.SelStart := 0;
-            E.SelLength := 0;
-            Key := #0;
-         end;
+         E.SelStart := 0;
+         E.SelLength := 0;
+         Key := #0;
+      end;
+
       ^E: begin
-            E.SelStart := length(E.Text);
-            E.SelLength := 0;
-            Key := #0;
-         end;
+         E.SelStart := length(E.Text);
+         E.SelLength := 0;
+         Key := #0;
+      end;
+
       ^B: begin
-            i := E.SelStart;
-            if i > 0 then
-               E.SelStart := i - 1;
-            Key := #0;
-         end;
+         i := E.SelStart;
+         if i > 0 then
+            E.SelStart := i - 1;
+         Key := #0;
+      end;
+
       ^f: begin
-            i := E.SelStart;
-            if i < length(E.Text) then
-               E.SelStart := i + 1;
-            Key := #0;
-         end;
+         i := E.SelStart;
+         if i < length(E.Text) then
+            E.SelStart := i + 1;
+         Key := #0;
+      end;
+
       ^H: begin
-            Key := Chr($08);
-         end;
+         Key := Chr($08);
+      end;
+
       ^D: begin
-            i := E.SelStart;
-            str := E.Text;
-            if i < length(E.Text) then
-               Delete(str, i + 1, 1);
-            E.Text := str;
-            E.SelStart := i;
-            Key := #0;
-         end;
+         i := E.SelStart;
+         str := E.Text;
+         if i < length(E.Text) then
+            Delete(str, i + 1, 1);
+         E.Text := str;
+         E.SelStart := i;
+         Key := #0;
+      end;
+
       ^j: begin
-            i := E.SelStart;
-            str := E.Text;
-            str := copy(str, 1, i);
-            E.Text := str;
-            E.SelStart := length(str);
-            Key := #0;
-         end;
+         i := E.SelStart;
+         str := E.Text;
+         str := copy(str, 1, i);
+         E.Text := str;
+         E.SelStart := length(str);
+         Key := #0;
+      end;
    end;
 end;
 
-procedure TMainForm.IncFontSize;
+procedure TMainForm.IncFontSize();
 var
    j: integer;
 begin
    j := EditPanel.Font.Size;
-   if j < 21 then
-      inc(j)
-   else
+   if j < 21 then begin
+      Inc(j);
+   end
+   else begin
       j := 9;
+   end;
 
    EditPanel.Font.Size := j;
    Grid.Font.Size := j;
-//   EditDialog.Font.Size := j;
+
    dmZlogGlobal.Settings._mainfontsize := j;
    dmZlogGlobal.SaveCurrentSettings()
-   // dmZlogGlobal.Ini.SetInteger('Preferences','FontSize', dmZlogGlobal.Settings._mainfontsize);
+end;
+
+procedure TMainForm.DecFontSize();
+var
+   j: integer;
+begin
+   j := EditPanel.Font.Size;
+   if j > 9 then begin
+      Dec(j);
+   end
+   else begin
+      j := 21;
+   end;
+
+   EditPanel.Font.Size := j;
+   Grid.Font.Size := j;
+
+   dmZlogGlobal.Settings._mainfontsize := j;
+   dmZlogGlobal.SaveCurrentSettings()
 end;
 
 procedure TMainForm.SwitchCWBank(Action: integer); // 0 : toggle; 1,2 bank#)
@@ -4435,317 +4493,317 @@ label
    jjj;
 begin
    CommonEditKeyProcess(Sender, Key);
+
    if CallsignEdit.Font.Color = clGrayText then begin
       if Key <> ' ' then begin
          CallsignEdit.Text := OldCallsign;
          NumberEdit.Text := OldNumber;
       end;
+
       CallsignEdit.Font.Color := defaultTextColor;
       NumberEdit.Font.Color := defaultTextColor;
-      if Key <> ' ' then
+
+      if Key <> ' ' then begin
          exit;
+      end;
    end;
 
    case Key of
       '@': begin
-            MyContest.MultiForm.SelectAndAddNewPrefix(CurrentQSO.QSO.Callsign);
-            Key := #0;
-         end;
+         MyContest.MultiForm.SelectAndAddNewPrefix(CurrentQSO.QSO.Callsign);
+         Key := #0;
+      end;
+
       '\': begin
-            ControlPTT(not(PTTIsOn)); // toggle PTT;
-            Key := #0;
-         end;
+         ControlPTT(not(PTTIsOn)); // toggle PTT;
+         Key := #0;
+      end;
+
       'X', 'x': begin
-            if HiWord(GetKeyState(VK_SHIFT)) <> 0 then begin
-               RigControl.ToggleCurrentRig;
-               Key := #0;
-            end;
+         if GetAsyncKeyState(VK_SHIFT) < 0 then begin
+            RigControl.ToggleCurrentRig;
+            Key := #0;
          end;
-      '!':
+      end;
+
+      '!': begin
          ToggleFixedSpeed;
-      '-': // up key
-         begin
-            ToggleFixedSpeed;
-            Key := #0;
-         end;
+         Key := #0;
+      end;
+
+      '-': begin // up key
+         ToggleFixedSpeed;
+         Key := #0;
+      end;
+
       'V', 'v': begin
-            if HiWord(GetKeyState(VK_SHIFT)) <> 0 then begin
-               if RigControl.Rig <> nil then
-                  RigControl.Rig.ToggleVFO;
-               Key := #0;
-            end;
+         if GetAsyncKeyState(VK_SHIFT) < 0 then begin
+            if RigControl.Rig <> nil then
+               RigControl.Rig.ToggleVFO;
+            Key := #0;
          end;
+      end;
+
       ^i: begin
-            if PartialCheck.Visible then begin
-               if PartialCheck.HitNumber > 0 then
-                  CallsignEdit.Text := PartialCheck.HitCall
-               else if SuperCheck.Visible then
-                  if SuperCheck.HitNumber > 0 then
-                     CallsignEdit.Text := SuperCheck.HitCall;
-            end
-            else // partial check is not visible
-            begin
-               if SuperCheck.Visible then
-                  if SuperCheck.HitNumber > 0 then
-                     CallsignEdit.Text := SuperCheck.HitCall;
-            end;
-            Key := #0;
+         if PartialCheck.Visible then begin
+            if PartialCheck.HitNumber > 0 then
+               CallsignEdit.Text := PartialCheck.HitCall
+            else if SuperCheck.Visible then
+               if SuperCheck.HitNumber > 0 then
+                  CallsignEdit.Text := SuperCheck.HitCall;
+         end
+         else begin // partial check is not visible
+            if SuperCheck.Visible then
+               if SuperCheck.HitNumber > 0 then
+                  CallsignEdit.Text := SuperCheck.HitCall;
          end;
+         Key := #0;
+      end;
+
+      // フォントサイズ変更
       ^S: begin
+         if (GetAsyncKeyState(VK_SHIFT) < 0) then begin
+            DecFontSize();
+         end
+         else begin
             IncFontSize;
-            Key := #0;
          end;
+         Key := #0;
+      end;
+
       '+', ';': begin
-            DownKeyPress;
-            Key := #0;
+         DownKeyPress;
+         Key := #0;
+      end;
+
+      ^N: begin // insert band scope
+         if GetAsyncKeyState(VK_SHIFT) < 0 then begin
+            boo := True;
+         end
+         else begin
+            boo := False;
          end;
-      ^N: // insert band scope
-         begin
-            if HiWord(GetKeyState(VK_SHIFT)) = 0 then
-               boo := True
-            else
-               boo := False;
 
-            if RigControl.Rig <> nil then begin
-               j := RigControl.Rig.CurrentFreqHz;
-               if j > 0 then begin
-                  // BandScope.CreateBSData(CurrentQSO, j);
-                  BandScope2.CreateBSData(CurrentQSO, j);
-               end
-               else
-                  goto jjj;
-
-               if boo then begin
-                  CallsignEdit.Clear;
-                  NumberEdit.Clear;
-               end;
+         if RigControl.Rig <> nil then begin
+            j := RigControl.Rig.CurrentFreqHz;
+            if j > 0 then begin
+               BandScope2.CreateBSData(CurrentQSO, j);
             end
-            else begin// no rig control
-            jjj:
-               F := TIntegerDialog.Create(Self);
-               try
-                  F.SetLabel('Enter frequency in kHz');
-                  if F.ShowModal() <> mrOK then begin
-                     Exit;
-                  end;
-                  E := F.GetValueExtended;
-               finally
-                  F.Release();
-               end;
+            else
+               goto jjj;
 
-               if E > 1000 then begin
-                  BandScope2.CreateBSData(CurrentQSO, round(E * 1000));
-               end;
-
-               if boo then begin
-                  CallsignEdit.Clear;
-                  NumberEdit.Clear;
-               end;
+            if boo then begin
+               CallsignEdit.Clear;
+               NumberEdit.Clear;
             end;
-            Key := #0;
+         end
+         else begin// no rig control
+         jjj:
+            F := TIntegerDialog.Create(Self);
+            try
+               F.SetLabel('Enter frequency in kHz');
+               if F.ShowModal() <> mrOK then begin
+                  Exit;
+               end;
+               E := F.GetValueExtended;
+            finally
+               F.Release();
+            end;
+
+            if E > 1000 then begin
+               BandScope2.CreateBSData(CurrentQSO, round(E * 1000));
+            end;
+
+            if boo then begin
+               CallsignEdit.Clear;
+               NumberEdit.Clear;
+            end;
          end;
+         Key := #0;
+      end;
+
       ^O: begin
-            CurrentQSO.DecTime;
-            TimeEdit.Text := CurrentQSO.TimeStr;
-            DateEdit.Text := CurrentQSO.DateStr;
-            Key := #0;
-         end;
-      ^P: begin
-            CurrentQSO.IncTime;
-            TimeEdit.Text := CurrentQSO.TimeStr;
-            DateEdit.Text := CurrentQSO.DateStr;
-            Key := #0;
-         end;
-      ^W: begin
-            TEdit(Sender).Clear;
-            WriteStatusLine('', False);
-            Key := #0;
-         end;
-      ^R: begin
-            dmZlogGlobal.ReversePaddle;
-            Key := #0;
-         end;
-      ^K: begin
-            EditedSinceTABPressed := tabstate_normal;
-            CallsignEdit.Clear;
-            NumberEdit.Clear;
-            MemoEdit.Clear;
-            Key := #0;
-            CallsignEdit.SetFocus;
-            WriteStatusLine('', False);
-         end;
-      'Z': begin
-            if HiWord(GetKeyState(VK_SHIFT)) <> 0 then begin
-               if CurrentQSO.QSO.mode = mCW then begin
-                  CQRepeatClick1(Sender);
-               end
-               else begin
-                  // CQRepeatVoice1Click(Sender);
-               end;
-               Key := #0;
-            end;
-         end;
-      ^Z: begin
-            if CurrentQSO.QSO.mode = mCW then
-               CQRepeatClick2(Sender)
-            else
-               // CQRepeatVoice2Click(Sender);
-               Key := #0;
-         end;
-      ^T: begin
-            CtrlZCQLoop := True;
-            TuneOn;
-         end;
-      Chr($1B): { ESC } begin
-            CWStopButtonClick(Self);
-            // VoiceStopButtonClick(Self);
-            Key := #0;
-         end;
-      ' ': begin
-            if (TEdit(Sender).Name = 'NumberEdit') or (TEdit(Sender).Name = 'TimeEdit') or (TEdit(Sender).Name = 'DateEdit') then begin
-               Key := #0;
-               if FPostContest and (TEdit(Sender).Name = 'NumberEdit') then begin
-                  if TimeEdit.Visible then
-                     TimeEdit.SetFocus;
-                  if DateEdit.Visible then
-                     DateEdit.SetFocus;
-               end
-               else
-                  CallsignEdit.SetFocus;
-            end
-            else { if space is pressed when Callsign edit is in focus }
-            begin
-               if NumberEdit.Text = '' then begin
-                  {
-                    if Not(PostContest) then
-                    CurrentQSO.UpdateTime;
-                    TimeEdit.Text := CurrentQSO.TimeStr;
-                    DateEdit.Text := CurrentQSO.DateStr;
-                  }
-               end;
-               Key := #0;
-               // j := Log.IsDupe(CurrentQSO);
-               Q := Log.QuickDupe(CurrentQSO);
-               if Q <> nil then begin
-                  MessageBeep(0);
-                  if dmZLogGlobal.Settings._allowdupe = True then begin
-                     WriteStatusLineRed(Q.PartialSummary(dmZlogGlobal.Settings._displaydatepartialcheck), True);
-                     NumberEdit.SetFocus;
-                     exit;
-                  end;
-                  CallsignEdit.SelectAll;
-                  WriteStatusLineRed(Q.PartialSummary(dmZlogGlobal.Settings._displaydatepartialcheck), True);
-                  exit;
-               end
-               else { if not dupe }
-               begin
-                  MyContest.SpaceBarProc;
-               end;
-               NumberEdit.SetFocus;
-            end;
-         end;
-      'Y', 'y': begin
-            if HiWord(GetKeyState(VK_SHIFT)) <> 0 then begin
-               IncCWSpeed;
-               Key := #0;
-            end;
-         end;
-      'F', 'f': begin
-            if HiWord(GetKeyState(VK_SHIFT)) <> 0 then begin
-               (*
-                 if dmZlogGlobal.Settings.CW.CurrentBank = 1 then
-                 begin
-                 dmZlogGlobal.Settings.CW.CurrentBank := 2;
-                 j := clMaroon;
-                 end
-                 else
-                 begin
-                 dmZlogGlobal.Settings.CW.CurrentBank := 1;
-                 j := clGreen;
-                 end;
-                 if dmZlogGlobal.Settings.CW.CurrentBank = 1 then
-                 WriteStatusLine('CW Bank A', False)
-                 else
-                 WriteStatusLine('CW Bank B', False);
+         CurrentQSO.DecTime;
+         TimeEdit.Text := CurrentQSO.TimeStr;
+         DateEdit.Text := CurrentQSO.DateStr;
+         Key := #0;
+      end;
 
-                 CWF1.Hint := dmZlogGlobal.CWMessage(dmZlogGlobal.Settings.CW.CurrentBank, 1);
-                 CWF2.Hint := dmZlogGlobal.CWMessage(dmZlogGlobal.Settings.CW.CurrentBank, 2);
-                 CWF3.Hint := dmZlogGlobal.CWMessage(dmZlogGlobal.Settings.CW.CurrentBank, 3);
-                 CWF4.Hint := dmZlogGlobal.CWMessage(dmZlogGlobal.Settings.CW.CurrentBank, 4);
-                 CWF5.Hint := dmZlogGlobal.CWMessage(dmZlogGlobal.Settings.CW.CurrentBank, 5);
-                 CWF6.Hint := dmZlogGlobal.CWMessage(dmZlogGlobal.Settings.CW.CurrentBank, 6);
-                 CWF7.Hint := dmZlogGlobal.CWMessage(dmZlogGlobal.Settings.CW.CurrentBank, 7);
-                 CWF8.Hint := dmZlogGlobal.CWMessage(dmZlogGlobal.Settings.CW.CurrentBank, 8);
-                 CWF1.FaceColor := j;
-                 CWF2.FaceColor := j;
-                 CWF3.FaceColor := j;
-                 CWF4.FaceColor := j;
-                 CWF5.FaceColor := j;
-                 CWF6.FaceColor := j;
-                 CWF7.FaceColor := j;
-                 CWF8.FaceColor := j; *)
-               SwitchCWBank(0);
-               Key := #0;
-            end;
-         end;
-      'T', 't': begin
-            if HiWord(GetKeyState(VK_SHIFT)) <> 0 then begin
-               CurrentQSO.UpdateTime;
-               TimeEdit.Text := CurrentQSO.TimeStr;
-               DateEdit.Text := CurrentQSO.DateStr;
-               Key := #0;
-            end;
-         end;
-      'U', 'u': begin
-            if HiWord(GetKeyState(VK_SHIFT)) <> 0 then begin
-               DecCWSpeed;
-               Key := #0;
-            end;
-         end;
-      'B', 'b': begin
-            if HiWord(GetKeyState(VK_SHIFT)) <> 0 then begin
-               MyContest.ChangeBand(True);
-               Key := #0;
-            end;
-         end;
-      'R', 'r': begin
-            if HiWord(GetKeyState(VK_SHIFT)) <> 0 then begin
-               SetR(CurrentQSO);
-               RcvdRSTEdit.Text := CurrentQSO.RSTStr;
-               Key := #0;
-            end;
-         end;
-      'S', 's': begin
-            if HiWord(GetKeyState(VK_SHIFT)) <> 0 then begin
-               SetS(CurrentQSO);
-               RcvdRSTEdit.Text := CurrentQSO.RSTStr;
-               Key := #0;
-            end;
-         end;
-      'M', 'm': begin
-            if HiWord(GetKeyState(VK_SHIFT)) <> 0 then begin
-               MyContest.ChangeMode;
-               Key := #0;
-            end;
-         end;
-      'P', 'p': begin
-            if HiWord(GetKeyState(VK_SHIFT)) <> 0 then begin
-               MyContest.ChangePower;
-               Key := #0;
-            end;
-         end;
-      Chr($0D): begin
-            if CallsignEdit.Focused and (Pos(',', CallsignEdit.Text) = 1) then begin
-               ProcessConsoleCommand(CallsignEdit.Text);
-               CallsignEdit.Text := '';
+      ^P: begin
+         CurrentQSO.IncTime;
+         TimeEdit.Text := CurrentQSO.TimeStr;
+         DateEdit.Text := CurrentQSO.DateStr;
+         Key := #0;
+      end;
+
+      ^W: begin
+         TEdit(Sender).Clear;
+         WriteStatusLine('', False);
+         Key := #0;
+      end;
+
+      ^R: begin
+         dmZlogGlobal.ReversePaddle;
+         Key := #0;
+      end;
+
+      ^K: begin
+         EditedSinceTABPressed := tabstate_normal;
+         CallsignEdit.Clear;
+         NumberEdit.Clear;
+         MemoEdit.Clear;
+         Key := #0;
+         CallsignEdit.SetFocus;
+         WriteStatusLine('', False);
+      end;
+
+      'Z', 'z': begin
+         if GetAsyncKeyState(VK_SHIFT) < 0 then begin
+            if CurrentQSO.QSO.mode = mCW then begin
+               CQRepeatClick1(Sender);
             end
             else begin
-               if HiWord(GetKeyState(VK_SHIFT)) <> 0 then
-                  CurrentQSO.QSO.Reserve2 := $FF;
-               LogButtonClick(Self);
+               // CQRepeatVoice1Click(Sender);
             end;
             Key := #0;
          end;
+      end;
+
+      ^Z: begin
+         if CurrentQSO.QSO.mode = mCW then
+            CQRepeatClick2(Sender)
+         else
+            // CQRepeatVoice2Click(Sender);
+            Key := #0;
+      end;
+
+      ^T: begin
+         CtrlZCQLoop := True;
+         TuneOn;
+      end;
+
+      Char($1B): { ESC } begin
+         CWStopButtonClick(Self);
+         // VoiceStopButtonClick(Self);
+         Key := #0;
+      end;
+
+      ' ': begin
+         if (TEdit(Sender).Name = 'NumberEdit') or (TEdit(Sender).Name = 'TimeEdit') or (TEdit(Sender).Name = 'DateEdit') then begin
+            Key := #0;
+            if FPostContest and (TEdit(Sender).Name = 'NumberEdit') then begin
+               if TimeEdit.Visible then
+                  TimeEdit.SetFocus;
+               if DateEdit.Visible then
+                  DateEdit.SetFocus;
+            end
+            else
+               CallsignEdit.SetFocus;
+         end
+         else begin { if space is pressed when Callsign edit is in focus }
+            Key := #0;
+
+            Q := Log.QuickDupe(CurrentQSO);
+            if Q <> nil then begin
+               MessageBeep(0);
+               if dmZLogGlobal.Settings._allowdupe = True then begin
+                  WriteStatusLineRed(Q.PartialSummary(dmZlogGlobal.Settings._displaydatepartialcheck), True);
+                  NumberEdit.SetFocus;
+                  exit;
+               end;
+               CallsignEdit.SelectAll;
+               WriteStatusLineRed(Q.PartialSummary(dmZlogGlobal.Settings._displaydatepartialcheck), True);
+               exit;
+            end
+            else begin { if not dupe }
+               MyContest.SpaceBarProc;
+            end;
+
+            NumberEdit.SetFocus;
+         end;
+      end;
+
+      'Y', 'y': begin
+         if GetAsyncKeyState(VK_SHIFT) < 0 then begin
+            IncCWSpeed;
+            Key := #0;
+         end;
+      end;
+
+      'F', 'f': begin
+         if GetAsyncKeyState(VK_SHIFT) < 0 then begin
+            SwitchCWBank(0);
+            Key := #0;
+         end;
+      end;
+
+      'T', 't': begin
+         if GetAsyncKeyState(VK_SHIFT) < 0 then begin
+            CurrentQSO.UpdateTime;
+            TimeEdit.Text := CurrentQSO.TimeStr;
+            DateEdit.Text := CurrentQSO.DateStr;
+            Key := #0;
+         end;
+      end;
+
+      'U', 'u': begin
+         if GetAsyncKeyState(VK_SHIFT) < 0 then begin
+            DecCWSpeed;
+            Key := #0;
+         end;
+      end;
+
+      'B', 'b': begin
+         if GetAsyncKeyState(VK_SHIFT) < 0 then begin
+            MyContest.ChangeBand(True);
+            Key := #0;
+         end;
+      end;
+
+      'R', 'r': begin
+         if GetAsyncKeyState(VK_SHIFT) < 0 then begin
+            SetR(CurrentQSO);
+            RcvdRSTEdit.Text := CurrentQSO.RSTStr;
+            Key := #0;
+         end;
+      end;
+
+      'S', 's': begin
+         if GetAsyncKeyState(VK_SHIFT) < 0 then begin
+            SetS(CurrentQSO);
+            RcvdRSTEdit.Text := CurrentQSO.RSTStr;
+            Key := #0;
+         end;
+      end;
+
+      'M', 'm': begin
+         if GetAsyncKeyState(VK_SHIFT) < 0 then begin
+            MyContest.ChangeMode;
+            Key := #0;
+         end;
+      end;
+
+      'P', 'p': begin
+         if GetAsyncKeyState(VK_SHIFT) < 0 then begin
+            MyContest.ChangePower;
+            Key := #0;
+         end;
+      end;
+
+      Char($0D): begin
+         if CallsignEdit.Focused and (Pos(',', CallsignEdit.Text) = 1) then begin
+            ProcessConsoleCommand(CallsignEdit.Text);
+            CallsignEdit.Text := '';
+         end
+         else begin
+            if GetAsyncKeyState(VK_SHIFT) < 0 then begin
+               CurrentQSO.QSO.Reserve2 := $FF;
+            end;
+
+            LogButtonClick(Self);
+         end;
+         Key := #0;
+      end;
    end;
    { of case }
 end;
@@ -4785,12 +4843,7 @@ end;
 
 procedure TMainForm.ModeMenuClick(Sender: TObject);
 begin
-   UpdateMode(TMode(TMenuItem(Sender).Tag));
-
-   if RigControl.Rig <> nil then begin
-      RigControl.Rig.SetMode(CurrentQSO);
-   end;
-
+   QSY(CurrentQSO.QSO.Band, TMode(TMenuItem(Sender).Tag));
    LastFocus.SetFocus;
 end;
 
@@ -4990,9 +5043,6 @@ begin
 end;
 
 procedure TMainForm.GridKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
-var
-   i, cb: integer;
-   S: string;
 begin
    case Key of
       VK_DELETE: begin
@@ -5022,42 +5072,6 @@ begin
                Grid.LeftCol := 0;
                EditScreen.ResetTopRow;
                LastFocus.SetFocus;
-            end;
-         end;
-
-      VK_F1 .. VK_F8, VK_F11, VK_F12: begin
-            i := Key - VK_F1 + 1;
-
-            cb := dmZlogGlobal.Settings.CW.CurrentBank;
-
-            { if ssShift in Shift then   // doesn't work. why?
-              begin
-              if cb = 1 then
-              cb := 2
-              else
-              cb := 1;
-              end;
-            }
-            if GetAsyncKeyState(VK_SHIFT) < 0 then begin
-               if cb = 1 then
-                  cb := 2
-               else
-                  cb := 1;
-            end;
-
-            case CurrentQSO.QSO.mode of
-               mCW: begin
-                     S := dmZlogGlobal.CWMessage(cb, i);
-                     S := SetStr(S, CurrentQSO);
-                     zLogSendStr(S);
-                  end;
-               // mSSB, mFM, mAM :SendVoice(i);
-               mRTTY: begin
-                     S := dmZlogGlobal.CWMessage(3, i);
-                     S := SetStrNoAbbrev(S, CurrentQSO);
-                     if TTYConsole <> nil then
-                        TTYConsole.SendStrNow(S);
-                  end;
             end;
          end;
    end;
@@ -5223,18 +5237,11 @@ begin
 end;
 
 procedure TMainForm.EditKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
-var
-   i, cb: integer;
-   S: string[255];
 begin
    case Key of
       { MUHENKAN KEY }
       29: begin
             ControlPTT(not(PTTIsOn)); // toggle PTT;
-         end;
-
-      VK_F9: begin
-            MyContest.MultiForm.CheckMulti(CurrentQSO)
          end;
 
       VK_DOWN: begin
@@ -5249,51 +5256,6 @@ begin
               Key := 0;
               end;
             }
-         end;
-
-      VK_F1 .. VK_F8, VK_F11, VK_F12: begin
-            i := Key - VK_F1 + 1;
-
-            cb := dmZlogGlobal.Settings.CW.CurrentBank;
-            // if ssShift in Shift then   // doesn't work. why?
-            if GetAsyncKeyState(VK_SHIFT) < 0 then begin
-               if cb = 1 then
-                  cb := 2
-               else
-                  cb := 1;
-            end;
-
-            case CurrentQSO.QSO.mode of
-               mCW: begin
-                     S := dmZlogGlobal.CWMessage(cb, i);
-                     S := SetStr(S, CurrentQSO);
-                     zLogSendStr(S);
-                  end;
-
-               mSSB, mFM, mAM: begin
-                     // SendVoice(i);
-                  end;
-
-               mRTTY: begin
-                     S := dmZlogGlobal.CWMessage(3, i);
-                     S := SetStrNoAbbrev(S, CurrentQSO);
-                     if TTYConsole <> nil then begin
-                        TTYConsole.SendStrNow(S);
-                     end;
-                  end;
-            end;
-         end;
-
-      VK_F10: begin
-            PartialCheck.Show;
-            if TEdit(Sender).Name = 'NumberEdit' then begin
-               PartialCheck.CheckPartialNumber(CurrentQSO);
-            end
-            else begin
-               PartialCheck.CheckPartial(CurrentQSO);
-            end;
-
-            Key := 0;
          end;
 
       VK_UP: begin
@@ -5949,52 +5911,60 @@ begin
    CommonEditKeyProcess(Sender, Key);
    case Key of
       'X', 'x': begin
-            if HiWord(GetKeyState(VK_SHIFT)) <> 0 then begin
-               RigControl.ToggleCurrentRig;
-               Key := #0;
-            end;
+         if GetAsyncKeyState(VK_SHIFT) < 0 then begin
+            RigControl.ToggleCurrentRig;
+            Key := #0;
          end;
+      end;
+
       'V', 'v': begin
-            if HiWord(GetKeyState(VK_SHIFT)) <> 0 then begin
-               if RigControl.Rig <> nil then
-                  RigControl.Rig.ToggleVFO;
-               Key := #0;
-            end;
+         if GetAsyncKeyState(VK_SHIFT) < 0 then begin
+            if RigControl.Rig <> nil then
+               RigControl.Rig.ToggleVFO;
+            Key := #0;
          end;
+      end;
+
       '+', ';': begin
-            DownKeyPress;
-            Key := #0;
-         end;
+         DownKeyPress;
+         Key := #0;
+      end;
+
       ^W: begin
-            TEdit(Sender).Clear;
-            Key := #0;
-         end;
+         TEdit(Sender).Clear;
+         Key := #0;
+      end;
+
       ^R: begin
-            dmZlogGlobal.ReversePaddle;
-            Key := #0;
-         end;
+         dmZlogGlobal.ReversePaddle;
+         Key := #0;
+      end;
+
       ^K: begin
-            EditedSinceTABPressed := tabstate_normal;
-            CallsignEdit.Clear;
-            NumberEdit.Clear;
-            MemoEdit.Clear;
-            Key := #0;
-            CallsignEdit.SetFocus;
-         end;
+         EditedSinceTABPressed := tabstate_normal;
+         CallsignEdit.Clear;
+         NumberEdit.Clear;
+         MemoEdit.Clear;
+         Key := #0;
+         CallsignEdit.SetFocus;
+      end;
+
       ^Z: begin
-            if CurrentQSO.QSO.mode = mCW then
-               CQRepeatClick2(Sender);
-            Key := #0;
-         end;
+         if CurrentQSO.QSO.mode = mCW then
+            CQRepeatClick2(Sender);
+         Key := #0;
+      end;
+
       Chr($1B): { ESC } begin
-            CWStopButtonClick(Self);
-            VoiceStopButtonClick(Self);
-            Key := #0;
-         end;
+         CWStopButtonClick(Self);
+         VoiceStopButtonClick(Self);
+         Key := #0;
+      end;
+
       Chr($0D): begin
-            LogButtonClick(Self);
-            Key := #0;
-         end;
+         LogButtonClick(Self);
+         Key := #0;
+      end;
    end;
    { of case }
 end;
@@ -7197,7 +7167,6 @@ procedure TMainForm.OnZLogInit( var Message: TMessage );
 var
    menu: TMenuForm;
    E: Extended;
-   B: TBand;
    c, r: Integer;
 begin
    menu := TMenuForm.Create(Self);
@@ -7881,6 +7850,139 @@ begin
    end;
 
    Result := b19;
+end;
+
+procedure TMainForm.QSY(b: TBand; m: TMode);
+begin
+   if CurrentQSO.QSO.band <> b then begin
+      UpdateBand(b);
+
+      if RigControl.Rig <> nil then begin
+         RigControl.Rig.SetBand(CurrentQSO);
+      end;
+   end;
+
+   if CurrentQSO.QSO.mode <> m then begin
+      UpdateMode(m);
+
+      if RigControl.Rig <> nil then begin
+         RigControl.Rig.SetMode(CurrentQSO);
+      end;
+   end;
+end;
+
+// F1～F8
+procedure TMainForm.actionPlayMessageAExecute(Sender: TObject);
+var
+   no: Integer;
+   cb: Integer;
+begin
+   no := TAction(Sender).Tag;
+   cb := dmZlogGlobal.Settings.CW.CurrentBank;
+
+   {$IFDEF DEBUG}
+   OutputDebugString(PChar('PlayMessageA(' + IntToStr(cb) + ',' + IntToStr(no) + ')'));
+   {$ENDIF}
+
+   PlayMessage(cb, no);
+end;
+
+// F9
+procedure TMainForm.actionCheckMultiExecute(Sender: TObject);
+begin
+   {$IFDEF DEBUG}
+   OutputDebugString(PChar('CheckMulti()'));
+   {$ENDIF}
+
+   MyContest.MultiForm.CheckMulti(CurrentQSO);
+
+   LastFocus.SetFocus;
+end;
+
+// F10
+procedure TMainForm.actionCheckPartialExecute(Sender: TObject);
+begin
+   PartialCheck.Show;
+
+   if ActiveControl = NumberEdit then begin
+      PartialCheck.CheckPartialNumber(CurrentQSO);
+   end
+   else begin
+      PartialCheck.CheckPartial(CurrentQSO);
+   end;
+
+   LastFocus.SetFocus;
+end;
+
+// SHIFT+F1～F8
+procedure TMainForm.actionPlayMessageBExecute(Sender: TObject);
+var
+   no: Integer;
+   cb: Integer;
+begin
+   no := TAction(Sender).Tag;
+   cb := dmZlogGlobal.Settings.CW.CurrentBank;
+
+   if cb = 1 then
+      cb := 2
+   else
+      cb := 1;
+
+   {$IFDEF DEBUG}
+   OutputDebugString(PChar('PlayMessageB(' + IntToStr(cb) + ',' + IntToStr(no) + ')'));
+   {$ENDIF}
+
+   PlayMessage(cb, no);
+end;
+
+// CTRL+F1～F8
+procedure TMainForm.actionQuickQSYExecute(Sender: TObject);
+var
+   no: Integer;
+   b: TBand;
+   m: TMode;
+begin
+   no := TAction(Sender).Tag;
+
+   if dmZLogGlobal.Settings.FQuickQSY[no].FUse = False then begin
+      Exit;
+   end;
+
+   b := dmZLogGlobal.Settings.FQuickQSY[no].FBand;
+   m := dmZLogGlobal.Settings.FQuickQSY[no].FMode;
+
+   QSY(b, m);
+
+   LastFocus.SetFocus;
+end;
+
+procedure TMainForm.PlayMessage(bank: Integer; no: Integer);
+var
+   S: string;
+begin
+   case CurrentQSO.QSO.mode of
+      mCW: begin
+         S := dmZlogGlobal.CWMessage(bank, no);
+         S := SetStr(S, CurrentQSO);
+         zLogSendStr(S);
+      end;
+
+      mSSB, mFM, mAM: begin
+//         SendVoice(i);
+      end;
+
+      mRTTY: begin
+         S := dmZlogGlobal.CWMessage(3, no);
+         S := SetStrNoAbbrev(S, CurrentQSO);
+         if TTYConsole <> nil then begin
+            TTYConsole.SendStrNow(S);
+         end;
+      end;
+
+      else begin
+         // NO OPERATION
+      end;
+   end;
 end;
 
 end.

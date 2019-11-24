@@ -158,7 +158,6 @@ type
     cbDispExchange: TCheckBox;
     gbCWPort: TGroupBox;
     cbJMode: TCheckBox;
-    Label33: TLabel;
     comboRig1Port: TComboBox;
     Label42: TLabel;
     comboRig1Name: TComboBox;
@@ -211,6 +210,33 @@ type
     comboRig2Speed: TComboBox;
     comboCwPttPort: TComboBox;
     checkUseTransceiveMode: TCheckBox;
+    tabsheetQuickQSY: TTabSheet;
+    checkUseQuickQSY01: TCheckBox;
+    comboQuickQsyBand01: TComboBox;
+    comboQuickQsyMode01: TComboBox;
+    checkUseQuickQSY02: TCheckBox;
+    comboQuickQsyBand02: TComboBox;
+    comboQuickQsyMode02: TComboBox;
+    checkUseQuickQSY03: TCheckBox;
+    comboQuickQsyBand03: TComboBox;
+    comboQuickQsyMode03: TComboBox;
+    checkUseQuickQSY04: TCheckBox;
+    comboQuickQsyBand04: TComboBox;
+    comboQuickQsyMode04: TComboBox;
+    checkUseQuickQSY05: TCheckBox;
+    comboQuickQsyBand05: TComboBox;
+    comboQuickQsyMode05: TComboBox;
+    checkUseQuickQSY06: TCheckBox;
+    comboQuickQsyBand06: TComboBox;
+    comboQuickQsyMode06: TComboBox;
+    checkUseQuickQSY07: TCheckBox;
+    comboQuickQsyBand07: TComboBox;
+    comboQuickQsyMode07: TComboBox;
+    checkUseQuickQSY08: TCheckBox;
+    comboQuickQsyBand08: TComboBox;
+    comboQuickQsyMode08: TComboBox;
+    Label54: TLabel;
+    Label33: TLabel;
     procedure MultiOpRadioBtnClick(Sender: TObject);
     procedure SingleOpRadioBtnClick(Sender: TObject);
     procedure buttonOKClick(Sender: TObject);
@@ -240,6 +266,7 @@ type
     procedure cbTransverter1Click(Sender: TObject);
     procedure comboRig1NameChange(Sender: TObject);
     procedure comboRig2NameChange(Sender: TObject);
+    procedure checkUseQuickQSYClick(Sender: TObject);
   private
     TempVoiceFiles : array[1..10] of string;
     TempCurrentBank : integer;
@@ -249,6 +276,9 @@ type
     FTempClusterCom: TCommParam;
     FTempZLinkTelnet: TCommParam;
 
+    FQuickQSYCheck: array[1..8] of TCheckBox;
+    FQuickQSYBand: array[1..8] of TComboBox;
+    FQuickQSYMode: array[1..8] of TComboBox;
     procedure RenewCWStrBankDisp();
   public
     procedure RenewSettings; {Reads controls and updates Settings}
@@ -437,6 +467,24 @@ begin
       Settings._cluster_telnet := FTempClusterTelnet;
       Settings._cluster_com := FTempClusterCom;
       Settings._zlink_telnet := FTempZLinkTelnet;
+
+      // Quick QSY
+      for i := Low(FQuickQSYCheck) to High(FQuickQSYCheck) do begin
+         Settings.FQuickQSY[i].FUse := FQuickQSYCheck[i].Checked;
+         if FQuickQSYBand[i].ItemIndex = -1 then begin
+            Settings.FQuickQSY[i].FBand := b35;
+         end
+         else begin
+            Settings.FQuickQSY[i].FBand := TBand(FQuickQSYBand[i].ItemIndex);
+         end;
+
+         if FQuickQSYMode[i].ItemIndex = -1 then begin
+            Settings.FQuickQSY[i].FMode := mCW;
+         end
+         else begin
+            Settings.FQuickQSY[i].FMode := TMode(FQuickQSYMode[i].ItemIndex);
+         end;
+      end;
    end;
 end;
 
@@ -628,6 +676,21 @@ begin
 
       cbTransverter1.Checked := Settings._transverter1;
       cbTransverter2.Checked := Settings._transverter2;
+
+      // Quick QSY
+      for i := Low(FQuickQSYCheck) to High(FQuickQSYCheck) do begin
+         FQuickQSYCheck[i].Checked := dmZLogGlobal.Settings.FQuickQSY[i].FUse;
+         if FQuickQSYCheck[i].Checked = True then begin
+            FQuickQSYBand[i].ItemIndex := Integer(Settings.FQuickQSY[i].FBand);
+            FQuickQSYMode[i].ItemIndex := Integer(Settings.FQuickQSY[i].FMode);
+         end
+         else begin
+            FQuickQSYBand[i].ItemIndex := -1;
+            FQuickQSYMode[i].ItemIndex := -1;
+         end;
+         FQuickQSYBand[i].Enabled := FQuickQSYCheck[i].Checked;
+         FQuickQSYMode[i].Enabled := FQuickQSYCheck[i].Checked;
+      end;
    end;
 end;
 
@@ -657,8 +720,43 @@ end;
 procedure TformOptions.FormCreate(Sender: TObject);
 var
    i: integer;
+   b: TBand;
+   m: TMode;
 begin
-//   ImplementSettings(False);
+   FQuickQSYCheck[1]    := checkUseQuickQSY01;
+   FQuickQSYBand[1]     := comboQuickQsyBand01;
+   FQuickQSYMode[1]     := comboQuickQsyMode01;
+   FQuickQSYCheck[2]    := checkUseQuickQSY02;
+   FQuickQSYBand[2]     := comboQuickQsyBand02;
+   FQuickQSYMode[2]     := comboQuickQsyMode02;
+   FQuickQSYCheck[3]    := checkUseQuickQSY03;
+   FQuickQSYBand[3]     := comboQuickQsyBand03;
+   FQuickQSYMode[3]     := comboQuickQsyMode03;
+   FQuickQSYCheck[4]    := checkUseQuickQSY04;
+   FQuickQSYBand[4]     := comboQuickQsyBand04;
+   FQuickQSYMode[4]     := comboQuickQsyMode04;
+   FQuickQSYCheck[5]    := checkUseQuickQSY05;
+   FQuickQSYBand[5]     := comboQuickQsyBand05;
+   FQuickQSYMode[5]     := comboQuickQsyMode05;
+   FQuickQSYCheck[6]    := checkUseQuickQSY06;
+   FQuickQSYBand[6]     := comboQuickQsyBand06;
+   FQuickQSYMode[6]     := comboQuickQsyMode06;
+   FQuickQSYCheck[7]    := checkUseQuickQSY07;
+   FQuickQSYBand[7]     := comboQuickQsyBand07;
+   FQuickQSYMode[7]     := comboQuickQsyMode07;
+   FQuickQSYCheck[8]    := checkUseQuickQSY08;
+   FQuickQSYBand[8]     := comboQuickQsyBand08;
+   FQuickQSYMode[8]     := comboQuickQsyMode08;
+   for b := Low(MHzString) to High(MHzString) do begin
+      FQuickQsyBand[1].Items.Add(MHZString[b]);
+   end;
+   for m := Low(ModeString) to High(ModeString) do begin
+      FQuickQsyMode[1].Items.Add(MODEString[m]);
+   end;
+   for i := 2 to High(FQuickQsyBand) do begin
+      FQuickQsyBand[i].Items.Assign(FQuickQsyBand[1].Items);
+      FQuickQsyMode[i].Items.Assign(FQuickQsyMode[1].Items);
+   end;
 
    TempCurrentBank := 1;
 
@@ -955,6 +1053,15 @@ begin
          comboRig1Port.Enabled := True;
       end;
    end;
+end;
+
+procedure TformOptions.checkUseQuickQSYClick(Sender: TObject);
+var
+   no: Integer;
+begin
+   no := TCheckBox(Sender).Tag;
+   FQuickQSYBand[no].Enabled := FQuickQSYCheck[no].Checked;
+   FQuickQSYMode[no].Enabled := FQuickQSYCheck[no].Checked;
 end;
 
 end.

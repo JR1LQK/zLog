@@ -381,6 +381,11 @@ begin
       exit;
    end;
 
+   // 現在のバンドと同じ場合、交信済みか確認する
+   if Sp.Band = CurrentQSO.QSO.Band then begin
+      Sp.Worked := IsWorkedSpot(Sp);
+   end;
+
    SpotList.Add(Sp);
 
    if cbNotifyCurrentBand.Checked and (Sp.Band <> Main.CurrentQSO.QSO.Band) then begin
