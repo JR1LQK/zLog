@@ -2214,7 +2214,8 @@ begin
 
       MainForm.Grid.TopRow := _top;
       MainForm.Grid.Row := _row;
-      // MainForm.EditScreen.RefreshScreen;
+
+      MainForm.EditScreen.RefreshScreen;
    end;
 end;
 
@@ -2897,7 +2898,7 @@ begin
             exit;
          end;
 
-         if IndexArray[i] > 0 then begin
+         if (IndexArray[i] > 0) and (IndexArray[i] < Log.TotalQSO + 1) then begin
             WriteQSO(i, TQSO(Log.List[IndexArray[i]]));
          end
          else begin
@@ -4985,6 +4986,7 @@ begin
       ZLinkForm.DeleteQSO(TQSO(Log.List[R]));
       Log.Delete(R);
       MyContest.Renew;
+      Dec(EditScreen.DispQSO);
    end;
 end;
 
@@ -5000,6 +5002,7 @@ begin
          if (j > 0) and (j <= Log.TotalQSO) then begin
             ZLinkForm.DeleteQSO(TQSO(Log.List[j]));
             Log.Delete(j);
+            Dec(EditScreen.DispQSO);
          end;
       end;
    end;
@@ -5039,7 +5042,7 @@ begin
       end;
    end;
    // Grid.TopRow := _oldtop;
-   // EditScreen.RefreshScreen;
+   EditScreen.RefreshScreen;
 end;
 
 procedure TMainForm.GridKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
@@ -7377,9 +7380,6 @@ begin
          MessageDlg('QTC can be sent by pressing Ctrl+Q', mtInformation, [mbOK], 0);
       end;
 
-      EditScreen.ResetTopRow; // added 2.2e
-      EditScreen.RefreshScreen; // added 2,2e
-
       CurrentQSO.UpdateTime;
       TimeEdit.Text := CurrentQSO.TimeStr;
 
@@ -7421,6 +7421,9 @@ begin
       EditPanel.Font.Size := dmZlogGlobal.Settings._mainfontsize;
       Grid.Font.Size := dmZlogGlobal.Settings._mainfontsize;
       SetDispHeight(dmZlogGlobal.Settings._mainrowheight);
+
+      EditScreen.ResetTopRow; // added 2.2e
+      EditScreen.RefreshScreen; // added 2,2e
 
       UpdateBand(CurrentQSO.QSO.Band);
       UpdateMode(CurrentQSO.QSO.mode);
