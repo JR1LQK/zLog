@@ -424,7 +424,7 @@ begin
       exit;
    end;
 
-   if KeyingPort in [tkpSerial1, tkpSerial2, tkpSerial3, tkpSerial4, tkpSerial5, tkpSerial6] then begin
+   if KeyingPort in [tkpSerial1..tkpSerial20] then begin
       if RigControl.ZCom3 = nil then begin
          exit;
       end;
@@ -585,7 +585,7 @@ begin
       if n <= (length(SS) - 2) then // bug fix
       begin
          if SS[n + 1] = '+' then begin
-            if SS[n + 2] in ['1' .. '9'] then begin
+            if CharInSet(SS[n + 2], ['1' .. '9']) = True then begin
                k := Ord(SS[n + 2]) - Ord('0');
                delete(SS, n, 3);
                for j := 1 to k do
@@ -593,11 +593,12 @@ begin
             end;
          end;
          if SS[n + 1] = '-' then begin
-            if SS[n + 2] in ['1' .. '9'] then begin
+            if CharInSet(SS[n + 2], ['1' .. '9']) = True then begin
                k := Ord(SS[n + 2]) - Ord('0');
                delete(SS, n, 3);
-               for j := 1 to k do
+               for j := 1 to k do begin
                   insert(Chr(_deccw), SS, n);
+               end;
             end;
          end;
       end;
@@ -677,8 +678,7 @@ end;
 procedure CW_ON;
 begin
    Case KeyingPort of
-      // tkpParallel : SetPort(PRTport, _cwon);
-      tkpSerial1, tkpSerial2, tkpSerial3, tkpSerial4, tkpSerial5, tkpSerial6:
+      tkpSerial1..tkpSerial20:
          RigControl.ZCom3.ToggleDTR(True);
       tkpUSB:
          SetUSBPort(_usbportstatus and $FE);
@@ -688,8 +688,7 @@ end;
 procedure CW_OFF;
 begin
    Case KeyingPort of
-      // tkpParallel : SetPort(PRTport, _cwoff);
-      tkpSerial1, tkpSerial2, tkpSerial3, tkpSerial4, tkpSerial5, tkpSerial6:
+      tkpSerial1..tkpSerial20:
          RigControl.ZCom3.ToggleDTR(false);
       tkpUSB:
          SetUSBPort(_usbportstatus or $01);
@@ -1692,57 +1691,24 @@ begin
 end;
 
 procedure CloseBGK();
-var
-   R: UINT;
+//var
+//   R: UINT;
 begin
-   if not(KeyingPort in [tkpSerial1, tkpSerial2, tkpSerial3, tkpSerial4, tkpSerial5, tkpSerial6]) then begin
-      ControlPTT(false);
-   end;
+   ControlPTT(false);
 
    if not(Initialized) then begin
       exit;
    end;
 
-   R := timeKillEvent(TimerID);
+   timeKillEvent(TimerID);
 
    if Initialized then begin
       timeEndPeriod(1);
    end;
 
-   { R:=timeKillEvent(PaddleTimerID); }
-   R := 0;
    NoSound;
-   if not(KeyingPort in [tkpSerial1, tkpSerial2, tkpSerial3, tkpSerial4, tkpSerial5, tkpSerial6]) then begin
-      CW_OFF;
-   end;
 
-   // {$ifndef w95}
-   // if _WIN2KMODE then
-   // begin
-   // if USBIF <> nil then
-   // begin
-   // KeyingPort := tkpParallel;
-   // SleepEx(10, false);
-   // _SetUSBPort($FF);
-   // USBIF.CloseFile;
-   // HidController.CheckIn(USBIF);
-   // ZLHID.Destroy;
-   // USB_Detected := False;
-   // end;
-   // end;
-   // {$endif}
-
-   if R = TIMERR_NOERROR then begin
-      R := 121;
-   end
-   else begin
-      if R = MMSYSERR_INVALPARAM then begin
-         R := 999;
-      end
-      else begin
-         R := 7777;
-      end;
-   end;
+   CW_OFF;
 end;
 
 function GetWPM: byte;
@@ -2163,20 +2129,25 @@ const
    dot3 = '*';
    dash1 = '-';
    dash2 = '_';
-   Dots: set of char = [dot1, dot2, dot3];
-   Dashes: set of char = [dash1, dash2];
 var
    i: integer;
 begin
    for i := 1 to length(Code) do begin
-      if 2 * i > codemax then
+      if 2 * i > codemax then begin
          exit;
-      if Code[i] in Dots then
+      end;
+
+      if CharInSet(Code[i], [dot1, dot2, dot3]) = True then begin
          CodeTable[Ord(C)][2 * i - 1] := 1;
-      if Code[i] in Dashes then
+      end;
+
+      if CharInSet(Code[i], [dash1, dash2]) = True then begin
          CodeTable[Ord(C)][2 * i - 1] := 3;
+      end;
+
       CodeTable[Ord(C)][2 * i] := 0;
    end;
+
    CodeTable[Ord(C)][2 * length(Code)] := 2;
    CodeTable[Ord(C)][2 * length(Code) + 1] := 9;
 end;
