@@ -2633,7 +2633,7 @@ begin
             case temp of
                0, 1:
                   M := mSSB;
-               3:
+               3, 7:
                   M := mCW;
                5, 6:
                   M := mFM;
