@@ -19,7 +19,7 @@ const
   WM_ZLOG_INIT = (WM_USER + 100);
 
 const
-  MaxGridQSO = 20000;
+  MaxGridQSO = 5000;
 
 var
   GLOBALSERIAL : integer = 0;
@@ -2928,13 +2928,15 @@ var
    R: word;
    i, _row: integer;
 begin
-   for i := 1 to MaxGridQSO do
+   for i := 1 to MaxGridQSO do begin
       IndexArray[i] := 0;
+   end;
 
    DispQSO := 0;
    R := Log.TotalQSO;
 
    with MainForm.Grid do begin
+      TopRow := 1;
       _row := Row;
       Enabled := False;
 
