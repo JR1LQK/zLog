@@ -79,6 +79,7 @@ InstallフォルダのD103Install.groupprojを開き、ビルド→インスト�
 * 全市全郡コンテスト
 * ALL JA8コンテスト(allja8.cfg)
 * 東京UHFコンテスト(tokyo_uhf.cfg)
+* ALL JA0コンテスト
 * CQWW,CQWPX,AP Sprint,IARU HF
 
 ## 動作確認済み機能
