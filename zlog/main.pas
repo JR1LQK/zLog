@@ -825,6 +825,7 @@ type
     procedure AutoInput(D : TBSData);
     procedure ConsoleRigBandSet(B: TBand);
 
+    procedure ShowBandMenu(b: TBand);
     procedure HideBandMenu(b: TBand);
     procedure HideBandMenuHF();
     procedure HideBandMenuWARC();
@@ -7509,14 +7510,25 @@ begin
    MyContest := TJA0ContestZero.Create('ALL JA0 コンテスト (JA0)');
 
    case BandGroupIndex of
-      2:
+      // 3.5M
+      2: begin
          MyContest.SetBand(b35);
-      3:
+         ShowBandMenu(b35);
+      end;
+
+      // 7M
+      3: begin
          MyContest.SetBand(b7);
-      5, 6: begin
-            MyContest.SetBand(b21);
-            dmZlogGlobal.Settings._band := 0;
-         end;
+         ShowBandMenu(b7);
+      end;
+
+      // 21/28M
+      7, 9: begin
+         MyContest.SetBand(b21);
+         dmZlogGlobal.Settings._band := 0;
+         ShowBandMenu(b21);
+         ShowBandMenu(b28);
+      end;
    end;
 
    QTHString := dmZlogGlobal.Settings._city;
@@ -7534,14 +7546,25 @@ begin
    MyContest := TJA0Contest.Create('ALL JA0 コンテスト (Others)');
 
    case BandGroupIndex of
-      2:
+      // 3.5M
+      2: begin
          MyContest.SetBand(b35);
-      3:
+         ShowBandMenu(b35);
+      end;
+
+      // 7M
+      3: begin
          MyContest.SetBand(b7);
-      5, 6: begin
-            MyContest.SetBand(b21);
-            dmZlogGlobal.Settings._band := 0;
-         end;
+         ShowBandMenu(b7);
+      end;
+
+      // 21/28M
+      7, 9: begin
+         MyContest.SetBand(b21);
+         dmZlogGlobal.Settings._band := 0;
+         ShowBandMenu(b21);
+         ShowBandMenu(b28);
+      end;
    end;
 
    QTHString := dmZlogGlobal.Settings._city;
@@ -7771,6 +7794,11 @@ begin
    MyContest := TWAEContest.Create('WAEDC Contest');
    // QTHString := dmZlogGlobal.Settings._prov;
    dmZlogGlobal.Settings._sentstr := '$S';
+end;
+
+procedure TMainForm.ShowBandMenu(b: TBand);
+begin
+   BandMenu.Items[Ord(b)].Visible := True;
 end;
 
 procedure TMainForm.HideBandMenu(b: TBand);

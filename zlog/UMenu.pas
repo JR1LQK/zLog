@@ -87,6 +87,7 @@ type
       function GetScoreCoeff(): Extended;
       function GetGeneralName(): string;
       function GetPostContest(): Boolean;
+      procedure SelectFirstBand();
    public
       property CFGFileName: string read FCFGFileName;
       property OpGroupIndex: Integer read GetOpGroupIndex;
@@ -234,6 +235,8 @@ begin
 
 // ModeGroup.Controls[2].Enabled := False;
    ModeGroup.Controls[3].Enabled := False;
+
+   SelectFirstBand();
 end;
 
 procedure TMenuForm.rbPediClick(Sender: TObject);
@@ -247,6 +250,8 @@ begin
    BandGroup.Controls[1].Enabled := False;
 // ModeGroup.Controls[2].Enabled := False;
    ModeGroup.Controls[3].Enabled := False;
+
+   SelectFirstBand();
 end;
 
 procedure TMenuForm.rb6DClick(Sender: TObject);
@@ -260,6 +265,8 @@ begin
 
 // ModeGroup.Controls[2].Enabled := False;
    ModeGroup.Controls[3].Enabled := False;
+
+   SelectFirstBand();
 end;
 
 procedure TMenuForm.rbFDClick(Sender: TObject);
@@ -269,6 +276,8 @@ begin
    BandGroup.Controls[1].Enabled := False;
 // ModeGroup.Controls[2].Enabled := False;
    ModeGroup.Controls[3].Enabled := False;
+
+   SelectFirstBand();
 end;
 
 procedure TMenuForm.rbJA0inClick(Sender: TObject);
@@ -276,15 +285,21 @@ var
    i: Integer;
 begin
    EnableEveryThing;
+
+   // ALL, 1.9M
    for i := 0 to 1 do begin
       BandGroup.Controls[i].Enabled := False;
    end;
 
+   // 14M
    BandGroup.Controls[4].Enabled := False;
 
+   // 50M and upper
    for i := 7 to 13 do begin
       BandGroup.Controls[i].Enabled := False;
    end;
+
+   SelectFirstBand();
 
    ModeGroup.Controls[2].Enabled := False;
    ModeGroup.Controls[3].Enabled := False;
@@ -297,9 +312,12 @@ var
    i: Integer;
 begin
    EnableEveryThing;
+
    for i := 7 to 13 do begin
       BandGroup.Controls[i].Enabled := False;
    end;
+
+   SelectFirstBand();
 
    ModeGroup.Controls[0].Enabled := False;
    ModeGroup.Controls[3].Enabled := False;
@@ -310,9 +328,12 @@ var
    i: Integer;
 begin
    EnableEveryThing;
+
    for i := 1 to 13 do begin
       BandGroup.Controls[i].Enabled := False;
    end;
+
+   SelectFirstBand();
 
    ModeGroup.Controls[0].Enabled := False;
    ModeGroup.Controls[3].Enabled := False;
@@ -332,7 +353,7 @@ end;
 
 procedure TMenuForm.TXNrEditKeyPress(Sender: TObject; var Key: Char);
 begin
-   if CharInSet(Key, ['0' .. '9'])= False then begin
+   if CharInSet(Key, ['0' .. '9']) = False then begin
       Key := #0;
    end;
 end;
@@ -446,6 +467,18 @@ begin
    Result := OpGroup.ItemIndex;
 end;
 
+// WARCÉoÉìÉhÇçló∂ÇµÇΩî‘çÜÇï‘Ç∑
+// ALL:0  Å® 0
+// 1.9:1     1
+// 3.5:2     2
+// 7  :3     3
+// 10M:      4
+// 14 :4     5  +1
+// 18 :      6
+// 21 :5     7  +2
+// 24 :      8
+// 28 :6     9  +3
+// 50 :7     10
 function TMenuForm.GetBandGroupIndex(): Integer;
 begin
    case BandGroup.ItemIndex of
@@ -512,6 +545,18 @@ end;
 function TMenuForm.GetPostContest(): Boolean;
 begin
    Result := CheckBox1.Checked;
+end;
+
+procedure TMenuForm.SelectFirstBand();
+var
+   i: Integer;
+begin
+   for i := 0 to BandGroup.Items.Count - 1 do begin
+      if BandGroup.Controls[i].Enabled = True then begin
+         BandGroup.ItemIndex := i;
+         Exit;
+      end;
+   end;
 end;
 
 end.
