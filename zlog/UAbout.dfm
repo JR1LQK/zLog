@@ -147,7 +147,6 @@ object AboutBox: TAboutBox
     ModalResult = 1
     TabOrder = 1
     OnClick = OKButtonClick
-    ExplicitTop = 277
   end
   object Panel2: TPanel
     Left = 8
@@ -196,9 +195,9 @@ object AboutBox: TAboutBox
     object Label5: TLabel
       Left = 8
       Top = 80
-      Width = 159
+      Width = 247
       Height = 12
-      Caption = #21332#21147':JH1KVQ,JE1BJP,JR8VSE'
+      Caption = #21332#21147':JH1KVQ,JE1BJP,JR8VSE,JG8LOL,JR8LRQ'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -12

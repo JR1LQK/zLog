@@ -79,6 +79,7 @@ InstallフォルダのD103Install.groupprojを開き、ビルド→インスト�
 * 全市全郡コンテスト
 * ALL JA8コンテスト(allja8.cfg)
 * 東京UHFコンテスト(tokyo_uhf.cfg)
+* ALL JA0コンテスト
 * CQWW,CQWPX,AP Sprint,IARU HF
 
 ## 動作確認済み機能
@@ -91,11 +92,11 @@ InstallフォルダのD103Install.groupprojを開き、ビルド→インスト�
 ## 動作確認済み無線機
 
 ### ICOM
-* IC-706mkII,IC-756PRO2,IC-7100
+* IC-706mkII,IC-756PRO,IC-756PRO2,IC-7100
 ### KENWOOD
 * TS-570
 ### YAESU
-* FT-2000
+* FT-2000,FT-950
 
 ## 第三者著作権情報
 

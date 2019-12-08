@@ -1260,7 +1260,7 @@ begin
          btnOmniRig.Enabled := False;
       end;
 
-      if dmZlogGlobal.Settings._rigport[rignum] in [1 .. 6] then begin
+      if dmZlogGlobal.Settings._rigport[rignum] in [1 .. 20] then begin
          rname := dmZlogGlobal.RigNameStr[rignum];
          if rname = 'None' then begin
             Exit;
@@ -2633,7 +2633,7 @@ begin
             case temp of
                0, 1:
                   M := mSSB;
-               3:
+               3, 7:
                   M := mCW;
                5, 6:
                   M := mFM;

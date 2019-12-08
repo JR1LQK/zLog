@@ -491,9 +491,6 @@ end;
 procedure TformOptions.buttonOKClick(Sender: TObject);
 begin
    RenewSettings;
-   FTempClusterTelnet := dmZlogGlobal.Settings._cluster_telnet;
-   FTempClusterCom := dmZlogGlobal.Settings._cluster_com;
-   FTempZLinkTelnet := dmZlogGlobal.Settings._zlink_telnet;
    dmZlogGlobal.ImplementSettings(False);
 
    dmZlogGlobal.SaveCurrentSettings();
@@ -516,6 +513,10 @@ var
    i, j: integer;
 begin
    with dmZlogGlobal do begin
+      FTempClusterTelnet := Settings._cluster_telnet;
+      FTempClusterCom := Settings._cluster_com;
+      FTempZLinkTelnet := Settings._zlink_telnet;
+
       cbSaveWhenNoCW.Checked := Settings._savewhennocw;
       cbJMode.Checked := Settings._jmode;
 

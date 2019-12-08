@@ -19,7 +19,7 @@ const
   WM_ZLOG_INIT = (WM_USER + 100);
 
 const
-  MaxGridQSO = 20000;
+  MaxGridQSO = 5000;
 
 var
   GLOBALSERIAL : integer = 0;
@@ -825,6 +825,7 @@ type
     procedure AutoInput(D : TBSData);
     procedure ConsoleRigBandSet(B: TBand);
 
+    procedure ShowBandMenu(b: TBand);
     procedure HideBandMenu(b: TBand);
     procedure HideBandMenuHF();
     procedure HideBandMenuWARC();
@@ -2214,7 +2215,8 @@ begin
 
       MainForm.Grid.TopRow := _top;
       MainForm.Grid.Row := _row;
-      // MainForm.EditScreen.RefreshScreen;
+
+      MainForm.EditScreen.RefreshScreen;
    end;
 end;
 
@@ -2897,7 +2899,7 @@ begin
             exit;
          end;
 
-         if IndexArray[i] > 0 then begin
+         if (IndexArray[i] > 0) and (IndexArray[i] < Log.TotalQSO + 1) then begin
             WriteQSO(i, TQSO(Log.List[IndexArray[i]]));
          end
          else begin
@@ -2927,13 +2929,15 @@ var
    R: word;
    i, _row: integer;
 begin
-   for i := 1 to MaxGridQSO do
+   for i := 1 to MaxGridQSO do begin
       IndexArray[i] := 0;
+   end;
 
    DispQSO := 0;
    R := Log.TotalQSO;
 
    with MainForm.Grid do begin
+      TopRow := 1;
       _row := Row;
       Enabled := False;
 
@@ -4985,6 +4989,7 @@ begin
       ZLinkForm.DeleteQSO(TQSO(Log.List[R]));
       Log.Delete(R);
       MyContest.Renew;
+      Dec(EditScreen.DispQSO);
    end;
 end;
 
@@ -5000,6 +5005,7 @@ begin
          if (j > 0) and (j <= Log.TotalQSO) then begin
             ZLinkForm.DeleteQSO(TQSO(Log.List[j]));
             Log.Delete(j);
+            Dec(EditScreen.DispQSO);
          end;
       end;
    end;
@@ -5039,7 +5045,7 @@ begin
       end;
    end;
    // Grid.TopRow := _oldtop;
-   // EditScreen.RefreshScreen;
+   EditScreen.RefreshScreen;
 end;
 
 procedure TMainForm.GridKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
@@ -7377,9 +7383,6 @@ begin
          MessageDlg('QTC can be sent by pressing Ctrl+Q', mtInformation, [mbOK], 0);
       end;
 
-      EditScreen.ResetTopRow; // added 2.2e
-      EditScreen.RefreshScreen; // added 2,2e
-
       CurrentQSO.UpdateTime;
       TimeEdit.Text := CurrentQSO.TimeStr;
 
@@ -7421,6 +7424,9 @@ begin
       EditPanel.Font.Size := dmZlogGlobal.Settings._mainfontsize;
       Grid.Font.Size := dmZlogGlobal.Settings._mainfontsize;
       SetDispHeight(dmZlogGlobal.Settings._mainrowheight);
+
+      EditScreen.ResetTopRow; // added 2.2e
+      EditScreen.RefreshScreen; // added 2,2e
 
       UpdateBand(CurrentQSO.QSO.Band);
       UpdateMode(CurrentQSO.QSO.mode);
@@ -7504,14 +7510,25 @@ begin
    MyContest := TJA0ContestZero.Create('ALL JA0 コンテスト (JA0)');
 
    case BandGroupIndex of
-      2:
+      // 3.5M
+      2: begin
          MyContest.SetBand(b35);
-      3:
+         ShowBandMenu(b35);
+      end;
+
+      // 7M
+      3: begin
          MyContest.SetBand(b7);
-      5, 6: begin
-            MyContest.SetBand(b21);
-            dmZlogGlobal.Settings._band := 0;
-         end;
+         ShowBandMenu(b7);
+      end;
+
+      // 21/28M
+      7, 9: begin
+         MyContest.SetBand(b21);
+         dmZlogGlobal.Settings._band := 0;
+         ShowBandMenu(b21);
+         ShowBandMenu(b28);
+      end;
    end;
 
    QTHString := dmZlogGlobal.Settings._city;
@@ -7529,14 +7546,25 @@ begin
    MyContest := TJA0Contest.Create('ALL JA0 コンテスト (Others)');
 
    case BandGroupIndex of
-      2:
+      // 3.5M
+      2: begin
          MyContest.SetBand(b35);
-      3:
+         ShowBandMenu(b35);
+      end;
+
+      // 7M
+      3: begin
          MyContest.SetBand(b7);
-      5, 6: begin
-            MyContest.SetBand(b21);
-            dmZlogGlobal.Settings._band := 0;
-         end;
+         ShowBandMenu(b7);
+      end;
+
+      // 21/28M
+      7, 9: begin
+         MyContest.SetBand(b21);
+         dmZlogGlobal.Settings._band := 0;
+         ShowBandMenu(b21);
+         ShowBandMenu(b28);
+      end;
    end;
 
    QTHString := dmZlogGlobal.Settings._city;
@@ -7766,6 +7794,11 @@ begin
    MyContest := TWAEContest.Create('WAEDC Contest');
    // QTHString := dmZlogGlobal.Settings._prov;
    dmZlogGlobal.Settings._sentstr := '$S';
+end;
+
+procedure TMainForm.ShowBandMenu(b: TBand);
+begin
+   BandMenu.Items[Ord(b)].Visible := True;
 end;
 
 procedure TMainForm.HideBandMenu(b: TBand);
