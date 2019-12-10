@@ -911,7 +911,7 @@ begin
       if (BytesReturned <> 0) and (GetLastError = ERROR_INSUFFICIENT_BUFFER) then
       begin
         FunctionClassDeviceData := AllocMem(BytesReturned);
-        FunctionClassDeviceData.cbSize := 5;
+        FunctionClassDeviceData.cbSize := 6;
         if SetupDiGetDeviceInterfaceDetail(PnPHandle, @DeviceInterfaceData, FunctionClassDeviceData, BytesReturned, @BytesReturned, @DevData) then
         begin
           // create HID device object and add it to the device list

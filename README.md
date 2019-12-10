@@ -88,6 +88,7 @@ InstallフォルダのD103Install.groupprojを開き、ビルド→インスト�
 * BandScope
 * Z-Link
 * COMポートによるCWキーイング
+* USBIF4CWによるCWキーイング
 
 ## 動作確認済み無線機
 
