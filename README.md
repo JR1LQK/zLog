@@ -97,8 +97,8 @@ InstallフォルダのD103Install.groupprojを開き、ビルド→インスト�
 ### KENWOOD
 * TS-570
 ### YAESU
-* FT-2000/FT-450
-* FT-920,FT-950
+* FT-2000/FT-950/FT-450
+* FT-920
 * FT-1000MP
 
 ## 第三者著作権情報
