@@ -348,12 +348,6 @@
         <DCCReference Include="UBandScope2.pas">
             <Form>BandScope2</Form>
         </DCCReference>
-        <DCCReference Include="HID\DBT.pas"/>
-        <DCCReference Include="HID\Hid.pas"/>
-        <DCCReference Include="HID\HidControllerClass.pas"/>
-        <DCCReference Include="HID\HidToken.pas"/>
-        <DCCReference Include="HID\HidUsage.pas"/>
-        <DCCReference Include="HID\SetupApi.pas"/>
         <DCCReference Include="LIB\ToneGen.pas"/>
         <DCCReference Include="OmniRig\OmniRig_TLB.pas"/>
         <DCCReference Include="UzLogGlobal.pas">
@@ -427,6 +421,12 @@
                 <Platform value="Win64">False</Platform>
             </Platforms>
             <Deployment Version="3">
+                <DeployFile LocalName="Zlog.exe" Configuration="Release" Class="ProjectOutput">
+                    <Platform Name="Win32">
+                        <RemoteName>Zlog.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Zlog.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>Zlog.exe</RemoteName>

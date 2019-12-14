@@ -3,7 +3,7 @@ unit BGK32Lib; {Delphi Interface Unit for BGK32.DLL}
 interface
 
 uses
-  HIDControllerClass, ToneGen;
+  JvHIDControllerClass, ToneGen;
 
 var BGKRefresh : boolean; // set to true after a char is sent
 
@@ -19,7 +19,7 @@ var    DEBUG_FLAG : integer = 0;
 type TZLHID = class
        procedure DeviceChanges(Sender: TObject);
        procedure DeviceUnplug(HidDev: TJvHidDevice);
-       function Enumeration(HidDev: TJvHidDevice; Index: Integer) : boolean;
+       function Enumeration(HidDev: TJvHidDevice; const Index: Integer) : boolean;
      end;
 
 var ZLHID : TZLHID; // dummy object for HIDContol class to hand over events
@@ -944,7 +944,7 @@ procedure TZLHID.DeviceUnplug(HidDev: TJvHidDevice);
 begin
 end;
 
-function TZLHID.Enumeration(HidDev: TJvHidDevice; Index: integer): boolean;
+function TZLHID.Enumeration(HidDev: TJvHidDevice; const Index: integer): boolean;
 begin
    with HidDev do begin
       if (Attributes.ProductID = USBIF4CW_PRODID) and (Attributes.VendorID = USBIF4CW_VENDORID) then begin
