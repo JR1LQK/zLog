@@ -2639,7 +2639,7 @@ begin
                   M := mFM;
                2:
                   M := mAM;
-               4:
+               4, 8:
                   M := mRTTY;
                else
                   M := mOther;
