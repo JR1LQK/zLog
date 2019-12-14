@@ -45,13 +45,19 @@ http://www.overbyte.eu/frame_index.html?redirTo=/products/ics.html
 
 InstallフォルダのD103Install.groupprojを開き、ビルド→インストール 
 
-(2)VCLフォルダのzlog_requires.dpkを開き、ビルド→インストール
+(2)Project-JEDIよりJCL/JVCLを入手し、インストール
 
-(3)オプション－言語－DelphiでライブラリパスにVCLフォルダとその下を追加
+https://github.com/project-jedi
 
-(4)zlogフォルダのzlog.dprojを開き、ビルド
+JEDI-Install.txt参照
 
-(5)完成
+(3)VCLフォルダのzlog_requires.dpkを開き、ビルド→インストール
+
+(4)オプション－言語－DelphiでライブラリパスにVCLフォルダとその下を追加
+
+(5)zlogフォルダのzlog.dprojを開き、ビルド
+
+(6)完成
 
 ## オリジナルからの変更点
 
