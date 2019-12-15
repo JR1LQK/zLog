@@ -57,10 +57,9 @@ begin
    repeat
       SleepEx(WaitMS, False);
 
-      if KeyingPort = tkpUSB then
-         PaddleProcessUSB
-      else
-         PaddleProcess;
+      if KeyingPort = tkpUSB then begin
+         PaddleProcessUSB;
+      end;
 
    until Terminated;
 end;

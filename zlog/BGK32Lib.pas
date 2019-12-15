@@ -26,7 +26,6 @@ var ZLHID : TZLHID; // dummy object for HIDContol class to hand over events
     USBIF : TJvHIDDevice;
     USB_Detected : boolean;
     Tone : TToneGen;
-    //SelectedBuf : byte; {0..2}
 
 
 var
@@ -62,7 +61,6 @@ type TKeyingPort = (tkpNone,
 var
   KeyingPort: TKeyingPort = tkpNone;  {tkpParallel;}
 
-//function GetPRTPort : string;
 procedure UpdateDataPort; // sets data port acc to mask data
 procedure SetRigFlag(i : integer); // 0 : no rigs, 1 : rig 1, etc
 procedure SetVoiceFlag(i : integer); //0 or 1
@@ -113,10 +111,7 @@ procedure SetRandCQStr(Str1, Str2 : shortstring);
 procedure SetPTTPortDirect(p : word);
 procedure SetCWPortDirect(p : word);
 procedure SetPaddlePortDirect(p : word);
-{$ifndef w95}
 procedure PaddleProcessUSB;
-{$endif}
-procedure PaddleProcess;
 procedure ReversePaddle(boo : boolean);
 procedure SetSpaceFactor(R : integer);
 procedure SetEISpaceFactor(R : integer);
@@ -317,25 +312,20 @@ end;
 procedure _SetUSBPort(X: byte);
 var
    BW: DWORD;
-{$IFNDEF w95}
    OutReport: array [0 .. 8] of byte;
-{$ENDIF}
 begin
-{$IFNDEF w95}
-   if USBIF <> nil then begin
-      OutReport[0] := 0;
-      OutReport[1] := 1;
-      OutReport[2] := X;
-      OutReport[3] := 0;
-      OutReport[4] := 0;
-      OutReport[5] := 0;
-      OutReport[6] := 0;
-      OutReport[7] := 0;
-      OutReport[8] := 0;
-      _usbportstatus := X;
-      USBIF.WriteFile(OutReport, USBIF.Caps.OutputReportByteLength, BW);
-   end;
-{$ENDIF}
+   OutReport[0] := 0;
+   OutReport[1] := 1;
+   OutReport[2] := X;
+   OutReport[3] := 0;
+   OutReport[4] := 0;
+   OutReport[5] := 0;
+   OutReport[6] := 0;
+   OutReport[7] := 0;
+   OutReport[8] := 0;
+   _usbportstatus := X;
+
+   USBIF.WriteFile(OutReport, USBIF.Caps.OutputReportByteLength, BW);
 end;
 
 procedure SetUSBPort(X: byte);
@@ -929,13 +919,11 @@ begin
    Result := LoopTimeSec;
 end;
 
-{$IFNDEF w95}
-
 procedure TZLHID.DeviceChanges(Sender: TObject);
 begin
-   USB_Detected := false;
    if USBIF <> nil then begin
-      HidController.CheckOut(USBIF);
+      HidController.CheckIn(USBIF);
+      USB_Detected := False;
    end;
    HidController.Enumerate;
 end;
@@ -949,17 +937,16 @@ begin
    with HidDev do begin
       if (Attributes.ProductID = USBIF4CW_PRODID) and (Attributes.VendorID = USBIF4CW_VENDORID) then begin
          if HidController.CheckOutByIndex(USBIF, Index) = True then begin
-            USBIF.OpenFile;
+            USBIF.OpenFile();
             USB_Detected := True;
-            Result := false;
-            exit;
+            Result := False;
+            Exit;
          end;
       end;
    end;
 
    Result := True;
 end;
-{$ENDIF}
 
 procedure InitializeBGK(msec: integer);
 var
@@ -1922,8 +1909,6 @@ begin
    paddle_waiting := false;
 end;
 
-{$IFNDEF w95}
-
 Procedure PaddleProcessUSB;
 var
    OutReport: array [0 .. 8] of byte;
@@ -1932,17 +1917,10 @@ var
    PaddleStatus: byte;
 begin
    repeat
-      if USBIF = nil then
-         exit;
-      OutReport[0] := 0;
-      OutReport[1] := 4;
-      OutReport[2] := $0F;
-      OutReport[3] := 4;
-      OutReport[4] := 0;
-      OutReport[5] := 0;
-      OutReport[6] := 0;
-      OutReport[7] := 0;
-      OutReport[8] := 0;
+      if USBIF = nil then begin
+         Break;
+      end;
+
       InReport[0] := 0;
       InReport[1] := 4;
       InReport[2] := $0F;
@@ -1952,7 +1930,6 @@ begin
       InReport[6] := 0;
       InReport[7] := 0;
       InReport[8] := 0;
-
       USBIF.ReadFile(InReport, USBIF.Caps.InputReportByteLength, BR);
 
       if not((BGK32Lib.KeyingPort = tkpUSB) and (paddleport = 0)) then begin // ver 2.2b
@@ -2008,74 +1985,31 @@ begin
       end; // ver 2.2b
 
       if _usbportbuf = _usbportstatus then begin
+         OutReport[0] := 0;
+         OutReport[1] := 4;
+         OutReport[2] := $0F;
+         OutReport[3] := 4;
+         OutReport[4] := 0;
+         OutReport[5] := 0;
+         OutReport[6] := 0;
+         OutReport[7] := 0;
+         OutReport[8] := 0;
          USBIF.WriteFile(OutReport, USBIF.Caps.OutputReportByteLength, BR);
       end
       else begin
-         _SetUSBPort(_usbportbuf);
+         OutReport[0] := 0;
+         OutReport[1] := 1;
+         OutReport[2] := _usbportbuf;
+         OutReport[3] := 0;
+         OutReport[4] := 0;
+         OutReport[5] := 0;
+         OutReport[6] := 0;
+         OutReport[7] := 0;
+         OutReport[8] := 0;
+         _usbportstatus := _usbportbuf;
+         USBIF.WriteFile(OutReport, USBIF.Caps.OutputReportByteLength, BR);
       end;
    until KeyingPort <> tkpUSB;
-
-end;
-{$ENDIF}
-
-Procedure PaddleProcess;
-begin
-   (*
-     {$ifndef w95}
-     if KeyingPort = tkpUSB then
-     begin
-     PaddleProcessUSB;
-     exit;
-     end;
-     {$endif}
-   *)
-   if paddleport > 0 then begin
-      case mousetail - cwstrptr of
-         0: begin
-               // case ($30 and GetPort(paddleport)) of
-               // $00 : { both }
-               case CWSendBuf[0, mousetail - 2] of
-                  1:
-                     m_set(3);
-                  3:
-                     m_set(1);
-               end;
-               // $10 : {dit}
-               // if paddle_waiting then m_set(mouX);
-               // $20 : {dah}
-               // if paddle_waiting then m_set(mouY);
-               // end;
-            end;
-         1: begin
-               // case ($30 and GetPort(paddleport)) of
-               // $00 :
-               case CWSendBuf[0, cwstrptr - 1] of
-                  1:
-                     m_set(3);
-                  3:
-                     m_set(1);
-               end;
-               // $10 : if CWSendBuf[0,cwstrptr-1] = mouY then
-               // m_set(mouX);
-               // $20 : if CWSendBuf[0,cwstrptr-1] = mouX then
-               // m_set(mouY);
-               // end;
-            end;
-
-         else begin
-               // if (($30 and GetPort(paddleport))=$20) or (($30 and GetPort(paddleport))=$10) then begin
-               // if abs(mousetail-cwstrptr) > 5 then begin
-               // SelectedBuf:=0;
-               // cwstrptr:=1;
-               // mousetail:=1;
-               // sss:=1;
-               // paddle_waiting:=true;
-               // m_set(0);
-               // end;
-               // end;
-            end;
-      end;
-   end;
 end;
 
 procedure ReversePaddle(boo: boolean);
@@ -2151,25 +2085,6 @@ begin
    CodeTable[Ord(C)][2 * length(Code)] := 2;
    CodeTable[Ord(C)][2 * length(Code) + 1] := 9;
 end;
-
-
-//function BinaryStr(B : Byte) : string;
-//const _16str : array[0..$F] of string =
-//      ('0000', '0001', '0010', '0011',
-//       '0100', '0101', '0110', '0111',
-//       '1000', '1001', '1010', '1011',
-//       '1100', '1101', '1110', '1111');
-//begin
-//   Result := _16str[B div $F] + _16str[B and $F];
-//end;
-
-//function GetPRTPort : string;
-//var
-//   B : byte;
-//begin
-//   B := GetPort(PTTPort);
-//   Result := BinaryStr(B) + ' ' + IntToStr(B);
-//end;
 
 initialization
    Tone := TToneGen.Create(nil);
