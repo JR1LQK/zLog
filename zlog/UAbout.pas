@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, SysUtils, Classes, Graphics, Forms, Controls, StdCtrls,
-  Buttons, ExtCtrls, ShellApi, UzLogGlobal, BGK32LIB;
+  Buttons, ExtCtrls, ShellApi, UzLogGlobal, UzLogKeyer;
 
 type
   TAboutBox = class(TForm)
@@ -49,8 +49,6 @@ var
    temp : string;
 begin
    Label2.Caption := TQSO(Log.List[0]).QSO.memo;
-   Str(BGK32LIB.GetVersion : 3:2, temp);
-   //BGK32DLL.Caption := 'BGK32.DLL version '+temp;
 end;
 
 procedure TAboutBox.LinkLabel1LinkClick(Sender: TObject; const Link: string;
@@ -61,7 +59,7 @@ end;
 
 procedure TAboutBox.FormCreate(Sender: TObject);
 begin
-   if USB_Detected then begin
+   if dmZLogKeyer.USBIF4CW_Detected then begin
       Label4.Caption := 'USBIF4CW detected';
    end
    else begin

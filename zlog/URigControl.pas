@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   StdCtrls, ExtCtrls, AnsiStrings,
-  UzLogGlobal, BGK32Lib, CPDrv, OmniRig_TLB, Vcl.Grids;
+  UzLogGlobal, UzLogKeyer, CPDrv, OmniRig_TLB, Vcl.Grids;
 
 type
   TIcomInfo = record
@@ -594,7 +594,7 @@ begin
    if FCurrentRig = nil then begin
       if _currentrig > 0 then begin // virtual rig
          RigLabel.Caption := 'Current rig : ' + IntToStr(_currentrig) + ' (Virtual)';
-         BGK32Lib.SetRigFlag(0);
+         dmZlogKeyer.SetRigFlag(0);
          if VirtualRig[_currentrig].FirstTime then begin
             VirtualRig[_currentrig].FirstTime := False;
          end
@@ -612,14 +612,14 @@ begin
       end
       else begin
          RigLabel.Caption := 'Current rig : ' + IntToStr(_currentrig) + ' (None)';
-         BGK32Lib.SetRigFlag(0);
+         dmZlogKeyer.SetRigFlag(0);
          MainForm.StatusLine.Panels[1].Text := 'R' + IntToStr(_currentrig);
       end;
    end
    else begin
       FCurrentRig.InquireStatus;
       RigLabel.Caption := 'Current rig : ' + IntToStr(_currentrig) + ' (' + FCurrentRig.name + ')';
-      BGK32Lib.SetRigFlag(_currentrig);
+      dmZlogKeyer.SetRigFlag(_currentrig);
       FCurrentRig.UpdateStatus;
       // if Rig._lastcallsign <> '' then
       MainForm.CallsignEdit.Text := FCurrentRig._lastcallsign;
@@ -649,8 +649,8 @@ begin
       end;
    end;
 
-   BGK32Lib._bandmask := (dmZlogGlobal.Settings._BandData[B] * 16);
-   BGK32Lib.UpdateDataPort;
+   dmZlogKeyer.BandMask := (dmZlogGlobal.Settings._BandData[B] * 16);
+   dmZlogKeyer.UpdateDataPort;
 end;
 
 function TRigControl.GetCurrentRig: Integer;

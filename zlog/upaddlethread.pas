@@ -3,8 +3,7 @@ unit UPaddleThread;
 interface
 
 uses
-  Classes, BGK32LIB, Windows;
-
+  Classes, Windows, UzLogKeyer;
 
 type
   TPaddleThread = class(TThread)
@@ -40,6 +39,7 @@ implementation
 constructor TPaddleThread.Create(UseUSB : boolean);
 begin
    Count := 0;
+
    if UseUSB then
       WaitMS := 1
    else
@@ -54,12 +54,11 @@ end;
 procedure TPaddleThread.Execute;
 begin
    Stop := False;
+
    repeat
       SleepEx(WaitMS, False);
 
-      if KeyingPort = tkpUSB then begin
-         PaddleProcessUSB;
-      end;
+      dmZlogKeyer.PaddleProcessUSB;
 
    until Terminated;
 end;

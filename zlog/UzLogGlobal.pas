@@ -4,7 +4,7 @@ interface
 
 uses
   System.SysUtils, System.Classes, StrUtils, IniFiles, Forms, Windows, Menus,
-  BGK32Lib;
+  UzLogKeyer;
 
 type
   TMode = (mCW, mSSB, mFM, mAM, mRTTY, mOther);
@@ -1336,38 +1336,36 @@ begin
 
       CommForm.ImplementOptions;
       ZLinkForm.ImplementOptions;
-      BGK32Lib.SetSideTone(False);
+      dmZlogKeyer.UseSideTone := False;
 
       Case Settings._lptnr of
          0: begin
-            BGK32Lib.KeyingPort := tkpNone;
+            dmZlogKeyer.KeyingPort := tkpNone;
          end;
 
          1 .. 20: begin
             RigControl.SetSerialCWKeying(Settings._lptnr);
-            BGK32Lib.KeyingPort := TKeyingPort(Settings._lptnr);
+            dmZlogKeyer.KeyingPort := TKeyingPort(Settings._lptnr);
          end;
 
          21: begin // usb
-            BGK32Lib.KeyingPort := tkpUSB;
+            dmZlogKeyer.KeyingPort := tkpUSB;
 
             if Settings.CW._paddle then begin
-               BGK32Lib.SetPaddlePortDirect($99);
-               if PaddleThread = nil then begin
-                  PaddleThread := TPaddleThread.Create(True);
-               end;
+               dmZlogKeyer.PaddlePort := $99;   // use
             end
             else begin
-               BGK32Lib.SetPaddlePortDirect($00);
-               if PaddleThread = nil then begin
-                  PaddleThread := TPaddleThread.Create(True);
-               end;
+               dmZlogKeyer.PaddlePort := $00;   // not use
+            end;
+
+            if PaddleThread = nil then begin
+               PaddleThread := TPaddleThread.Create(True);
             end;
          end;
       end;
 
-      BGK32Lib.SetPTTDelay(Settings._pttbefore, Settings._pttafter);
-      BGK32Lib.SetPTT(Settings._pttenabled);
+      dmZlogKeyer.SetPTTDelay(Settings._pttbefore, Settings._pttafter);
+      dmZlogKeyer.SetPTT(Settings._pttenabled);
 
       // SetBand(Settings._band);
       Mode := Settings._mode;
@@ -1378,10 +1376,11 @@ begin
       CQRepeat := Settings.CW._cqrepeat;
       SendFreq := Settings._sendfreq;
       SetTonePitch(Settings.CW._tonepitch);
-      BGK32Lib.SetRandCQStr(SetStr(Settings.CW.CQStrBank[1], CurrentQSO), SetStr(Settings.CW.CQStrBank[2], CurrentQSO));
+      dmZlogKeyer.RandCQStr[1] := SetStr(Settings.CW.CQStrBank[1], CurrentQSO);
+      dmZlogKeyer.RandCQStr[2] := SetStr(Settings.CW.CQStrBank[2], CurrentQSO);
 
-      BGK32Lib.SetSpaceFactor(Settings.CW._spacefactor);
-      BGK32Lib.SetEISpaceFactor(Settings.CW._eispacefactor);
+      dmZlogKeyer.SpaceFactor := Settings.CW._spacefactor;
+      dmZlogKeyer.EISpaceFactor := Settings.CW._eispacefactor;
 
       if Settings._backuppath = '' then begin
          MainForm.BackUp1.Enabled := False;
@@ -1551,9 +1550,8 @@ procedure TdmZLogGlobal.SetSpeed(i: integer);
 begin
    if i in [0 .. 60] then begin
       Settings.CW._speed := i;
+      dmZlogKeyer.WPM := Settings.CW._speed;
    end;
-
-   BGK32Lib.SetCWSpeed(Settings.CW._speed);
 end;
 
 function TdmZLogGlobal.GetFIFO(): Boolean;
@@ -1592,13 +1590,13 @@ begin
    if i in [0 .. 100] then
       Settings.CW._weight := i;
 
-   BGK32Lib.SetWeight(Settings.CW._weight);
+   dmZlogKeyer.SetWeight(Settings.CW._weight);
 end;
 
 procedure TdmZLogGlobal.SetTonePitch(i: integer);
 begin
    Settings.CW._tonepitch := i;
-   BGK32Lib.SetPitch(i);
+   dmZlogKeyer.SideTonePitch := i;
 end;
 
 function TdmZLogGlobal.GetRigNameStr(Index: Integer): string; // returns the selected rig name
@@ -1624,7 +1622,7 @@ end;
 procedure TdmZLogGlobal.SetCQMax(i: integer);
 begin
    Settings.CW._cqmax := i;
-   BGK32Lib.SetLoopMax(i);
+   dmZlogKeyer.CQLoopMax := i;
 end;
 
 function TdmZLogGlobal.GetCQRepeat(): Double;
@@ -1635,7 +1633,7 @@ end;
 procedure TdmZLogGlobal.SetCQRepeat(r: Double);
 begin
    Settings.CW._cqrepeat := r;
-   BGK32Lib.SetLoopTime(r);
+   dmZlogKeyer.CQRepeatIntervalSec := r;
 end;
 
 function TdmZLogGlobal.GetSendFreq(): Double;
@@ -1671,7 +1669,7 @@ end;
 procedure TdmZLogGlobal.SetPaddleReverse(boo: boolean);
 begin
    Settings.CW._paddlereverse := boo;
-   BGK32Lib.ReversePaddle(boo);
+   dmZlogKeyer.SetReversePaddle(boo);
 end;
 
 procedure TdmZLogGlobal.ReversePaddle;

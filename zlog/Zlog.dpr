@@ -62,7 +62,6 @@ uses
   UARRL10Multi in 'UARRL10Multi.pas' {ARRL10Multi},
   UARRL10Score in 'UARRL10Score.pas' {ARRL10Score},
   UPaddleThread in 'UPaddleThread.pas',
-  BGK32Lib in 'BGK32Lib.pas',
   USummaryInfo in 'USummaryInfo.pas' {SummaryInfo},
   URigControl in 'URigControl.pas' {RigControl},
   UConsolePad in 'UConsolePad.pas' {ConsolePad},
@@ -91,7 +90,8 @@ uses
   OmniRig_TLB in 'OmniRig\OmniRig_TLB.pas',
   UzLogGlobal in 'UzLogGlobal.pas' {dmZLogGlobal: TDataModule},
   UELogJarl1 in 'UELogJarl1.pas' {formELogJarl1},
-  UELogJarl2 in 'UELogJarl2.pas' {formELogJarl2};
+  UELogJarl2 in 'UELogJarl2.pas' {formELogJarl2},
+  UzLogKeyer in 'UzLogKeyer.pas' {dmZLogKeyer: TDataModule};
 
 {$R *.RES}
 
@@ -100,6 +100,7 @@ begin
   Application.Initialize;
   Application.Title := 'zLog for Windows';
   Application.CreateForm(TdmZLogGlobal, dmZLogGlobal);
+  Application.CreateForm(TdmZLogKeyer, dmZLogKeyer);
   Application.CreateForm(TMainForm, MainForm);
   Application.CreateForm(TRigControl, RigControl);
   Application.CreateForm(TPartialCheck, PartialCheck);
@@ -121,13 +122,10 @@ begin
   Application.ShowMainForm := False;
 //  Application.MainFormOnTaskBar := True;
 
-   try
-      MainForm.Show();
-      Application.Run;
-   except
-      CloseBGK;
-   end;
+   MainForm.Show();
+   Application.Run;
 
    CoUnInitialize; // <-- free memory
+   dmZlogKeyer.Free();
    dmZlogGlobal.Free();
 end.

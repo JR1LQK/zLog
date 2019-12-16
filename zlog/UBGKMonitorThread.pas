@@ -3,7 +3,7 @@ unit UBGKMonitorThread;
 interface
 
 uses
-  Classes, BGK32LIB, Windows, Main;
+  Classes, Windows, Main, UzLogKeyer;
 
 type
   TBGKMonitorThread = class(TThread)
@@ -49,7 +49,7 @@ procedure TBGKMonitorThread.Execute;
 begin
   repeat
     SleepEx(2, False);
-    if BGK32Lib.CallsignSent then
+    if dmZlogKeyer.CallsignSent then
       begin
         Synchronize(DotheJob);
       end;
