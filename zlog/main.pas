@@ -10,7 +10,7 @@ uses
   UOptions, UEditDialog, UGeneralMulti2,
   UzLogCW, Hemibtn, ShellAPI, UITypes, UzLogKeyer,
   OEdit, URigControl, UConsolePad, URenewThread, USpotClass,
-  UMMTTY, UTTYConsole, UPaddleThread, UELogJarl1, UELogJarl2,
+  UMMTTY, UTTYConsole, UELogJarl1, UELogJarl2,
   UWWMulti, UWWScore, UWWZone, UARRLWMulti, UQTCForm, System.Actions,
   Vcl.ActnList;
 
@@ -803,7 +803,7 @@ type
     procedure SetQSOMode(var aQSO : TQSO);
     procedure WriteStatusLine(S : string; WriteConsole : boolean);
     procedure WriteStatusLineRed(S : string; WriteConsole : boolean);
-    procedure CallsignSentProc; // called when callsign is sent;
+    procedure CallsignSentProc(Sender: TObject); // called when callsign is sent;
     procedure Update10MinTimer; //10 min countdown
     procedure SetDispHeight(H : integer); // sets grid's row height 18..40 pts
     procedure ProcessConsoleCommand(S : string);
@@ -854,7 +854,7 @@ uses UPartials, UALLJAEditDialog, UAbout, URateDialog, UMenu, UACAGMulti,
   UIARUScore, UAllAsianScore, UIOTAMulti, {UIOTACategory,} UARRL10Multi,
   UARRL10Score, UFreqList, UCheckCall2, UCheckCountry, UCheckMulti,
   UBandScope2, UIntegerDialog, UNewPrefix, UKCJScore, UScratchSheet,
-  UWAEScore, UWAEMulti, UQuickRef, UBGKMonitorThread, USummaryInfo,
+  UWAEScore, UWAEMulti, UQuickRef, USummaryInfo,
   UAgeDialog, UMultipliers, UUTCDialog, UZServerInquiry, UNewIOTARef;
 
 {$R *.DFM}
@@ -3670,6 +3670,7 @@ begin
 
    if (Pos('/NOBGK', UpperCase(S)) = 0) then begin
       if GetAsyncKeyState(VK_SHIFT) = 0 then begin
+         dmZLogKeyer.OnCallsignSentProc := CallsignSentProc;
          dmZLogKeyer.InitializeBGK(mSec);
       end;
    end;
@@ -4274,11 +4275,6 @@ begin
    // begin
    // SetVoiceFlag(0);
    // end;
-
-   if (S = 'TEST') then begin
-      PaddleThread.Stop := True;
-      // PaddleThread.Free;
-   end;
 
    if (S = 'TEST2') then begin
       BandScope2.MarkCurrentFreq(7060000);
@@ -5142,7 +5138,7 @@ begin
    dmZLogKeyer.ResumeCW;
 
    if dmZlogGlobal.Settings._switchcqsp then begin
-      CallsignSentProc;
+      CallsignSentProc(nil);
    end;
 end;
 
@@ -5558,15 +5554,7 @@ end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
-   dmZLogKeyer.CloseBGK;
-
-   if PaddleThread <> nil then begin
-      PaddleThread.Terminate();
-   end;
-
-   if BGKMonitorThread <> nil then begin
-      BGKMonitorThread.Terminate();
-   end;
+//   dmZLogKeyer.CloseBGK;
 end;
 
 procedure TMainForm.SpeedBarChange(Sender: TObject);
@@ -5824,7 +5812,7 @@ begin
    StatusLine.Panels[2].Text := S;
 end;
 
-procedure TMainForm.CallsignSentProc;
+procedure TMainForm.CallsignSentProc(Sender: TObject);
 var
    Q: TQSO;
    S: ShortString;

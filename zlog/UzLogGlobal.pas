@@ -501,7 +501,7 @@ implementation
 
 uses
   Main, URigControl, UZLinkForm, UComm, UzLogCW, UClusterTelnetSet, UClusterCOMSet,
-  UZlinkTelnetSet, UPaddleThread;
+  UZlinkTelnetSet;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -1325,7 +1325,6 @@ begin
       end;
 
       RigControl.SetBandMask;
-      // BGK32LIB.UpdateDataPort;
 
       if Settings._zlinkport in [1 .. 6] then begin // zlinkport rs232c
          // ZLinkForm.Transparent := True;
@@ -1356,10 +1355,6 @@ begin
             end
             else begin
                dmZlogKeyer.PaddlePort := $00;   // not use
-            end;
-
-            if PaddleThread = nil then begin
-               PaddleThread := TPaddleThread.Create(True);
             end;
          end;
       end;

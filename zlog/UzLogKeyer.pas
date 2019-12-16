@@ -1,16 +1,25 @@
 unit UzLogKeyer;
 
+//
+// zLog for Windows
+// CW Keyer Module
+//
+
+// サイドトーンを使用する場合、下記の定義を有効にする 要ToneGen.pas
+//{$DEFINE USESIDETONE}
+
 interface
 
 uses
   System.SysUtils, System.Classes, Windows, MMSystem,
-  ToneGen, JvComponentBase, JvHidControllerClass;
+  JvComponentBase, JvHidControllerClass
+  {$IFDEF USESIDETONE},ToneGen{$ENDIF};
 
 const
-  charmax=256;
-  codemax=16;
-  MAXWPM =60;
-  MINWPM =1;
+  charmax = 256;
+  codemax = 16;
+  MAXWPM = 60;
+  MINWPM = 1;
   _inccw = $80;
   _deccw = $81;
 
@@ -27,6 +36,30 @@ type
   CodeTableType = array[0..255] of CodeData;
 
 type
+  TdmZLogKeyer = class;
+
+  TKeyerMonitorThread = class(TThread)
+  private
+    { Private declarations }
+    FKeyer: TdmZLogKeyer;
+    procedure DotheJob;
+  protected
+    procedure Execute; override;
+  public
+    constructor Create(AKeyer: TdmZLogKeyer);
+  end;
+
+  TKeyerPaddleThread = class(TThread)
+  private
+    { Private declarations }
+    FKeyer: TdmZLogKeyer;
+    FWaitMS: Integer; // wait time in ms
+  protected
+    procedure Execute; override;
+  public
+    constructor Create(AKeyer: TdmZLogKeyer);
+  end;
+
   TdmZLogKeyer = class(TDataModule)
     HidController: TJvHidDeviceController;
     procedure DoDeviceChanges(Sender: TObject);
@@ -35,17 +68,21 @@ type
     procedure DataModuleDestroy(Sender: TObject);
   private
     { Private 宣言 }
+    FMonitorThread: TKeyerMonitorThread;
+    FPaddleThread: TKeyerPaddleThread;
+
     FUSBIF4CW_Detected: Boolean;
     FUSBIF4CW: TJvHIDDevice;
+
+    {$IFDEF USESIDETONE}
     FTone: TToneGen;
+    {$ENDIF}
 
     FPrevUsbPortData: Byte;
     FUsbPortData: Byte;
 
     // mask data for data port
-    _rigmask: byte; // bit mask for sel rig
     _bandmask: byte; //bit mask for band data
-    _voicemask: byte; // bit mask for voice memory
 
     FUserFlag: Boolean; // can be set to True by user. set to False only when ClrBuffer is called or "  is reached in the sending buffer. // 1.9z2 used in QTCForm
     FVoiceFlag: Integer;  //temporary
@@ -55,7 +92,7 @@ type
     FSpaceFactor: Integer; {space length factor in %}
     FEISpaceFactor: Integer; {space length factor after E and I}
 
-    FSelectedBuf: byte; {0..2}
+    FSelectedBuf: Integer; {0..2}
 
     FCWSendBuf: array[0..2, 1..charmax * codemax] of byte;
 
@@ -106,9 +143,9 @@ type
     FEndOfWordCounter: Integer; {counter which determines the end of a word}
                        {set in m_set and decremented in $AA }
     mouX, mouY : word;  { 1 or 3 dot or dash}
-    paddle_input : array[1..codemax+1] of byte;
 
-    procedure SetVoiceFlag(i : Integer); //0 or 1
+    FOnCallsignSentProc: TNotifyEvent;
+
     procedure Sound();
     procedure NoSound();
 
@@ -120,7 +157,6 @@ type
     procedure IncWPM; {Increases CW speed by 1WPM}
     procedure DecWPM; {Decreases CW speed by 1WPM}
     procedure SetCWSendBufChar2(C: char; CharPos: word);
-    procedure m_set(b: word);
 
     procedure SetRandCQStr(Index: Integer; cqstr: string);
 
@@ -132,12 +168,12 @@ type
     procedure SetSideTonePitch(Hertz: Integer); {Sets the pitch of the side tone}
     procedure SetSpaceFactor(R: Integer);
     procedure SetEISpaceFactor(R: Integer);
+
+    procedure SetBandMask(bandmask: Byte);
   public
     { Public 宣言 }
     procedure InitializeBGK(msec : Integer); {Initializes BGK. msec is interval}
     procedure CloseBGK; {Closes BGK}
-
-    procedure UpdateDataPort; // sets data port acc to mask data
 
     function PTTIsOn : Boolean;
     function IsPlaying : Boolean;
@@ -184,9 +220,11 @@ type
     property EISpaceFactor: Integer read FEISpaceFactor write SetEISpaceFactor;
 
     property USBIF4CW_Detected: Boolean read FUSBIF4CW_Detected;
-    property BandMask: Byte read _bandmask write _bandmask;
+    property BandMask: Byte read _bandmask write SetBandMask;
     property UserFlag: Boolean read FUserFlag write FUserFlag;
     property KeyingPort: TKeyingPort read FKeyingPort write FKeyingPort;
+
+    property OnCallsignSentProc: TNotifyEvent read FOnCallsignSentProc write FOnCallsignSentProc;
   end;
 
 var
@@ -208,14 +246,22 @@ uses
 
 {$R *.dfm}
 
+procedure TimerCallback(uTimerID, uMessage: word; dwUser, dw1, dw2: Longint); stdcall;
+begin
+   dmZLogKeyer.TimerProcess(uTimerID, uMessage, dwUser, dw1, dw2);
+end;
+
 procedure TdmZLogKeyer.DataModuleCreate(Sender: TObject);
 begin
    FInitialized := False;
+
+   {$IFDEF USESIDETONE}
    FTone := TToneGen.Create(nil);
    FTone.Waveform := tgSine;
    FTone.Duration := 100;
    FTone.Loop := True;
    FTone.Frequency := 700;
+   {$ENDIF}
 
    FUSBIF4CW_Detected := False;
    FUSBIF4CW := nil;
@@ -223,9 +269,7 @@ begin
    FPrevUsbPortData := $FF;
    FUsbPortData := $FF;
 
-   _rigmask := $00; // bit mask for sel rig
-   _bandmask := $00; //bit mask for band data
-   _voicemask := $00; // bit mask for voice memory
+   Bandmask := $00; //bit mask for band data
 
    FUserFlag := False;
    FVoiceFlag := 0;
@@ -234,11 +278,21 @@ begin
 
    FSpaceFactor := 100; {space length factor in %}
    FEISpaceFactor := 100; {space length factor after E and I}
+
+   FMonitorThread := TKeyerMonitorThread.Create(Self);
+   FOnCallsignSentProc := nil;
+
+   FPaddleThread := TKeyerPaddleThread.Create(Self);
+   FEndOfWordCounter := 0;
 end;
 
 procedure TdmZLogKeyer.DataModuleDestroy(Sender: TObject);
 begin
+   {$IFDEF USESIDETONE}
    FTone.Free();
+   {$ENDIF}
+   FMonitorThread.Free();
+   FPaddleThread.Free();
 end;
 
 procedure TdmZLogKeyer.DoDeviceChanges(Sender: TObject);
@@ -267,75 +321,36 @@ begin
    Result := True;
 end;
 
-procedure TdmZLogKeyer.UpdateDataPort;
+procedure TdmZLogKeyer.SetRigFlag(i: Integer); // 0 : no rigs, 1 : rig 1, etc
 begin
    if FKeyingPort = tkpUSB then begin
       FUsbPortData := (not(_bandmask) and $F0) or (FUsbPortData and $0F);
-   end;
-end;
 
-procedure TdmZLogKeyer.SetRigFlag(i: Integer); // 0 : no rigs, 1 : rig 1, etc
-var
-   _outb: byte;
-begin
-   case i of
-      0:
-         _rigmask := $00;
-      1:
-         _rigmask := $00;
-      2:
-         _rigmask := $04;
-   end;
-
-   UpdateDataPort;
-
-   if FKeyingPort = tkpUSB then begin
       case i of
          0, 1:
-            _outb := FUsbPortData or $04;
+            FUsbPortData := FUsbPortData or $04;
          2:
-            _outb := FUsbPortData and $FB;
+            FUsbPortData := FUsbPortData and $FB;
          else
-            _outb := FUsbPortData;
-      end;
-      FUsbPortData := _outb;
-      Exit;
-   end;
-end;
-
-procedure TdmZLogKeyer.SetVoiceFlag(i: Integer); // 0 : no rigs, 1 : rig 1, etc
-begin
-   FVoiceFlag := i;
-
-   if FKeyingPort = tkpUSB then begin
-      if i = 1 then begin
-         FUsbPortData := FUsbPortData and $F7;
-      end
-      else begin
-         FUsbPortData := FUsbPortData or $08;
+            FUsbPortData := FUsbPortData;
       end;
 
       Exit;
    end;
-
-   case i of
-      0:
-         _voicemask := $00;
-      1:
-         _voicemask := $02;
-   end;
-
-   UpdateDataPort;
 end;
 
 procedure TdmZLogKeyer.Sound();
 begin
+   {$IFDEF USESIDETONE}
    FTone.Play;
+   {$ENDIF}
 end;
 
 procedure TdmZLogKeyer.NoSound();
 begin
+   {$IFDEF USESIDETONE}
    FTone.Stop;
+   {$ENDIF}
 end;
 
 procedure TdmZLogKeyer.ControlPTT(PTTON: Boolean);
@@ -415,7 +430,9 @@ procedure TdmZLogKeyer.SetSideTonePitch(Hertz: Integer);
 begin
    if Hertz < 2500 then begin
       FSideTonePitch := Hertz;
+      {$IFDEF USESIDETONE}
       FTone.Frequency := FSideTonePitch;
+      {$ENDIF}
    end;
 end;
 
@@ -605,8 +622,6 @@ begin
 end;
 
 procedure TdmZLogKeyer.TimerProcess(uTimerID, uMessage: word; dwUser, dw1, dw2: Longint); stdcall;
-var
-   workw, workx: word; { work variables in TimerProcess $AA }
 
    procedure Finish();
    begin
@@ -729,15 +744,6 @@ begin
       $AA: begin { paddle waiting routine. if p_char_count expires, }
          FPaddleWaiting := True;
          if FEndOfWordCounter = 0 then begin
-            if mousetail > codemax then
-               workx := codemax
-            else
-               workx := mousetail;
-
-            for workw := 1 to workx - 1 do
-               paddle_input[workw] := FCWSendBuf[0, workw];
-
-            paddle_input[workx] := $FF;
 
             if FPTTEnabled then begin
                FPttHoldCounter := FPttDelayAfterCount;
@@ -862,11 +868,6 @@ end;
 procedure TdmZLogKeyer.InitializeBGK(msec: Integer);
 var
    n, m: word;
-
-   procedure TimerCallback(uTimerID, uMessage: word; dwUser, dw1, dw2: Longint); stdcall;
-   begin
-      TimerProcess(uTimerID, uMessage, dwUser, dw1, dw2);
-   end;
 begin
    FRandCQStr[1] := '';
    FRandCQStr[2] := '';
@@ -1440,12 +1441,23 @@ begin
       FCodeTable[Ord('{')][n] := $14;
    end;
 
+   FMonitorThread.Start();
+   FPaddleThread.Start();
+
    FInitialized := True;
 end;
 
 procedure TdmZLogKeyer.CloseBGK();
 begin
    ControlPTT(False);
+
+   if Assigned(FMonitorThread) then begin
+      FMonitorThread.Terminate();
+   end;
+
+   if Assigned(FPaddleThread) then begin
+      FPaddleThread.Terminate();
+   end;
 
    if FInitialized = False then begin
       Exit;
@@ -1576,13 +1588,13 @@ end;
 function TdmZLogKeyer.CallSignSent: Boolean;
 begin
    Result := False;
-   if callsignptr > 0 then
-      if FCWSendBuf[0, cwstrptr - 1] = $99 then
-      // if cwstrptr > (callsignptr + 10)*codemax then
-      begin
+
+   if callsignptr > 0 then begin
+      if FCWSendBuf[0, cwstrptr - 1] = $99 then begin
          Result := True;
          callsignptr := 0;
       end;
+   end;
 end;
 
 function TdmZLogKeyer.IsPlaying: Boolean;
@@ -1599,134 +1611,136 @@ begin
    SetCWSendBuf(Index, '(' + cqstr + ')@');
 end;
 
-procedure TdmZLogKeyer.m_set(b: word);
-begin
-   if FPTTEnabled and (mousetail = 1) then begin
-      ControlPTT(True);
-      FCWSendBuf[0, 1] := $55; { set PTT delay }
-      inc(mousetail);
-   end;
-
-   if (mousetail + 2) > (charmax * codemax) then
-      mousetail := 1;
-
-   FCWSendBuf[0, mousetail] := b;
-   FCWSendBuf[0, mousetail + 1] := 0;
-   FCWSendBuf[0, mousetail + 2] := $AA;
-   inc(mousetail, 2);
-   FEndOfWordCounter := (FDotCount * 3) div 2;
-   FSendOK := True;
-   { inLoop:=False; } // not sure what it was used for}
-   FPaddleWaiting := False;
-end;
-
 procedure TdmZLogKeyer.PaddleProcessUSB;
 var
    OutReport: array [0 .. 8] of byte;
    InReport: array [0 .. 8] of byte;
    BR: DWORD;
    PaddleStatus: byte;
-begin
-   repeat
-      if FUSBIF4CW = nil then begin
-         Break;
+
+   procedure m_set(b: word);
+   begin
+      if FPTTEnabled and (mousetail = 1) then begin
+         ControlPTT(True);
+         FCWSendBuf[0, 1] := $55; { set PTT delay }
+         inc(mousetail);
       end;
 
-      InReport[0] := 0;
-      InReport[1] := 4;
-      InReport[2] := $0F;
-      InReport[3] := 4;
-      InReport[4] := 0;
-      InReport[5] := 0;
-      InReport[6] := 0;
-      InReport[7] := 0;
-      InReport[8] := 0;
-      FUSBIF4CW.ReadFile(InReport, FUSBIF4CW.Caps.InputReportByteLength, BR);
+      if (mousetail + 2) > (charmax * codemax) then begin
+         mousetail := 1;
+      end;
 
-      if (FKeyingPort = tkpUSB) and (FPaddlePort <> 0) then begin // ver 2.2b
+      FCWSendBuf[0, mousetail] := b;
+      FCWSendBuf[0, mousetail + 1] := 0;
+      FCWSendBuf[0, mousetail + 2] := $AA;
+      inc(mousetail, 2);
+      FEndOfWordCounter := (FDotCount * 3) div 2;
+      FSendOK := True;
+      { inLoop:=False; } // not sure what it was used for}
+      FPaddleWaiting := False;
+   end;
+begin
+   if FUSBIF4CW = nil then begin
+      Exit;
+   end;
 
-         if (InReport[1] = 4) and (InReport[3] = 4) and (InReport[2] <> $F) then begin
-            PaddleStatus := $05 and InReport[2];
-            case mousetail - cwstrptr of
-               0: begin
-                  case PaddleStatus of
-                     $00: { both }
-                        case FCWSendBuf[0, mousetail - 2] of
-                           1:
-                              m_set(3);
-                           3:
-                              m_set(1);
-                        end;
-                     $01: { dot }
-                        if FPaddleWaiting then
-                           m_set(mouX);
-                     $04: { dash }
-                        if FPaddleWaiting then
-                           m_set(mouY);
+   if FKeyingPort <> tkpUSB then begin
+      Exit;
+   end;
+
+   if FPaddlePort = 0 then begin
+      Exit;
+   end;
+
+   InReport[0] := 0;
+   InReport[1] := 4;
+   InReport[2] := $0F;
+   InReport[3] := 4;
+   InReport[4] := 0;
+   InReport[5] := 0;
+   InReport[6] := 0;
+   InReport[7] := 0;
+   InReport[8] := 0;
+   FUSBIF4CW.ReadFile(InReport, FUSBIF4CW.Caps.InputReportByteLength, BR);
+
+   if (InReport[1] = 4) and (InReport[3] = 4) and (InReport[2] <> $F) then begin
+      PaddleStatus := $05 and InReport[2];
+      case mousetail - cwstrptr of
+         0: begin
+            case PaddleStatus of
+               $00: { both }
+                  case FCWSendBuf[0, mousetail - 2] of
+                     1:
+                        m_set(3);
+                     3:
+                        m_set(1);
                   end;
-               end;
-
-               1: begin
-                  case PaddleStatus of
-                     $00:
-                        case FCWSendBuf[0, cwstrptr - 1] of
-                           1:
-                              m_set(3);
-                           3:
-                              m_set(1);
-                        end;
-                     $01:
-                        if FCWSendBuf[0, cwstrptr - 1] = mouY then
-                           m_set(mouX);
-                     $04:
-                        if FCWSendBuf[0, cwstrptr - 1] = mouX then
-                           m_set(mouY);
-                  end;
-               end;
-
-               else begin
-                  if (PaddleStatus = $01) or (PaddleStatus = $04) then begin
-                     if abs(mousetail - cwstrptr) > 5 then begin
-                        FSelectedBuf := 0;
-                        cwstrptr := 1;
-                        mousetail := 1;
-                        FKeyingCounter := 1;
-                        FPaddleWaiting := True;
-                        m_set(0);
-                     end;
-                  end;
-               end;
+               $01: { dot }
+                  if FPaddleWaiting then
+                     m_set(mouX);
+               $04: { dash }
+                  if FPaddleWaiting then
+                     m_set(mouY);
             end;
          end;
 
-      end; // ver 2.2b
+         1: begin
+            case PaddleStatus of
+               $00:
+                  case FCWSendBuf[0, cwstrptr - 1] of
+                     1:
+                        m_set(3);
+                     3:
+                        m_set(1);
+                  end;
+               $01:
+                  if FCWSendBuf[0, cwstrptr - 1] = mouY then
+                     m_set(mouX);
+               $04:
+                  if FCWSendBuf[0, cwstrptr - 1] = mouX then
+                     m_set(mouY);
+            end;
+         end;
 
-      if FUsbPortData = FPrevUsbPortData then begin
-         OutReport[0] := 0;
-         OutReport[1] := 4;
-         OutReport[2] := $0F;
-         OutReport[3] := 4;
-         OutReport[4] := 0;
-         OutReport[5] := 0;
-         OutReport[6] := 0;
-         OutReport[7] := 0;
-         OutReport[8] := 0;
-         FUSBIF4CW.WriteFile(OutReport, FUSBIF4CW.Caps.OutputReportByteLength, BR);
-      end
-      else begin
-         OutReport[0] := 0;
-         OutReport[1] := 1;
-         OutReport[2] := FUsbPortData;
-         OutReport[3] := 0;
-         OutReport[4] := 0;
-         OutReport[5] := 0;
-         OutReport[6] := 0;
-         OutReport[7] := 0;
-         OutReport[8] := 0;
-         FPrevUsbPortData := FUsbPortData;
-         FUSBIF4CW.WriteFile(OutReport, FUSBIF4CW.Caps.OutputReportByteLength, BR);
+         else begin
+            if (PaddleStatus = $01) or (PaddleStatus = $04) then begin
+               if abs(mousetail - cwstrptr) > 5 then begin
+                  FSelectedBuf := 0;
+                  cwstrptr := 1;
+                  mousetail := 1;
+                  FKeyingCounter := 1;
+                  FPaddleWaiting := True;
+                  m_set(0);
+               end;
+            end;
+         end;
       end;
-   until FKeyingPort <> tkpUSB;
+   end;
+
+   if FUsbPortData = FPrevUsbPortData then begin
+      OutReport[0] := 0;
+      OutReport[1] := 4;
+      OutReport[2] := $0F;
+      OutReport[3] := 4;
+      OutReport[4] := 0;
+      OutReport[5] := 0;
+      OutReport[6] := 0;
+      OutReport[7] := 0;
+      OutReport[8] := 0;
+   end
+   else begin
+      OutReport[0] := 0;
+      OutReport[1] := 1;
+      OutReport[2] := FUsbPortData;
+      OutReport[3] := 0;
+      OutReport[4] := 0;
+      OutReport[5] := 0;
+      OutReport[6] := 0;
+      OutReport[7] := 0;
+      OutReport[8] := 0;
+      FPrevUsbPortData := FUsbPortData;
+   end;
+   FUSBIF4CW.WriteFile(OutReport, FUSBIF4CW.Caps.OutputReportByteLength, BR);
 end;
 
 procedure TdmZLogKeyer.SetReversePaddle(boo: Boolean);
@@ -1765,6 +1779,62 @@ begin
    if FUseSideTone then begin
       Sound();
    end;
+end;
+
+procedure TdmZLogKeyer.SetBandMask(bandmask: Byte);
+begin
+   _bandmask := bandmask;
+   FUsbPortData := (not(_bandmask) and $F0) or (FUsbPortData and $0F);
+end;
+
+{ TKeyerMonitorThread }
+
+constructor TKeyerMonitorThread.Create(AKeyer: TdmZLogKeyer);
+begin
+   inherited Create(True);
+   FKeyer := AKeyer;
+end;
+
+procedure TKeyerMonitorThread.DotheJob;
+begin
+   if Assigned(FKeyer.OnCallsignSentProc) then begin
+      FKeyer.OnCallsignSentProc(FKeyer);
+   end;
+end;
+
+procedure TKeyerMonitorThread.Execute;
+begin
+   repeat
+      SleepEx(2, False);
+      if FKeyer.CallsignSent then begin
+         Synchronize(DotheJob);
+      end;
+   until Terminated;
+end;
+
+{ TKeyerPaddleThread }
+
+constructor TKeyerPaddleThread.Create(AKeyer: TdmZLogKeyer);
+begin
+   inherited Create(True);
+   FKeyer := AKeyer;
+end;
+
+procedure TKeyerPaddleThread.Execute;
+begin
+   if FKeyer.USBIF4CW_Detected = True then begin
+      FWaitMS := 1;
+   end
+   else begin
+      FWaitMS := 2;
+   end;
+
+   repeat
+      Sleep(FWaitMS);
+
+      FKeyer.PaddleProcessUSB;
+
+   until Terminated;
 end;
 
 end.

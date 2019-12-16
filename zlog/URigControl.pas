@@ -650,7 +650,6 @@ begin
    end;
 
    dmZlogKeyer.BandMask := (dmZlogGlobal.Settings._BandData[B] * 16);
-   dmZlogKeyer.UpdateDataPort;
 end;
 
 function TRigControl.GetCurrentRig: Integer;
