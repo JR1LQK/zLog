@@ -208,6 +208,11 @@ uses
 
 {$R *.dfm}
 
+procedure TimerCallback(uTimerID, uMessage: word; dwUser, dw1, dw2: Longint); stdcall;
+begin
+   dmZLogKeyer.TimerProcess(uTimerID, uMessage, dwUser, dw1, dw2);
+end;
+
 procedure TdmZLogKeyer.DataModuleCreate(Sender: TObject);
 begin
    FInitialized := False;
@@ -862,11 +867,6 @@ end;
 procedure TdmZLogKeyer.InitializeBGK(msec: Integer);
 var
    n, m: word;
-
-   procedure TimerCallback(uTimerID, uMessage: word; dwUser, dw1, dw2: Longint); stdcall;
-   begin
-      TimerProcess(uTimerID, uMessage, dwUser, dw1, dw2);
-   end;
 begin
    FRandCQStr[1] := '';
    FRandCQStr[2] := '';
