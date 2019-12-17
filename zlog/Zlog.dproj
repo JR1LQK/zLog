@@ -62,7 +62,7 @@
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_Namespace>System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
         <BT_BuildType>Debug</BT_BuildType>
-        <VerInfo_Keys>CompanyName=;FileDescription=zLog for Windows 令和 Edition;FileVersion=2.3.0.6;InternalName=;LegalCopyright=COPYRIGHT 1997-2005 by JJ1MED/AD6AJ, 2019 JR8PPG;LegalTrademarks=;OriginalFilename=;ProductName=zLog for Windows 令和 Edition;ProductVersion=2.3.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName)</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileDescription=zLog for Windows 令和 Edition;FileVersion=2.3.1.0;InternalName=;LegalCopyright=COPYRIGHT 1997-2005 by JJ1MED/AD6AJ, 2019 JR8PPG;LegalTrademarks=;OriginalFilename=;ProductName=zLog for Windows 令和 Edition;ProductVersion=2.3.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName)</VerInfo_Keys>
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
         <Icon_MainIcon>zlog.ico</Icon_MainIcon>
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
@@ -70,7 +70,7 @@
         <UWP_DelphiLogo150>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png</UWP_DelphiLogo150>
         <VerInfo_MajorVer>2</VerInfo_MajorVer>
         <VerInfo_MinorVer>3</VerInfo_MinorVer>
-        <VerInfo_Build>6</VerInfo_Build>
+        <VerInfo_Release>1</VerInfo_Release>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64)'!=''">
         <Icon_MainIcon>Zlog_Icon1.ico</Icon_MainIcon>
@@ -89,9 +89,9 @@
         <UWP_DelphiLogo150>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png</UWP_DelphiLogo150>
         <VerInfo_MajorVer>2</VerInfo_MajorVer>
         <VerInfo_MinorVer>3</VerInfo_MinorVer>
-        <VerInfo_Keys>CompanyName=;FileDescription=zLog for Windows 令和 Edition;FileVersion=2.3.0.6;InternalName=;LegalCopyright=COPYRIGHT 1997-2005 by JJ1MED/AD6AJ, 2019 JR8PPG;LegalTrademarks=;OriginalFilename=;ProductName=zLog for Windows 令和 Edition;ProductVersion=2.3.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName)</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileDescription=zLog for Windows 令和 Edition;FileVersion=2.3.1.0;InternalName=;LegalCopyright=COPYRIGHT 1997-2005 by JJ1MED/AD6AJ, 2019 JR8PPG;LegalTrademarks=;OriginalFilename=;ProductName=zLog for Windows 令和 Edition;ProductVersion=2.3.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName)</VerInfo_Keys>
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
-        <VerInfo_Build>6</VerInfo_Build>
+        <VerInfo_Release>1</VerInfo_Release>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
@@ -284,7 +284,6 @@
         <DCCReference Include="UARRL10Score.pas">
             <Form>ARRL10Score</Form>
         </DCCReference>
-        <DCCReference Include="UPaddleThread.pas"/>
         <DCCReference Include="USummaryInfo.pas">
             <Form>SummaryInfo</Form>
         </DCCReference>
@@ -313,7 +312,6 @@
         <DCCReference Include="UIntegerDialog.pas">
             <Form>IntegerDialog</Form>
         </DCCReference>
-        <DCCReference Include="UBGKMonitorThread.pas"/>
         <DCCReference Include="URenewThread.pas"/>
         <DCCReference Include="UNewPrefix.pas">
             <Form>NewPrefix</Form>
@@ -347,7 +345,6 @@
         <DCCReference Include="UBandScope2.pas">
             <Form>BandScope2</Form>
         </DCCReference>
-        <DCCReference Include="LIB\ToneGen.pas"/>
         <DCCReference Include="OmniRig\OmniRig_TLB.pas"/>
         <DCCReference Include="UzLogGlobal.pas">
             <Form>dmZLogGlobal</Form>
