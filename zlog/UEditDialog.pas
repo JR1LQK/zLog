@@ -5,7 +5,7 @@ interface
 uses
   Windows, SysUtils, Classes, Graphics, Forms, Controls, StdCtrls,
   Buttons, ExtCtrls, Menus,
-  UzLogGlobal, UzLogCW, BGK32LIB;
+  UzLogGlobal, UzLogCW, UzLogKeyer;
 
 
 const _ActInsert = 0;
@@ -257,7 +257,7 @@ begin
   case Key of
     '\' :
       begin
-        ControlPTT(not(PTTIsOn)); // toggle PTT;
+        dmZLogKeyer.ControlPTT(not(dmZLogKeyer.PTTIsOn)); // toggle PTT;
         Key := #0;
       end;
     'X','x' :
@@ -758,7 +758,7 @@ begin
    case Key of
       {MUHENKAN KEY}
       29: begin
-         ControlPTT(not(PTTIsOn)); // toggle PTT;
+         dmZLogKeyer.ControlPTT(not(dmZLogKeyer.PTTIsOn)); // toggle PTT;
       end;
 
       VK_F1..VK_F8, VK_F11, VK_F12: begin

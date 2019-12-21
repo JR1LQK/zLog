@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, Spin, UzLogGlobal, uzLogCW, UZLinkForm, BGK32LIB;
+  StdCtrls, Spin, UzLogGlobal, uzLogCW, UZLinkForm, UzLogKeyer;
 
 type
   TQTCForm = class(TForm)
@@ -144,10 +144,10 @@ begin
 
           btnSend.Enabled := False;
           btnBack.Enabled := False;
-          UserFlag := True;
+          dmZlogKeyer.UserFlag := True;
           repeat
             Application.ProcessMessages;
-          until UserFlag = False;
+          until dmZlogKeyer.UserFlag = False;
           btnSend.Enabled := True;
           btnBack.Enabled := True;
        end;
@@ -171,10 +171,10 @@ begin
 
           btnSend.Enabled := False;
           btnBack.Enabled := False;
-          UserFlag := True;
+          dmZlogKeyer.UserFlag := True;
           repeat
             Application.ProcessMessages;
-          until UserFlag = False;
+          until dmZlogKeyer.UserFlag = False;
           btnSend.Enabled := True;
           btnBack.Enabled := True;
         end;
@@ -260,7 +260,7 @@ begin
   case Key of
     Chr($08), 'B', 'b': btnBackClick(Self);
     'F', 'f' : btnSendClick(Self);
-    '\' : ControlPTT(not(PTTIsOn)); // toggle PTT;
+    '\' : dmZlogKeyer.ControlPTT(not(dmZlogKeyer.PTTIsOn)); // toggle PTT;
   end;
 end;
 
@@ -270,7 +270,7 @@ begin
   case Key of
     29 : {MUHENKAN KEY}
       begin
-        ControlPTT(not(PTTIsOn)); // toggle PTT;
+        dmZlogKeyer.ControlPTT(not(dmZlogKeyer.PTTIsOn)); // toggle PTT;
       end;
   end;
 end;

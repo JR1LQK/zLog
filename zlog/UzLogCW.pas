@@ -3,7 +3,7 @@ unit UzLogCW;
 interface
 
 uses
-  SysUtils, UzLogGlobal, BGK32LIB, UOptions;
+  SysUtils, UzLogGlobal, UzLogKeyer, UOptions;
 
 var CtrlZCQLoop : boolean;
     QTHString : string[255];
@@ -362,19 +362,20 @@ end;
 
 procedure zLogSendStr(S : shortstring);
 begin
-  PauseCW;
+  dmZLogKeyer.PauseCW;
   if dmZLogGlobal.FIFO then
-    SendStrFIFO(S)
+    dmZLogKeyer.SendStrFIFO(S)
   else
-    SendStr(S);
-  BGK32LIB.SetCallSign(ShortString(Main.CurrentQSO.QSO.Callsign));
-  ResumeCW;
+    dmZLogKeyer.SendStr(S);
+
+  dmZLogKeyer.SetCallSign(ShortString(Main.CurrentQSO.QSO.Callsign));
+  dmZLogKeyer.ResumeCW;
 end;
 
 procedure CtrlZBreak;
 begin
   CtrlZCQLoop := False;
-  BGK32LIB.ClrBuffer;
+  dmZLogKeyer.ClrBuffer;
 end;
 
 initialization

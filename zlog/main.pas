@@ -8,9 +8,9 @@ uses
   ShlObj, ComObj,
   UzLogGlobal, UBasicMulti, UBasicScore, UALLJAMulti,
   UOptions, UEditDialog, UGeneralMulti2,
-  BGK32Lib, UzLogCW, Hemibtn, ShellAPI, UITypes,
+  UzLogCW, Hemibtn, ShellAPI, UITypes, UzLogKeyer,
   OEdit, URigControl, UConsolePad, URenewThread, USpotClass,
-  UMMTTY, UTTYConsole, UPaddleThread, UELogJarl1, UELogJarl2,
+  UMMTTY, UTTYConsole, UELogJarl1, UELogJarl2,
   UWWMulti, UWWScore, UWWZone, UARRLWMulti, UQTCForm, System.Actions,
   Vcl.ActnList;
 
@@ -803,7 +803,7 @@ type
     procedure SetQSOMode(var aQSO : TQSO);
     procedure WriteStatusLine(S : string; WriteConsole : boolean);
     procedure WriteStatusLineRed(S : string; WriteConsole : boolean);
-    procedure CallsignSentProc; // called when callsign is sent;
+    procedure CallsignSentProc(Sender: TObject); // called when callsign is sent;
     procedure Update10MinTimer; //10 min countdown
     procedure SetDispHeight(H : integer); // sets grid's row height 18..40 pts
     procedure ProcessConsoleCommand(S : string);
@@ -854,7 +854,7 @@ uses UPartials, UALLJAEditDialog, UAbout, URateDialog, UMenu, UACAGMulti,
   UIARUScore, UAllAsianScore, UIOTAMulti, {UIOTACategory,} UARRL10Multi,
   UARRL10Score, UFreqList, UCheckCall2, UCheckCountry, UCheckMulti,
   UBandScope2, UIntegerDialog, UNewPrefix, UKCJScore, UScratchSheet,
-  UWAEScore, UWAEMulti, UQuickRef, UBGKMonitorThread, USummaryInfo,
+  UWAEScore, UWAEMulti, UQuickRef, USummaryInfo,
   UAgeDialog, UMultipliers, UUTCDialog, UZServerInquiry, UNewIOTARef;
 
 {$R *.DFM}
@@ -3635,7 +3635,6 @@ var
 begin
    if GetAsyncKeyState(VK_SHIFT) < 0 then begin
       DEBUGMODE := True;
-      BGK32Lib.DEBUGMODE := True;
    end;
 
    defaultTextColor := CallsignEdit.Font.Color;
@@ -3669,11 +3668,10 @@ begin
       end;
    end;
 
-   BGK32Lib._WIN2KMODE := True;
-
    if (Pos('/NOBGK', UpperCase(S)) = 0) then begin
       if GetAsyncKeyState(VK_SHIFT) = 0 then begin
-         InitializeBGK(mSec);
+         dmZLogKeyer.OnCallsignSentProc := CallsignSentProc;
+         dmZLogKeyer.InitializeBGK(mSec);
       end;
    end;
 
@@ -3718,7 +3716,7 @@ begin
    end;
 
    TempQSOList := TList.Create;
-   ControlPTT(False);
+   dmZLogKeyer.ControlPTT(False);
 end;
 
 procedure TMainForm.ShowHint(Sender: TObject);
@@ -4067,10 +4065,6 @@ begin
       SetCQ(False);
    end;
 
-   if S = 'DEBUG' then begin
-      WriteStatusLine('DEBUG_FLAG=' + IntToStr(DEBUG_FLAG), False);
-   end;
-
    if S = 'CQ?' then begin
       if CurrentQSO.QSO.CQ then
          WriteStatusLine('CQ status : CQ', False)
@@ -4118,7 +4112,7 @@ begin
 
    if S = 'TUNE' then begin
       CtrlZCQLoop := True;
-      TuneOn;
+      dmZLogKeyer.TuneOn;
    end;
 
    if (S = 'LF') or (S = 'LASTF') then
@@ -4282,11 +4276,6 @@ begin
    // SetVoiceFlag(0);
    // end;
 
-   if (S = 'TEST') then begin
-      PaddleThread.Stop := True;
-      // PaddleThread.Free;
-   end;
-
    if (S = 'TEST2') then begin
       BandScope2.MarkCurrentFreq(7060000);
    end;
@@ -4299,11 +4288,11 @@ begin
       SwitchLastQSOBandMode;
 
    if S = 'CWOFF' then begin
-      CloseBGK;
+      dmZLogKeyer.CloseBGK;
    end;
 
    if S = 'CWON' then begin
-      InitializeBGK(dmZlogGlobal.Settings.CW._interval);
+      dmZLogKeyer.InitializeBGK(dmZlogGlobal.Settings.CW._interval);
    end;
 
    i := StrToFloatDef(S, 0);
@@ -4519,7 +4508,7 @@ begin
       end;
 
       '\': begin
-         ControlPTT(not(PTTIsOn)); // toggle PTT;
+         dmZLogKeyer.ControlPTT(not(dmZLogKeyer.PTTIsOn)); // toggle PTT;
          Key := #0;
       end;
 
@@ -4683,7 +4672,7 @@ begin
 
       ^T: begin
          CtrlZCQLoop := True;
-         TuneOn;
+         dmZLogKeyer.TuneOn;
       end;
 
       Char($1B): { ESC } begin
@@ -4816,7 +4805,7 @@ procedure TMainForm.CallsignEditChange(Sender: TObject);
 begin
    CurrentQSO.QSO.Callsign := CallsignEdit.Text;
 
-   BGK32Lib.SetCallSign(ShortString(CallsignEdit.Text));
+   dmZLogKeyer.SetCallSign(CallsignEdit.Text);
 
    if EditedSinceTABPressed = tabstate_tabpressedbutnotedited then begin
       EditedSinceTABPressed := tabstate_tabpressedandedited;
@@ -5138,18 +5127,18 @@ begin
       S := SetStr(dmZlogGlobal.CWMessage(1, 2), CurrentQSO);
    end;
 
-   BGK32Lib.ClrBuffer;
-   BGK32Lib.PauseCW;
+   dmZLogKeyer.ClrBuffer;
+   dmZLogKeyer.PauseCW;
    if dmZlogGlobal.PTTEnabled then begin
       S := S + ')'; // PTT is turned on in ResumeCW
    end;
 
-   BGK32Lib.SetCWSendBuf(0, S);
-   BGK32Lib.SetCallSign(ShortString(CurrentQSO.QSO.Callsign));
-   BGK32Lib.ResumeCW;
+   dmZLogKeyer.SetCWSendBuf(0, S);
+   dmZLogKeyer.SetCallSign(CurrentQSO.QSO.Callsign);
+   dmZLogKeyer.ResumeCW;
 
    if dmZlogGlobal.Settings._switchcqsp then begin
-      CallsignSentProc;
+      CallsignSentProc(nil);
    end;
 end;
 
@@ -5173,10 +5162,10 @@ begin
 
                S := SetStr(S, CurrentQSO);
                if dmZlogGlobal.FIFO then begin
-                  SendStrFIFO(S);
+                  dmZLogKeyer.SendStrFIFO(S);
                end
                else begin
-                  SendStr(S);
+                  dmZLogKeyer.SendStr(S);
                end;
 
                WriteStatusLine('Invalid Number', False);
@@ -5194,13 +5183,13 @@ begin
 
             S := SetStr(S, CurrentQSO);
             if dmZlogGlobal.FIFO then begin
-               SendStrFIFO(S);
+               dmZLogKeyer.SendStrFIFO(S);
             end
             else begin
-               SendStr(S);
+               dmZLogKeyer.SendStr(S);
             end;
 
-            BGK32Lib.SetCallSign(ShortString(CallsignEdit.Text));
+            dmZLogKeyer.SetCallSign(CallsignEdit.Text);
             LogButtonClick(Self);
          end;
 
@@ -5247,7 +5236,7 @@ begin
    case Key of
       { MUHENKAN KEY }
       29: begin
-            ControlPTT(not(PTTIsOn)); // toggle PTT;
+            dmZLogKeyer.ControlPTT(not(dmZLogKeyer.PTTIsOn)); // toggle PTT;
          end;
 
       VK_DOWN: begin
@@ -5565,15 +5554,7 @@ end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
-   CloseBGK;
-
-   if PaddleThread <> nil then begin
-      PaddleThread.Terminate();
-   end;
-
-   if BGKMonitorThread <> nil then begin
-      BGKMonitorThread.Terminate();
-   end;
+//   dmZLogKeyer.CloseBGK;
 end;
 
 procedure TMainForm.SpeedBarChange(Sender: TObject);
@@ -5593,7 +5574,7 @@ end;
 
 procedure TMainForm.CWStopButtonClick(Sender: TObject);
 begin
-   BGK32Lib.ClrBuffer;
+   dmZLogKeyer.ClrBuffer;
    CWPlayButton.Visible := False;
    CWPauseButton.Visible := True;
 end;
@@ -5632,7 +5613,7 @@ var
 begin
    S := dmZlogGlobal.CWMessage(1, 1);
    S := SetStr(UpperCase(S), CurrentQSO);
-   SendStrLoop(S);
+   dmZLogKeyer.SendStrLoop(S);
    SetCQ(True);
 end;
 
@@ -5643,8 +5624,9 @@ begin
    CtrlZCQLoop := True;
    S := dmZlogGlobal.CWMessage(1, 1);
    S := SetStr(UpperCase(S), CurrentQSO);
-   SendStrLoop(S);
-   BGK32Lib.SetRandCQStr(SetStr(dmZlogGlobal.Settings.CW.CQStrBank[1], CurrentQSO), SetStr(dmZlogGlobal.Settings.CW.CQStrBank[2], CurrentQSO));
+   dmZLogKeyer.SendStrLoop(S);
+   dmZLogKeyer.RandCQStr[1] := SetStr(dmZlogGlobal.Settings.CW.CQStrBank[1], CurrentQSO);
+   dmZLogKeyer.RandCQStr[2] := SetStr(dmZlogGlobal.Settings.CW.CQStrBank[2], CurrentQSO);
    SetCQ(True);
 end;
 
@@ -5694,16 +5676,17 @@ end;
 
 procedure TMainForm.CWPauseButtonClick(Sender: TObject);
 begin
-   if BGK32Lib.IsPlaying = False then
+   if dmZLogKeyer.IsPlaying = False then
       exit;
-   BGK32Lib.PauseCW;
+
+   dmZLogKeyer.PauseCW;
    CWPauseButton.Visible := False;
    CWPlayButton.Visible := True;
 end;
 
 procedure TMainForm.CWPlayButtonClick(Sender: TObject);
 begin
-   BGK32Lib.ResumeCW;
+   dmZLogKeyer.ResumeCW;
    CWPlayButton.Visible := False;
    CWPauseButton.Visible := True;
 end;
@@ -5729,7 +5712,7 @@ end;
 
 procedure TMainForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-   CloseBGK;
+   dmZLogKeyer.CloseBGK;
    RecordWindowStates;
 
    if MMTTYRunning then begin
@@ -5829,7 +5812,7 @@ begin
    StatusLine.Panels[2].Text := S;
 end;
 
-procedure TMainForm.CallsignSentProc;
+procedure TMainForm.CallsignSentProc(Sender: TObject);
 var
    Q: TQSO;
    S: ShortString;
@@ -5838,7 +5821,7 @@ begin
       if CallsignEdit.Focused then begin
          Q := Log.QuickDupe(CurrentQSO);
          if TabPressed2 and (Q <> nil) then begin
-            BGK32Lib.ClrBuffer;
+            dmZLogKeyer.ClrBuffer;
             WriteStatusLineRed(Q.PartialSummary(dmZlogGlobal.Settings._displaydatepartialcheck), True);
 
             if dmZlogGlobal.Settings._switchcqsp then begin
@@ -5849,8 +5832,8 @@ begin
             end;
 
             S := ' ' + SetStr(dmZlogGlobal.CWMessage(1, 4), CurrentQSO);
-            BGK32Lib.SendStr(S);
-            BGK32Lib.SetCallSign(ShortString(CurrentQSO.QSO.Callsign));
+            dmZLogKeyer.SendStr(S);
+            dmZLogKeyer.SetCallSign(CurrentQSO.QSO.Callsign);
 
             CallsignEdit.SelectAll;
 
@@ -5864,7 +5847,7 @@ begin
          end;
       end;
 
-      BGK32Lib.ResumeCW;
+      dmZLogKeyer.ResumeCW;
    finally
       TabPressed := False;
       TabPressed2 := False;
@@ -7109,7 +7092,7 @@ procedure TMainForm.MyIdleEvent(Sender: TObject; var Done: boolean);
 var
    boo: boolean;
 begin
-   boo := BGK32Lib.IsPlaying;
+   boo := dmZlogKeyer.IsPlaying;
 
    if boo then begin
       if CurrentQSO.QSO.mode = mCW then begin
@@ -7133,7 +7116,8 @@ begin
       end;
 
       CWPauseButton.Enabled := False;
-      if not(BGK32Lib.Paused) then begin
+
+      if not(dmZlogKeyer.Paused) then begin
          CWStopButton.Enabled := False;
       end
       else begin

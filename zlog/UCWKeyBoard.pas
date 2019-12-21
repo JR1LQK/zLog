@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, BGK32LIB, ExtCtrls, UzLogGlobal, UzLogCW, ClipBrd;
+  StdCtrls, ExtCtrls, UzLogGlobal, UzLogCW, ClipBrd, UzLogKeyer;
 
 type
   TCWKeyBoard = class(TForm)
@@ -47,15 +47,16 @@ var K : Char;
 begin
   if Key = Chr($1B) then
     exit;
+
   if Key = Chr($08) then
-    BGK32LIB.CancelLastChar
+    dmZLogKeyer.CancelLastChar
   else
     begin
       if HiWord(GetKeyState(VK_SHIFT))<>0 then
         K := LowCase(Key)
       else
         K := UpCase(Key);
-      BGK32LIB.SetCWSendBufCharPTT(K);
+      dmZLogKeyer.SetCWSendBufCharPTT(K);
       Key := K;
     end;
 end;
@@ -66,7 +67,7 @@ begin
   case Key of
     VK_ESCAPE :
       begin
-        ControlPTT(False);
+        dmZLogKeyer.ControlPTT(False);
         MainForm.LastFocus.SetFocus;
       end;
   end;
@@ -92,14 +93,14 @@ begin
   case Key of
     VK_ESCAPE :
       begin
-        if BGK32LIB.IsPlaying then
+        if dmZLogKeyer.IsPlaying then
           begin
-            BGK32LIB.ClrBuffer;
-            ControlPTT(False);
+            dmZLogKeyer.ClrBuffer;
+            dmZLogKeyer.ControlPTT(False);
           end
         else
           begin
-            ControlPTT(False);
+            dmZLogKeyer.ControlPTT(False);
             MainForm.SetFocus;
             //Caption := 'CODE 2';
          end;

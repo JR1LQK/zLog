@@ -5,7 +5,7 @@ interface
 uses
   SysUtils, Windows, Messages, Classes, Graphics, Controls,
   StdCtrls, ExtCtrls, Forms, ComCtrls, Spin,
-  BGK32Lib, Dialogs, Menus, FileCtrl, UPaddleThread,
+  Dialogs, Menus, FileCtrl,
   UIntegerDialog, UzLogGlobal;
 
 type
