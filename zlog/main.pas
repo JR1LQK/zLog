@@ -576,6 +576,7 @@ type
     actionPlayMessageB12: TAction;
     actionCheckMulti: TAction;
     actionCheckPartial: TAction;
+    menuClearCallAndRst: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure ShowHint(Sender: TObject);
@@ -741,6 +742,7 @@ type
     procedure actionPlayMessageBExecute(Sender: TObject);
     procedure actionCheckMultiExecute(Sender: TObject);
     procedure actionCheckPartialExecute(Sender: TObject);
+    procedure menuClearCallAndRstClick(Sender: TObject);
   private
     TempQSOList : TList;
     clStatusLine : TColor;
@@ -7020,6 +7022,14 @@ begin
    else begin
       TWAEContest(MyContest).QTCForm.OpenQTC(Main.CurrentQSO);
    end;
+end;
+
+procedure TMainForm.menuClearCallAndRstClick(Sender: TObject);
+begin
+   CallsignEdit.Clear();
+   NumberEdit.Clear();
+   WriteStatusLine('', False);
+   CallsignEdit.SetFocus;
 end;
 
 procedure TMainForm.mnNewBandScopeClick(Sender: TObject);

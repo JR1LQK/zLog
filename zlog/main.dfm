@@ -9227,6 +9227,11 @@ object MainForm: TMainForm
         Visible = False
         OnClick = QTC1Click
       end
+      object menuClearCallAndRst: TMenuItem
+        Caption = 'clear call and rst'
+        ShortCut = 32855
+        OnClick = menuClearCallAndRstClick
+      end
     end
     object Windows1: TMenuItem
       Caption = '&Windows'
