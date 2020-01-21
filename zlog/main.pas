@@ -4573,10 +4573,10 @@ begin
 
       ^N: begin // insert band scope
          if GetAsyncKeyState(VK_SHIFT) < 0 then begin
-            boo := True;
+            boo := False;
          end
          else begin
-            boo := False;
+            boo := True;
          end;
 
          if RigControl.Rig <> nil then begin
@@ -4589,6 +4589,7 @@ begin
 
             if boo then begin
                CallsignEdit.Clear;
+               CallsignEdit.SetFocus();
                NumberEdit.Clear;
             end;
          end
@@ -4611,6 +4612,7 @@ begin
 
             if boo then begin
                CallsignEdit.Clear;
+               CallsignEdit.SetFocus();
                NumberEdit.Clear;
             end;
          end;
