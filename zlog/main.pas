@@ -10,7 +10,7 @@ uses
   UOptions, UEditDialog, UGeneralMulti2,
   UzLogCW, Hemibtn, ShellAPI, UITypes, UzLogKeyer,
   OEdit, URigControl, UConsolePad, URenewThread, USpotClass,
-  UMMTTY, UTTYConsole, UELogJarl1, UELogJarl2,
+  UMMTTY, UTTYConsole, UELogJarl1, UELogJarl2, UQuickRef,
   UWWMulti, UWWScore, UWWZone, UARRLWMulti, UQTCForm, System.Actions,
   Vcl.ActnList;
 
@@ -756,6 +756,9 @@ type
 
     FPostContest: Boolean;
 
+    // Quick Reference
+    FQuickRef: TQuickRef;
+
     procedure MyIdleEvent(Sender: TObject; var Done: boolean);
     procedure MyMessageEvent(var Msg: TMsg; var Handled: boolean);
 
@@ -856,7 +859,7 @@ uses UPartials, UALLJAEditDialog, UAbout, URateDialog, UMenu, UACAGMulti,
   UIARUScore, UAllAsianScore, UIOTAMulti, {UIOTACategory,} UARRL10Multi,
   UARRL10Score, UFreqList, UCheckCall2, UCheckCountry, UCheckMulti,
   UBandScope2, UIntegerDialog, UNewPrefix, UKCJScore, UScratchSheet,
-  UWAEScore, UWAEMulti, UQuickRef, USummaryInfo,
+  UWAEScore, UWAEMulti, USummaryInfo,
   UAgeDialog, UMultipliers, UUTCDialog, UZServerInquiry, UNewIOTARef;
 
 {$R *.DFM}
@@ -3717,6 +3720,8 @@ begin
       end;
    end;
 
+   FQuickRef := TQuickRef.Create(Self);
+
    TempQSOList := TList.Create;
    dmZLogKeyer.ControlPTT(False);
 end;
@@ -5558,6 +5563,7 @@ end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
+   FQuickRef.Release();
 //   dmZLogKeyer.CloseBGK;
 end;
 
@@ -7060,15 +7066,8 @@ begin
 end;
 
 procedure TMainForm.menuQuickReferenceClick(Sender: TObject);
-var
-   f: TQuickRef;
 begin
-   f := TQuickRef.Create(Self);
-   try
-      f.ShowModal();
-   finally
-      f.Release();
-   end;
+   FQuickRef.Show();
 end;
 
 procedure TMainForm.Timer2Timer(Sender: TObject);
