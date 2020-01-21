@@ -9952,5 +9952,20 @@ object MainForm: TMainForm
       ShortCut = 8315
       OnExecute = actionPlayMessageBExecute
     end
+    object actionInsertBandScope: TAction
+      Caption = 'actionInsertBandScope'
+      ShortCut = 16397
+      OnExecute = actionInsertBandScopeExecute
+    end
+    object actionInsertBandScope2: TAction
+      Caption = 'actionInsertBandScope2'
+      ShortCut = 16462
+      OnExecute = actionInsertBandScopeExecute
+    end
+    object actionInsertBandScope3: TAction
+      Caption = 'actionInsertBandScope3'
+      ShortCut = 24654
+      OnExecute = actionInsertBandScope3Execute
+    end
   end
 end

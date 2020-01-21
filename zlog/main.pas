@@ -577,6 +577,9 @@ type
     actionCheckMulti: TAction;
     actionCheckPartial: TAction;
     menuClearCallAndRst: TMenuItem;
+    actionInsertBandScope: TAction;
+    actionInsertBandScope2: TAction;
+    actionInsertBandScope3: TAction;
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure ShowHint(Sender: TObject);
@@ -743,6 +746,8 @@ type
     procedure actionCheckMultiExecute(Sender: TObject);
     procedure actionCheckPartialExecute(Sender: TObject);
     procedure menuClearCallAndRstClick(Sender: TObject);
+    procedure actionInsertBandScopeExecute(Sender: TObject);
+    procedure actionInsertBandScope3Execute(Sender: TObject);
   private
     TempQSOList : TList;
     clStatusLine : TColor;
@@ -838,6 +843,7 @@ type
 
     procedure QSY(b: TBand; m: TMode);
     procedure PlayMessage(bank: Integer; no: Integer);
+    procedure InsertBandScope(fShiftKey: Boolean);
   end;
 
 var
@@ -4484,13 +4490,7 @@ end;
 
 procedure TMainForm.EditKeyPress(Sender: TObject; var Key: Char);
 var
-   j: integer;
-   E: Extended;
    Q: TQSO;
-   boo: boolean;
-   F: TIntegerDialog;
-label
-   jjj;
 begin
    CommonEditKeyProcess(Sender, Key);
 
@@ -4573,54 +4573,6 @@ begin
 
       '+', ';': begin
          DownKeyPress;
-         Key := #0;
-      end;
-
-      ^N: begin // insert band scope
-         if GetAsyncKeyState(VK_SHIFT) < 0 then begin
-            boo := False;
-         end
-         else begin
-            boo := True;
-         end;
-
-         if RigControl.Rig <> nil then begin
-            j := RigControl.Rig.CurrentFreqHz;
-            if j > 0 then begin
-               BandScope2.CreateBSData(CurrentQSO, j);
-            end
-            else
-               goto jjj;
-
-            if boo then begin
-               CallsignEdit.Clear;
-               CallsignEdit.SetFocus();
-               NumberEdit.Clear;
-            end;
-         end
-         else begin// no rig control
-         jjj:
-            F := TIntegerDialog.Create(Self);
-            try
-               F.SetLabel('Enter frequency in kHz');
-               if F.ShowModal() <> mrOK then begin
-                  Exit;
-               end;
-               E := F.GetValueExtended;
-            finally
-               F.Release();
-            end;
-
-            if E > 1000 then begin
-               BandScope2.CreateBSData(CurrentQSO, round(E * 1000));
-            end;
-
-            if boo then begin
-               CallsignEdit.Clear;
-               CallsignEdit.SetFocus();
-               NumberEdit.Clear;
-            end;
-         end;
          Key := #0;
       end;
 
@@ -4792,6 +4744,7 @@ begin
          end;
       end;
 
+      // Enter / SHIFT+Enter
       Char($0D): begin
          if CallsignEdit.Focused and (Pos(',', CallsignEdit.Text) = 1) then begin
             ProcessConsoleCommand(CallsignEdit.Text);
@@ -8010,6 +7963,73 @@ begin
       else begin
          // NO OPERATION
       end;
+   end;
+end;
+
+// CTRL+Enter, CTRL+N
+procedure TMainForm.actionInsertBandScopeExecute(Sender: TObject);
+begin
+   InsertBandScope(False);
+end;
+
+// CTRL+SHIFT+N
+procedure TMainForm.actionInsertBandScope3Execute(Sender: TObject);
+begin
+   InsertBandScope(True);
+end;
+
+// バンドスコープへ追加
+procedure TMainForm.InsertBandScope(fShiftKey: Boolean);
+var
+   nFreq: Integer;
+
+   function InputFreq(): Boolean;
+   var
+      E: Extended;
+      F: TIntegerDialog;
+   begin
+      F := TIntegerDialog.Create(Self);
+      try
+         F.SetLabel('Enter frequency in kHz');
+
+         if F.ShowModal() <> mrOK then begin
+            Result := False;
+            Exit;
+         end;
+
+         E := F.GetValueExtended;
+      finally
+         F.Release();
+      end;
+
+      if E > 1000 then begin
+         BandScope2.CreateBSData(CurrentQSO, round(E * 1000));
+      end;
+
+      Result := True;
+   end;
+begin
+   if RigControl.Rig <> nil then begin
+      nFreq := RigControl.Rig.CurrentFreqHz;
+      if nFreq > 0 then begin
+         BandScope2.CreateBSData(CurrentQSO, nFreq);
+      end
+      else begin
+         if InputFreq() = False then begin
+            Exit;
+         end;
+      end;
+   end
+   else begin// no rig control
+      if InputFreq() = False then begin
+         Exit;
+      end;
+   end;
+
+   if fShiftKey = False then begin
+      CallsignEdit.Clear;
+      CallsignEdit.SetFocus();
+      NumberEdit.Clear;
    end;
 end;
 
