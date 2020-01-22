@@ -17,9 +17,10 @@ uses
 
 const
   WM_ZLOG_INIT = (WM_USER + 100);
+  WM_ZLOG_SETGRIDCOL = (WM_USER + 101);
 
 const
-  MaxGridQSO = 5000;
+  MaxGridQSO = 3000;
 
 var
   GLOBALSERIAL : integer = 0;
@@ -57,7 +58,6 @@ type
     NumberWid : integer;
     BandWid : integer;
     ModeWid : integer;
-    PowerWid : integer;
     NewPowerWid : integer;
     PointWid : integer;
     OpWid : integer;
@@ -740,6 +740,7 @@ type
     procedure CreateELogJARL2Click(Sender: TObject);
 
     procedure OnZLogInit( var Message: TMessage ); message WM_ZLOG_INIT;
+    procedure OnZLogSetGridCol( var Message: TMessage ); message WM_ZLOG_SETGRIDCOL;
     procedure actionQuickQSYExecute(Sender: TObject);
     procedure actionPlayMessageAExecute(Sender: TObject);
     procedure actionPlayMessageBExecute(Sender: TObject);
@@ -2770,23 +2771,18 @@ begin
       ColCount := 10;
       Height := 291;
       DefaultRowHeight := 17;
-      // Height := 256;
-      // DefaultRowHeight := 16;
 
       SerialWid := 4;
-      TimeWid := 4;
-      // CallSignWid := 10;
-      CallSignWid := 9;
-      rcvdRSTWid := 3;
-      // NumberWid := 5;
-      NumberWid := 6;
+      TimeWid := 6;
+      CallSignWid := 12;
+      rcvdRSTWid := 4;
+      NumberWid := 10;
       BandWid := 4;
-      ModeWid := 3;
-      PowerWid := 0;
+      ModeWid := 4;
       NewPowerWid := 2;
       PointWid := 3;
-      OpWid := 6;
-      MemoWid := 7;
+      OpWid := 8;
+      MemoWid := 10;
       NewMulti1Wid := 3;
       NewMulti2Wid := 0;
    end;
@@ -2978,86 +2974,96 @@ begin
 end;
 
 procedure TBasicEdit.SetGridWidth;
+var
+   i: Integer;
+   nColWidth: Integer;
+   nRowHeight: Integer;
 begin
    with MainForm.Grid do begin
+
+      nColWidth := Canvas.TextWidth('0') + 1;
+      nRowHeight := Canvas.TextHeight('0') + 4;
+
+      DefaultRowHeight := nRowHeight;
+
       if colSerial >= 0 then begin
          Cells[colSerial, 0] := 'serial';
-         ColWidths[colSerial] := SerialWid * CWid;
+         ColWidths[colSerial] := SerialWid * nColWidth;
       end;
       MainForm.SerialEdit.Tag := colSerial;
 
       if colTime >= 0 then begin
          Cells[colTime, 0] := 'time';
-         ColWidths[colTime] := TimeWid * CWid;
+         ColWidths[colTime] := TimeWid * nColWidth;
       end;
       MainForm.TimeEdit.Tag := colTime;
 
       if colCall >= 0 then begin
          Cells[colCall, 0] := 'call';
-         ColWidths[colCall] := CallSignWid * CWid;
+         ColWidths[colCall] := CallSignWid * nColWidth;
       end;
       MainForm.CallsignEdit.Tag := colCall;
 
       if colrcvdRST >= 0 then begin
          Cells[colrcvdRST, 0] := 'RST';
-         ColWidths[colrcvdRST] := rcvdRSTWid * CWid;
+         ColWidths[colrcvdRST] := rcvdRSTWid * nColWidth;
       end;
       MainForm.RcvdRSTEdit.Tag := colrcvdRST;
 
       if colrcvdNumber >= 0 then begin
          Cells[colrcvdNumber, 0] := 'rcvd';
-         ColWidths[colrcvdNumber] := NumberWid * CWid;
+         ColWidths[colrcvdNumber] := NumberWid * nColWidth;
       end;
       MainForm.NumberEdit.Tag := colrcvdNumber;
 
       if colBand >= 0 then begin
          Cells[colBand, 0] := 'band';
-         ColWidths[colBand] := BandWid * CWid;
+         ColWidths[colBand] := BandWid * nColWidth;
       end;
       MainForm.BandEdit.Tag := colBand;
 
       if colMode >= 0 then begin
          Cells[colMode, 0] := 'mod';
-         ColWidths[colMode] := ModeWid * CWid;
+         ColWidths[colMode] := ModeWid * nColWidth;
       end;
       MainForm.ModeEdit.Tag := colMode;
 
       if colNewPower >= 0 then begin
          Cells[colNewPower, 0] := 'pwr';
-         ColWidths[colNewPower] := NewPowerWid * CWid;
+         ColWidths[colNewPower] := NewPowerWid * nColWidth;
       end;
       MainForm.NewPowerEdit.Tag := colNewPower;
 
       if colPoint >= 0 then begin
          Cells[colPoint, 0] := 'pts';
-         ColWidths[colPoint] := PointWid * CWid;
+         ColWidths[colPoint] := PointWid * nColWidth;
       end;
       MainForm.PointEdit.Tag := colPoint;
 
       if colNewMulti1 >= 0 then begin
          Cells[colNewMulti1, 0] := 'new';
-         ColWidths[colNewMulti1] := NewMulti1Wid * CWid;
+         ColWidths[colNewMulti1] := NewMulti1Wid * nColWidth;
       end;
 
       if colNewMulti2 >= 0 then begin
          Cells[colNewMulti2, 0] := 'new';
-         ColWidths[colNewMulti2] := NewMulti2Wid * CWid;
+         ColWidths[colNewMulti2] := NewMulti2Wid * nColWidth;
       end;
 
       if colOp >= 0 then begin
          Cells[colOp, 0] := 'op';
-         ColWidths[colOp] := OpWid * CWid;
+         ColWidths[colOp] := OpWid * nColWidth;
       end;
       MainForm.OpEdit.Tag := colOp;
 
       if colMemo >= 0 then begin
          Cells[colMemo, 0] := 'memo';
-         ColWidths[colMemo] := MemoWid * CWid;
+         ColWidths[colMemo] := MemoWid * nColWidth;
       end;
       MainForm.MemoEdit.Tag := colMemo;
 
+      Refresh();
    end;
-//   MainForm.Width := 46 * CWid + 36;
 end;
 
 function TBasicEdit.GetLeft(col: integer): integer;
@@ -3075,53 +3081,69 @@ begin
 end;
 
 Procedure TBasicEdit.SetEditFields;
+var
+   h: Integer;
 begin
    with MainForm do begin
+      h := MainForm.Grid.RowHeights[0];
+      EditPanel.Height := h + 10;
+
       if colSerial >= 0 then begin
          SerialEdit.Width := MainForm.Grid.ColWidths[colSerial];
+         SerialEdit.Height := h;
          SerialEdit.Left := GetLeft(colSerial);
       end;
       if colTime >= 0 then begin
          TimeEdit.Width := MainForm.Grid.ColWidths[colTime];
+         TimeEdit.Height := h;
          TimeEdit.Left := GetLeft(colTime);
          DateEdit.Width := TimeEdit.Width;
          DateEdit.Left := TimeEdit.Left;
       end;
       if colCall >= 0 then begin
          CallsignEdit.Width := MainForm.Grid.ColWidths[colCall];
+         CallsignEdit.Height := h;
          CallsignEdit.Left := GetLeft(colCall);
       end;
       if colrcvdRST >= 0 then begin
          RcvdRSTEdit.Width := MainForm.Grid.ColWidths[colrcvdRST];
+         RcvdRSTEdit.Height := h;
          RcvdRSTEdit.Left := GetLeft(colrcvdRST);
       end;
       if colrcvdNumber >= 0 then begin
          NumberEdit.Width := MainForm.Grid.ColWidths[colrcvdNumber];
+         NumberEdit.Height := h;
          NumberEdit.Left := GetLeft(colrcvdNumber);
       end;
       if colBand >= 0 then begin
          BandEdit.Width := MainForm.Grid.ColWidths[colBand];
+         BandEdit.Height := h;
          BandEdit.Left := GetLeft(colBand);
       end;
       if colMode >= 0 then begin
          ModeEdit.Width := MainForm.Grid.ColWidths[colMode];
+         ModeEdit.Height := h;
          ModeEdit.Left := GetLeft(colMode);
       end;
       if colNewPower >= 0 then begin
          NewPowerEdit.Width := MainForm.Grid.ColWidths[colNewPower];
+         NewPowerEdit.Height := h;
          NewPowerEdit.Left := GetLeft(colNewPower);
       end;
       if colPoint >= 0 then begin
          PointEdit.Width := MainForm.Grid.ColWidths[colPoint];
+         PointEdit.Height := h;
          PointEdit.Left := GetLeft(colPoint);
       end;
       if colOp >= 0 then begin
          OpEdit.Width := MainForm.Grid.ColWidths[colOp];
+         OpEdit.Height := h;
          OpEdit.Left := GetLeft(colOp);
       end;
       if colMemo >= 0 then begin
          MemoEdit.Left := GetLeft(colMemo);
          MemoEdit.Width := EditPanel.Width - MemoEdit.Left - 3;
+         MemoEdit.Height := h;
       end;
    end;
 end;
@@ -4424,9 +4446,12 @@ begin
 
    EditPanel.Font.Size := j;
    Grid.Font.Size := j;
+   Grid.Refresh();
 
    dmZlogGlobal.Settings._mainfontsize := j;
-   dmZlogGlobal.SaveCurrentSettings()
+   dmZlogGlobal.SaveCurrentSettings();
+
+   PostMessage(Handle, WM_ZLOG_SETGRIDCOL, 0, 0);
 end;
 
 procedure TMainForm.DecFontSize();
@@ -4443,9 +4468,12 @@ begin
 
    EditPanel.Font.Size := j;
    Grid.Font.Size := j;
+   Grid.Refresh();
 
    dmZlogGlobal.Settings._mainfontsize := j;
-   dmZlogGlobal.SaveCurrentSettings()
+   dmZlogGlobal.SaveCurrentSettings();
+
+   PostMessage(Handle, WM_ZLOG_SETGRIDCOL, 0, 0);
 end;
 
 procedure TMainForm.SwitchCWBank(Action: integer); // 0 : toggle; 1,2 bank#)
@@ -7394,9 +7422,17 @@ begin
 
       // リグコントロール開始
       RigControl.ImplementOptions;
+
+      PostMessage(Handle, WM_ZLOG_SETGRIDCOL, 0, 0);
    finally
       menu.Release();
    end;
+end;
+
+procedure TMainForm.OnZLogSetGridCol( var Message: TMessage );
+begin
+   EditScreen.SetGridWidth();
+   EditScreen.SetEditFields();
 end;
 
 procedure TMainForm.InitALLJA();
