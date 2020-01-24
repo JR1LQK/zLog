@@ -580,6 +580,9 @@ type
     actionInsertBandScope: TAction;
     actionInsertBandScope2: TAction;
     actionInsertBandScope3: TAction;
+    DecreaseFontSize1: TMenuItem;
+    actionIncreaseFontSize: TAction;
+    actionDecreaseFontSize: TAction;
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure ShowHint(Sender: TObject);
@@ -728,7 +731,6 @@ type
     procedure mnHideCWPhToolBarClick(Sender: TObject);
     procedure mnHideMenuToolbarClick(Sender: TObject);
     procedure Scratchsheet1Click(Sender: TObject);
-    procedure IncreaseFontSize1Click(Sender: TObject);
     procedure mnMMTTYClick(Sender: TObject);
     procedure mnTTYConsoleClick(Sender: TObject);
     procedure SwitchCWBank(Action : integer);
@@ -749,6 +751,8 @@ type
     procedure menuClearCallAndRstClick(Sender: TObject);
     procedure actionInsertBandScopeExecute(Sender: TObject);
     procedure actionInsertBandScope3Execute(Sender: TObject);
+    procedure actionIncreaseFontSizeExecute(Sender: TObject);
+    procedure actionDecreaseFontSizeExecute(Sender: TObject);
   private
     TempQSOList : TList;
     clStatusLine : TColor;
@@ -4588,17 +4592,6 @@ begin
          Key := #0;
       end;
 
-      // フォントサイズ変更
-      ^S: begin
-         if (GetAsyncKeyState(VK_SHIFT) < 0) then begin
-            DecFontSize();
-         end
-         else begin
-            IncFontSize;
-         end;
-         Key := #0;
-      end;
-
       '+', ';': begin
          DownKeyPress;
          Key := #0;
@@ -6960,11 +6953,6 @@ begin
    end;
 end;
 
-procedure TMainForm.IncreaseFontSize1Click(Sender: TObject);
-begin
-   IncFontSize;
-end;
-
 procedure TMainForm.mnMMTTYClick(Sender: TObject);
 begin
    if mnMMTTY.Tag = 0 then begin
@@ -8067,6 +8055,18 @@ begin
       CallsignEdit.SetFocus();
       NumberEdit.Clear;
    end;
+end;
+
+// CTRL+S フォントサイズ↑
+procedure TMainForm.actionIncreaseFontSizeExecute(Sender: TObject);
+begin
+   IncFontSize;
+end;
+
+// CTRL+SHIFT+S フォントサイズ↓
+procedure TMainForm.actionDecreaseFontSizeExecute(Sender: TObject);
+begin
+   DecFontSize();
 end;
 
 end.

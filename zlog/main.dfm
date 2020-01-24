@@ -9371,9 +9371,10 @@ object MainForm: TMainForm
         OnClick = mnHideMenuToolbarClick
       end
       object IncreaseFontSize1: TMenuItem
-        Caption = 'Increase Font Size'
-        ShortCut = 16467
-        OnClick = IncreaseFontSize1Click
+        Action = actionIncreaseFontSize
+      end
+      object DecreaseFontSize1: TMenuItem
+        Action = actionDecreaseFontSize
       end
     end
     object Help1: TMenuItem
@@ -9966,6 +9967,16 @@ object MainForm: TMainForm
       Caption = 'actionInsertBandScope3'
       ShortCut = 24654
       OnExecute = actionInsertBandScope3Execute
+    end
+    object actionIncreaseFontSize: TAction
+      Caption = 'Increase Font Size'
+      ShortCut = 16467
+      OnExecute = actionIncreaseFontSizeExecute
+    end
+    object actionDecreaseFontSize: TAction
+      Caption = 'Decrease Font Size'
+      ShortCut = 24659
+      OnExecute = actionDecreaseFontSizeExecute
     end
   end
 end
