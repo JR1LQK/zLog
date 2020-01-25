@@ -798,6 +798,7 @@ type
     function GetNumOfAvailableBands(): Integer;
     procedure AdjustActiveBands();
     function GetFirstAvailableBand(): TBand;
+    procedure SetWindowCaption();
   public
     EditScreen : TBasicEdit;
     LastFocus : TEdit;
@@ -3796,7 +3797,7 @@ begin
       LoadNewContestFromFile(OpenDialog.filename);
       MyContest.Renew;
       WriteStatusLine('', False);
-      Caption := 'zLog for Windows  ' + ExtractFileName(OpenDialog.filename);
+      SetWindowCaption();
    end;
 end;
 
@@ -3816,7 +3817,7 @@ begin
    if SaveDialog.Execute then begin
       Log.SaveToFile(SaveDialog.filename);
       dmZLogGlobal.SetLogFileName(SaveDialog.filename);
-      Caption := 'zLog for Windows  ' + ExtractFileName(SaveDialog.filename);
+      SetWindowCaption();
       { Add code to save current file under SaveDialog.FileName }
    end;
 end;
@@ -4123,7 +4124,7 @@ begin
             SerialEdit.Text := CurrentQSO.SerialStr;
          end;
 
-      Caption := 'zLog for Windows - Multi station  ' + ExtractFileName(CurrentFileName);
+      SetWindowCaption();
       ReEvaluateCountDownTimer;
       ReEvaluateQSYCount;
    end;
@@ -4140,7 +4141,7 @@ begin
             SerialEdit.Text := CurrentQSO.SerialStr;
          end;
 
-      Caption := 'zLog for Windows - Running station  ' + ExtractFileName(CurrentFileName);
+      SetWindowCaption();
       ReEvaluateCountDownTimer;
       ReEvaluateQSYCount;
    end;
@@ -6156,6 +6157,8 @@ begin
       // リグコントロール開始
       RigControl.ImplementOptions;
 
+      SetWindowCaption();
+
       LastFocus.SetFocus;
    finally
       f.Release();
@@ -7318,6 +7321,8 @@ begin
             if FileExists(OpenDialog.FileName) then begin
                LoadNewContestFromFile(OpenDialog.FileName);
             end;
+
+            SetWindowCaption();
          end
          else begin // user hit cancel
             MessageDlg('Data will NOT be saved until you enter the file name', mtWarning, [mbOK], 0); { HELP context 0 }
@@ -7855,6 +7860,30 @@ begin
    end;
 
    Result := b19;
+end;
+
+procedure TMainForm.SetWindowCaption();
+var
+   strCap: string;
+begin
+   strCap := 'zLog for Windows';
+
+   if dmZlogGlobal.Settings._multistation = True then begin
+      strCap := strCap + ' - Multi station';
+   end
+   else begin
+      strCap := strCap + ' - Running station';
+   end;
+
+   if dmZlogGlobal.Settings._zlinkport <> 0 then begin
+      if dmZlogGlobal.Settings._pcname <> '' then begin
+          strCap := strCap + ' [' + dmZlogGlobal.Settings._pcname + ']';
+      end;
+   end;
+
+   strCap := strCap + ' - ' + ExtractFileName(CurrentFileName);
+
+   Caption := strCap;
 end;
 
 procedure TMainForm.QSY(b: TBand; m: TMode);
