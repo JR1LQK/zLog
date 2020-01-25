@@ -821,7 +821,6 @@ type
     procedure WriteStatusLineRed(S : string; WriteConsole : boolean);
     procedure CallsignSentProc(Sender: TObject); // called when callsign is sent;
     procedure Update10MinTimer; //10 min countdown
-    procedure SetDispHeight(H : integer); // sets grid's row height 18..40 pts
     procedure ProcessConsoleCommand(S : string);
     procedure UpdateBand(B : TBand); // takes care of window disp
     procedure UpdateMode(M : TMode);
@@ -838,6 +837,7 @@ type
     procedure SwitchLastQSOBandMode;
     procedure IncFontSize();
     procedure DecFontSize();
+    procedure SetFontSize(font_size: Integer);
     procedure AutoInput(D : TBSData);
     procedure ConsoleRigBandSet(B: TBand);
 
@@ -3974,22 +3974,6 @@ begin
    Q.Free;
 end;
 
-procedure TMainForm.SetDispHeight(H: integer);
-var
-   i: integer;
-begin
-   Grid.DefaultRowHeight := H;
-   EditPanel.Height := H + 9;
-
-   for i := 0 to EditPanel.ControlCount - 1 do begin
-      EditPanel.Controls[i].Height := H;
-   end;
-
-   dmZlogGlobal.Settings._mainrowheight := H;
-   dmZlogGlobal.SaveCurrentSettings()
-   // dmZlogGlobal.Ini.SetInteger('Preferences','RowHeight', dmZlogGlobal.Settings._mainrowheight);
-end;
-
 procedure TMainForm.ProcessConsoleCommand(S: string);
 var
    i: double;
@@ -4073,20 +4057,6 @@ begin
       TTYConsole.close;
       TTYConsole.Destroy;
       ExitMMTTY;
-   end;
-
-   if Pos('HEIGHT', S) = 1 then begin
-      temp := S;
-      Delete(temp, 1, 6);
-      temp := TrimLeft(temp);
-      try
-         j := StrToInt(temp);
-      except
-         on EConvertError do
-            exit;
-      end;
-      if (j > 17) and (j < 41) then
-         SetDispHeight(j);
    end;
 
    if S = 'MMCLR' then begin
@@ -4449,14 +4419,7 @@ begin
       j := 9;
    end;
 
-   EditPanel.Font.Size := j;
-   Grid.Font.Size := j;
-   Grid.Refresh();
-
-   dmZlogGlobal.Settings._mainfontsize := j;
-   dmZlogGlobal.SaveCurrentSettings();
-
-   PostMessage(Handle, WM_ZLOG_SETGRIDCOL, 0, 0);
+   SetFontSize(j);
 end;
 
 procedure TMainForm.DecFontSize();
@@ -4471,11 +4434,16 @@ begin
       j := 21;
    end;
 
-   EditPanel.Font.Size := j;
-   Grid.Font.Size := j;
+   SetFontSize(j);
+end;
+
+procedure TMainForm.SetFontSize(font_size: Integer);
+begin
+   EditPanel.Font.Size := font_size;
+   Grid.Font.Size := font_size;
    Grid.Refresh();
 
-   dmZlogGlobal.Settings._mainfontsize := j;
+   dmZlogGlobal.Settings._mainfontsize := font_size;
    dmZlogGlobal.SaveCurrentSettings();
 
    PostMessage(Handle, WM_ZLOG_SETGRIDCOL, 0, 0);
@@ -7390,9 +7358,8 @@ begin
       // CurrentQSO.QSO.Serial := SerialArray[b19]; // in case SERIALSTART is defined. SERIALSTART applies to all bands.
       SerialEdit.Text := CurrentQSO.SerialStr;
 
-      EditPanel.Font.Size := dmZlogGlobal.Settings._mainfontsize;
-      Grid.Font.Size := dmZlogGlobal.Settings._mainfontsize;
-      SetDispHeight(dmZlogGlobal.Settings._mainrowheight);
+      // フォントサイズの設定
+      SetFontSize(dmZlogGlobal.Settings._mainfontsize);
 
       EditScreen.ResetTopRow; // added 2.2e
       EditScreen.RefreshScreen; // added 2,2e
@@ -7415,8 +7382,6 @@ begin
 
       // リグコントロール開始
       RigControl.ImplementOptions;
-
-      PostMessage(Handle, WM_ZLOG_SETGRIDCOL, 0, 0);
    finally
       menu.Release();
    end;
