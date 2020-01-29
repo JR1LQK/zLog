@@ -799,6 +799,7 @@ type
     procedure AdjustActiveBands();
     function GetFirstAvailableBand(): TBand;
     procedure SetWindowCaption();
+    procedure RestoreWindowsPos();
   public
     EditScreen : TBasicEdit;
     LastFocus : TEdit;
@@ -3756,6 +3757,9 @@ begin
    FQuickRef := TQuickRef.Create(Self);
 
    TempQSOList := TList.Create;
+
+   RestoreWindowsPos();
+
    dmZLogKeyer.ControlPTT(False);
 end;
 
@@ -5458,27 +5462,7 @@ begin
 end;
 
 procedure TMainForm.FormShow(Sender: TObject);
-var
-   X, Y, W, H: Integer;
-   B, BB: Boolean;
 begin
-   dmZlogGlobal.ReadMainFormState(X, Y, W, H, B, BB);
-   if (W > 0) and (H > 0) then begin
-      if B then begin
-         mnHideCWPhToolBar.Checked := True;
-         CWToolBar.Height := 1;
-         SSBToolBar.Height := 1;
-      end;
-      if BB then begin
-         mnHideMenuToolbar.Checked := True;
-         MainToolBar.Height := 1;
-      end;
-      Left := X;
-      top := Y;
-      Width := W;
-      Height := H;
-   end;
-
    if FPostContest then begin
       MessageDlg('To change the date, double click the time field.', mtInformation, [mbOK], 0); { HELP context 0 }
    end;
@@ -8061,6 +8045,53 @@ end;
 procedure TMainForm.actionDecreaseFontSizeExecute(Sender: TObject);
 begin
    DecFontSize();
+end;
+
+procedure TMainForm.RestoreWindowsPos();
+var
+   X, Y, W, H: Integer;
+   B, BB: Boolean;
+   mon: TMonitor;
+   pt: TPoint;
+begin
+   dmZlogGlobal.ReadMainFormState(X, Y, W, H, B, BB);
+
+   if (W > 0) and (H > 0) then begin
+      pt.X := X;
+      pt.Y := Y;
+      mon := Screen.MonitorFromPoint(pt, mdNearest);
+      if X < mon.Left then begin
+         X := mon.Left;
+      end;
+      if X > (mon.Left + mon.Width) then begin
+         X := (mon.Left + mon.Width) - W;
+      end;
+      if Y < mon.Top then begin
+         Y := mon.Top;
+      end;
+      if Y > (mon.Top + mon.Height) then begin
+         Y := (mon.Top + mon.Height) - H;
+      end;
+
+      if B then begin
+         mnHideCWPhToolBar.Checked := True;
+         CWToolBar.Height := 1;
+         SSBToolBar.Height := 1;
+      end;
+
+      if BB then begin
+         mnHideMenuToolbar.Checked := True;
+         MainToolBar.Height := 1;
+      end;
+      Position := poDesigned;
+      Left := X;
+      top := Y;
+      Width := W;
+      Height := H;
+   end
+   else begin
+      Position := poScreenCenter;
+   end;
 end;
 
 end.
