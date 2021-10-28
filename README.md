@@ -10,7 +10,8 @@ Windows
 Windows専用ですが，Delphiで書かれているのでMacOSやLinuxへの移植も可能かもしれません
 
 # Licence
-This software is released under the GNU General Public License.
+This software is released under the MIT License.
+公開時はGPL3とMITライセンスの表記が混在していましたが、当初よりMITライセンスです
 
 # Authors
 Yokobayashi Yohei (ex. JJ1MED), JARL Contest Committee
