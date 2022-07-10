@@ -1,0 +1,12 @@
+TVicRes 1.0
+
+VCL component for Delphi 2.x/3.x/4.x/ and C++Builder 1.0/3.0
+
+Allows you see all hardware resource (Ports, Memory, IRQs, DMA)
+used by some device in Windows 95/98/NT
+
+Nov, 1998.
+Author : Victor Ishikeev
+e-mail : ivi@iufanet.ru
+         tools@entechtaiwan.com
+http://www.entechtaiwan.com/tools.htm

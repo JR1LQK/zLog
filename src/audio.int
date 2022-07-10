@@ -1,0 +1,87 @@
+unit Audio;
+
+interface
+
+Uses SysUtils, Windows, Controls, Classes,MMSystem, Messages;
+Type
+
+	EWaveInError = class(Exception);
+	EWaveOutError = class(Exception);
+
+  TWaveInData = procedure (Data : PChar; Size : integer) of object;
+  TBeforeOpen = procedure (var WaveFormat : pointer) of object;
+
+  TWaveIn = class(TComponent)
+  private
+    FBeforeOpen    : TBeforeOpen;
+    FOnWaveInData  : TWaveInData;
+    FOnWaveInOpen  : TNotifyEvent;
+    FOnWaveInClose : TNotifyEvent;
+    FDeviceId      : Integer;
+    FWaveFormat    : pointer;
+    FRecording     : boolean;
+    FStereo        : boolean;
+    FSamples       : integer;
+    FHWnd          : HWND;
+    hWaveIn        : HWave;
+    FBufSize       : Integer;
+    WaveFormatEx   : TWaveFormatEX;
+    procedure   SetRecording(AValue : Boolean);
+  protected
+		procedure   WndProc(var Message : TMessage);
+  public
+    constructor Create(AComponent : TComponent); override;
+    destructor  Destroy; override;
+    procedure   Open; virtual;
+    procedure   Close; virtual;
+    property    Recording : boolean read FRecording write SetRecording;
+    property    DeviceId : integer read FDeviceId write FDeviceId;
+    property    Handle : HWave read hWaveIn;
+  published
+    property    OnWaveInData : TWaveInData read FOnWaveInData write FOnWaveInData;
+    property    OnWaveInOpen  : TNotifyEvent read FOnWaveInOpen write FOnWaveInOpen ;
+    property    OnWaveInClose : TNotifyEvent read FOnWaveInClose write FOnWaveInClose ;
+    property    BeforeOpen : TBeforeOpen read FBeforeOpen write FBeforeOpen;
+    property    Samples : integer read FSamples write FSamples;
+    property    Stereo : boolean read FStereo write FStereo;
+
+  end;
+
+  TWaveOut = class(TComponent)
+  private
+    FBeforeOpen    : TBeforeOpen;
+    FOnWaveOutOpen  : TNotifyEvent;
+    FOnWaveOutClose : TNotifyEvent;
+    FOnWaveOutDone  : TNotifyEvent;
+    FDeviceId      : Integer;
+    FWaveFormat    : pointer;
+    FVolume        : integer;
+    hWaveOut       : HWave;
+    WaveOutHdr     : TWaveHdr;
+    FRecording     : boolean;
+    FSamples       : integer;
+    FStereo        : boolean;
+    FHWnd          : HWND;
+    hWaveIn        : HWave;
+    FBufSize       : Integer;
+    WaveFormatEx   : TWaveFormatEX;
+    procedure SetVolume(AValue : integer);
+  protected
+		procedure WndProc(var Message : TMessage);
+    procedure Open; virtual;
+    procedure Close; virtual;
+  public
+    constructor Create(AComponent : TComponent); override;
+    destructor  Destroy; override;
+    procedure   PlayBack(Data : PChar; Size : integer);
+    property    Volume : integer read FVolume write SetVolume;
+    property    Handle : HWave read hWaveOut;
+  published
+    property    OnWaveOutOpen  : TNotifyEvent read FOnWaveOutOpen write FOnWaveOutOpen ;
+    property    OnWaveOutClose : TNotifyEvent read FOnWaveOutClose write FOnWaveOutClose ;
+    property    OnWaveOutDone  : TNotifyEvent read FOnWaveOutDone write FOnWaveOutDone ;
+    property    BeforeOpen : TBeforeOpen read FBeforeOpen write FBeforeOpen;
+    property    Samples : integer read FSamples write FSamples;
+    property    Stereo : boolean read FStereo write FStereo;
+    property    DeviceId : integer read FDeviceId write FDeviceId;
+  end;

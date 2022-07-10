@@ -1,0 +1,31 @@
+
+ColorMemo NEWS
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+New features ( most important ones, as there's lots of them ) :
+
+<< -- Version 2.0.2 -- >>
+
+ - One Delphi 2.0 resource problem fixed
+
+
+<< -- Version 2.0.1 -- >>
+
+ - Lot's of bugs fixed. 
+   - No ghost cursor
+   - No trash when scrolling
+   - No "filled blocks" at the end of line in Delphi 4.0
+   - If there is no text after final keyword it will be colored
+   - Hotspots now are always colored
+   - .... and few more simple "undocumented features"
+ - More speed
+ - More stability
+
+
+_________________________________________________________________
+Baltic Solutions Team
+
+Web  :	http://www.balticsolutions.com
+email:	support@balticsolutions.com
+	corp@balticsolutions.com
+

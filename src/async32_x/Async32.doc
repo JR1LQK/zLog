@@ -1,0 +1,399 @@
+{\rtf1\ansi\deff0\deftab720{\fonttbl{\f0\fnil MS Sans Serif;}{\f1\fnil\fcharset2 Symbol;}{\f2\fswiss\fprq2 System;}{\f3\fnil Times New Roman;}{\f4\fnil Courier New;}{\f5\fmodern\fprq1 Courier 20 Pitch;}}
+{\colortbl\red0\green0\blue0;\red0\green0\blue128;\red255\green0\blue0;\red0\green0\blue255;}
+\deflang1033\pard\plain\f4\fs22\cf1\b ******************************************************************************
+\par                       VARIAN ASYNC32 COMPONENT v1.25
+\par                (c) VARIAN SOFTWARE SERVICES NL 1996-1997
+\par                           ALL RIGHTS RESERVED
+\par ******************************************************************************\plain\f4\fs20 
+\par 
+\par 
+\par \plain\f5\fs24\cf2\b TCOMM EXCEPTIONS
+\par ================
+\par \plain\f4\fs20 type
+\par   ECommError = class(Exception)
+\par     ErrorCode: Integer;
+\par   end;
+\par 
+\par An ECommError exception contains an additional errorcode wich includes an
+\par windows system error result. This value is set to -1 when the error is
+\par handled by the component itself and no extra errorcode is available.
+\par 
+\par \plain\f5\fs24\cf2\b PUBLISHED PROPERTIES
+\par ====================
+\par \plain\f4\fs20 
+\par \plain\f4\fs22\cf3\ul DeviceName\plain\f4\fs22\cf3 
+\par \plain\f4\fs20 
+\par property DeviceName: string;
+\par 
+\par Name of communication device, Com1, Com2, Lpt1 etc. Can only be
+\par set when the port is not assigned (closed).
+\par 
+\par \plain\f4\fs20\cf3\ul MonitorEvents
+\par \plain\f4\fs20\cf3 
+\par \plain\f4\fs20 TCommEventState = (evBreak, evCTS, evDSR, evError, evRing,
+\par   evRlsd, evRxChar, evRxFlag, evTxEmpty);
+\par TCommEventType = set of TCommEventState;
+\par 
+\par property MonitorEvents: TCommEventType;
+\par 
+\par Enable or disable certain system events.
+\par 
+\par evBREAK   - A break was detected on input.
+\par evCTS     - The CTS (clear-to-send) signal changed state.
+\par evDSR     - The DSR (data-set-ready) signal changed state.
+\par evERROR   - A line-status error occurred. Line-status errors
+\par             are CE_FRAME, CE_OVERRUN, and CE_RXPARITY.
+\par evRING    - A ring indicator was detected.
+\par evRLSD    - The RLSD (receive-line-signal-detect) signal changed state.
+\par evRXCHAR  - A character was received and placed in the input buffer.
+\par evRXFLAG  - The event character was received and placed in the input buffer.
+\par             The event character is specified in the device's DCB structure,
+\par             which is applied to a serial port by using the SetCommState function.
+\par evTXEMPTY - The last character in the output buffer was sent.
+\par 
+\par \plain\f4\fs20\cf3\ul Baudrate
+\par \plain\f4\fs20\cf3 
+\par \plain\f4\fs20 TBaudRate = (cbr110, cbr300, cbr600, cbr1200, cbr2400, cbr4800, cbr9600,
+\par   cbr14400, cbr19200, cbr38400, cbr56000, cbr57600, cbr115200, cbr128000, cbr256000);
+\par 
+\par property BaudRate: TBaudRate;
+\par 
+\par \plain\f4\fs20\cf3\ul Parity
+\par \plain\f4\fs20\cf3 
+\par \plain\f4\fs20 TParity = (paNone, paOdd, paEven, paMark, paSpace);
+\par 
+\par property Parity: TParity;
+\par 
+\par \plain\f4\fs20\cf3\ul Stopbits
+\par \plain\f4\fs20\cf3 
+\par \plain\f4\fs20 TStopbits = (sb10, sb15, sb20);
+\par 
+\par property Stopbits: TStopbits;
+\par 
+\par \plain\f4\fs20\cf3\ul Databits
+\par \plain\f4\fs20\cf3 
+\par \plain\f4\fs20 TDatabits=(da4, da5, da6, da7, da8);
+\par 
+\par property Databits: TDatabits;
+\par 
+\par \plain\f4\fs20\cf3\ul ReadBufSize
+\par \plain\f4\fs20\cf3 
+\par \plain\f4\fs20 property ReadBufSize: Integer;
+\par 
+\par Specifies the recommended size, in bytes, of the device's internal input buffer.
+\par 
+\par \plain\f4\fs20\cf3\ul WriteBufSize\plain\f4\fs20\cf3 
+\par 
+\par \plain\f4\fs20 property WriteBufSize: Integer;
+\par 
+\par Specifies the recommended size, in bytes, of the device's internal output buffer.
+\par 
+\par \plain\f4\fs20\cf3\ul CharsTimeout
+\par \plain\f4\fs20\cf3 
+\par \plain\f4\fs20 property CharsTimeout: Integer;
+\par 
+\par Specifies the maximum time, in milliseconds, allowed to elapse between
+\par the arrival of two characters on the communications line. During a Read
+\par operation, the time period begins when the first character is received.
+\par If the interval between the arrival of any two characters exceeds this
+\par amount, the Read operation is completed and any buffered data is returned.
+\par A value of zero indicates that interval time-outs are not used.
+\par 
+\par \plain\f4\fs20\cf3\ul Options
+\par \plain\f4\fs20\cf3 
+\par \plain\f4\fs20 TCommOption = (coParityCheck, coDsrSensitivity, coIgnoreXOff,
+\par   coErrorChar, coNullStrip);
+\par TCommOptions = set of TCommOption;
+\par 
+\par property Options: TCommOptions;
+\par 
+\par coParityCheck:
+\par Specifies whether parity checking is enabled. If this member is TRUE,
+\par parity checking is performed and errors are reported.
+\par 
+\par coDsrSensitivity:
+\par Specifies whether the communications driver is sensitive to the state
+\par of the DSR signal. If this member is TRUE, the driver ignores any bytes
+\par received, unless the DSR modem input line is high.
+\par 
+\par coIgnoreXoff:
+\par Specifies whether transmission stops when the input buffer is full and the
+\par driver has transmitted the XoffChar character. If this member is TRUE,
+\par transmission continues after the input buffer has come within XoffLim bytes
+\par of being full and the driver has transmitted the XoffChar character to stop
+\par receiving bytes. If this member is FALSE, transmission does not continue until
+\par the input buffer is within XonLim bytes of being empty and the driver has
+\par transmitted the XonChar character to resume reception.
+\par 
+\par coErrorChar:
+\par Specifies whether bytes received with parity errors are replaced with the
+\par character specified by the ErrorChar member. If this member is TRUE and
+\par the fParity member is TRUE, replacement occurs.
+\par 
+\par coNullStrip:
+\par Specifies whether null bytes are discarded. If this member is TRUE,
+\par null bytes are discarded when received.
+\par 
+\par \plain\f4\fs20\cf3\ul EventChars
+\par \plain\f4\fs20\cf3 
+\par \plain\f4\fs20 XonChar
+\par property XonChar: char;
+\par Specifies the value of the XON character for both transmission and reception
+\par 
+\par XoffChar
+\par property XoffChar: char;
+\par Specifies the value of the XOFF character for both transmission and reception.
+\par 
+\par \plain\f4\fs20\cf3\ul FlowControl\plain\f4\fs20\cf3 
+\par 
+\par \plain\f4\fs20 TFlowControl = (fcNone, fcCTS, fcDTR, fcSoftware, fcDefault);
+\par 
+\par property FlowControl: TFlowControl;
+\par 
+\par fcNone                No flowcontrol
+\par fsCTS                 Rts/Cts flowcontrol
+\par fsDTR                 Specifies the DTR (data-terminal-ready) flow control.
+\par fsSoftware            Xon/Xoff flowcontrol
+\par fcDefault             Use system settings
+\par 
+\par 
+\par \plain\f5\fs24\cf2\b METHODS AND PUBLIC PROPERTIES
+\par =============================
+\par \plain\f4\fs20 
+\par \plain\f4\fs20\cf3\ul Enabled\plain\f4\fs20\cf3 
+\par 
+\par \plain\f4\fs20 function Enabled: Boolean;
+\par 
+\par Describes the component/device state, true=Open, false=Closed
+\par 
+\par \plain\f4\fs20\cf3\ul Open
+\par \plain\f4\fs20\cf3 
+\par \plain\f4\fs20 procedure Open;
+\par 
+\par Opens the communications device and does all the needed configurations.
+\par Open must be called in order to access the comport. If an invalid
+\par device handle is requested, one of the following errorcodes is returned.
+\par 
+\par 2      File not found.
+\par 3      Invalid file name.
+\par 4      Too many open files.
+\par 5      Access denied.
+\par 100    EOF.
+\par 101    Disk full.
+\par 106    Invalid input.
+\par 
+\par \plain\f4\fs20\cf3\ul Close\plain\f4\fs20\cf3 
+\par 
+\par \plain\f4\fs20 procedure Close;
+\par 
+\par Close the communications device.
+\par 
+\par \plain\f4\fs20\cf3\ul Write\plain\f4\fs20\cf3 
+\par 
+\par \plain\f4\fs20 function Write(const Buf; Count: Integer): Integer;
+\par 
+\par Buf is any variable, Count is an expression of type Integer. Write writes Count
+\par or fewer bytes to the com port from memory, starting at the first byte occupied
+\par by Buf. The actual number of bytes written (less than or equal to Count) is
+\par returned in it's Result. If a write operations fails it returns -1.
+\par 
+\par \plain\f4\fs20\cf3\ul Read\plain\f4\fs20\cf3 
+\par 
+\par \plain\f4\fs20 function Read(var Buf; Count: Integer): Integer;
+\par 
+\par Buf is any variable, Count is an expression of type Integer. Read reades Count
+\par or fewer bytes from the com port. The actual number of bytes read
+\par (less than or equal to Count) is returned in it's Result. If a read operations
+\par fails it returns -1. Never try to read bytes manually by specifying the
+\par count parameter yourself. Use the Count parameter returned in "RxCharEvent".
+\par 
+\par \plain\f4\fs20\cf3\ul InQueCount\plain\f4\fs20\cf3 
+\par 
+\par \plain\f4\fs20 function InQueCount: Integer;
+\par 
+\par Number of bytes in the ReadBuffer.
+\par 
+\par \plain\f4\fs20\cf3\ul OutQueCount\plain\f4\fs20\cf3 
+\par 
+\par \plain\f4\fs20 function OutQueCount: Integer;
+\par 
+\par Number of bytes in the WriteBuffer. When all bytes are sent, an OnTxEmpty
+\par event is triggerd.
+\par 
+\par \plain\f4\fs20\cf3\ul PurgeIn\plain\f4\fs20\cf3 
+\par 
+\par \plain\f4\fs20 procedure PurgeIn;
+\par 
+\par Remove all pending characters from the inputbuffer (read).
+\par 
+\par \plain\f4\fs20\cf3\ul PurgeOut\plain\f4\fs20\cf3 
+\par 
+\par \plain\f4\fs20 procedure PurgeOut;
+\par 
+\par Remove all pending characters from the outputbuffer (write).
+\par 
+\par \plain\f4\fs20\cf3\ul SetDTRState\plain\f4\fs20\cf3 
+\par 
+\par \plain\f4\fs20 procedure SetDTRState(State: Boolean);
+\par 
+\par False - Clears the DTR (data-terminal-ready) signal.
+\par True  - Sends the DTR (data-terminal-ready) signal.
+\par 
+\par \plain\f4\fs20\cf3\ul SetRTSState\plain\f4\fs20\cf3 
+\par 
+\par \plain\f4\fs20 procedure SetRTSState(State: Boolean);
+\par 
+\par False - Clears the RTS (request-to-send) signal.
+\par True  - Sends the RTS (request-to-send) signal.
+\par 
+\par \plain\f4\fs20\cf3\ul SetBreakState\plain\f4\fs20\cf3 
+\par 
+\par \plain\f4\fs20 procedure SetBREAKState(State: Boolean);
+\par 
+\par False - Restores character transmission and places the transmission line
+\par         in a nonbreak state.
+\par True  - Suspends character transmission and places the transmission line in
+\par         a break state. Note that this extended function does not flush data
+\par         that has not been transmitted.
+\par 
+\par \plain\f4\fs20\cf3\ul SetXONState\plain\f4\fs20\cf3 
+\par 
+\par \plain\f4\fs20 procedure SetXONState(State: Boolean);
+\par 
+\par False - Causes transmission to act as if an XOFF character has been received.
+\par True  - Causes transmission to act as if an XON character has been received.
+\par 
+\par \plain\f4\fs20\cf3\ul CTS\plain\f4\fs20\cf3 
+\par 
+\par \plain\f4\fs20 property CTS: Boolean;
+\par 
+\par True - The CTS (clear-to-send) signal is on.
+\par 
+\par \plain\f4\fs20\cf3\ul DSR\plain\f4\fs20\cf3 
+\par 
+\par \plain\f4\fs20 property DSR: Boolean;
+\par 
+\par True - The DSR (data-set-ready) signal is on.
+\par 
+\par \plain\f4\fs20\cf3\ul RING\plain\f4\fs20\cf3 
+\par 
+\par \plain\f4\fs20 property RING: Boolean;
+\par 
+\par True - The ring indicator signal is on.
+\par 
+\par \plain\f4\fs20\cf3\ul RLSD\plain\f4\fs20\cf3 
+\par 
+\par \plain\f4\fs20 property RLSD: Boolean;
+\par 
+\par True - The RLSD (receive-line-signal-detect) signal is on.
+\par 
+\par \plain\f4\fs20\cf3\ul Handle\plain\f4\fs20\cf3 
+\par 
+\par \plain\f4\fs20 property Handle: THandle;
+\par 
+\par Reference to the internal devicehandle (Readonly property)
+\par 
+\par \plain\f4\fs20\cf3\ul ProviderSubtype\plain\f4\fs20\cf3 
+\par 
+\par \plain\f4\fs20 property ProviderSubtype: Integer;
+\par 
+\par Device Id. Use the added GetProviderSubTypeName function in order
+\par to get a string representation of the type of device currently
+\par opened.
+\par 
+\par Available provider subtypes:
+\par PST_FAX            FAX device
+\par PST_LAT            LAT protocol
+\par PST_MODEM          Modem device
+\par PST_NETWORK_BRIDGE Unspecified network bridge
+\par PST_PARALLELPORT   Parallel port
+\par PST_RS232          RS-232 serial port
+\par PST_RS422          RS-422 port
+\par PST_RS423          RS-423 port
+\par PST_RS449          RS-449 port
+\par PST_SCANNER        Scanner device
+\par PST_TCPIP_TELNET   TCP/IP Telnet\'ae protocol
+\par PST_UNSPECIFIED    Unspecified
+\par PST_X25            X.25 standards
+\par 
+\par 
+\par \plain\f5\fs24\cf2\b EVENTS
+\par ======
+\par \plain\f4\fs20 
+\par \plain\f4\fs20\cf3\ul OnBreak\plain\f4\fs20\cf3 
+\par \plain\f4\fs20 
+\par property OnBreak: TNotifyEvent;
+\par 
+\par A break was detected on input.
+\par 
+\par \plain\f4\fs20\cf3\ul OnCTS\plain\f4\fs20\cf3 
+\par 
+\par \plain\f4\fs20 property OnCTS: TNotifyEvent;
+\par 
+\par The CTS (clear-to-send) signal changed state.
+\par 
+\par \plain\f4\fs20\cf3\ul OnDSR\plain\f4\fs20\cf3 
+\par 
+\par \plain\f4\fs20 property OnDSR: TNotifyEvent;
+\par 
+\par The DSR (data-set-ready) signal changed state.
+\par 
+\par \plain\f4\fs20\cf3\ul OnRing\plain\f4\fs20\cf3 
+\par 
+\par \plain\f4\fs20 property OnRing: TNotifyEvent;
+\par 
+\par A ring indicator was detected.
+\par 
+\par \plain\f4\fs20\cf3\ul OnRLSD\plain\f4\fs20\cf3 
+\par 
+\par \plain\f4\fs20 property OnRLSD: TNotifyEvent;
+\par 
+\par The RLSD (receive-line-signal-detect) signal changed state.
+\par 
+\par \plain\f4\fs20\cf3\ul OnError\plain\f4\fs20\cf3 
+\par 
+\par \plain\f4\fs20 TCommErrorEvent = procedure(Sender: TObject; Errors: Integer) of object;
+\par property OnError: TCommErrorEvent;
+\par 
+\par A line-status error occurred.
+\par 
+\par CE_BREAK       The hardware detected a break condition.
+\par CE_DNS         Windows 95 only: A parallel device is not selected.
+\par CE_FRAME       The hardware detected a framing error.
+\par CE_IOE         An I/O error occurred during communications with the device.
+\par CE_MODE        The requested mode is not supported, or the hFile parameter
+\par                is invalid. If this value is specified, it is the only valid error.
+\par CE_OOP         Windows 95 only: A parallel device signaled that it is out of paper.
+\par CE_OVERRUN     A character-buffer overrun has occurred. The next character is lost.
+\par CE_PTO         Windows 95 only: A time-out occurred on a parallel device.
+\par CE_RXOVER      An input buffer overflow has occurred. There is either no
+\par                room in the input buffer, or a character was received after
+\par                the end-of-file (EOF) character.
+\par CE_RXPARITY    The hardware detected a parity error.
+\par CE_TXFULL      The application tried to transmit a character, but the output
+\par                buffer was full.
+\par 
+\par \plain\f4\fs20\cf3\ul OnRxChar\plain\f4\fs20\cf3 
+\par 
+\par \plain\f4\fs20 TCommRxCharEvent = procedure(Sender: TObject; Count: Integer) of object;
+\par property OnRxChar: TCommRxCharEvent;
+\par 
+\par A character was received and placed in the input buffer. Count defines
+\par the number of bytes received.
+\par 
+\par \plain\f4\fs20\cf3\ul OnRxFlag\plain\f4\fs20\cf3 
+\par 
+\par \plain\f4\fs20 property OnRxFlag: TNotifyEvent;
+\par 
+\par The event character was received and placed in the input buffer.
+\par The event character is specified in the device's DCB structure,
+\par which is applied to a serial port by using the SetCommState function.
+\par 
+\par \plain\f4\fs20\cf3\ul OnTxEmpty\plain\f4\fs20\cf3 
+\par 
+\par \plain\f4\fs20 property OnTxEmpty: TNotifyEvent;
+\par 
+\par The last character in the output buffer was sent.
+\par 
+\par }
+ 

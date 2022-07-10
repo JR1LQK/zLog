@@ -1,0 +1,108 @@
+*******************************************************************************
+                      VARIAN ASYNC32 COMPONENT 
+               (c) VARIAN SOFTWARE SERVICES NL 1996-1998
+                           ALL RIGHTS RESERVED
+*******************************************************************************
+
+
+
+*** Version 1.49
+
+- Release for Delphi 4
+
+HISTORY
+
+** Version 1.26
+
+- First, our special thanks goes to:
+
+  Laco Laszlo
+  Czech Republic
+  E-mail: lacola@usa.net
+
+  David J Rose
+  Senior Software Engineer
+  NexSys
+  E-mail: DavidRose@nexsys.demon.co.uk
+
+  and all the others who contributed their suggestions...
+
+
+- implementation of Exceptions and Handling
+
+- Removed OnOpenEvent, Error parameter replaced by exceptions.
+  ProviderSubtype parameter replaced by public property
+
+- Fixed write statement bug by setting the WriteCommTimeouts <> 0
+
+- Write statement now reports the correct number of bytes send
+
+- The read and write statements now report an errorcode -1 when IO is pending
+  instead of returning zero bytecount. This gives the application the
+  opportunity to simply resend or cancel the operation.
+
+- Moved the XonChar and XOffChar to a new class object "TCommEventChars"
+
+- Changed properties WriteBufferSize, ReadBufferSize in WriteBufSize, ReadBufSize.
+
+- Removed all numeric "32" references, TComm32 is now called TComm.  
+
+- Changed CommEscapeFunctions DTR, RTS, BREAK, XON functions in procedures   
+  procedure SetDTRState(State: Boolean);
+  procedure SetRTSState(State: Boolean);
+  procedure SetBREAKState(State: Boolean);
+  procedure SetXONState(State: Boolean);
+
+- Added help documentation regarding properties, methods and events.
+
+- Some internal syntaxis rewrites
+
+
+
+* VERSION 1.01
+
+- The Thread is now created in a "suspended" state and is
+  resumed after initialization of all variables.
+  By Gary Weinfurther <gary@mich.com>
+
+- Added additional code to Escapecomm function <BREAK> to ensure
+  correct dataflow.
+
+- Rewritten the "write" procedure. It should work fine now.
+
+- Updated the demo program to test XON/XOFF flags.
+
+
+* VERSION 1.0
+
+-Changed the receive part for the demo application.
+
+-added device indentification to OpenEvent, see provider subtypes for
+ more info.
+
+-added device DCB profile to open procedure
+
+-added additional port-settings through "Options" property
+
+-added missing escapecomm function "xon/xoff"
+
+-the component waited (infinite) for write operations to be completed after
+ XOff or Break. Fixed.
+ The function now returns zero bytes written on an IOPending event.
+ Initial idea by Piet Jansen <pietjans@tref.nl>
+
+-Removed "signal" extensions from event properties.
+ sorry for the inconvenience this may cause.
+
+-Moved Event calls to dynamic procedures in order to enhance inheritance.
+ Initial idea by Tim Evans <vgs.mil@interbusiness.it>
+
+-Removed some Delphi VCL units from the uses clause.
+
+-Added handshake handling
+ by Gyula Mészáros (Mr. InnMaxX), Hungary
+ e-mail: 100263.1465@compuserve.com
+
+
+
+                            ***

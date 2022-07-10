@@ -1,0 +1,180 @@
+----------------------------------------------------------------- 
+TSuperGrid Version 1.4 - by Pablo Pissanetzky - pablo@neosoft.com
+----------------------------------------------------------------- 
+
+New for Version 1.4
+-------------------
+* The property editor now has an entirely new look ( to make room for
+  more features ).
+* Added separate vertical alignment for the headings and the contents.
+* Headings can now have bevels. Just like TPanel, the user can control
+  the inner and outer bevels as well as the bevel and border widths.
+* TSuperGrid can now hold three different types of checkboxes in its 
+  cells along with text. There is a new property called Checked that 
+  allows the user to read or set the state of each checkbox. There is 
+  also an event, OnCheckBoxClick, that is triggered whenever the state 
+  of a checkbox is changed by clicking on a cell. You can specify whether
+  the checkboxes will be intially checked at design time. No coding
+  required!
+* Added a DeleteRow method ( Something TStringGrid should've had from the start )
+* Added an InsertRow method ( Something TStringGrid should've had from the start )
+* Added some version checking so that future versions of TSuperGrid will
+  always be compatible with the older ones.
+* Graphics and checkboxes in the cells now assume the same vertical 
+  alignment as the contents of the column, not just top-left.
+* Added a SaveCells method that writes the contents of TSuperGrid to a comma 
+  delimited file that can be read with the existing LoadCells method.
+
+************************************************************************
+IMPORTANT - Please read                          IMPORTANT - Please read
+                           I M P O R T A N T
+                           I M P O R T A N T
+                           I M P O R T A N T
+IMPORTANT - Please read                          IMPORTANT - Please read
+************************************************************************
+IF YOU ARE A CURRENT USER OF TSUPERGRID AND ARE UPGRADING TO 1.4:
+
+Version 1.4 has new properties that did not exist in previous versions.
+As such, to be able to use your existing projects that contain a TSuperGrid
+Version 1.3 or older, you must do the following:
+
+ 1) First, Close the current project and all open files.
+ 2) Install TSuperGrid Version 1.4 as described below.
+ 3) Open each project that contains a TSuperGrid Version 1.3.
+    !!Do not try to run the project!!
+ 4) Change something on each form that contains a TSuperGrid. You can 
+    just move the TSuperGrid a couple of pixels.
+ 5) Save the project.
+ 6) You TSuperGrid(s) have now been converted to comply with Version 1.4.
+
+    What happens is that Version 1.4 detects that it is reading 
+    a Pre-1.4 DFM file and does not attempt to read the values of
+    new properties, it just sets them to their default. When you change and 
+    save your project, the DFM file is written out as a Version 1.4 with all
+    the new properties and you can keep on trucking. This is the only way
+    to make a component like this one, backward compatible. It updates itself.
+
+IF YOU GET ERRORS SAYING THAT PROPERTIES DO NOT EXIST, I WARNED YOU! :)
+************************************************************************
+
+Features
+--------	
+
+The TSuperGridT Component is an enhanced TStringGrid. It allows you to 
+change the way a string grid looks in a What-You-See-Is-What-You-Get 
+manner. With TSuperGrid, you can have a grid populated with data and 
+formatted at design time, without writing a single line of code. 
+You can also easily change any of its many properties at run time.
+
+It adds a single property to TStringGrid, called Columns.  
+The Columns property allows you to change virtually all aspects of 
+the string grid at design time with a Windows 95 style, user friendly 
+property editor as well as at run time. 
+With Columns you can do the following:
+
+* Give each column a multi line title.
+* Align each column's title to the left, right or centered.
+* Dynamically change the width of each column by typing a new 
+  value or using a slider.
+* Give each column title its own background color.
+* Specify a different font for each column title, change the 
+  style, size, and color of the font.
+* Specify how to clip each cell. If the text does not fit in a 
+  cell, TSuperGridT can either clip it, add an ellipsis, or 
+  wrap the words for multiple lines of  text in each cell.
+* Align the contents of each row to the left, right or centered.
+* Specify a background color for the contents of each row.
+* Specify a font ( style, size and color ) for the contents 
+  of each row.
+* Dynamically change the height of any row by typing a new value 
+  or using a slider.
+* Give even and/or odd rows their own background color.
+* Specify a comma-delimited file to populate the grid, 
+  create and edit the file at design time. 
+  You can specify whether to strip leading and trailing blanks 
+  from each item in the file, and whether the grid should add 
+  rows to accomodate all the lines in the data file.
+* New for Version 1.2! You can load bitmaps, icons or windows meta
+  files into each cell of TSuperGrid at design time or run time.
+
+The property editor has an Apply button that allows you to see 
+all the changes you make instantly take effect on the grid. 
+If you specify a data file, the file will be loaded into the 
+grid when you press the Apply button.
+
+TSuperGrid also adds an event to TStringGrid that allows you 
+to override any color, or font choices that you made at design 
+time, and specify new values for each cell.
+
+
+Installation
+------------
+Note: If you have a previous version of TSuperGrid, it is recommended
+that you delete all the old files and reinstall TSuperGrid 1.4 with the
+new files.
+
+Unzip the file super14.zip. 
+This will create the following files:
+ 1) Super.HLP
+ 2) Super.KWF
+ 3) Super14.TXT
+ 4) SuperBug.TXT
+ 5) 16bit\RzCommon.DCU
+ 6) 16bit\RzTrkbar.DCU
+ 7) 16bit\RzTrkbar.RES
+ 8) 16bit\SuperCol.DCU
+ 9) 16bit\SuperDlg.DCU
+10) 16bit\SuperDlg.DFM
+11) 16bit\SuperGrd.DCU
+12) 16bit\SuperReg.DCU
+13) 16bit\SuperReg.DCR
+14) 16bit\Super16.RES
+15) 16bit\Colorpik.DCU
+16) 32bit\RzCommon.DCU
+17) 32bit\RzTrkbar.DCU
+18) 32bit\RzTBar32.RES
+19) 32bit\SuperCol.DCU
+20) 32bit\SuperDlg.DCU
+21) 32bit\SuperDlg.DFM
+22) 32bit\SuperGrd.DCU
+23) 32bit\Super32.DCU
+24) 32bit\Super32.DCR
+25) 32bit\Super32.RES
+26) 32bit\Colorpik.DCU
+
+The following instructions refer to Delphi 1.0 menus, the procedure
+is basicaly the same for Delphi 2.0
+
+ 1.Copy Super.HLP to a directory in your path, such as the 
+   Windows directory, or the Delphi\Bin directory.
+ 2.Copy Super.KWF to the Delphi\Help directory.
+ 3.Run Helpinst.EXE, this program is located in the Delphi\Help 
+   directory.
+ 4.Select File | Open to open Delphi.HDX, which is located in 
+   your Delphi\Bin directory.
+ 5.Click on the green plus sign, to add the Super.KWF file.
+ 6.Once you added the file, select File | Save to compile and 
+   save the Delphi.HDX file.
+ 7.Run Delphi and select Options | Install Components.
+ 8.Click on the Add button, and then Browse.
+ 9.Change the List Files Of Type box to show all *.DCU files.
+10.Navigate to the directory where you unzipped the original 
+   files and double click on the following file:
+
+   For Delphi 1.0, select SuperReg.DCU
+   For Delphi 2.0, select Super32.DCU
+
+11.Back at the Install Components dialog, click on OK.
+12.After Delphi is done building the component library and the 
+   component palette is updated, you will see TSuperGrid as the 
+   last component in the Additional page looking like a 
+   TStringGrid, and bearing the 'Super' brand.
+13.Congratulations! TSuperGrid is now installed.
+14.To view the documentation, click on the TSuperGrid component 
+   and press F1.
+
+Enjoy.
+
+----------------------------------------------------------------- 
+TSuperGrid Version 1.4 - by Pablo Pissanetzky - pablo@neosoft.com
+----------------------------------------------------------------- 
