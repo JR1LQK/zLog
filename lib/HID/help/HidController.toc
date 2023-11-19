@@ -1,0 +1,8 @@
+:BASE HidController.hlp>main
+:TITLE complete access to HID
+;
+1 Accessing HID devices
+2 HID = IDH_Library_HID
+1 HID Objects
+2 TJvHidDeviceController=IDH_Class_TJvHidDeviceController
+2 TJvHidDevice=IDH_Class_TJvHidDevice

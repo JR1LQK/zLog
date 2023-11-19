@@ -1,0 +1,31 @@
+[DSP upload]
+FileName=nfigrid.zip
+Replace File=nfigrid.zip
+Version=2
+FileURL=
+DirectFileURL=
+Description=Enhanced grid featuring check boxes, bitmaps, combo boxes, individual cell fonts and colors and more.
+Delphi 1.0=N
+Delphi 2.0=N
+Delphi 3.0=Y
+C++Builder 1.0=N
+File Status=Shareware
+Full Source=not included
+Group=Component/Code
+Category=Improved Components
+Platform=Windows 95
+Note=
+Additional info=
+[DSP Support]
+DSP Support=N
+[Versions available]
+Delphi 1.0=
+Delphi 2.0=nfigrid.zip
+Delphi 3.0=
+C++Builder 1.0=
+[Uploader]
+Author name=Ashley Godfrey
+Author E-mail=nfi@post1.com
+Author URL=
+AuthorSpecialization=
+count=0
